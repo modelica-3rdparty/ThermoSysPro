@@ -1,9 +1,17 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
-model SourcePQ "MultiFluids source with fixed pressure and mass flow rate"
+model SourcePQ
+  "MultiFluids source with fixed pressure and mass flow rate"
   extends
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None
+  annotation(choicesAllMatching = true, Dialog(tab="Fluid", group="Transported Substances"));
+
+ parameter Real Cin[Species.Concentrations]=zeros(size(C.SubC,1)) "Concentration values for the substances to be transported"
+ annotation(Dialog(tab="Fluid", group="Transported Substances"));
 
   parameter Units.SI.AbsolutePressure P0=300000
     "Fluid pressure (active if IPressure connector is not connected)";
@@ -71,9 +79,11 @@ public
         origin={0,-50},
         extent={{10,-10},{-10,10}},
         rotation=270)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C annotation (Placement(
-        transformation(extent={{90,-10},{110,10}}, rotation=0)));
+  Fluid.Interfaces.Connectors.FluidOutlet C(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
 equation
+
+  C.SubC = Cin;
 
   C.Q = Q;
   C.P = P;

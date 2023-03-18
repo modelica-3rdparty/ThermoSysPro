@@ -6,6 +6,10 @@ model VolumeA "Mixing volume with 2 inlets and 2 outlets"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None
+  annotation(choicesAllMatching = true, Dialog(tab="Fluid", group="Transported Substances"));
+
   parameter Boolean dynamic_energy_balance=true
     "true: dynamic energy balance equation - false: static energy balance equation";
   parameter Units.SI.Volume V=1
@@ -101,15 +105,27 @@ public
   Real rs2 "Value of r(Q/gamma) for outlet s2";
 
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce1 annotation (Placement(
-        transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce2 annotation (Placement(
-        transformation(extent={{-10,90},{10,110}}, rotation=0),
-        iconTransformation(extent={{-10,90},{10,110}})));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs1 annotation (
-      Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs2 annotation (
-      Placement(transformation(extent={{-10,-110},{10,-90}}, rotation=0)));
+  Fluid.Interfaces.Connectors.FluidInlet Ce1(redeclare package Species =
+        Species) annotation (Placement(transformation(extent={{-110,-10},{-90,
+            10}}, rotation=0)));
+  Fluid.Interfaces.Connectors.FluidInlet Ce2(redeclare package Species =
+        Species) annotation (Placement(transformation(extent={{-10,90},{10,110}},
+          rotation=0), iconTransformation(extent={{-10,90},{10,110}})));
+  Fluid.Interfaces.Connectors.FluidOutlet Cs1(redeclare package Species =
+        Species) annotation (Placement(transformation(extent={{90,-10},{110,10}},
+          rotation=0)));
+  Fluid.Interfaces.Connectors.FluidOutlet Cs2(redeclare package Species =
+        Species) annotation (Placement(transformation(extent={{-10,-110},{10,-90}},
+          rotation=0)));
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(
+    redeclare package Species = Species,
+    n_in=2,
+    n_out=2,
+    dynamic_mass_balance=dynamic_mass_balance,
+    V=V,
+    Qin={Ce1.Q,Ce2.Q},
+    Qout={Cs1.Q,Cs2.Q},
+    rho=rho) annotation (Placement(transformation(extent={{-80,60},{-40,100}})));
 initial equation
   if dynamic_energy_balance and dynamic_mass_balance then
     if steady_state then
@@ -144,6 +160,10 @@ initial equation
   end if;
 
 equation
+
+  sub_massBalance.mix_in.SubC = {Ce1.SubC,Ce2.SubC};
+  sub_massBalance.mix_out.SubC = {Cs1.SubC,Cs2.SubC};
+
   /* Check that volume is positive */
   if dynamic_energy_balance or dynamic_mass_balance then
     assert(V > 0, "Volume non-positive");
@@ -171,6 +191,7 @@ equation
     Ce1.Xh2o = 0;
     Ce1.Xo2 = 0;
     Ce1.Xso2 = 0;
+    Ce1.SubC = fill(0,size(Ce1.SubC,1));
   end if;
 
   if (cardinality(Ce2) == 0) then
@@ -184,6 +205,7 @@ equation
     Ce2.Xh2o = 0;
     Ce2.Xo2 = 0;
     Ce2.Xso2 = 0;
+    Ce2.SubC = fill(0,size(Ce2.SubC,1));
   end if;
 
   if (cardinality(Cs1) == 0) then

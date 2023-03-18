@@ -3,6 +3,10 @@ model PipePressureLoss "Pipe generic pressure loss"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None
+  annotation(choicesAllMatching = true, Dialog(tab="Fluid", group="Transported Substances"));
+
   parameter Real K=10 "Friction pressure loss coefficient";
   parameter Units.SI.Position z1=0 "Inlet altitude";
   parameter Units.SI.Position z2=0 "Outlet altitude";
@@ -30,9 +34,9 @@ public
   Integer fluid=Integer(ftype) "Fluid number";
 
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1 annotation (Placement(
+  Interfaces.Connectors.FluidInlet C1(redeclare package Species = Species) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
+  Interfaces.Connectors.FluidOutlet C2(redeclare package Species = Species) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
 
 equation
@@ -54,6 +58,8 @@ equation
   C1.Xh2o = C2.Xh2o;
   C1.Xo2  = C2.Xo2;
   C1.Xso2 = C2.Xso2;
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   h = C1.h;

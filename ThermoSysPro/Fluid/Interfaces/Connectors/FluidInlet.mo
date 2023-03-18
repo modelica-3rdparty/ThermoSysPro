@@ -19,6 +19,9 @@ connector FluidInlet "Fluid inlet connector"
     "O2 mass fraction of the fluid crossing the boundary of the control volume";
   ThermoSysPro.Units.SI.MassFraction Xso2(start=0)
     "SO2 mass fraction of the fluid crossing the boundary of the control volume";
+  replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None;
+  Real SubC[Species.Concentrations];
   input Real diff_res_1(start=1e4)
     "Diffusion resistance from control volume 1";
   output Real diff_res_2(start=1e4)

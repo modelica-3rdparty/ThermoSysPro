@@ -6,6 +6,10 @@ model SteamDryer "Steam dryer"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None
+  annotation(choicesAllMatching = true, Dialog(tab="Fluid", group="Transported Substances"));
+
   parameter Real eta=1 "Steam dryer efficiency (0 <= eta <= 1)";
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
@@ -43,9 +47,9 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proe
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
            0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cev annotation (Placement(
+  Interfaces.Connectors.FluidInlet Cev(redeclare package Species = Species) annotation (Placement(
         transformation(extent={{-109,30},{-89,50}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Csv annotation (
+  Interfaces.Connectors.FluidOutlet Csv(redeclare package Species = Species) annotation (
       Placement(transformation(extent={{89,30},{109,50}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat1
     annotation (Placement(transformation(extent={{-100,-98},{-80,-78}},
@@ -53,10 +57,28 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat1
     annotation (Placement(transformation(extent={{-76,-98},{-56,-78}}, rotation=
            0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Csl annotation (
+  Interfaces.Connectors.FluidOutlet Csl(redeclare package Species = Species) annotation (
       Placement(transformation(extent={{-9,-110},{11,-90}}, rotation=0)));
 
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance_HeterogeneousPhases
+    sub_massBalance(
+    redeclare package Species = Species,
+    n_in=1,
+    n_out_liq=1,
+    n_out_gas=1,
+    Qin={Cev.Q},
+    Qout_liq={Csl.Q},
+    Qout_gas={Csv.Q},
+    rho=proe.d,
+    rho_liquidPhase=lsat1.rho,
+    x=xe,
+    T=proe.T) annotation (Placement(transformation(extent={{-28,-50},{34,12}})));
 equation
+
+  sub_massBalance.mix_in.SubC = {Cev.SubC};
+  sub_massBalance.mix_out_gas.SubC = {Csv.SubC};
+  sub_massBalance.mix_out_liq.SubC = {Csl.SubC};
+
   /* Check that incoming fluids are compatible with fluid in volume */
   fluids[1] = ftype;
   fluids[2] = Cev.ftype;

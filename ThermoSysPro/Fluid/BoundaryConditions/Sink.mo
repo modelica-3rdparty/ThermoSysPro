@@ -5,6 +5,10 @@ model Sink "MultiFluids sink"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
 
+  replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None
+  annotation(choicesAllMatching = true, Dialog(tab="Fluid", group="Transported Substances"));
+
   parameter Units.SI.Temperature T0=290
     "Source temperature (active if option_temperature=true)"
     annotation (Evaluate=true, Dialog(enable=option_temperature));
@@ -36,8 +40,9 @@ public
   Real Xso2(start=0)
     "SO2 mass fraction of the fluid crossing the boundary of the control volume";
 
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C annotation (Placement(
-        transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
+  Fluid.Interfaces.Connectors.FluidInlet C(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
+           0)));
   InstrumentationAndControl.Connectors.InputReal              ISpecificEnthalpyOrTemperature
     "Fixed specific enthalpy or temperature according to option_temperature"
     annotation (Placement(transformation(

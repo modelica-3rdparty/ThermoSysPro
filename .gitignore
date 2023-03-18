@@ -8,8 +8,10 @@ dsfinal.txt
 dsin.txt
 dslog.txt
 dsmodel.c
-dsres.mat
+*.mat
 dymosim
 dymosim.exe
 request.
 status.
+*.mof
+buildlog.txt
