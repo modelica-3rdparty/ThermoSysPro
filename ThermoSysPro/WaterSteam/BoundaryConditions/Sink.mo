@@ -1,4 +1,4 @@
-within ChimiScope.WaterSteam.BoundaryConditions;
+within ThermoSysPro.WaterSteam.BoundaryConditions;
 model Sink "Water/steam sink"
   parameter Units.SI.SpecificEnthalpy h0=100000
     "Fluid specific enthalpy (active if IEnthalpy connector is not connected)";

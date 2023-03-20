@@ -1,4 +1,4 @@
-within ChimiScope.WaterSteam.BoundaryConditions;
+within ThermoSysPro.WaterSteam.BoundaryConditions;
 model SourcePQ "Water/steam source with fixed pressure and mass flow rate"
   parameter Units.SI.AbsolutePressure P0=300000
     "Fluid pressure (active if IPressure connector is not connected)";
