@@ -9,6 +9,9 @@ package Connectors "Connectors"
       "Mass flow rate of the fluid crossing the boundary of the control volume";
     Units.SI.SpecificEnthalpy h(start=1.e5)
       "Specific enthalpy of the fluid crossing the boundary of the control volume";
+    replaceable package Species =
+        ThermoSysPro.ConvectedQuantities.Substances.None;
+    Real SubC[Species.Concentrations];
 
     input Boolean a=true
       "Pseudo-variable for the verification of the connection orientation";
@@ -51,6 +54,9 @@ package Connectors "Connectors"
       "Mass flow rate of the fluid crossing the boundary of the control volume";
     Units.SI.SpecificEnthalpy h(start=1.e5)
       "Specific enthalpy of the fluid crossing the boundary of the control volume";
+    replaceable package Species =
+        ThermoSysPro.ConvectedQuantities.Substances.None;
+    Real SubC[Species.Concentrations];
 
     input Boolean a
       "Pseudo-variable for the verification of the connection orientation";
@@ -93,6 +99,9 @@ package Connectors "Connectors"
       "Mass flow rate of the fluid crossing the boundary of the control volume";
     Units.SI.SpecificEnthalpy h(start=1.e5)
       "Specific enthalpy of the fluid crossing the boundary of the control volume";
+    replaceable package Species =
+        ThermoSysPro.ConvectedQuantities.Substances.None;
+    Real SubC[Species.Concentrations];
 
     output Boolean a
       "Pseudo-variable for the verification of the connection orientation";
@@ -135,6 +144,9 @@ package Connectors "Connectors"
       "Mass flow rate of the fluid crossing the boundary of the control volume";
     Units.SI.SpecificEnthalpy h(start=1.e5)
       "Specific enthalpy of the fluid crossing the boundary of the control volume";
+    replaceable package Species =
+        ThermoSysPro.ConvectedQuantities.Substances.None;
+    Real SubC[Species.Concentrations];
 
     output Boolean a
       "Pseudo-variable for the verification of the connection orientation";

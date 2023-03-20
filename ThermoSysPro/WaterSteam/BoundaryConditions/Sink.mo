@@ -1,4 +1,4 @@
-within ThermoSysPro.WaterSteam.BoundaryConditions;
+within ChimiScope.WaterSteam.BoundaryConditions;
 model Sink "Water/steam sink"
   parameter Units.SI.SpecificEnthalpy h0=100000
     "Fluid specific enthalpy (active if IEnthalpy connector is not connected)";
@@ -8,15 +8,21 @@ public
   Units.SI.MassFlowRate Q "Mass flow rate";
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
 
+    WaterSteam.Connectors.FluidInlet C(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
+           0)));
+
+    replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group=
+          "Transported Substances"));
+
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpy
     annotation (Placement(transformation(
         origin={0,-50},
         extent={{10,-10},{-10,10}},
         rotation=270)));
-  Connectors.FluidInlet C
-    annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
-           0)));
 equation
 
   C.P = P;

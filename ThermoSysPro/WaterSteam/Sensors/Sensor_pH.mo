@@ -1,18 +1,26 @@
-﻿within ThermoSysPro.Fluid.Sensors;
-model Sensor_pH "Temperature sensor"
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+﻿within ThermoSysPro.WaterSteam.Sensors;
+model Sensor_pH "pH sensor"
+  parameter Boolean continuous_flow_reversal=false
+    "true : continuous flow reversal - false : discontinuous flow reversal";
+  parameter Integer mode=0
+    "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
-  replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+    replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
-  //parameter Integer output_unit=1 "Sensor outpu unit - 1: m3/h, other: m3/s";
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
+      //Units.SI.Density rho;
+  Units.SI.Density rho_liquidPhase;
+  Real x "Title";
+
+  parameter Real pH_scale_max = 14;
+  parameter Real pH_scale_min = 0;
+
+  Real measure_col[3](each min=0, each max=255) "pH corrspondig color";
+  Real neg_col[3](each min=0, each max=255) "Negative pH color";
 
 protected
   constant Real pi=Modelica.Constants.pi "pi";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Units.SI.MassFlowRate Qeps=1.e-3
     "Minimum mass flow rate for continuous flow reversal";
 
@@ -21,66 +29,42 @@ public
   Units.SI.Temperature T "Fluid temperature";
   Units.SI.AbsolutePressure P "Fluid average pressure";
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
-
-//Units.SI.Density rho;
-  Units.SI.Density rho_liquidPhase;
-  Real x "Title";
-  //Real InternalConcentrations[Species.Concentrations];
-    Properties.WaterSteam.Common.ThermoProperties_ph              pro
-    "Propriétés de l'eau";
-
-  parameter Real pH_scale_max = 14;
-  parameter Real pH_scale_min = 0;
-
-  Real measure_col[3](each min=0, each max=255) "pH corrspondig color";
-  Real neg_col[3](each min=0, each max=255) "Negative pH color";
-
+  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
+    "Propriétés de l'eau"
+    annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
+           0)));
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Measure
     annotation (Placement(transformation(
-        origin={0,102},
+        origin={0,100},
         extent={{-10,-10},{10,10}},
-        rotation=90), iconTransformation(
-        extent={{-10,-10},{10,10}},
-        rotation=90,
-        origin={0,102})));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package
-      Species = Species) annotation (Placement(transformation(extent={{-110,-90},
-            {-90,-70}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package
-      Species = Species) annotation (Placement(transformation(extent={{92,-90},
-            {112,-70}}, rotation=0)));
+        rotation=90)));
+  ThermoSysPro.WaterSteam.Connectors.FluidInlet C1(redeclare package Species =
+        Species) annotation (Placement(transformation(extent={{-110,-90},{-90,-70}},
+          rotation=0)));
+  ThermoSysPro.WaterSteam.Connectors.FluidOutlet C2(redeclare package Species =
+        Species) annotation (Placement(transformation(extent={{92,-90},{112,-70}},
+          rotation=0)));
   Species.pH pH(T=T, rho_liquidPhase=rho_liquidPhase, x=x, SubC=C1.SubC)
     annotation (Placement(transformation(extent={{-90,70},{-70,90}})));
+
 equation
 
   C1.P = C2.P;
-  C1.Q = C2.Q;
   C1.h = C2.h;
-
-  C1.h_vol_1 = C2.h_vol_1;
-  C1.h_vol_2 = C2.h_vol_2;
-
-  C2.diff_on_1 = C1.diff_on_1;
-  C1.diff_on_2 = C2.diff_on_2;
-
-  C2.diff_res_1 = C1.diff_res_1;
-  C1.diff_res_2 = C2.diff_res_2;
-
-  C1.ftype = C2.ftype;
-
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  C1.Q = C2.Q;
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
 
-  ftype = C1.ftype;
-
-  C1.SubC = C2.SubC;
+  /* Flow reversal */
+  if continuous_flow_reversal then
+    0 = noEvent(if (Q > Qeps) then C1.h - C1.h_vol else if (Q < -Qeps) then
+      C2.h - C2.h_vol else C1.h - 0.5*((C1.h_vol - C2.h_vol)*Modelica.Math.sin(pi
+      *Q/2/Qeps) + C1.h_vol + C2.h_vol));
+  else
+    0 = if (Q > 0) then C1.h - C1.h_vol else C2.h - C2.h_vol;
+  end if;
 
   /* Sensor signal */
   Measure.signal = pH.pH;
@@ -88,14 +72,18 @@ equation
   /* Fluid thermodynamic properties */
   P = (C1.P + C2.P)/2;
   h = (C1.h + C2.h)/2;
- rho_liquidPhase = ThermoSysPro.Properties.Fluid.Density_Ph(P, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
-  //rho avec pro?//
-  pro = ThermoSysPro.Properties.Fluid.Ph(P, h, mode, fluid);
+
+  rho_liquidPhase = pro.d;
+
   x = pro.x;
-  T = pro.T;
 
   measure_col = Modelica.Mechanics.MultiBody.Visualizers.Colors.scalarToColor(14-pH.pH,14-pH_scale_max,14-pH_scale_min,Modelica.Mechanics.MultiBody.Visualizers.Colors.ColorMaps.jet());
   neg_col = fill(255,3) - measure_col;
+
+  pro = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(
+                                                P, h, mode);
+
+  T = pro.T;
 
   annotation (
     Diagram(coordinateSystem(

@@ -4,6 +4,10 @@ model SteamDryer "Steam dryer"
     "Vapor mass fraction at outlet (0 < eta <= 1 and eta > Vapor mass fraction at the inlet)";
   parameter Integer mode_e=0
     "IF97 region at the inlet. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
+    replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group=
+          "Transported Substances"));
 
 public
   Units.SI.AbsolutePressure P(start=10e5) "Fluid pressure";
@@ -14,22 +18,34 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proe
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
            0)));
-  Connectors.FluidInlet Cev
+  WaterSteam.Connectors.FluidInlet Cev(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-109,30},{-89,50}}, rotation=
             0)));
-  Connectors.FluidOutlet Csv               annotation (Placement(transformation(
-          extent={{89,30},{109,50}}, rotation=0)));
+  WaterSteam.Connectors.FluidOutlet Csv(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{89,30},{109,50}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat1
     annotation (Placement(transformation(extent={{-100,-98},{-80,-78}},
           rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat1
     annotation (Placement(transformation(extent={{-76,-98},{-56,-78}}, rotation=
            0)));
-  Connectors.FluidOutlet Csl               annotation (Placement(transformation(
-          extent={{-9,-110},{11,-90}}, rotation=0)));
+  WaterSteam.Connectors.FluidOutlet Csl(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{-9,-110},{11,-90}}, rotation=
+            0)));
+
+           ThermoSysPro.ConvectedQuantities.Components.MassBalance_HeterogeneousPhases
+    sub_massBalance(redeclare package Species = Species,
+   n_in=1, n_out_liq=1, n_out_gas=1,
+   Qin = {Cev.Q}, Qout_liq = {Csl.Q}, Qout_gas = {Csv.Q},
+   rho = proe.d, rho_liquidPhase = lsat1.rho, x = xe, T = proe.T)
+    annotation (Placement(transformation(extent={{-28,-50},{34,12}})));
 
 equation
   assert((eta > 0) and (eta <= 1), "SteamDryer - Parameter eta should be > 0 and <= 1");
+
+    sub_massBalance.mix_in.SubC = {Cev.SubC};
+  sub_massBalance.mix_out_gas.SubC = {Csv.SubC};
+  sub_massBalance.mix_out_liq.SubC = {Csl.SubC};
 
   /* Fluid pressure */
   P = Cev.P;

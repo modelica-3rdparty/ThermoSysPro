@@ -15,3 +15,4 @@ request.
 status.
 *.mof
 buildlog.txt
+dsmodelext1.c

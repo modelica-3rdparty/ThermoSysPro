@@ -1,5 +1,10 @@
-﻿within ThermoSysPro.WaterSteam.PressureLosses;
+﻿within ChimiScope.WaterSteam.PressureLosses;
 model PipePressureLoss "Pipe generic pressure loss"
+
+    replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
   parameter Real K=10 "Friction pressure loss coefficient";
   parameter Units.SI.Position z1=0 "Inlet altitude";
   parameter Units.SI.Position z2=0 "Outlet altitude";
@@ -32,17 +37,18 @@ public
     annotation (Placement(transformation(extent={{-100,80},{-80,102}}, rotation=
            0)));
 public
-  Connectors.FluidInlet C1
-                          annotation (Placement(transformation(extent={{-110,
-            -10},{-90,10}}, rotation=0)));
-  Connectors.FluidOutlet C2
-                          annotation (Placement(transformation(extent={{90,-10},
-            {110,10}}, rotation=0)));
+  WaterSteam.Connectors.FluidInlet C1(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
+           0)));
+  WaterSteam.Connectors.FluidOutlet C2(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
 
 equation
   C1.P - C2.P = deltaP;
   C2.Q = C1.Q;
   C2.h = C1.h;
+
+  C1.SubC = C2.SubC;
 
   h = C1.h;
   Q = C1.Q;
