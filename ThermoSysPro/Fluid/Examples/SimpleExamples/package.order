@@ -86,3 +86,4 @@ TestVolumeA1
 TestVolumeI
 TestConvectedQuantities_None
 TestConvectedQuantities_Homogeneous
+TestConvectedQuantities_LiquidoPhile
