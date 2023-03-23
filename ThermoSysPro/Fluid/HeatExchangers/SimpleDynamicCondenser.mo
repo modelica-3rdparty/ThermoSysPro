@@ -162,7 +162,7 @@ equation
     Cv.diff_on_1 = false;
     Cv.ftype = ftype;
     Cv.Xco2 = 0;
-    Cv.Xh2o = 1;
+    Cv.Xh2o = 0;
     Cv.Xo2 = 0;
     Cv.Xso2 = 0;
   end if;
@@ -175,7 +175,7 @@ equation
     Cee.diff_on_1 = false;
     Cee.ftype = ftype;
     Cee.Xco2 = 0;
-    Cee.Xh2o = 1;
+    Cee.Xh2o = 0;
     Cee.Xo2 = 0;
     Cee.Xso2 = 0;
   end if;
@@ -260,7 +260,7 @@ equation
   Cl.ftype = ftype;
 
   Cl.Xco2 = 0;
-  Cl.Xh2o = 1;
+  Cl.Xh2o = 0;
   Cl.Xo2  = 0;
   Cl.Xso2 = 0;
 

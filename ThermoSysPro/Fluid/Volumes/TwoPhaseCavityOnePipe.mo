@@ -205,7 +205,7 @@ equation
     Ce.diff_on_1 = false;
     Ce.ftype = ftype;
     Ce.Xco2 = 0;
-    Ce.Xh2o = 1;
+    Ce.Xh2o = 0;
     Ce.Xo2 = 0;
     Ce.Xso2 = 0;
   end if;
@@ -218,7 +218,7 @@ equation
     CvGCT.diff_on_1 = false;
     CvGCT.ftype = ftype;
     CvGCT.Xco2 = 0;
-    CvGCT.Xh2o = 1;
+    CvGCT.Xh2o = 0;
     CvGCT.Xo2 = 0;
     CvGCT.Xso2 = 0;
   end if;
@@ -231,7 +231,7 @@ equation
     CvBP.diff_on_1 = false;
     CvBP.ftype = ftype;
     CvBP.Xco2 = 0;
-    CvBP.Xh2o = 1;
+    CvBP.Xh2o = 0;
     CvBP.Xo2 = 0;
     CvBP.Xso2 = 0;
   end if;
@@ -340,7 +340,7 @@ equation
   Cl.ftype = ftype;
 
   Cl.Xco2 = 0;
-  Cl.Xh2o = 1;
+  Cl.Xh2o = 0;
   Cl.Xo2  = 0;
   Cl.Xso2 = 0;
 

@@ -113,7 +113,7 @@ equation
     Cw.diff_on_1 = false;
     Cw.ftype = ftype;
     Cw.Xco2 = 0;
-    Cw.Xh2o = 1;
+    Cw.Xh2o = 0;
     Cw.Xo2 = 0;
     Cw.Xso2 = 0;
   end if;
@@ -146,7 +146,7 @@ equation
   Cws2.ftype = ftype;
 
   Cws2.Xco2 = 0;
-  Cws2.Xh2o = 1;
+  Cws2.Xh2o = 0;
   Cws2.Xo2  = 0;
   Cws2.Xso2 = 0;
 
