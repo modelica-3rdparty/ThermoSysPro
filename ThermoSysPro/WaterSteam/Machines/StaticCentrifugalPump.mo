@@ -33,6 +33,10 @@ model StaticCentrifugalPump "Static centrifugal pump"
   parameter Real b3=-0.0075464
     "Constant coef. of the pump efficiency characteristics rh = f(vol_flow) (s.u.)";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
@@ -57,10 +61,10 @@ public
     "Specific enthalpy variation between the outlet and the inlet";
   Units.SI.AbsolutePressure Pm(start=1.e5) "Fluid average pressure";
   Units.SI.SpecificEnthalpy h(start=100000) "Fluid average specific enthalpy";
-  Connectors.FluidInlet C1
+  WaterSteam.Connectors.FluidInlet C1(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{-110,
             -10},{-90,10}}, rotation=0)));
-  Connectors.FluidOutlet C2
+  WaterSteam.Connectors.FluidOutlet C2(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{90,-10},
             {110,10}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
@@ -90,6 +94,8 @@ equation
   C1.Q = C2.Q;
   Q = C1.Q;
   Q = Qv*rho;
+
+  C1.SubC = C2.SubC;
 
   /* Flow reversal */
   if continuous_flow_reversal then

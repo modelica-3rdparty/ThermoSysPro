@@ -10,6 +10,9 @@ model SourceP "Water/steam source with fixed pressure"
   parameter Integer mode=1
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
+  parameter Real Cin[Species.Concentrations]=zeros(size(C.SubC,1)) "Concentration values for the substances to be transported"
+ annotation(Dialog(tab="Fluid", group="Transported Substances"));
+
 public
   Units.SI.AbsolutePressure P "Fluid pressure";
   Units.SI.MassFlowRate Q "Mass flow rate";
@@ -27,14 +30,22 @@ public
         origin={0,-50},
         extent={{10,-10},{-10,10}},
         rotation=270)));
-  Connectors.FluidOutlet C      annotation (Placement(transformation(extent={{
+  WaterSteam.Connectors.FluidOutlet C(redeclare package Species = Species)      annotation (Placement(transformation(extent={{
             90,-10},{110,10}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ITemperature
     annotation (Placement(transformation(
         origin={0,50},
         extent={{-10,-10},{10,10}},
         rotation=270)));
+
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
 equation
+
+  C.SubC = Cin;
 
   C.P = P;
   C.Q = Q;

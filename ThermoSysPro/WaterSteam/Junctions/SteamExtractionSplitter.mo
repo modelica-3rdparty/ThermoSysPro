@@ -4,6 +4,9 @@ model SteamExtractionSplitter "Splitter for steam extraction"
     "Vapor mass fraction at the extraction/Vapor mass fraction at the inlet (0 <= alpha <= 1)";
   parameter Integer mode_e=0
     "IF97 region at the inlet. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 public
   Real x_ex(start=0.99) "Vapor mass fraction at the extraction outlet";
@@ -14,20 +17,32 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proe
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
            0)));
-  Connectors.FluidInlet Ce
+  WaterSteam.Connectors.FluidInlet Ce(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-113,-10},{-93,10}}, rotation=
            0)));
-  Connectors.FluidOutlet Cs      annotation (Placement(transformation(extent={{
+  WaterSteam.Connectors.FluidOutlet Cs(redeclare package Species = Species)      annotation (Placement(transformation(extent={{
             93,-10},{113,10}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat
     annotation (Placement(transformation(extent={{-60,80},{-40,100}}, rotation=
             0)));
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat
     annotation (Placement(transformation(extent={{-20,80},{0,100}}, rotation=0)));
-  Connectors.FluidOutlet Cex "Extraction outlet"
+  WaterSteam.Connectors.FluidOutlet Cex(redeclare package Species = Species) "Extraction outlet"
                                  annotation (Placement(transformation(extent={{
             30,-110},{50,-90}}, rotation=0)));
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(redeclare
+      package
+      Species =                                                                          Species,
+   n_in=1,n_out=2,
+   Qin={Ce.Q},
+   Qout={Cs.Q,Cex.Q},
+   rho = proe.d)
+    annotation (Placement(transformation(extent={{-30,34},{10,74}})));
+
 equation
+
+  sub_massBalance.mix_in.SubC = {Ce.SubC};
+  sub_massBalance.mix_out.SubC = {Cs.SubC,Cex.SubC};
 
   /* Fluid pressure */
   P = Ce.P;

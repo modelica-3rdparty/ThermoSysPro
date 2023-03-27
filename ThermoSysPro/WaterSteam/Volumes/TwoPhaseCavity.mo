@@ -75,6 +75,10 @@ model TwoPhaseCavity "TwoPhaseCavity for one shell pass "
     "h4 = 1, Heat exchange coefficient";
   parameter Units.SI.Area S4=1 " S4 = 1, Heat exchange surface  ";
 
+replaceable package Species =
+  ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 public
   Units.SI.Length L(start=15) "Cavity length";
   Integer NbTubT "Number of total pipes in Cavity";
@@ -175,10 +179,10 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat
                                            annotation (Placement(transformation(
           extent={{58,-200},{98,-160}}, rotation=0)));
-  Connectors.FluidInlet Cv "Steam input"
+  WaterSteam.Connectors.FluidInlet Cv(redeclare package Species = Species) "Steam input"
                                     annotation (Placement(transformation(extent=
            {{-86,50},{-66,70}}, rotation=0)));
-  Connectors.FluidOutlet Cl "Water output"
+  WaterSteam.Connectors.FluidOutlet Cl(redeclare package Species = Species) "Water output"
                                      annotation (Placement(transformation(
           extent={{-86,-170},{-66,-150}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort Cth3[Ns3]
@@ -191,7 +195,7 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prod
     annotation (Placement(transformation(extent={{-250,-20},{-210,20}},
           rotation=0)));
-  Connectors.FluidInlet Ce "Water input"
+  WaterSteam.Connectors.FluidInlet Ce(redeclare package Species = Species) "Water input"
                                     annotation (Placement(transformation(extent=
            {{-160,50},{-140,70}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort Cth1[Ns]
@@ -208,6 +212,15 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph provIn
     "Propriétés de la vapeur dans le ballon" annotation (Placement(
         transformation(extent={{12,70},{52,110}}, rotation=0)));
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(redeclare
+      package
+      Species =                                                                          Species,
+   n_in=2, n_out=1,
+   V=V,
+   Qin = {Cv.Q,Ce.Q},
+   Qout = {Cl.Q},
+   rho = (rhol*Vl+rhov*Vv)/V)
+    annotation (Placement(transformation(extent={{-254,-68},{-214,-28}})));
 initial equation
   if steady_state then
     der(hl) = 0;
@@ -224,6 +237,10 @@ initial equation
   end if;
 
 equation
+
+  sub_massBalance.mix_in.SubC = {Cv.SubC,Ce.SubC};
+  sub_massBalance.mix_out.SubC = {Cl.SubC};
+
   /* Unconnected connectors */
   if (cardinality(Cl) == 0) then
     Cl.Q = 0;
@@ -235,12 +252,14 @@ equation
     Cv.Q = 0;
     Cv.h = 1.e5;
     Cv.b = true;
+    Cv.SubC = fill(0,size(Cv.SubC,1));
   end if;
 
   if (cardinality(Ce) == 0) then
     Ce.Q = 0;
     Ce.h = 1.e5;
     Ce.b = true;
+    Ce.SubC = fill(0,size(Ce.SubC,1));
   end if;
 
   /* Wall temperature and HeatFlowRate*/

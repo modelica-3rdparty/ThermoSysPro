@@ -32,6 +32,10 @@ model DynamicOnePhaseFlowPipe "Dynamic one-phase flow pipe"
   parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
+replaceable package Species =
+  ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
@@ -112,12 +116,20 @@ public
                                                         N - 1]
     annotation (Placement(transformation(extent={{20,80},{40,100}}, rotation=0)));
 public
-  Connectors.FluidInlet C1          annotation (Placement(transformation(extent=
+  WaterSteam.Connectors.FluidInlet C1(redeclare package Species = Species)          annotation (Placement(transformation(extent=
            {{-110,-10},{-90,10}}, rotation=0)));
-  Connectors.FluidOutlet C2         annotation (Placement(transformation(extent=
+  WaterSteam.Connectors.FluidOutlet C2(redeclare package Species = Species)         annotation (Placement(transformation(extent=
            {{90,-10},{110,10}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort CTh[Ns]
     annotation (Placement(transformation(extent={{-10,20},{10,40}}, rotation=0)));
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance [N-1](redeclare
+      package
+Species = Species,
+n_in=1, n_out=1,
+V=A*L,
+dynamic_mass_balance=dynamic_mass_balance)
+    annotation (Placement(transformation(extent={{-90,38},{-50,78}})));
+
 initial equation
   if steady_state then
     for i in 2:N loop
@@ -157,6 +169,13 @@ initial equation
 
 equation
 
+  sub_massBalance[1].mix_in.SubC = {C1.SubC};
+  sub_massBalance[N-1].mix_out.SubC = {C2.SubC};
+
+  for i in 1:N - 2 loop
+  sub_massBalance[i+1].mix_in.SubC = sub_massBalance[i].mix_out.SubC;
+  end for;
+
   /* Wall temperature */
   Tp = CTh.T;
   CTh.W = dW1;
@@ -182,6 +201,10 @@ equation
     else
       0 = Q[i] - Q[i + 1];
     end if;
+
+  sub_massBalance[i].Qin = {Q[i]};
+  sub_massBalance[i].Qout = {Q[i+1]};
+  sub_massBalance[i].rho=rho1[i];
 
     /* Energy balance equation */
     if dynamic_mass_balance then

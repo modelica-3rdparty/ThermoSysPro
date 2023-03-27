@@ -63,6 +63,10 @@ model CentrifugalPump "Centrifugal pump"
   parameter Real rh_coef[2]={-3.7751, 3.61}
     "Coef. of the parabolic pump efficiency characteristics (active if mode_car=2)";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
@@ -115,10 +119,10 @@ public
   Real gamma=rh_coef[1] "Coef. gamma of the characteristics for rh";
   Real delta=rh_coef[2] "Coef. delta of the characteristics for rh";
 
-  Connectors.FluidInlet C1
+  WaterSteam.Connectors.FluidInlet C1(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{-110,
             -10},{-90,10}}, rotation=0)));
-  Connectors.FluidOutlet C2
+  WaterSteam.Connectors.FluidOutlet C2(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{90,-10},
             {110,10}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
@@ -152,6 +156,8 @@ equation
   C1.Q = C2.Q;
   Q = C1.Q;
   Q = Qv*rho;
+
+  C1.SubC = C2.SubC;
 
   /* Flow reversal */
   if continuous_flow_reversal then

@@ -17,6 +17,10 @@ model ControlValve "Control valve"
   parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
   parameter Real eps=1.e-0 "Small number for pressure loss equation";
   constant Real pi=Modelica.Constants.pi "pi";
@@ -42,16 +46,18 @@ public
         origin={0,110},
         extent={{-10,-10},{10,10}},
         rotation=270)));
-  Connectors.FluidInlet C1
+  WaterSteam.Connectors.FluidInlet C1(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{-110,
             -70},{-90,-50}}, rotation=0)));
-  Connectors.FluidOutlet C2
+  WaterSteam.Connectors.FluidOutlet C2(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{90,-70},
             {110,-50}}, rotation=0)));
 equation
 
   C1.h = C2.h;
   C1.Q = C2.Q;
+
+  C1.SubC = C2.SubC;
 
   h = C1.h;
   Q = C1.Q;

@@ -8,6 +8,10 @@ model SingularPressureLoss "Singular pressure loss"
   parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
   constant Real pi=Modelica.Constants.pi "pi";
   parameter Real eps=1.e-3 "Small number for pressure loss equation";
@@ -22,10 +26,10 @@ public
   Units.SI.AbsolutePressure Pm(start=1.e5) "Average fluid pressure";
   Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
 
-  Connectors.FluidInlet C1
+  WaterSteam.Connectors.FluidInlet C1(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
            0)));
-  Connectors.FluidOutlet C2                annotation (Placement(transformation(
+  WaterSteam.Connectors.FluidOutlet C2(redeclare package Species = Species)                annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
@@ -35,6 +39,8 @@ equation
   C1.P - C2.P = deltaP;
   C2.Q = C1.Q;
   C2.h = C1.h;
+
+  C1.SubC = C2.SubC;
 
   h = C1.h;
   Q = C1.Q;

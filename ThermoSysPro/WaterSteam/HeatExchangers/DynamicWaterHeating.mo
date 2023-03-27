@@ -42,6 +42,10 @@ model DynamicWaterHeating "Dynamic water heater"
   parameter Real COP0l = 1
     "Corrective term for Heat exchange coefficient or Fouling coefficient liquid side";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
   Volumes.TwoPhaseCavity WaterHeating(
     Vf0=Vf0,
     P0=P0c,
@@ -77,22 +81,23 @@ model DynamicWaterHeating "Dynamic water heater"
     Q(start=fill(300, Ns*2 + 1)),
     P(start=fill(200e5, 2*Ns + 2)))
     annotation (Placement(transformation(extent={{-35,-34},{60,0}}, rotation=0)));
-  Connectors.FluidInletI C1vap "Vapor inlet"
+  WaterSteam.Connectors.FluidInletI C1vap(redeclare package Species = Species) "Vapor inlet"
     annotation (Placement(transformation(extent={{-10,90},{10,110}}, rotation=0)));
-  Connectors.FluidOutletI C2ex "Condensed water extraction outlet"
+  WaterSteam.Connectors.FluidOutletI C2ex(redeclare package Species = Species) "Condensed water extraction outlet"
     annotation (Placement(transformation(extent={{-10,-110},{10,-90}}, rotation=
            0)));
-  Connectors.FluidInletI Ce1 "Cooling water inlet"
+  WaterSteam.Connectors.FluidInletI Ce1(redeclare package Species = Species) "Cooling water inlet"
     annotation (Placement(transformation(extent={{-110,-55},{-90,-35}},
           rotation=0)));
-  Connectors.FluidOutletI Ce2 "Cooling water outlet"
+  WaterSteam.Connectors.FluidOutletI Ce2(redeclare package Species = Species)
+                                                                             "Cooling water outlet"
     annotation (Placement(transformation(extent={{-110,34},{-90,54}}, rotation=
             0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal sortieReelle
     annotation (Placement(transformation(extent={{92,-86},{112,-66}}, rotation=
             0)));
 
-  Connectors.FluidInletI C1 "Extra water inlet"
+  WaterSteam.Connectors.FluidInletI C1(redeclare package Species = Species) "Extra water inlet"
     annotation (Placement(transformation(extent={{-74,82},{-54,102}}, rotation=
             0)));
   Thermal.HeatTransfer.HeatExchangerWall Wall_3(
@@ -160,13 +165,13 @@ model DynamicWaterHeating "Dynamic water heater"
     h0=890e3,
     dynamic_mass_balance=true)  annotation (Placement(transformation(extent={{
             -56,35},{-74,53}}, rotation=0)));
-  Volumes.VolumeD volumeD(
+  Volumes.VolumeA volumeD(
     mode=1,
     h0=790e3,
     dynamic_mass_balance=false)
                    annotation (Placement(transformation(extent={{-74,-54},{-56,
             -36}}, rotation=0)));
-  Volumes.VolumeD volumeD1(
+  Volumes.VolumeA volumeD1(
     mode=1,
     h0=850e3,
     dynamic_mass_balance=true)
@@ -180,6 +185,7 @@ equation
     C1.Q = 0;
     C1.h = 1.e5;
     C1.b = true;
+    C1.SubC=fill(0,size(Ce1.SubC,1));
   end if;
 
   connect(C1vap, WaterHeating.Cv)
@@ -207,10 +213,8 @@ equation
           {12.5714,8.33335},{13,8.33335},{13,4.8}}, color={191,95,0}));
   connect(Wall_3.WT1, pipe_3.CTh) annotation (Line(points={{13,-4.8},{13,-10.4},
           {12.5,-10.4},{12.5,-11.9}}, color={191,95,0}));
-  connect(Ce1, volumeD.Ce)
-    annotation (Line(points={{-100,-45},{-74,-45}}, thickness=1));
   connect(volumeD.Cs2, pipe_1.C1) annotation (Line(
-      points={{-65,-53.82},{-65,-60},{-35,-60}},
+      points={{-65,-54},{-65,-60},{-35,-60}},
       color={0,0,255},
       thickness=1));
   connect(pipe_3.C2, volumeC.Ce3) annotation (Line(
@@ -222,21 +226,19 @@ equation
       color={0,0,255},
       thickness=1));
   connect(volumeD.Cs1, pipe_3.C1) annotation (Line(
-      points={{-65,-36},{-66,-36},{-66,-17},{-35,-17}},
+      points={{-56,-45},{-54,-45},{-54,-17},{-35,-17}},
       color={95,95,95},
       thickness=1));
   connect(Ce2, volumeC.Cs) annotation (Line(
       points={{-100,44},{-74,44}},
       color={95,95,95},
       thickness=1));
-  connect(volumeD1.Ce, pipe_1.C2) annotation (Line(
-      points={{75,-42},{68,-42},{68,-60},{60,-60}},
-      color={0,0,255},
-      thickness=1));
-  connect(volumeD1.Cs3, pipe_2.C1) annotation (Line(
-      points={{75,-24},{76,-24},{76,28},{60,28}},
-      color={0,0,255},
-      thickness=1));
+  connect(Ce1, volumeD.Ce1)
+    annotation (Line(points={{-100,-45},{-74,-45}}, color={0,0,255}));
+  connect(pipe_1.C2, volumeD1.Ce1)
+    annotation (Line(points={{60,-60},{75,-60},{75,-42}}, color={0,0,255}));
+  connect(volumeD1.Cs1, pipe_2.C1)
+    annotation (Line(points={{75,-24},{75,28},{60,28}}, color={0,0,255}));
   annotation (Diagram(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},

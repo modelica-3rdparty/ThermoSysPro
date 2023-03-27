@@ -5,6 +5,9 @@ model SourceQ "Water/steam source with fixed mass flow rate"
   parameter Units.SI.SpecificEnthalpy h0=100000
     "Fluid specific enthalpy (active if IEnthalpy connector is not connected)";
 
+  parameter Real Cin[Species.Concentrations]=zeros(size(C.SubC,1)) "Concentration values for the substances to be transported"
+ annotation(Dialog(tab="Fluid", group="Transported Substances"));
+
 public
   Units.SI.AbsolutePressure P "Fluid pressure";
   Units.SI.MassFlowRate Q "Mass flow rate";
@@ -21,9 +24,16 @@ public
         origin={0,-50},
         extent={{10,-10},{-10,10}},
         rotation=270)));
-  Connectors.FluidOutlet C                annotation (Placement(transformation(
+  WaterSteam.Connectors.FluidOutlet C(redeclare package Species = Species)                annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
+
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 equation
+
+  C.SubC = Cin;
 
   C.P = P;
   C.Q = Q;

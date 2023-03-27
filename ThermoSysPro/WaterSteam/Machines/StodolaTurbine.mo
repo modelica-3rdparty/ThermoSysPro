@@ -26,6 +26,10 @@ model StodolaTurbine "Multistage turbine group using Stodola's ellipse"
   parameter Integer mode_ps=0
     "IF97 region after isentropic expansion. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
   parameter Units.SI.AbsolutePressure pcrit=ThermoSysPro.Properties.WaterSteam.BaseIF97.data.PCRIT
     "Critical pressure";
@@ -56,10 +60,10 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pros
     annotation (Placement(transformation(extent={{-60,80},{-40,100}}, rotation=
             0)));
-  Connectors.FluidInlet Ce
+  WaterSteam.Connectors.FluidInlet Ce(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-111,-10},{-91,10}}, rotation=
            0)));
-  Connectors.FluidOutlet Cs                annotation (Placement(transformation(
+  WaterSteam.Connectors.FluidOutlet Cs(redeclare package Species = Species)                annotation (Placement(transformation(
           extent={{91,-10},{111,10}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ps props
     annotation (Placement(transformation(extent={{-100,-100},{-80,-80}},
@@ -90,6 +94,8 @@ equation
   Ce.Q = Cs.Q;
 
   Q = Ce.Q;
+
+  Ce.SubC = Cs.SubC;
 
   /* No flow reversal */
   0 = Ce.h - Ce.h_vol;

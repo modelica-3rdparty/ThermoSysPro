@@ -42,6 +42,10 @@ model DynamicWaterHeatingOnePipe "Dynamic WaterHeating"
   parameter Real COP0l = 1
     "Corrective terme for Heat exchange coefficient or Fouling coefficient liquid side";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
   Volumes.TwoPhaseCavity WaterHeating(
     Vf0=Vf0,
     P0=P0c,
@@ -76,22 +80,22 @@ model DynamicWaterHeatingOnePipe "Dynamic WaterHeating"
     ntubes=ntubes3,
     Q(start=fill(300, Ns*2 + 1)))
     annotation (Placement(transformation(extent={{-35,-34},{60,0}}, rotation=0)));
-  Connectors.FluidInletI C1vap "Vapor inlet"
+  WaterSteam.Connectors.FluidInletI C1vap(redeclare package Species = Species) "Vapor inlet"
     annotation (Placement(transformation(extent={{-10,90},{10,110}}, rotation=0)));
-  Connectors.FluidOutletI C2ex "Condensed water extraction outlet"
+  WaterSteam.Connectors.FluidOutletI C2ex(redeclare package Species = Species) "Condensed water extraction outlet"
     annotation (Placement(transformation(extent={{-10,-110},{10,-90}}, rotation=
            0)));
-  Connectors.FluidInletI Ce1 "Cooling water inlet"
+  WaterSteam.Connectors.FluidInletI Ce1(redeclare package Species = Species) "Cooling water inlet"
     annotation (Placement(transformation(extent={{-110,-55},{-90,-35}},
           rotation=0)));
-  Connectors.FluidOutletI Ce2 "Cooling water outlet"
+  WaterSteam.Connectors.FluidOutletI Ce2(redeclare package Species = Species) "Cooling water outlet"
     annotation (Placement(transformation(extent={{-110,34},{-90,54}}, rotation=
             0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal sortieReelle
     annotation (Placement(transformation(extent={{92,-86},{112,-66}}, rotation=
             0)));
 
-  Connectors.FluidInletI C1 "Extra water inlet"
+  WaterSteam.Connectors.FluidInletI C1(redeclare package Species = Species) "Extra water inlet"
     annotation (Placement(transformation(extent={{-74,82},{-54,102}}, rotation=
             0)));
   Thermal.HeatTransfer.HeatExchangerWall Wall_3(
@@ -110,6 +114,7 @@ equation
     C1.Q = 0;
     C1.h = 1.e5;
     C1.b = true;
+    C1.SubC=fill(0,size(Ce1.SubC,1));
   end if;
 
   connect(C1vap, WaterHeating.Cv)

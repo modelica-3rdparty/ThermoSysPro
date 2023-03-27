@@ -28,9 +28,15 @@ public
         origin={0,-50},
         extent={{10,-10},{-10,10}},
         rotation=270)));
-  Connectors.FluidInlet C
+  WaterSteam.Connectors.FluidInlet C(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
            0)));
+
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group=
+          "Transported Substances"));
+
 equation
 
   C.P = P;

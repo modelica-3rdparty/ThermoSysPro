@@ -36,6 +36,10 @@ model SimpleDynamicCondenser
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   parameter Units.SI.MassFlowRate Qeps=1.e-3
@@ -86,9 +90,9 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat
                                            annotation (Placement(transformation(
           extent={{10,40},{30,60}}, rotation=0)));
-  Connectors.FluidInlet Cv     annotation (Placement(transformation(extent={{
+  WaterSteam.Connectors.FluidInlet Cv(redeclare package Species = Species)     annotation (Placement(transformation(extent={{
             -10,90},{10,110}}, rotation=0)));
-  Connectors.FluidOutlet Cl     annotation (Placement(transformation(extent={{
+  WaterSteam.Connectors.FluidOutlet Cl(redeclare package Species = Species)     annotation (Placement(transformation(extent={{
             -8,-110},{12,-90}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal yNiveau          annotation (Placement(
         transformation(extent={{100,-82},{120,-62}}, rotation=0)));
@@ -96,13 +100,23 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prod
     annotation (Placement(transformation(extent={{-60,20},{-40,40}}, rotation=0)));
 public
-  Connectors.FluidInlet Cee    annotation (Placement(transformation(extent={{
+  WaterSteam.Connectors.FluidInlet Cee(redeclare package Species = Species)     annotation (Placement(transformation(extent={{
             -110,-32},{-90,-12}}, rotation=0)));
-  Connectors.FluidOutlet Cse   annotation (Placement(transformation(extent={{90,
+  WaterSteam.Connectors.FluidOutlet Cse(redeclare package Species = Species)   annotation (Placement(transformation(extent={{90,
             -30},{110,-10}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proe
     "Propriétés de l'eau "                   annotation (Placement(
         transformation(extent={{40,20},{60,40}}, rotation=0)));
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(redeclare
+      package
+      Species =                                                                          Species,
+   n_in=1, n_out=1,
+   V=V,
+   Qin = {Cv.Q},
+   Qout = {Cl.Q},
+   rho=(rhol*Vl+rhov*Vv)/V)
+    annotation (Placement(transformation(extent={{-106,40},{-66,80}})));
+
 initial equation
   if steady_state then
     der(hl) = 0;
@@ -118,6 +132,10 @@ initial equation
 
 equation
 
+  sub_massBalance.mix_in.SubC = {Cv.SubC};
+  sub_massBalance.mix_out.SubC = {Cl.SubC};
+
+  Cee.SubC=Cse.SubC;
   /* Unconnected connectors */
   if (cardinality(Cl) == 0) then
     Cl.Q = 0;

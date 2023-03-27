@@ -28,6 +28,8 @@ model TestDynamicWaterHeating
             {108,-166}}, rotation=0)));
 
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicWaterHeating WaterHeating(
+    volumeD1(h(start=953939), P(start=222.48e5)),
+    volumeD(h(start=812750), P(start=222.72e5)),
     ec=2e-3,
     Ns=10,
     P0c=40e5,
@@ -83,8 +85,6 @@ model TestDynamicWaterHeating
       Tp1(start={510,510.4,511,511.4,512,512.4,513,513.4,514,514.4,   515,515.4,516,516.4,517,517.4,518,518.4,519,519.4}),
       Tp2(start={510,510.4,511,511.4,512,512.4,513,513.4,514,514.4,   515,515.4,516,516.4,517,517.4,518,518.4,519,519.4})),
     volumeC(h(start=1082.65e3), P(start=222.48e5)),
-    volumeD1(h(start=953939), P(start=222.48e5)),
-    volumeD(h(start=812750), P(start=222.72e5)),
     WaterHeating(
       steady_state=true,
       Vertical=false,

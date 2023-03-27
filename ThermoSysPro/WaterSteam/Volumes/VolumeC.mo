@@ -14,6 +14,10 @@ model VolumeC "Mixing volume with 3 inlets and 1 outlet"
   parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
+replaceable package Species =
+  ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 public
   Units.SI.Temperature T "Fluid temperature";
   Units.SI.AbsolutePressure P(start=1.e5) "Fluid pressure";
@@ -26,18 +30,28 @@ public
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
            0)));
 public
-  Connectors.FluidInlet Ce1
+  WaterSteam.Connectors.FluidInlet Ce1(redeclare package Species = Species)
                            annotation (Placement(transformation(extent={{-110,
             -10},{-90,10}}, rotation=0)));
-  Connectors.FluidInlet Ce2
+  WaterSteam.Connectors.FluidInlet Ce2(redeclare package Species = Species)
                            annotation (Placement(transformation(extent={{-10,80},
             {10,100}}, rotation=0)));
-  Connectors.FluidOutlet Cs
+  WaterSteam.Connectors.FluidOutlet Cs(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{90,-10},
             {110,10}}, rotation=0)));
-  Connectors.FluidInlet Ce3
+  WaterSteam.Connectors.FluidInlet Ce3(redeclare package Species = Species)
                            annotation (Placement(transformation(extent={{-10,
             -110},{10,-90}}, rotation=0)));
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(redeclare
+      package
+      Species =                                                                          Species,
+   n_in=3, n_out=1,
+   dynamic_mass_balance=dynamic_mass_balance,
+   V=V,
+   Qin = {Ce1.Q,Ce2.Q,Ce3.Q},
+   Qout = {Cs.Q},
+   rho = rho)
+    annotation (Placement(transformation(extent={{-100,34},{-60,74}})));
 initial equation
   if steady_state then
     if dynamic_mass_balance then
@@ -56,23 +70,29 @@ initial equation
 equation
   assert(V > 0, "Volume non-positive");
 
+  sub_massBalance.mix_in.SubC = {Ce1.SubC,Ce2.SubC,Ce3.SubC};
+  sub_massBalance.mix_out.SubC = {Cs.SubC};
+
   /* Unconnected connectors */
   if (cardinality(Ce1) == 0) then
     Ce1.Q = 0;
     Ce1.h = 1.e5;
     Ce1.b = true;
+    Ce1.SubC = fill(0,size(Ce1.SubC,1));
   end if;
 
   if (cardinality(Ce2) == 0) then
     Ce2.Q = 0;
     Ce2.h = 1.e5;
     Ce2.b = true;
+    Ce2.SubC = fill(0,size(Ce2.SubC,1));
   end if;
 
   if (cardinality(Ce3) == 0) then
     Ce3.Q = 0;
     Ce3.h = 1.e5;
     Ce3.b = true;
+    Ce3.SubC = fill(0,size(Ce3.SubC,1));
   end if;
 
   if (cardinality(Cs) == 0) then

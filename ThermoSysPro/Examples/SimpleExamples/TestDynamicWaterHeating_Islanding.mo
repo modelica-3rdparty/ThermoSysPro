@@ -22,6 +22,11 @@ model TestDynamicWaterHeating_Islanding
             {108,-166}}, rotation=0)));
 
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicWaterHeating WaterHeating(
+    volumeD1(h(start=953939), P(start=6848000)),
+    volumeD(
+      h(start=812750),
+      dynamic_mass_balance=false,
+      P(start=6872000)),
     Dc=0.016,
     Lc=2.56,
     PasL=0.027,
@@ -103,11 +108,6 @@ model TestDynamicWaterHeating_Islanding
       P(start={6859000,6859000,6858000,6857000,6856000,6855000,6854000,6853000,
             6852000,6851000,6850000,6848000}),
       Tp(start={510,510.4,511,511.4,512,512.4,513,513.4,514,514.4})),
-    volumeD1(h(start=953939), P(start=6848000)),
-    volumeD(
-      h(start=812750),
-      dynamic_mass_balance=false,
-      P(start=6872000)),
     P0c=2200000,
     pipe_3(
       steady_state=true,
