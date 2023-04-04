@@ -1,17 +1,22 @@
 within ThermoSysPro.WaterSteam.LoopBreakers;
 model LoopBreakerP "Pressure loop breaker for the water/steam connector"
 
+  replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 public
-  Connectors.FluidInlet C1
+  Connectors.FluidInlet C1( redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
            0)));
-  Connectors.FluidOutlet C2
+  Connectors.FluidOutlet C2( redeclare package Species = Species)
     annotation (Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
 equation
 
   C1.Q = C2.Q;
   C1.h = C2.h;
+
+  C1.SubC = C2.SubC;
 
   /* Flow reversal */
   0 = if (C1.Q > 0) then C1.h - C1.h_vol else C2.h - C2.h_vol;
