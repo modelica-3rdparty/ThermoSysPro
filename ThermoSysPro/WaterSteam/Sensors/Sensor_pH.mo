@@ -10,25 +10,29 @@ model Sensor_pH "pH sensor"
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
       //Units.SI.Density rho;
-  Units.SI.Density rho_liquidPhase;
+  ThermoSysPro.Units.SI.Density rho_liquidPhase;
   Real x "Title";
 
   parameter Real pH_scale_max = 14;
   parameter Real pH_scale_min = 0;
+
+  parameter ThermoSysPro.Units.SI.Temperature ImposedT=25 + 273.15;
+  parameter Boolean TChoice=true;
 
   Real measure_col[3](each min=0, each max=255) "pH corrspondig color";
   Real neg_col[3](each min=0, each max=255) "Negative pH color";
 
 protected
   constant Real pi=Modelica.Constants.pi "pi";
-  parameter Units.SI.MassFlowRate Qeps=1.e-3
+  parameter ThermoSysPro.Units.SI.MassFlowRate Qeps=1.e-3
     "Minimum mass flow rate for continuous flow reversal";
 
 public
-  Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
-  Units.SI.Temperature T "Fluid temperature";
-  Units.SI.AbsolutePressure P "Fluid average pressure";
-  Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
+  ThermoSysPro.Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
+  ThermoSysPro.Units.SI.Temperature T "Fluid temperature";
+  ThermoSysPro.Units.SI.AbsolutePressure P "Fluid average pressure";
+  ThermoSysPro.Units.SI.SpecificEnthalpy h(start=110000)
+    "Fluid specific enthalpy";
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
     "Propriétés de l'eau"
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
@@ -42,8 +46,8 @@ public
   ThermoSysPro.WaterSteam.Connectors.FluidInlet C1(redeclare package Species =
         Species) annotation (Placement(transformation(extent={{-110,-90},{-90,-70}},
           rotation=0)));
-  ThermoSysPro.WaterSteam.Connectors.FluidOutlet C2(redeclare package Species =
-        Species) annotation (Placement(transformation(extent={{92,-90},{112,-70}},
+  ThermoSysPro.WaterSteam.Connectors.FluidOutlet C2(redeclare package Species
+      = Species) annotation (Placement(transformation(extent={{92,-90},{112,-70}},
           rotation=0)));
   Species.pH pH(T=T, rho_liquidPhase=rho_liquidPhase, x=x, SubC=C1.SubC)
     annotation (Placement(transformation(extent={{-90,70},{-70,90}})));
@@ -70,8 +74,14 @@ equation
   Measure.signal = pH.pH;
 
   /* Fluid thermodynamic properties */
-  P = (C1.P + C2.P)/2;
+
+  if TChoice then
+    T=ImposedT;
+    P=1.013e5;
+   else
   h = (C1.h + C2.h)/2;
+  P = (C1.P + C2.P)/2;
+  end if;
 
   rho_liquidPhase = pro.d;
 
