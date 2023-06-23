@@ -11,6 +11,8 @@ block MassBalance_HeterogeneousPhases
   parameter Integer n_out_gas = 1 "Number of outlets";
   parameter Integer n_out_liq = 1 "Number of outlets";
   parameter Boolean dynamic_mass_balance = false "true: dynamic mass balance equation - false: static mass balance equation";
+  parameter Boolean steady_state = true "true: start from steady state - false: start from (C0)";
+  parameter Real C0[Species.Concentrations] = zeros(size(InternalConcentrations,1)) "Initial Concentrations (active if steady_state=false)";
   parameter SI.Volume V = 0 "Volume used to compute the fluid mass for dynamic calculations"
                                                                                             annotation(Dialog(enable=dynamic_mass_balance));
 
@@ -41,7 +43,11 @@ block MassBalance_HeterogeneousPhases
 initial equation
 
   if dynamic_mass_balance == true then
-    der(InternalConcentrations) = zeros(size(InternalConcentrations,1));
+    if steady_state then
+      der(InternalConcentrations) = zeros(size(InternalConcentrations,1));
+    else
+      InternalConcentrations = C0;
+    end if;
   end if;
 
 equation

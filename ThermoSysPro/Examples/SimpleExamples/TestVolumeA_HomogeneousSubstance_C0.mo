@@ -1,5 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
-model TestVolumeA_HomogeneousSubstance
+model TestVolumeA_HomogeneousSubstance_C0
 
   parameter Real Coeff(fixed=false, start=10);
   parameter ThermoSysPro.Units.SI.MassFlowRate Qmain=5000;
@@ -26,7 +26,8 @@ model TestVolumeA_HomogeneousSubstance
     dynamic_mass_balance=true,
     steady_state=true,
     redeclare package Species =
-        ThermoSysPro.ConvectedQuantities.Substances.HomogeneousSubstance)
+        ThermoSysPro.ConvectedQuantities.Substances.HomogeneousSubstance,
+    sub_massBalance(steady_state=false, C0={10}))
     annotation (Placement(transformation(
         extent={{-12,-13},{12,13}},
         rotation=0,
@@ -72,4 +73,4 @@ equation
             {160,60}})), Diagram(coordinateSystem(preserveAspectRatio=false,
           extent={{-200,-100},{160,60}})),
     experiment(StopTime=100, __Dymola_Algorithm="Dassl"));
-end TestVolumeA_HomogeneousSubstance;
+end TestVolumeA_HomogeneousSubstance_C0;
