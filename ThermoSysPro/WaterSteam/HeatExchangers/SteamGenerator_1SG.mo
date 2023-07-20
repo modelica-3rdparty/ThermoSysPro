@@ -2,6 +2,11 @@ within ThermoSysPro.WaterSteam.HeatExchangers;
 model SteamGenerator_1SG "Individual steam generator"
   parameter Real H0_Mix_AlimDomeGV=1194812.89980521;
 
+
+
+  replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 public
   DynamicOnePhaseFlowPipe UtubeHotLeg(
     option_temperature=2,
@@ -55,8 +60,8 @@ public
     Cd(P(start=67.9e5)),
     zl(fixed=false, start=0.66),
     R=4.2818979,
-    Mp=32000)                      annotation (Placement(transformation(extent=
-            {{-22,64},{22,107}}, rotation=0)));
+    Mp=32000)                      annotation (Placement(transformation(extent={{-22,62},
+            {22,105}},           rotation=0)));
   ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DPSeparateurCyclone(
     L=1,
     D=0.95886,
@@ -91,15 +96,18 @@ public
         origin={99,30},
         extent={{-6,-6},{6,6}},
         rotation=270)));
-  ThermoSysPro.WaterSteam.Connectors.FluidOutletI fluidOutletI
+  ThermoSysPro.WaterSteam.Connectors.FluidOutletI fluidOutletI( redeclare
+      package                                                                     Species = Species)
     annotation (Placement(transformation(extent={{-10,139},{10,159}}, rotation=
             0)));
-  ThermoSysPro.WaterSteam.Connectors.FluidInletI fluidInlet
+  ThermoSysPro.WaterSteam.Connectors.FluidInletI fluidInlet( redeclare package Species = Species)
     annotation (Placement(transformation(extent={{42,102},{62,122}}, rotation=0)));
-  ThermoSysPro.WaterSteam.Connectors.FluidInletI fluidInlet1
+  ThermoSysPro.WaterSteam.Connectors.FluidInletI fluidInlet1( redeclare package
+                                                                                Species = Species)
     annotation (Placement(transformation(extent={{-56,-132},{-36,-112}},
           rotation=0)));
-  ThermoSysPro.WaterSteam.Connectors.FluidOutletI fluidOutletI1
+  ThermoSysPro.WaterSteam.Connectors.FluidOutletI fluidOutletI1( redeclare
+      package                                                                      Species = Species)
     annotation (Placement(transformation(extent={{36,-132},{56,-112}}, rotation=
            0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal outputReal
@@ -245,14 +253,14 @@ equation
   connect(RiserGV.CTh1, heatExchangerWall1.WT2)
                                               annotation (Line(points={{19.55,
           -41},{40.8,-41}}, color={191,95,0}));
-  connect(DomeGV.Cv, fluidOutletI) annotation (Line(points={{22,107},{22,124},{
+  connect(DomeGV.Cv, fluidOutletI) annotation (Line(points={{22,105},{22,124},{
           0,124},{0,149}}, color={255,0,0}));
   connect(DPSeparateurCyclone.C2, DomeGV.Cm) annotation (Line(points={{
-          6.12303e-016,47},{6.12303e-016,52},{22,52},{22,64}}, color={0,0,255}));
-  connect(DomeGV.Cs, DPnulle_DomeDwnc.C1) annotation (Line(points={{22,76.9},{40,
-          76.9},{40,63},{47,63}},    color={0,0,255}));
-  connect(DomeGV.yLevel, outputReal) annotation (Line(points={{24.2,85.5},{32,
-          85.5},{32,128},{-34,128},{-34,96},{-52,96}}, color={0,0,255}));
+          6.12303e-16,47},{6.12303e-16,52},{22,52},{22,62}},   color={0,0,255}));
+  connect(DomeGV.Cs, DPnulle_DomeDwnc.C1) annotation (Line(points={{22,74.9},{
+          40,74.9},{40,63},{47,63}}, color={0,0,255}));
+  connect(DomeGV.yLevel, outputReal) annotation (Line(points={{24.2,83.5},{32,
+          83.5},{32,128},{-34,128},{-34,96},{-52,96}}, color={0,0,255}));
   annotation (Diagram(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-150,-150},{150,150}},
