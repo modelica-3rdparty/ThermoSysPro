@@ -203,9 +203,13 @@ public
   ConvectedQuantities.Components.MassBalance sub_massBalance [N-1](redeclare
       package
 Species = Species,
-n_in=1, n_out=1,
-V=A*L,
-dynamic_mass_balance=dynamic_mass_balance)
+each n_in=1,
+each n_out=1,
+each V=A*L/(N-1),
+each dynamic_mass_balance=dynamic_mass_balance,
+Qin = transpose({Q[1:N-1]}),
+Qout = transpose({Q[2:N]}),
+rho = rho1)
     annotation (Placement(transformation(extent={{38,70},{74,106}})));
 
 initial equation
@@ -286,9 +290,11 @@ equation
     else
       0 = Q[i] - Q[i + 1];
     end if;
-  sub_massBalance[i].Qin = {Q[i]};
-  sub_massBalance[i].Qout = {Q[i+1]};
-  sub_massBalance[i].rho=rho1[i];
+
+  //Moved to binding equations
+  //sub_massBalance[i].Qin = {Q[i]};
+  //sub_massBalance[i].Qout = {Q[i+1]};
+  //sub_massBalance[i].rho=rho1[i];
 
 
     /* Energy balance equation */
