@@ -81,7 +81,7 @@ equation
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},
         grid={2,2}), graphics={Polygon(
-          points={{-96,42},{-16,-98},{24,-98},{104,42},{-96,42}},
+          points={{-98,40},{-18,-100},{22,-100},{102,40},{-98,40}},
           lineColor={0,0,255},
           fillColor={255,255,0},
           fillPattern=FillPattern.Solid)}),

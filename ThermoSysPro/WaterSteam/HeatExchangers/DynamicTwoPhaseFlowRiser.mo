@@ -35,10 +35,6 @@ model DynamicTwoPhaseFlowRiser "Riser: Dynamic two-phase flow pipe"
    parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
-replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
-      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
-
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
@@ -191,23 +187,15 @@ public
     annotation (Placement(transformation(extent={{-100,-100},{-80,-80}},
           rotation=0)));
 public
-  Connectors.FluidInlet C1( redeclare package Species = Species)          annotation (Placement(transformation(extent=
+  Connectors.FluidInlet C1          annotation (Placement(transformation(extent=
            {{-110,0},{-90,20}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort CTh1[Ns]
     annotation (Placement(transformation(extent={{-10,60},{10,80}}, rotation=0)));
-  Connectors.FluidOutlet C2( redeclare package Species = Species)         annotation (Placement(transformation(extent=
+  Connectors.FluidOutlet C2         annotation (Placement(transformation(extent=
            {{90,0},{110,20}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort CTh2[Ns]
     annotation (Placement(transformation(extent={{-10,-60},{10,-40}}, rotation=
             0)));
-  ConvectedQuantities.Components.MassBalance sub_massBalance [N-1](redeclare
-      package
-Species = Species,
-n_in=1, n_out=1,
-V=A*L,
-dynamic_mass_balance=dynamic_mass_balance)
-    annotation (Placement(transformation(extent={{38,70},{74,106}})));
-
 initial equation
   if steady_state then
     for i in 2:N loop
@@ -245,14 +233,6 @@ initial equation
 
 equation
 
-  sub_massBalance[1].mix_in.SubC = {C1.SubC};
-  sub_massBalance[N-1].mix_out.SubC = {C2.SubC};
-
-  for i in 1:N - 2 loop
-  sub_massBalance[i+1].mix_in.SubC = sub_massBalance[i].mix_out.SubC;
-  end for;
-
-
   /* Wall temperature */
   Tp1 = CTh1.T;
   CTh1.W = dW1;
@@ -276,8 +256,6 @@ equation
   Pb[1] = max(min(P[1], pcrit - 1), ptriple);
   Pb[N + 1] = max(min(P[N + 1], pcrit - 1), ptriple);
 
-
-
   /* Mass and energy balance equations (thermal nodes) */
   for i in 1:N - 1 loop
     /* Mass balance equation */
@@ -286,10 +264,6 @@ equation
     else
       0 = Q[i] - Q[i + 1];
     end if;
-  sub_massBalance[i].Qin = {Q[i]};
-  sub_massBalance[i].Qout = {Q[i+1]};
-  sub_massBalance[i].rho=rho1[i];
-
 
     /* Energy balance equation */
     if dynamic_mass_balance then

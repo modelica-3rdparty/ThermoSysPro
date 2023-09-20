@@ -20,10 +20,6 @@ model LumpedStraightPipe "Lumped straight pipe (circular duct)"
   parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
-replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
-      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
-
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
@@ -50,9 +46,9 @@ public
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
 
 public
-  Connectors.FluidInlet C1( redeclare package Species = Species) annotation (Placement(transformation(extent={{-110,
+  Connectors.FluidInlet C1 annotation (Placement(transformation(extent={{-110,
             -10},{-90,10}}, rotation=0)));
-  Connectors.FluidOutlet C2( redeclare package Species = Species)
+  Connectors.FluidOutlet C2
                           annotation (Placement(transformation(extent={{90,-10},
             {110,10}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
@@ -63,14 +59,9 @@ initial equation
     der(Q) = 0;
   end if;
 
-
-
 equation
   C1.h = C2.h;
   C1.Q = C2.Q;
-
-  // AJOUTER INERTIE AVEC UN VOLUME SUB_MASS_BALANCE ?
-  C1.SubC = C2.SubC;
 
   C1.P - C2.P = deltaP;
 
