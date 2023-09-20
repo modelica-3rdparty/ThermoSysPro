@@ -27,6 +27,10 @@ model DynamicDrum "Dynamic drum"
   parameter Boolean steady_state=true
     "true: start from steady state - false: start from (P0, Vf0)";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
   constant Real pi=Modelica.Constants.pi "pi";
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
@@ -127,6 +131,21 @@ public
   Connectors.FluidOutlet Cs "Water outlet"
                                     annotation (Placement(transformation(extent=
            {{90,-50},{110,-30}}, rotation=0)));
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance_HeterogeneousPhases sub_massBalance(
+    redeclare package Species = Species,
+    n_in=4,
+    n_out_liq=2,
+    n_out_gas=1,
+    V=V,
+    Qin={Ce1.Q,Ce2.Q,Ce3.Q,Cm.Q},
+    Qout_liq={Cd.Q,Cs.Q},
+    Qout_gas={Cv.Q},
+    rho=prom.d,
+    rho_liquidPhase=rhol,
+    x=prom.x,
+    T=prom.T)
+    annotation (Placement(transformation(extent={{-102,-16},{-72,14}})));
+
 initial equation
   if steady_state then
     der(hl) = 0;
@@ -143,23 +162,32 @@ initial equation
   end if;
 
 equation
+  /* Amines transport */
+  assert(V > 0, "Volume non-positive");
+  sub_massBalance.mix_in.SubC = {Ce1.SubC, Ce2.SubC, Ce3.SubC, Cm.SubC};
+  sub_massBalance.mix_out_gas.SubC = {Cv.SubC};
+  sub_massBalance.mix_out_liq.SubC = {Cd.SubC, Cs.SubC};
+
   /* Unconnected connectors */
   if (cardinality(Ce1) == 0) then
     Ce1.Q = 0;
     Ce1.h = 1.e5;
     Ce1.b = true;
+    Ce1.SubC = fill(0,size(Ce1.SubC,1));
   end if;
 
   if (cardinality(Ce2) == 0) then
     Ce2.Q = 0;
     Ce2.h = 1.e5;
     Ce2.b = true;
+    Ce2.SubC = fill(0,size(Ce2.SubC,1));
   end if;
 
   if (cardinality(Ce3) == 0) then
     Ce3.Q = 0;
     Ce3.h = 1.e5;
     Ce3.b = true;
+    Ce3.SubC = fill(0,size(Ce3.SubC,1));
   end if;
 
   if (cardinality(Cd) == 0) then
@@ -178,6 +206,7 @@ equation
     Cm.Q = 0;
     Cm.h = 1.e5;
     Cm.b = true;
+    Cm.SubC = fill(0,size(Cm.SubC,1));
   end if;
 
   if (cardinality(Cv) == 0) then
