@@ -97,18 +97,17 @@ public
         extent={{-6,-6},{6,6}},
         rotation=270)));
   ThermoSysPro.WaterSteam.Connectors.FluidOutletI fluidOutletI( redeclare
-      package Species =                                                                     Species)
+      package                                                                     Species = Species)
     annotation (Placement(transformation(extent={{-10,139},{10,159}}, rotation=
             0)));
-  ThermoSysPro.WaterSteam.Connectors.FluidInletI fluidInlet( redeclare package
-      Species =                                                                          Species)
+  ThermoSysPro.WaterSteam.Connectors.FluidInletI fluidInlet( redeclare package Species = Species)
     annotation (Placement(transformation(extent={{42,102},{62,122}}, rotation=0)));
   ThermoSysPro.WaterSteam.Connectors.FluidInletI fluidInlet1( redeclare package
-      Species =                                                                           Species)
+                                                                                Species = Species)
     annotation (Placement(transformation(extent={{-56,-132},{-36,-112}},
           rotation=0)));
   ThermoSysPro.WaterSteam.Connectors.FluidOutletI fluidOutletI1( redeclare
-      package Species =                                                                      Species)
+      package                                                                      Species = Species)
     annotation (Placement(transformation(extent={{36,-132},{56,-112}}, rotation=
            0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal outputReal
@@ -167,16 +166,14 @@ public
 
   DynamicTwoPhaseFlowRiser RiserGV(
     Ns=5,
-    redeclare package Species =
-        ThermoSysPro.ConvectedQuantities.Substances.None,
-    P(start={6866734.6044951,6862203.9025063,6853535.2456408,6846247.0825137,
-          6840314.8313501,6834912.1497303,6828884.4924605}),
+    P(start={6866734.60449511,6862203.90250626,6853535.24564075,
+          6846247.08251367,6840314.83135013,6834912.1497303,6828884.49246047}),
     h(start={1194851.37008144,1260885.3160958,1364323.64228458,1450411.24087846,
           1525552.01981793,1595519.78942018,1595519.78863864}),
-    Tp1(start={563.83109489963,562.97171435789,562.21322867383,561.55248247184,
-          560.97588254902}),
-    Tp2(start={563.83109489963,562.97171435789,562.21322867383,561.55248247184,
-          560.97588254902}),
+    Tp1(start={563.831094899634,562.971714357892,562.213228673834,
+          561.552482471836,560.975882549024}),
+    Tp2(start={563.831094899634,562.971714357892,562.213228673834,
+          561.552482471836,560.975882549024}),
     D=0.03689,
     inertia=false,
     L=10.848,
@@ -202,8 +199,6 @@ public
         origin={0,18},
         extent={{-10,-10},{10,10}},
         rotation=90)));
-  BoundaryConditions.SinkQ sinkQ(Q0=0)
-    annotation (Placement(transformation(extent={{-70,14},{-106,46}})));
 equation
   connect(UtubeHotLeg.C2, UtubeColdtLeg.C1) annotation (Line(
       points={{-67,-11},{-67,-2},{67,-2},{67,-11}},
@@ -266,8 +261,6 @@ equation
           40,74.9},{40,63},{47,63}}, color={0,0,255}));
   connect(DomeGV.yLevel, outputReal) annotation (Line(points={{24.2,83.5},{32,
           83.5},{32,128},{-34,128},{-34,96},{-52,96}}, color={0,0,255}));
-  connect(sinkQ.C, DomeGV.Cd) annotation (Line(points={{-70,30},{-28,30},{-28,
-          62},{-22,62}}, color={0,0,255}));
   annotation (Diagram(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-150,-150},{150,150}},
