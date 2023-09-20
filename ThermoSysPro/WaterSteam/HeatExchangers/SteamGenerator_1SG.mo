@@ -1,4 +1,4 @@
-within ;
+within ThermoSysPro.WaterSteam.HeatExchangers;
 model SteamGenerator_1SG "Individual steam generator"
   parameter Real H0_Mix_AlimDomeGV=1194812.89980521;
 
