@@ -97,17 +97,20 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat
                                            annotation (Placement(transformation(
           extent={{0,-80},{40,-40}}, rotation=0)));
-  Connectors.FluidInlet Ce1 "Feedwater input 1"
+  Connectors.FluidInlet Ce1(redeclare package Species =
+        Species) "Feedwater input 1"
                                     annotation (Placement(transformation(extent=
            {{-110,90},{-90,110}}, rotation=0)));
-  Connectors.FluidInlet Cm "Evaporation loop outlet"
+  Connectors.FluidInlet Cm(redeclare package Species =
+        Species) "Evaporation loop outlet"
                                     annotation (Placement(transformation(extent=
            {{90,-110},{110,-90}}, rotation=0)));
-  Connectors.FluidOutlet Cd "Evaporation loop inlet"
+  Connectors.FluidOutlet Cd(redeclare package Species =
+        Species) "Evaporation loop inlet"
                                     annotation (Placement(transformation(extent=
            {{-110,-110},{-90,-90}}, rotation=0)));
-  Connectors.FluidOutlet Cv "Steam outlet"
-                                    annotation (Placement(transformation(extent=
+  Connectors.FluidOutlet Cv(redeclare package Species =
+        Species) "Steam outlet"     annotation (Placement(transformation(extent=
            {{90,90},{110,110}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal yLevel
     "Water level "
@@ -122,14 +125,16 @@ public
 public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prod
     annotation (Placement(transformation(extent={{0,-20},{40,20}}, rotation=0)));
-  Connectors.FluidInlet Ce2 "Feedwater input 2"
+  Connectors.FluidInlet Ce2(redeclare package Species =
+        Species) "Feedwater input 2"
                                     annotation (Placement(transformation(extent=
            {{-110,30},{-90,50}}, rotation=0)));
-  Connectors.FluidInlet Ce3 "Feedwater input 3"
+  Connectors.FluidInlet Ce3(redeclare package Species =
+        Species) "Feedwater input 3"
                                     annotation (Placement(transformation(extent=
            {{-110,-50},{-90,-30}}, rotation=0)));
-  Connectors.FluidOutlet Cs "Water outlet"
-                                    annotation (Placement(transformation(extent=
+  Connectors.FluidOutlet Cs(redeclare package Species =
+        Species) "Water outlet"     annotation (Placement(transformation(extent=
            {{90,-50},{110,-30}}, rotation=0)));
   ThermoSysPro.ConvectedQuantities.Components.MassBalance_HeterogeneousPhases sub_massBalance(
     redeclare package Species = Species,
