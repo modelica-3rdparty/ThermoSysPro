@@ -46,8 +46,8 @@ public
   ThermoSysPro.WaterSteam.Connectors.FluidInlet C1(redeclare package Species =
         Species) annotation (Placement(transformation(extent={{-110,-90},{-90,-70}},
           rotation=0)));
-  ThermoSysPro.WaterSteam.Connectors.FluidOutlet C2(redeclare package Species
-      = Species) annotation (Placement(transformation(extent={{92,-90},{112,-70}},
+  ThermoSysPro.WaterSteam.Connectors.FluidOutlet C2(redeclare package Species =
+        Species) annotation (Placement(transformation(extent={{92,-90},{112,-70}},
           rotation=0)));
   Species.pH pH(T=T, rho_liquidPhase=rho_liquidPhase, x=x, SubC=C1.SubC)
     annotation (Placement(transformation(extent={{-90,70},{-70,90}})));
