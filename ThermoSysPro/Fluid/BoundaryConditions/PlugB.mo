@@ -12,7 +12,7 @@ public
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
   FluidType ftype "Fluid type";
   Real Xco2(start=0.01) "CO2 mass fraction of the fluid crossing the boundary of the control volume";
-  Real Xh2o(start=0.05) "H2O mass fraction of the fluid crossing the boundary of the control volume";
+  Real Xh2o "H2O mass fraction of the fluid crossing the boundary of the control volume";
   Real Xo2(start=0.2) "O2 mass fraction of the fluid crossing the boundary of the control volume";
   Real Xso2(start=0) "SO2 mass fraction of the fluid crossing the boundary of the control volume";
 
