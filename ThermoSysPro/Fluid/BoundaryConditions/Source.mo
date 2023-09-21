@@ -19,7 +19,7 @@ model Source "MultiFluids Source"
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
   parameter IF97Region region=IF97Region.All_regions "IF97 regions (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
-  parameter ThermoSysPro.Units.SI.MassFraction Xco2=if ftype == FluidType.FlueGases then 0.01 else 0 "CO2 mass fraction"
+  parameter ThermoSysPro.Units.SI.MassFraction Xco2= 0.01 "CO2 mass fraction"
     annotation (Evaluate=true, Dialog(
       enable=(ftype == FluidType.FlueGases),
       tab="Fluid",
@@ -29,12 +29,12 @@ model Source "MultiFluids Source"
       enable=(ftype == FluidType.FlueGases),
       tab="Fluid",
       group="Composition values (active for flue gases only)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xo2=if ftype == FluidType.FlueGases then 0.22 else 0 "O2 mass fraction"
+  parameter ThermoSysPro.Units.SI.MassFraction Xo2= 0.22 "O2 mass fraction"
     annotation (Evaluate=true, Dialog(
       enable=(ftype == FluidType.FlueGases),
       tab="Fluid",
       group="Composition values (active for flue gases only)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xso2=if ftype == FluidType.FlueGases then 0 else 0 "SO2 mass fraction"
+  parameter ThermoSysPro.Units.SI.MassFraction Xso2= 0 "SO2 mass fraction"
     annotation (Evaluate=true, Dialog(
       enable=(ftype == FluidType.FlueGases),
       tab="Fluid",
