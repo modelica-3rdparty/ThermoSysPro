@@ -24,13 +24,12 @@ model TestVolumeA_HomogeneousSubstance
   ThermoSysPro.WaterSteam.Volumes.VolumeA volumeA(
     V=100,
     dynamic_mass_balance=true,
-    steady_state=true,
     redeclare package Species =
         ThermoSysPro.ConvectedQuantities.Substances.HomogeneousSubstance)
     annotation (Placement(transformation(
         extent={{-12,-13},{12,13}},
         rotation=0,
-        origin={0,-41})));
+        origin={-2,-43})));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP(
     h0(fixed=true) = 100000,
     Cin={100},
@@ -53,10 +52,10 @@ model TestVolumeA_HomogeneousSubstance
     annotation (Placement(transformation(extent={{-78,-4},{-58,16}})));
 equation
   connect(singularPressureLoss2.C2, volumeA.Ce1)
-    annotation (Line(points={{-58,-40},{-36,-40},{-36,-41},{-12,-41}},
+    annotation (Line(points={{-58,-40},{-36,-40},{-36,-43},{-14,-43}},
                                                    color={0,0,255}));
   connect(volumeA.Cs1, singularPressureLoss1.C1)
-    annotation (Line(points={{12,-41},{30,-41},{30,-40},{48,-40}},
+    annotation (Line(points={{10,-43},{30,-43},{30,-40},{48,-40}},
                                                  color={0,0,255}));
   connect(singularPressureLoss1.C2, sinkP.C)
     annotation (Line(points={{68,-40},{98,-40}}, color={0,0,255}));
@@ -65,7 +64,8 @@ equation
   connect(sourceP.C, controlValve.C1)
     annotation (Line(points={{-106,0},{-78,0}}, color={0,0,255}));
   connect(controlValve.C2, volumeA.Ce2)
-    annotation (Line(points={{-58,0},{0,0},{0,-28}}, color={0,0,255}));
+    annotation (Line(points={{-58,0},{-2,0},{-2,-30}},
+                                                     color={0,0,255}));
   connect(rampe.y, controlValve.Ouv)
     annotation (Line(points={{-139,20},{-68,20},{-68,17}}, color={0,0,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-200,-100},

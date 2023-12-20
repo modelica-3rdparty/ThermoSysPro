@@ -6,7 +6,7 @@ model Sensor_pH "pH sensor"
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
     replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      ChimiScope.None          annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
       //Units.SI.Density rho;

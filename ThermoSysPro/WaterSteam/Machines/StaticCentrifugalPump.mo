@@ -34,7 +34,7 @@ model StaticCentrifugalPump "Static centrifugal pump"
     "Constant coef. of the pump efficiency characteristics rh = f(vol_flow) (s.u.)";
 
 replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      ChimiScope.None          annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 protected

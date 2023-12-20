@@ -10,7 +10,7 @@ package Connectors "Connectors"
     Units.SI.SpecificEnthalpy h(start=1.e5)
       "Specific enthalpy of the fluid crossing the boundary of the control volume";
     replaceable package Species =
-        ThermoSysPro.ConvectedQuantities.Substances.None;
+        ChimiScope.None;
     Real SubC[Species.Concentrations];
 
     input Boolean a=true
@@ -55,7 +55,7 @@ package Connectors "Connectors"
     Units.SI.SpecificEnthalpy h(start=1.e5)
       "Specific enthalpy of the fluid crossing the boundary of the control volume";
     replaceable package Species =
-        ThermoSysPro.ConvectedQuantities.Substances.None;
+        ChimiScope.None;
     Real SubC[Species.Concentrations];
 
     input Boolean a
@@ -100,7 +100,7 @@ package Connectors "Connectors"
     Units.SI.SpecificEnthalpy h(start=1.e5)
       "Specific enthalpy of the fluid crossing the boundary of the control volume";
     replaceable package Species =
-        ThermoSysPro.ConvectedQuantities.Substances.None;
+        ChimiScope.None;
     Real SubC[Species.Concentrations];
 
     output Boolean a
@@ -145,7 +145,7 @@ package Connectors "Connectors"
     Units.SI.SpecificEnthalpy h(start=1.e5)
       "Specific enthalpy of the fluid crossing the boundary of the control volume";
     replaceable package Species =
-        ThermoSysPro.ConvectedQuantities.Substances.None;
+        ChimiScope.None;
     Real SubC[Species.Concentrations];
 
     output Boolean a

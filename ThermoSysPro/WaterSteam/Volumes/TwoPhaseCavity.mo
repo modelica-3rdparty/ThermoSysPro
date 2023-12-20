@@ -76,7 +76,7 @@ model TwoPhaseCavity "TwoPhaseCavity for one shell pass "
   parameter Units.SI.Area S4=1 " S4 = 1, Heat exchange surface  ";
 
 replaceable package Species =
-  ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+  ChimiScope.None   annotation (
   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 public
@@ -219,7 +219,8 @@ public
    V=V,
    Qin = {Cv.Q,Ce.Q},
    Qout = {Cl.Q},
-   rho = (rhol*Vl+rhov*Vv)/V)
+   rho = (rhol*Vl+rhov*Vv)/V,
+   T=Tl)
     annotation (Placement(transformation(extent={{-254,-68},{-214,-28}})));
 initial equation
   if steady_state then

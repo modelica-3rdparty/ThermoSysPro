@@ -15,7 +15,7 @@ model VolumeC "Mixing volume with 3 inlets and 1 outlet"
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 replaceable package Species =
-  ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+  ChimiScope.None   annotation (
   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 public
@@ -46,11 +46,15 @@ public
       package
       Species =                                                                          Species,
    n_in=3, n_out=1,
+    D=1,
+    L=1,
+    capa=1,
    dynamic_mass_balance=dynamic_mass_balance,
    V=V,
    Qin = {Ce1.Q,Ce2.Q,Ce3.Q},
    Qout = {Cs.Q},
-   rho = rho)
+   rho = rho,
+   T=T)
     annotation (Placement(transformation(extent={{-100,34},{-60,74}})));
 initial equation
   if steady_state then

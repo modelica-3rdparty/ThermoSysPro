@@ -43,7 +43,7 @@ model DynamicWaterHeating "Dynamic water heater"
     "Corrective term for Heat exchange coefficient or Fouling coefficient liquid side";
 
 replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      ChimiScope.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
   Volumes.TwoPhaseCavity WaterHeating(

@@ -1,26 +1,26 @@
 ﻿within ThermoSysPro.WaterSteam.HeatExchangers;
 model DynamicWaterWaterExchanger "Dynamic plate heat exchanger"
-  parameter Units.SI.ThermalConductivity lambdam=15.0
+  parameter ThermoSysPro.Units.SI.ThermalConductivity lambdam=15.0
     "Metal thermal conductivity";
-  parameter Units.SI.CoefficientOfHeatTransfer p_hc=6000
+  parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer p_hc=6000
     "Heat transfer coefficient for the hot side if not computed by the correlations";
-  parameter Units.SI.CoefficientOfHeatTransfer p_hf=3000
+  parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer p_hf=3000
     "Heat transfer coefficient for the cold side if not computed by the correlations";
   parameter Real p_Kc=100
     "Pressure loss coefficient for the hot side if not computed by the correlations";
   parameter Real p_Kf=100
     "Pressure loss coefficient for the cold side if not computed by the correlations";
-  parameter Units.SI.Volume Vc=1 "Hot side volume";
-  parameter Units.SI.Volume Vf=1 "Cold side volume";
-  parameter Units.SI.Thickness emetal=0.0006 "Wall thickness";
-  parameter Units.SI.Area Sp=2 "Plate area";
+  parameter ThermoSysPro.Units.SI.Volume Vc=1 "Hot side volume";
+  parameter ThermoSysPro.Units.SI.Volume Vf=1 "Cold side volume";
+  parameter ThermoSysPro.Units.SI.Thickness emetal=0.0006 "Wall thickness";
+  parameter ThermoSysPro.Units.SI.Area Sp=2 "Plate area";
   parameter Real nbp=499 "Number of plates";
   parameter Real c1=1.12647 "Correction coefficient";
   parameter Integer N=10 "Number of segments";
   parameter Boolean steady_state=true "true: start from steady state";
-  parameter Units.SI.Density p_rhoc=0
+  parameter ThermoSysPro.Units.SI.Density p_rhoc=0
     "If > 0, fixed fluid density for the hot fluid";
-  parameter Units.SI.Density p_rhof=0
+  parameter ThermoSysPro.Units.SI.Density p_rhof=0
     "If > 0, fixed fluid density for the cold fluid";
   parameter Integer modec=0
     "IF97 region for the hot fluid. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
@@ -31,65 +31,71 @@ model DynamicWaterWaterExchanger "Dynamic plate heat exchanger"
     "Correlation for the computation of the heat exchange coefficient - 0: no correlation. 1: SRI correlations";
   parameter Integer pressure_loss_correlation=1
     "Correlation for the computation of the pressure loss coefficient - 0: no correlation. 1: SRI correlations";
+replaceable package Species =
+      ChimiScope.None      annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 public
-  Units.SI.Power dW[N] "Thermal power exchanged between the two sides";
+  ThermoSysPro.Units.SI.Power dW[N]
+    "Thermal power exchanged between the two sides";
   ThermoSysPro.Units.SI.PressureDifference DPc[N]
     "Pressure loss of the hot fluid";
   ThermoSysPro.Units.SI.PressureDifference DPf[N]
     "Pressure loss of the cold fluid";
-  Units.SI.CoefficientOfHeatTransfer hc[N]
+  ThermoSysPro.Units.SI.CoefficientOfHeatTransfer hc[N]
     "Heat transfer coefficient of the hot fluid";
-  Units.SI.CoefficientOfHeatTransfer hf[N]
+  ThermoSysPro.Units.SI.CoefficientOfHeatTransfer hf[N]
     "Heat transfer coefficient of the cold fluid";
-  Units.SI.CoefficientOfHeatTransfer K[N] "Global heat transfer coefficient";
-  Units.SI.Area dS "Heat exchange surface";
-  Units.SI.Temperature Tec "Fluid temperature at the hot inlet";
-  Units.SI.Temperature Tsc "Fluid temperature at the hot outlet";
-  Units.SI.Temperature Tef "Fluid temperature at the cold inlet";
-  Units.SI.Temperature Tsf "Fluid temperature at the cold outlet";
-  Units.SI.AbsolutePressure Pcc[N + 1]
+  ThermoSysPro.Units.SI.CoefficientOfHeatTransfer K[N]
+    "Global heat transfer coefficient";
+  ThermoSysPro.Units.SI.Area dS "Heat exchange surface";
+  ThermoSysPro.Units.SI.Temperature Tec "Fluid temperature at the hot inlet";
+  ThermoSysPro.Units.SI.Temperature Tsc "Fluid temperature at the hot outlet";
+  ThermoSysPro.Units.SI.Temperature Tef "Fluid temperature at the cold inlet";
+  ThermoSysPro.Units.SI.Temperature Tsf "Fluid temperature at the cold outlet";
+  ThermoSysPro.Units.SI.AbsolutePressure Pcc[N + 1]
     "Hot fluid pressure at the boundary of section i";
-  Units.SI.MassFlowRate Qcc[N + 1]
+  ThermoSysPro.Units.SI.MassFlowRate Qcc[N + 1]
     "Hot fluid mass flow rate at the boundary of section i";
-  Units.SI.SpecificEnthalpy Hcc[N + 1]
+  ThermoSysPro.Units.SI.SpecificEnthalpy Hcc[N + 1]
     "Hot fluid specific enthalpy at the boundary of section i";
-  Units.SI.AbsolutePressure Pcf[N + 1]
+  ThermoSysPro.Units.SI.AbsolutePressure Pcf[N + 1]
     "Cold fluid pressure at the boundary of section i";
-  Units.SI.MassFlowRate Qcf[N + 1]
+  ThermoSysPro.Units.SI.MassFlowRate Qcf[N + 1]
     "Cold fluid mass flow rate at the boundary of section i";
-  Units.SI.SpecificEnthalpy Hcf[N + 1]
+  ThermoSysPro.Units.SI.SpecificEnthalpy Hcf[N + 1]
     "Cold fluid specific enthalpy at the boundary of section i";
-  Units.SI.MassFlowRate Qc[N](start=fill(500, N))
+  ThermoSysPro.Units.SI.MassFlowRate Qc[N](start=fill(500, N))
     "Mass flow rate of the hot fluid";
-  Units.SI.MassFlowRate Qf[N](start=fill(500, N))
+  ThermoSysPro.Units.SI.MassFlowRate Qf[N](start=fill(500, N))
     "Mass flow rate of the cold fluid";
   Real qmc[N];
   Real qmf[N];
   Real quc[N];
   Real quf[N];
   Real M;
-  Units.SI.Density rhoc[N](start=fill(998, N)) "Hot fluid density";
-  Units.SI.Density rhof[N](start=fill(998, N)) "Cold fluid density";
-  Units.SI.DynamicViscosity muc[N](start=fill(1.e-3, N))
+  ThermoSysPro.Units.SI.Density rhoc[N](start=fill(998, N)) "Hot fluid density";
+  ThermoSysPro.Units.SI.Density rhof[N](start=fill(998, N))
+    "Cold fluid density";
+  ThermoSysPro.Units.SI.DynamicViscosity muc[N](start=fill(1.e-3, N))
     "Hot fluid dynamic viscosity";
-  Units.SI.DynamicViscosity muf[N](start=fill(1.e-3, N))
+  ThermoSysPro.Units.SI.DynamicViscosity muf[N](start=fill(1.e-3, N))
     "Cold fluid dynamic viscosity";
-  Units.SI.ThermalConductivity lambdac[N](start=fill(0.602698, N))
+  ThermoSysPro.Units.SI.ThermalConductivity lambdac[N](start=fill(0.602698, N))
     "Hot fluid thermal conductivity";
-  Units.SI.ThermalConductivity lambdaf[N](start=fill(0.597928, N))
+  ThermoSysPro.Units.SI.ThermalConductivity lambdaf[N](start=fill(0.597928, N))
     "Cold fluid thermal conductivity";
-  Units.SI.Temperature Tmc[N](start=fill(290, N))
+  ThermoSysPro.Units.SI.Temperature Tmc[N](start=fill(290, N))
     "Hot fluid average temperature";
-  Units.SI.Temperature Tmf[N](start=fill(290, N))
+  ThermoSysPro.Units.SI.Temperature Tmf[N](start=fill(290, N))
     "Cold fluid average temperature";
-  Units.SI.AbsolutePressure Pmc[N](start=fill(1.e5, N))
+  ThermoSysPro.Units.SI.AbsolutePressure Pmc[N](start=fill(1.e5, N))
     "Hot fluid average pressure";
-  Units.SI.AbsolutePressure Pmf[N](start=fill(1.e5, N))
+  ThermoSysPro.Units.SI.AbsolutePressure Pmf[N](start=fill(1.e5, N))
     "Cold fluid average pressure";
-  Units.SI.SpecificEnthalpy Hmc[N](start=fill(100000, N))
+  ThermoSysPro.Units.SI.SpecificEnthalpy Hmc[N](start=fill(100000, N))
     "Hot fluid average specific enthalpy";
-  Units.SI.SpecificEnthalpy Hmf[N](start=fill(100000, N))
+  ThermoSysPro.Units.SI.SpecificEnthalpy Hmf[N](start=fill(100000, N))
     "Cold fluid average specific enthalpy";
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proc[
                                                               N]
@@ -113,15 +119,43 @@ public
     "Propriétés du fluide froid en sortie"
     annotation (Placement(transformation(extent={{-60,80},{-40,100}}, rotation=
             0)));
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance_C[N](
+    redeclare package Species = Species,
+    each n_in=1,
+    each n_out=1,
+    each dynamic_mass_balance=false,
+    each V=Vc/N,
+    Qin=transpose({Qcc[1:N]}),
+    Qout=transpose({Qcc[2:N + 1]}),
+    rho=proc.d,
+    T=proc.T,
+    SaS_resine(each choix_resine=1))
+    annotation (Placement(transformation(extent={{-108,14},{-68,54}})));
+
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance_F[N](
+    redeclare package Species = Species,
+    each n_in=1,
+    each n_out=1,
+    each dynamic_mass_balance=false,
+    each V=Vf/N,
+    Qin=transpose({Qcf[1:N]}),
+    Qout=transpose({Qcf[2:N + 1]}),
+    rho=proc.d,
+    T=proc.T,
+    SaS_resine(each choix_resine=1))
+    annotation (Placement(transformation(extent={{-20,-80},{20,-40}})));
+
 public
-  Connectors.FluidInlet Ec          annotation (Placement(transformation(extent=
-           {{-110,-10},{-90,10}}, rotation=0)));
-  Connectors.FluidInlet Ef          annotation (Placement(transformation(extent=
-           {{-60,-70},{-40,-50}}, rotation=0)));
-  Connectors.FluidOutlet Sf         annotation (Placement(transformation(extent=
-           {{40,-70},{60,-50}}, rotation=0)));
-  Connectors.FluidOutlet Sc         annotation (Placement(transformation(extent=
-           {{90,-10},{110,10}}, rotation=0)));
+  Connectors.FluidInlet            Ec(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
+           0)));
+  Connectors.FluidInlet Ef(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{-60,-70},{-40,-50}}, rotation=
+           0)));
+  Connectors.FluidOutlet Sf(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{40,-70},{60,-50}}, rotation=0)));
+  Connectors.FluidOutlet Sc(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
 initial equation
   if steady_state then
     for i in 1:N loop
@@ -136,6 +170,20 @@ initial equation
   end if;
 
 equation
+  sub_massBalance_F[1].mix_in.SubC = {Ef.SubC};
+  sub_massBalance_F[N].mix_out.SubC = {Sf.SubC};
+
+  for i in 1:N - 1 loop
+    sub_massBalance_F[i+1].mix_in.SubC = sub_massBalance_F[i].mix_out.SubC;
+  end for;
+
+  sub_massBalance_C[1].mix_in.SubC = {Ec.SubC};
+  sub_massBalance_C[N].mix_out.SubC = {Sc.SubC};
+
+  for i in 1:N - 1 loop
+    sub_massBalance_C[i+1].mix_in.SubC = sub_massBalance_C[i].mix_out.SubC;
+  end for;
+
   Ec.P = Pcc[1];
   Sc.P = Pcc[N + 1];
   Ec.Q = Qcc[1];

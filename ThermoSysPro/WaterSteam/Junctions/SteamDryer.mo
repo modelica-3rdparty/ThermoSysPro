@@ -5,7 +5,7 @@ model SteamDryer "Steam dryer"
   parameter Integer mode_e=0
     "IF97 region at the inlet. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
     replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      ChimiScope.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group=
           "Transported Substances"));
 

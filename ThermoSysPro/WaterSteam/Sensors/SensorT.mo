@@ -5,6 +5,10 @@ model SensorT "Temperature sensor"
   parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
+replaceable package Species =
+      ChimiScope.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
   constant Real pi=Modelica.Constants.pi "pi";
   parameter Units.SI.MassFlowRate Qeps=1.e-3
@@ -25,10 +29,10 @@ public
         origin={0,100},
         extent={{-10,-10},{10,10}},
         rotation=90)));
-  Connectors.FluidInlet C1
+  Connectors.FluidInlet C1(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{-110,
             -90},{-90,-70}}, rotation=0)));
-  Connectors.FluidOutlet C2
+  Connectors.FluidOutlet C2(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{92,-90},
             {112,-70}}, rotation=0)));
 equation
@@ -36,6 +40,7 @@ equation
   C1.P = C2.P;
   C1.h = C2.h;
   C1.Q = C2.Q;
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
 

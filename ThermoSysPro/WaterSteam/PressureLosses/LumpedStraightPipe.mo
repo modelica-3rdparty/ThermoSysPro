@@ -1,14 +1,14 @@
 within ThermoSysPro.WaterSteam.PressureLosses;
 model LumpedStraightPipe "Lumped straight pipe (circular duct)"
-  parameter Units.SI.Length L=10. "Pipe length";
-  parameter Units.SI.Diameter D=0.2 "Pipe internal diameter";
+  parameter ThermoSysPro.Units.SI.Length L=10. "Pipe length";
+  parameter ThermoSysPro.Units.SI.Diameter D=0.2 "Pipe internal diameter";
   parameter Integer ntubes=1 "Number of pipes in parallel";
   parameter Real lambda=0.03
     "Friction pressure loss coefficient (active if lambda_fixed=true)";
   parameter Real rugosrel=0.0001
     "Pipe roughness (active if lambda_fixed=false)";
-  parameter Units.SI.Position z1=0 "Inlet altitude";
-  parameter Units.SI.Position z2=0 "Outlet altitude";
+  parameter ThermoSysPro.Units.SI.Position z1=0 "Inlet altitude";
+  parameter ThermoSysPro.Units.SI.Position z2=0 "Outlet altitude";
   parameter Boolean lambda_fixed=true
     "true: lambda given by parameter - false: lambde computed using Idel'Cik correlation";
   parameter Boolean inertia=false
@@ -16,61 +16,76 @@ model LumpedStraightPipe "Lumped straight pipe (circular duct)"
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Integer fluid=1 "1: water/steam - 2: C3H3F5";
-  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density";
+  parameter ThermoSysPro.Units.SI.Density p_rho=0 "If > 0, fixed fluid density";
   parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      ChimiScope.None      annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 protected
-  constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
+  constant ThermoSysPro.Units.SI.Acceleration g=Modelica.Constants.g_n
+    "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
   parameter Real eps=1.e-3 "Small number for pressure loss equation";
-  parameter Units.SI.MassFlowRate Qeps=1.e-3
+  parameter ThermoSysPro.Units.SI.MassFlowRate Qeps=1.e-3
     "Small mass flow for continuous flow reversal";
-  parameter Units.SI.Area A=ntubes*pi*D^2/4
+  parameter ThermoSysPro.Units.SI.Area A=ntubes*pi*D^2/4
     "Pipes cross-sectional area (circular duct is assumed)";
-  parameter Units.SI.Area Pw=ntubes*pi*D
+  parameter ThermoSysPro.Units.SI.Area Pw=ntubes*pi*D
     "Pipes wetted perimeter (circular duct is assumed)";
 
 public
   Real khi "Hydraulic pressure loss coefficient";
   ThermoSysPro.Units.SI.PressureDifference deltaPf "Friction pressure loss";
   ThermoSysPro.Units.SI.PressureDifference deltaP "Total pressure loss";
-  Units.SI.MassFlowRate Q(start=100) "Mass flow rate";
-  Units.SI.ReynoldsNumber Re "Reynolds number";
-  Units.SI.ReynoldsNumber Relim "Limit Reynolds number";
+  ThermoSysPro.Units.SI.MassFlowRate Q(start=100) "Mass flow rate";
+  ThermoSysPro.Units.SI.ReynoldsNumber Re "Reynolds number";
+  ThermoSysPro.Units.SI.ReynoldsNumber Relim "Limit Reynolds number";
   Real lam "Friction pressure loss coefficient";
-  Units.SI.Density rho "Fluid density";
-  Units.SI.DynamicViscosity mu "Fluid dynamic viscosity";
-  Units.SI.Temperature T "Fluid temperature";
-  Units.SI.AbsolutePressure Pm "Fluid average pressure";
-  Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
+  ThermoSysPro.Units.SI.Density rho "Fluid density";
+  ThermoSysPro.Units.SI.DynamicViscosity mu "Fluid dynamic viscosity";
+  ThermoSysPro.Units.SI.Temperature T "Fluid temperature";
+  ThermoSysPro.Units.SI.AbsolutePressure Pm "Fluid average pressure";
+  ThermoSysPro.Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
 
 public
-  Connectors.FluidInlet C1( redeclare package Species = Species) annotation (Placement(transformation(extent={{-110,
-            -10},{-90,10}}, rotation=0)));
-  Connectors.FluidOutlet C2( redeclare package Species = Species)
-                          annotation (Placement(transformation(extent={{90,-10},
-            {110,10}}, rotation=0)));
+  Connectors.FluidInlet C1(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
+           0)));
+  Connectors.FluidOutlet C2(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
     annotation (Placement(transformation(extent={{-100,78},{-80,98}}, rotation=
             0)));
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(
+    redeclare package Species = Species,
+    n_in=1,
+    n_out=1,
+    D=D,
+    L=L,
+    sink_and_source=Species.sink_and_source_list.none,
+    dynamic_mass_balance=false,
+    capa=1,
+    Qin={C1.Q},
+    Qout={C2.Q},
+    rho=rho,
+    T=T,
+    SaS_resine(choix_resine=1))
+    annotation (Placement(transformation(extent={{68,70},{88,90}})));
+
 initial equation
   if inertia then
     der(Q) = 0;
   end if;
 
-
-
 equation
   C1.h = C2.h;
   C1.Q = C2.Q;
 
-  // AJOUTER INERTIE AVEC UN VOLUME SUB_MASS_BALANCE ?
-  C1.SubC = C2.SubC;
+  sub_massBalance.mix_in.SubC = {C1.SubC};
+  sub_massBalance.mix_out.SubC = {C2.SubC};
 
   C1.P - C2.P = deltaP;
 

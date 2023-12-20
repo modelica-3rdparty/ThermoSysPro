@@ -1,12 +1,10 @@
 Degasifier
 DegasifierVolume
-DynamicDrum
 Pressurizer
 Tank
 TwoPhaseCavity
 TwoPhaseCavityOnePipe
 TwoPhaseVolume
-VolumeA
 VolumeATh
 VolumeB
 VolumeBTh
@@ -16,3 +14,5 @@ VolumeD
 VolumeDTh
 VolumeI
 VolumeITh
+VolumeA
+DynamicDrum

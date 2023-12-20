@@ -2,11 +2,12 @@
 model DynamicDrum "Dynamic drum"
   parameter Boolean Vertical=true
     "true: vertical cylinder - false: horizontal cylinder";
-  parameter Units.SI.Radius R=1.05 "Radius of the drum cross-sectional area";
-  parameter Units.SI.Length L=16.27 "Drum length";
+  parameter ThermoSysPro.Units.SI.Radius R=1.05
+    "Radius of the drum cross-sectional area";
+  parameter ThermoSysPro.Units.SI.Length L=16.27 "Drum length";
   parameter Real Vf0=0.5
     "Fraction of initial water volume in the drum (active if steady_state=false)";
-  parameter Units.SI.AbsolutePressure P0=50.e5
+  parameter ThermoSysPro.Units.SI.AbsolutePressure P0=50.e5
     "Fluid initial pressure (active if steady_state=false)";
   parameter Real Ccond=0.01 "Condensation coefficient";
   parameter Real Cevap=0.09 "Evaporation coefficient";
@@ -16,69 +17,75 @@ model DynamicDrum "Dynamic drum"
     "Vapor mass fraction in the gas phase from which the liquid starts to condensate";
   parameter Real Kvl=1000
     "Heat exchange coefficient between the liquid and gas phases";
-  parameter Units.SI.CoefficientOfHeatTransfer Klp=400
+  parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer Klp=400
     "Heat exchange coefficient between the liquid phase and the wall";
-  parameter Units.SI.CoefficientOfHeatTransfer Kvp=100
+  parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer Kvp=100
     "Heat exchange coefficient between the gas phase and the wall";
-  parameter Units.SI.CoefficientOfHeatTransfer Kpa=25
+  parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer Kpa=25
     "Heat exchange coefficient between the wall and the outside";
-  parameter Units.SI.Mass Mp=117e3 "Wall mass";
-  parameter Units.SI.SpecificHeatCapacity cpp=600 "Wall specific heat";
+  parameter ThermoSysPro.Units.SI.Mass Mp=117e3 "Wall mass";
+  parameter ThermoSysPro.Units.SI.SpecificHeatCapacity cpp=600
+    "Wall specific heat";
   parameter Boolean steady_state=true
     "true: start from steady state - false: start from (P0, Vf0)";
 
 replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      ChimiScope.None      annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 protected
   constant Real pi=Modelica.Constants.pi "pi";
-  constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
-  parameter Units.SI.Volume V=pi*R^2*L "Drum volume";
-  parameter Units.SI.Volume Vmin=1.e-6;
+  constant ThermoSysPro.Units.SI.Acceleration g=Modelica.Constants.g_n
+    "Gravity constant";
+  parameter ThermoSysPro.Units.SI.Volume V=pi*R^2*L "Drum volume";
+  parameter ThermoSysPro.Units.SI.Volume Vmin=1.e-6;
 
 public
-  Units.SI.AbsolutePressure P "Fluid average pressure";
-  Units.SI.AbsolutePressure Pfond "Fluid pressure at the bottom of the drum";
-  Units.SI.SpecificEnthalpy hl "Liquid phase specific enthalpy";
-  Units.SI.SpecificEnthalpy hv "Gas phase specific enthalpy";
-  Units.SI.Temperature Tl "Liquid phase temperature";
-  Units.SI.Temperature Tv "Gas phase temperature";
-  Units.SI.Temperature Tp(start=550) "Wall temperature";
-  Units.SI.Temperature Ta "External temperature";
-  Units.SI.Volume Vl "Liquid phase volume";
-  Units.SI.Volume Vv "Gas phase volume";
-  Units.SI.Area Alp "Liquid phase surface on contact with the wall";
-  Units.SI.Area Avp "Gas phase surface on contact with the wall";
-  Units.SI.Area Ape "Wall surface on contact with the outside";
+  ThermoSysPro.Units.SI.AbsolutePressure P "Fluid average pressure";
+  ThermoSysPro.Units.SI.AbsolutePressure Pfond
+    "Fluid pressure at the bottom of the drum";
+  ThermoSysPro.Units.SI.SpecificEnthalpy hl "Liquid phase specific enthalpy";
+  ThermoSysPro.Units.SI.SpecificEnthalpy hv "Gas phase specific enthalpy";
+  ThermoSysPro.Units.SI.Temperature Tl "Liquid phase temperature";
+  ThermoSysPro.Units.SI.Temperature Tv "Gas phase temperature";
+  ThermoSysPro.Units.SI.Temperature Tp(start=550) "Wall temperature";
+  ThermoSysPro.Units.SI.Temperature Ta "External temperature";
+  ThermoSysPro.Units.SI.Volume Vl "Liquid phase volume";
+  ThermoSysPro.Units.SI.Volume Vv "Gas phase volume";
+  ThermoSysPro.Units.SI.Area Alp
+    "Liquid phase surface on contact with the wall";
+  ThermoSysPro.Units.SI.Area Avp "Gas phase surface on contact with the wall";
+  ThermoSysPro.Units.SI.Area Ape "Wall surface on contact with the outside";
   Real xl(start=0.5) "Mass vapor fraction in the liquid phase";
   Real xv(start=0) "Mass vapor fraction in the vapor phase";
   Real xmv(start=0.5) "Mass vapor fraction in the ascending tube";
-  Units.SI.Density rhol(start=996) "Liquid phase density";
-  Units.SI.Density rhov(start=1.5) "Gas phase density";
-  Units.SI.MassFlowRate BQl
+  ThermoSysPro.Units.SI.Density rhol(start=996) "Liquid phase density";
+  ThermoSysPro.Units.SI.Density rhov(start=1.5) "Gas phase density";
+  ThermoSysPro.Units.SI.MassFlowRate BQl
     "Right hand side of the mass balance equation of the liquid phase";
-  Units.SI.MassFlowRate BQv
+  ThermoSysPro.Units.SI.MassFlowRate BQv
     "Right hand side of the mass balance equation of the gas phase";
-  Units.SI.Power BHl
+  ThermoSysPro.Units.SI.Power BHl
     "Right hand side of the energy balance equation of the liquid phase";
-  Units.SI.Power BHv
+  ThermoSysPro.Units.SI.Power BHv
     "Right hand side of the energy balance equation of the gas phase";
-  Units.SI.MassFlowRate Qcond
+  ThermoSysPro.Units.SI.MassFlowRate Qcond
     "Condensation mass flow rate from the vapor phase";
-  Units.SI.MassFlowRate Qevap
+  ThermoSysPro.Units.SI.MassFlowRate Qevap
     "Evaporation mass flow rate from the liquid phase";
-  Units.SI.MassFlowRate Qv "Steam mass flow rate from the riser";
-  Units.SI.Power Wlv
+  ThermoSysPro.Units.SI.MassFlowRate Qv "Steam mass flow rate from the riser";
+  ThermoSysPro.Units.SI.Power Wlv
     "Thermal power exchanged from the gas phase to the liquid phase";
-  Units.SI.Power Wpl
+  ThermoSysPro.Units.SI.Power Wpl
     "Thermal power exchanged from the liquid phase to the wall";
-  Units.SI.Power Wpv "Thermal power exchanged from the gas phase to the wall";
-  Units.SI.Power Wpa "Thermal power exchanged from the outside to the wall";
-  Units.SI.Position zl(start=1.05) "Liquid level in drum";
-  Units.SI.Area Al "Cross sectional area of the liquid phase";
-  Units.SI.Angle theta "Angle";
-  Units.SI.Area Avl(start=1.0)
+  ThermoSysPro.Units.SI.Power Wpv
+    "Thermal power exchanged from the gas phase to the wall";
+  ThermoSysPro.Units.SI.Power Wpa
+    "Thermal power exchanged from the outside to the wall";
+  ThermoSysPro.Units.SI.Position zl(start=1.05) "Liquid level in drum";
+  ThermoSysPro.Units.SI.Area Al "Cross sectional area of the liquid phase";
+  ThermoSysPro.Units.SI.Angle theta "Angle";
+  ThermoSysPro.Units.SI.Area Avl(start=1.0)
     "Heat exchange surface between the liquid and gas phases";
 
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prol
@@ -97,21 +104,18 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat
                                            annotation (Placement(transformation(
           extent={{0,-80},{40,-40}}, rotation=0)));
-  Connectors.FluidInlet Ce1(redeclare package Species =
-        Species) "Feedwater input 1"
-                                    annotation (Placement(transformation(extent=
-           {{-110,90},{-90,110}}, rotation=0)));
-  Connectors.FluidInlet Cm(redeclare package Species =
-        Species) "Evaporation loop outlet"
-                                    annotation (Placement(transformation(extent=
-           {{90,-110},{110,-90}}, rotation=0)));
-  Connectors.FluidOutlet Cd(redeclare package Species =
-        Species) "Evaporation loop inlet"
-                                    annotation (Placement(transformation(extent=
-           {{-110,-110},{-90,-90}}, rotation=0)));
-  Connectors.FluidOutlet Cv(redeclare package Species =
-        Species) "Steam outlet"     annotation (Placement(transformation(extent=
-           {{90,90},{110,110}}, rotation=0)));
+  Connectors.FluidInlet Ce1(redeclare package Species = Species)
+    "Feedwater input 1" annotation (Placement(transformation(extent={{-110,90},
+            {-90,110}}, rotation=0)));
+  Connectors.FluidInlet Cm(redeclare package Species = Species)
+    "Evaporation loop outlet" annotation (Placement(transformation(extent={{90,
+            -110},{110,-90}}, rotation=0)));
+  Connectors.FluidOutlet Cd(redeclare package Species = Species)
+    "Evaporation loop inlet" annotation (Placement(transformation(extent={{-110,
+            -110},{-90,-90}}, rotation=0)));
+  Connectors.FluidOutlet Cv(redeclare package Species = Species)
+    "Steam outlet" annotation (Placement(transformation(extent={{90,90},{110,
+            110}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal yLevel
     "Water level "
     annotation (                            layer="icon", Placement(
@@ -125,18 +129,17 @@ public
 public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prod
     annotation (Placement(transformation(extent={{0,-20},{40,20}}, rotation=0)));
-  Connectors.FluidInlet Ce2(redeclare package Species =
-        Species) "Feedwater input 2"
-                                    annotation (Placement(transformation(extent=
-           {{-110,30},{-90,50}}, rotation=0)));
-  Connectors.FluidInlet Ce3(redeclare package Species =
-        Species) "Feedwater input 3"
-                                    annotation (Placement(transformation(extent=
-           {{-110,-50},{-90,-30}}, rotation=0)));
-  Connectors.FluidOutlet Cs(redeclare package Species =
-        Species) "Water outlet"     annotation (Placement(transformation(extent=
-           {{90,-50},{110,-30}}, rotation=0)));
-  ThermoSysPro.ConvectedQuantities.Components.MassBalance_HeterogeneousPhases sub_massBalance(
+  Connectors.FluidInlet Ce2(redeclare package Species = Species)
+    "Feedwater input 2" annotation (Placement(transformation(extent={{-110,30},
+            {-90,50}}, rotation=0)));
+  Connectors.FluidInlet Ce3(redeclare package Species = Species)
+    "Feedwater input 3" annotation (Placement(transformation(extent={{-110,-50},
+            {-90,-30}}, rotation=0)));
+  Connectors.FluidOutlet Cs(redeclare package Species = Species)
+    "Water outlet" annotation (Placement(transformation(extent={{90,-50},{110,-30}},
+          rotation=0)));
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance_HeterogeneousPhases
+    sub_massBalance(
     redeclare package Species = Species,
     n_in=4,
     n_out_liq=2,
@@ -149,7 +152,7 @@ public
     rho_liquidPhase=rhol,
     x=prom.x,
     T=prom.T)
-    annotation (Placement(transformation(extent={{-102,-16},{-72,14}})));
+    annotation (Placement(transformation(extent={{-102,-18},{-72,12}})));
 
 initial equation
   if steady_state then
@@ -167,6 +170,7 @@ initial equation
   end if;
 
 equation
+
   /* Amines transport */
   assert(V > 0, "Volume non-positive");
   sub_massBalance.mix_in.SubC = {Ce1.SubC, Ce2.SubC, Ce3.SubC, Cm.SubC};

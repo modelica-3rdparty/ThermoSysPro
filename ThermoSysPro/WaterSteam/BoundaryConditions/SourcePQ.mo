@@ -8,7 +8,7 @@ model SourcePQ "Water/steam source with fixed pressure and mass flow rate"
     "Fluid specific enthalpy (active if IEnthalpy connector is not connected)";
 
       replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      ChimiScope.None          annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
  parameter Real Cin[Species.Concentrations]=zeros(size(C.SubC,1)) "Concentration values for the substances to be transported"

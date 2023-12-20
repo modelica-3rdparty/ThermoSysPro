@@ -2,7 +2,7 @@
 model PipePressureLoss "Pipe generic pressure loss"
 
     replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      ChimiScope.None          annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
   parameter Real K=10 "Friction pressure loss coefficient";

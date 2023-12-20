@@ -1,11 +1,12 @@
 ﻿within ThermoSysPro.WaterSteam.HeatExchangers;
 model DynamicTwoPhaseFlowRiser "Riser: Dynamic two-phase flow pipe"
-  parameter Units.SI.Length L=10. "Pipe length";
-  parameter Units.SI.Diameter D=0.02 "Hydraulic diameter";
-  parameter Units.SI.Length rugosrel=0.0007 "Pipe relative roughness";
+  parameter ThermoSysPro.Units.SI.Length L=10. "Pipe length";
+  parameter ThermoSysPro.Units.SI.Diameter D=0.02 "Hydraulic diameter";
+  parameter ThermoSysPro.Units.SI.Length rugosrel=0.0007
+    "Pipe relative roughness";
   parameter Integer ntubes=1 "Number of pipes in parallel";
-  parameter Units.SI.Position z1=0 "Pipe inlet altitude";
-  parameter Units.SI.Position z2=0 "Pipe outlet altitude";
+  parameter ThermoSysPro.Units.SI.Position z1=0 "Pipe inlet altitude";
+  parameter ThermoSysPro.Units.SI.Position z2=0 "Pipe outlet altitude";
   parameter Real rgliss=1 "Phase slip coefficient";
   parameter Integer a=4200 "Phase pressure loss coefficient";
   parameter Real dpfCorr=1.00
@@ -13,10 +14,10 @@ model DynamicTwoPhaseFlowRiser "Riser: Dynamic two-phase flow pipe"
   parameter Real hcCorr=1.00
     "Corrective term for the heat exchange coefficient (hc) for each node";
   parameter Integer Ns=10 "Number of segments";
-  parameter Units.SI.Temperature T0[Ns]=fill(300, Ns)
+  parameter ThermoSysPro.Units.SI.Temperature T0[Ns]=fill(300, Ns)
     "Initial fluid temperature (active if steady_state = false and option_temperature = 1)"
     annotation (Evaluate=false);
-  parameter Units.SI.SpecificEnthalpy h0[Ns]=fill(1e5, Ns)
+  parameter ThermoSysPro.Units.SI.SpecificEnthalpy h0[Ns]=fill(1e5, Ns)
     "Initial fluid specific enthalpy (active if steady_state = false and option_temperature = 2)";
   parameter Boolean inertia=true
     "true: momentum balance equation with inertia - false: without inertia";
@@ -36,119 +37,131 @@ model DynamicTwoPhaseFlowRiser "Riser: Dynamic two-phase flow pipe"
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None  annotation(choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+      ChimiScope.None      annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
-  constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
+  constant ThermoSysPro.Units.SI.Acceleration g=Modelica.Constants.g_n
+    "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
   parameter Real eps=1.e-0 "Small number for pressure loss equation";
-  parameter Units.SI.MassFlowRate Qeps=1.e-3
+  parameter ThermoSysPro.Units.SI.MassFlowRate Qeps=1.e-3
     "Small mass flow rate for continuous flow reversal";
   parameter Integer N=Ns + 1
     "Number of hydraulic nodes (= number of thermal nodes + 1)";
-  parameter Units.SI.Area A=ntubes*pi*D^2/4
+  parameter ThermoSysPro.Units.SI.Area A=ntubes*pi*D^2/4
     "Internal cross sectional pipe area";
-  parameter Units.SI.Diameter Di=ntubes*D "Internal pipe diameter";
-  parameter Units.SI.PathLength dx1=L/(N - 1) "Length of a thermal node";
-  parameter Units.SI.PathLength dx2=L/N "Length of a hydraulic node";
-  parameter Units.SI.Area dSi=pi*Di*dx1
+  parameter ThermoSysPro.Units.SI.Diameter Di=ntubes*D "Internal pipe diameter";
+  parameter ThermoSysPro.Units.SI.PathLength dx1=L/(N - 1)
+    "Length of a thermal node";
+  parameter ThermoSysPro.Units.SI.PathLength dx2=L/N
+    "Length of a hydraulic node";
+  parameter ThermoSysPro.Units.SI.Area dSi=pi*Di*dx1
     "Internal heat exchange area for a node";
   parameter Real Mmol=18.015 "Water molar mass";
-  parameter Units.SI.AbsolutePressure pcrit=ThermoSysPro.Properties.WaterSteam.BaseIF97.data.PCRIT
+  parameter ThermoSysPro.Units.SI.AbsolutePressure pcrit=ThermoSysPro.Properties.WaterSteam.BaseIF97.data.PCRIT
     "Critical pressure";
-  parameter Units.SI.Temperature Tcrit=ThermoSysPro.Properties.WaterSteam.BaseIF97.data.TCRIT
+  parameter ThermoSysPro.Units.SI.Temperature Tcrit=ThermoSysPro.Properties.WaterSteam.BaseIF97.data.TCRIT
     "Critical temperature";
-  parameter Units.SI.AbsolutePressure ptriple=ThermoSysPro.Properties.WaterSteam.BaseIF97.triple.ptriple
+  parameter ThermoSysPro.Units.SI.AbsolutePressure ptriple=ThermoSysPro.Properties.WaterSteam.BaseIF97.triple.ptriple
     "Triple point pressure";
   parameter Real xb1=0.0002 "Min value for vapor mass fraction";
   parameter Real xb2=0.85 "Max value for vapor mass fraction";
 
 public
-  Units.SI.AbsolutePressure P[N + 1](start=fill(1.e5, N + 1), nominal=fill(1.e5,
-        N + 1)) "Fluid pressure in node i";
-  Units.SI.MassFlowRate Q[N](start=fill(10, N), nominal=fill(10, N))
+  ThermoSysPro.Units.SI.AbsolutePressure P[N + 1](start=fill(1.e5, N + 1),
+      nominal=fill(1.e5, N + 1)) "Fluid pressure in node i";
+  ThermoSysPro.Units.SI.MassFlowRate Q[N](start=fill(10, N), nominal=fill(10, N))
     "Mass flow rate in node i";
-  Units.SI.SpecificEnthalpy h[N + 1](start=fill(1.e5, N + 1), nominal=fill(1.e6,
-        N + 1)) "Fluid specific enthalpy in node i";
-  Units.SI.SpecificEnthalpy hb[N]
+  ThermoSysPro.Units.SI.SpecificEnthalpy h[N + 1](start=fill(1.e5, N + 1),
+      nominal=fill(1.e6, N + 1)) "Fluid specific enthalpy in node i";
+  ThermoSysPro.Units.SI.SpecificEnthalpy hb[N]
     "Fluid specific enthalpy at the boundary of node i";
-  Units.SI.AbsolutePressure Pb[N + 1](start=fill(1.e5, N + 1), nominal=fill(
-        1.e5, N + 1)) "Bounded fluid pressure in node i";
-  Units.SI.Density rho1[N - 1](start=fill(998, N - 1), nominal=fill(1, N - 1))
-    "Fluid density in thermal node i";
-  Units.SI.Density rho2[N](start=fill(998, N), nominal=fill(1, N))
+  ThermoSysPro.Units.SI.AbsolutePressure Pb[N + 1](start=fill(1.e5, N + 1),
+      nominal=fill(1.e5, N + 1)) "Bounded fluid pressure in node i";
+  ThermoSysPro.Units.SI.Density rho1[N - 1](start=fill(998, N - 1), nominal=
+        fill(1, N - 1)) "Fluid density in thermal node i";
+  ThermoSysPro.Units.SI.Density rho2[N](start=fill(998, N), nominal=fill(1, N))
     "Fluid density in hydraulic node i";
-  Units.SI.Density rhoc[N + 1](start=fill(998, N + 1), nominal=fill(1, N + 1))
-    "Fluid density at the boudary of node i";
-  Units.SI.Power dW1[N - 1](start=fill(3.e5, N - 1), nominal=fill(3.e5, N - 1))
-    "Thermal power exchanged on the liquid side for node i";
-  Units.SI.Power dW2[N - 1](start=fill(3.e5, N - 1), nominal=fill(3.e5, N - 1))
-    "Thermal power exchanged on the liquid side for node i";
-  Units.SI.Power W1t "Total power exchanged on the liquid side";
-  Units.SI.Temperature Tp1[N - 1](each start=500.0)
+  ThermoSysPro.Units.SI.Density rhoc[N + 1](start=fill(998, N + 1), nominal=
+        fill(1, N + 1)) "Fluid density at the boudary of node i";
+  ThermoSysPro.Units.SI.Power dW1[N - 1](start=fill(3.e5, N - 1), nominal=fill(3.e5,
+        N - 1)) "Thermal power exchanged on the liquid side for node i";
+  ThermoSysPro.Units.SI.Power dW2[N - 1](start=fill(3.e5, N - 1), nominal=fill(3.e5,
+        N - 1)) "Thermal power exchanged on the liquid side for node i";
+  ThermoSysPro.Units.SI.Power W1t "Total power exchanged on the liquid side";
+  ThermoSysPro.Units.SI.Temperature Tp1[N - 1](each start=500.0)
     "Wall temperature in node i";
-  Units.SI.Temperature Tp2[N - 1](each start=500.0)
+  ThermoSysPro.Units.SI.Temperature Tp2[N - 1](each start=500.0)
     "Wall temperature in node i";
-  Units.SI.CoefficientOfHeatTransfer hi[N - 1](start=fill(2000, N - 1), nominal=
-       fill(2.e4, N - 1)) "Fluid heat exchange coefficient in node i";
-  Units.SI.CoefficientOfHeatTransfer hcl[N - 1](start=fill(2000, N - 1),
-      nominal=fill(200, N - 1))
+  ThermoSysPro.Units.SI.CoefficientOfHeatTransfer hi[N - 1](start=fill(2000, N -
+        1), nominal=fill(2.e4, N - 1))
+    "Fluid heat exchange coefficient in node i";
+  ThermoSysPro.Units.SI.CoefficientOfHeatTransfer hcl[N - 1](start=fill(2000, N -
+        1), nominal=fill(200, N - 1))
     "Fluid heat exchange coefficient in node i for the liquid fraction";
-  Units.SI.CoefficientOfHeatTransfer hcv[N - 1](start=fill(0, N - 1), nominal=
-        fill(200, N - 1))
+  ThermoSysPro.Units.SI.CoefficientOfHeatTransfer hcv[N - 1](start=fill(0, N - 1),
+      nominal=fill(200, N - 1))
     "Fluid heat exchange coefficient in node i for the vapor fraction";
   Real S[N - 1] "Corrective terme correctif for nucleation removal";
   Real E[N - 1] "Corrective term for hcl";
-  Units.SI.CoefficientOfHeatTransfer heb[N - 1](start=fill(0, N - 1), nominal=
-        fill(5.e5, N - 1))
+  ThermoSysPro.Units.SI.CoefficientOfHeatTransfer heb[N - 1](start=fill(0, N - 1),
+      nominal=fill(5.e5, N - 1))
     "Fluid heat exchange coefficient for vaporization in thermal node i";
-  Units.SI.ReynoldsNumber Rel1[N - 1](start=fill(6.e4, N - 1), nominal=fill(
-        0.5e4, N - 1)) "Reynolds number in thermal node i for the liquid";
-  Units.SI.ReynoldsNumber Rel2[N](start=fill(6.e4, N), nominal=fill(0.5e4, N))
-    "Reynolds number in hydraulic node i for the liquid";
-  Units.SI.ReynoldsNumber Rev1[N - 1](start=fill(0.1e4, N - 1), nominal=fill(
-        5.e5, N - 1)) "Reynolds number in thermal node i for the vapor";
-  Units.SI.ReynoldsNumber Rev2[N](start=fill(0.1e4, N), nominal=fill(5.e5, N))
-    "Reynolds number in hydraulic node i for the vapor";
+  ThermoSysPro.Units.SI.ReynoldsNumber Rel1[N - 1](start=fill(6.e4, N - 1),
+      nominal=fill(0.5e4, N - 1))
+    "Reynolds number in thermal node i for the liquid";
+  ThermoSysPro.Units.SI.ReynoldsNumber Rel2[N](start=fill(6.e4, N), nominal=
+        fill(0.5e4, N)) "Reynolds number in hydraulic node i for the liquid";
+  ThermoSysPro.Units.SI.ReynoldsNumber Rev1[N - 1](start=fill(0.1e4, N - 1),
+      nominal=fill(5.e5, N - 1))
+    "Reynolds number in thermal node i for the vapor";
+  ThermoSysPro.Units.SI.ReynoldsNumber Rev2[N](start=fill(0.1e4, N), nominal=
+        fill(5.e5, N)) "Reynolds number in hydraulic node i for the vapor";
   Real Prl[N - 1](start=fill(4, N - 1), nominal=fill(1, N - 1))
     "Fluid Prandtl number in node i for the liquid";
   Real Prv[N - 1](start=fill(1, N - 1), nominal=fill(1, N - 1))
     "Fluid Prandtl number in node i for the vapor";
-  Units.SI.ThermalConductivity kl[N - 1](start=fill(0.6, N - 1), nominal=fill(
-        0.6, N - 1)) "Thermal conductivity in node i for the liquid";
-  Units.SI.ThermalConductivity kv[N - 1](start=fill(0.03, N - 1), nominal=fill(
-        0.03, N - 1)) "Thermal conductivity in node i for the vapor";
+  ThermoSysPro.Units.SI.ThermalConductivity kl[N - 1](start=fill(0.6, N - 1),
+      nominal=fill(0.6, N - 1)) "Thermal conductivity in node i for the liquid";
+  ThermoSysPro.Units.SI.ThermalConductivity kv[N - 1](start=fill(0.03, N - 1),
+      nominal=fill(0.03, N - 1)) "Thermal conductivity in node i for the vapor";
   Real xv1[N - 1] "Vapor mass fraction in thermal node i";
   Real xv2[N] "Vapor mass fraction in hydraulic node i";
   Real xbs[N - 1] "Bounded upper value for the vapor mass fraction";
   Real xbi[N - 1] "Bounded lower value for the vapor mass fraction";
-  Units.SI.DynamicViscosity mul1[N - 1](start=fill(2.e-4, N - 1), nominal=fill(
-        2.e-4, N - 1)) "Dynamic viscosity in thermal node i for the liquid";
-  Units.SI.DynamicViscosity mul2[N](start=fill(2.e-4, N), nominal=fill(2.e-4, N))
-    "Dynamic viscosity in hydraulic node i for the liquid";
-  Units.SI.DynamicViscosity muv1[N - 1](start=fill(1.e-5, N - 1), nominal=fill(
-        1.e-4, N - 1)) "Dynamic viscosity in thermal node i for the vapor";
-  Units.SI.DynamicViscosity muv2[N](start=fill(1.e-5, N), nominal=fill(1.e-4, N))
-    "Dynamic viscosity in hydraulic node i for the vapor";
-  Units.SI.SpecificHeatCapacity cpl[N - 1](start=fill(4000, N - 1), nominal=
-        fill(4000, N - 1)) "Specific heat capacity for the liquid";
-  Units.SI.SpecificHeatCapacity cpv[N - 1](start=fill(2000, N - 1), nominal=
-        fill(2000, N - 1)) "Specific heat capacity for the vapor";
+  ThermoSysPro.Units.SI.DynamicViscosity mul1[N - 1](start=fill(2.e-4, N - 1),
+      nominal=fill(2.e-4, N - 1))
+    "Dynamic viscosity in thermal node i for the liquid";
+  ThermoSysPro.Units.SI.DynamicViscosity mul2[N](start=fill(2.e-4, N), nominal=
+        fill(2.e-4, N)) "Dynamic viscosity in hydraulic node i for the liquid";
+  ThermoSysPro.Units.SI.DynamicViscosity muv1[N - 1](start=fill(1.e-5, N - 1),
+      nominal=fill(1.e-4, N - 1))
+    "Dynamic viscosity in thermal node i for the vapor";
+  ThermoSysPro.Units.SI.DynamicViscosity muv2[N](start=fill(1.e-5, N), nominal=
+        fill(1.e-4, N)) "Dynamic viscosity in hydraulic node i for the vapor";
+  ThermoSysPro.Units.SI.SpecificHeatCapacity cpl[N - 1](start=fill(4000, N - 1),
+      nominal=fill(4000, N - 1)) "Specific heat capacity for the liquid";
+  ThermoSysPro.Units.SI.SpecificHeatCapacity cpv[N - 1](start=fill(2000, N - 1),
+      nominal=fill(2000, N - 1)) "Specific heat capacity for the vapor";
   Real Bo[N - 1](start=fill(0, N - 1), nominal=fill(4.e-4, N - 1))
     "Boiling number";
   Real Xtt[N - 1](start=fill(1, N - 1), nominal=fill(1, N - 1))
     "Martinelli number";
-  Units.SI.SpecificEnthalpy lv[N - 1](start=fill(2.e6, N - 1), nominal=fill(
-        2.e6, N - 1)) "Specific enthalpy for vaporisation";
-  Units.SI.Density rhol1[N - 1](start=fill(998, N - 1), nominal=fill(998, N - 1))
-    "Fluid density in thermal node i for the liquid";
-  Units.SI.Density rhol2[N](start=fill(998, N), nominal=fill(998, N))
-    "Fluid density in hydraulic node i for the liquid";
-  Units.SI.Density rhov1[N - 1](start=fill(1, N - 1), nominal=fill(1, N - 1))
-    "Fluid density in thermal node i for the vapor";
-  Units.SI.Density rhov2[N](start=fill(1, N), nominal=fill(1, N))
+  ThermoSysPro.Units.SI.SpecificEnthalpy lv[N - 1](start=fill(2.e6, N - 1),
+      nominal=fill(2.e6, N - 1)) "Specific enthalpy for vaporisation";
+  ThermoSysPro.Units.SI.Density rhol1[N - 1](start=fill(998, N - 1), nominal=
+        fill(998, N - 1)) "Fluid density in thermal node i for the liquid";
+  ThermoSysPro.Units.SI.Density rhol2[N](start=fill(998, N), nominal=fill(998,
+        N)) "Fluid density in hydraulic node i for the liquid";
+  ThermoSysPro.Units.SI.Density rhov1[N - 1](start=fill(1, N - 1), nominal=fill(
+         1, N - 1)) "Fluid density in thermal node i for the vapor";
+  ThermoSysPro.Units.SI.Density rhov2[N](start=fill(1, N), nominal=fill(1, N))
     "Fluid density in hydraulic node i for the vapor";
-  Units.SI.Temperature T1[N - 1] "Fluid temperature in thermal node i";
-  Units.SI.Temperature T2[N] "Fluid temperature in hydraulic node i";
+  ThermoSysPro.Units.SI.Temperature T1[N - 1]
+    "Fluid temperature in thermal node i";
+  ThermoSysPro.Units.SI.Temperature T2[N]
+    "Fluid temperature in hydraulic node i";
   ThermoSysPro.Units.SI.PressureDifference dpa[N]
     "Advection term for the mass balance equation in node i";
   ThermoSysPro.Units.SI.PressureDifference dpf[N]
@@ -189,25 +202,28 @@ public
     annotation (Placement(transformation(extent={{-100,-100},{-80,-80}},
           rotation=0)));
 public
-  Connectors.FluidInlet C1(redeclare package Species = Species)          annotation (Placement(transformation(extent=
-           {{-110,0},{-90,20}}, rotation=0)));
+  Connectors.FluidInlet            C1(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{-110,0},{-90,20}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort CTh1[Ns]
     annotation (Placement(transformation(extent={{-10,60},{10,80}}, rotation=0)));
-  Connectors.FluidOutlet C2(redeclare package Species = Species)         annotation (Placement(transformation(extent=
-           {{90,0},{110,20}}, rotation=0)));
+  Connectors.FluidOutlet            C2(redeclare package Species = Species)
+    annotation (Placement(transformation(extent={{90,0},{110,20}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort CTh2[Ns]
     annotation (Placement(transformation(extent={{-10,-60},{10,-40}}, rotation=
             0)));
-  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance[N-1](
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance_mixedphases
+    sub_massBalance[N - 1](
     redeclare package Species = Species,
     each n_in=1,
-    each n_out=1,
-    each V=A*L/(N-1),
+    each n_out_mixed=1,
+    each V=A*L/(N),
     each dynamic_mass_balance=dynamic_mass_balance,
-    Qin=transpose({Q[1:N-1]}),
+    Qin=transpose({Q[1:N - 1]}),
     Qout=transpose({Q[2:N]}),
-    rho=rho1)  annotation (Placement(transformation(extent={{38,70},{74,106}})));
-
+    rho=rho1,
+    rho_liquidPhase=rhol1,
+    x=xv1,
+    T=pro1.T) annotation (Placement(transformation(extent={{38,70},{74,106}})));
 
 initial equation
   if steady_state then
@@ -245,11 +261,12 @@ initial equation
   end if;
 
 equation
+
   sub_massBalance[1].mix_in.SubC = {C1.SubC};
-  sub_massBalance[N-1].mix_out.SubC = {C2.SubC};
+  sub_massBalance[N-1].mix_out_mixed.SubC = {C2.SubC};
 
   for i in 1:N - 2 loop
-  sub_massBalance[i+1].mix_in.SubC = sub_massBalance[i].mix_out.SubC;
+  sub_massBalance[i+1].mix_in.SubC = sub_massBalance[i].mix_out_mixed.SubC;
   end for;
 
   /* Wall temperature */
@@ -283,6 +300,11 @@ equation
     else
       0 = Q[i] - Q[i + 1];
     end if;
+
+  //Moved to binding equations
+  //sub_massBalance[i].Qin = {Q[i]};
+  //sub_massBalance[i].Qout = {Q[i+1]};
+  //sub_massBalance[i].rho=rho1[i];
 
     /* Energy balance equation */
     if dynamic_mass_balance then

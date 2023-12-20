@@ -5,7 +5,7 @@ model SteamExtractionSplitter "Splitter for steam extraction"
   parameter Integer mode_e=0
     "IF97 region at the inlet. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      ChimiScope.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 public
@@ -36,7 +36,8 @@ public
    n_in=1,n_out=2,
    Qin={Ce.Q},
    Qout={Cs.Q,Cex.Q},
-   rho = proe.d)
+   rho = proe.d,
+   T=proe.T)
     annotation (Placement(transformation(extent={{-30,34},{10,74}})));
 
 equation

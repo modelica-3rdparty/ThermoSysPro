@@ -28,7 +28,7 @@ public
           extent={{90,-10},{110,10}}, rotation=0)));
 
 replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      ChimiScope.None          annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 equation

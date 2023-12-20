@@ -64,7 +64,7 @@ model CentrifugalPump "Centrifugal pump"
     "Coef. of the parabolic pump efficiency characteristics (active if mode_car=2)";
 
 replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      ChimiScope.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 protected

@@ -1,0 +1,35 @@
+within ThermoSysPro.Examples.SimpleExamples;
+model Test_VolumeA_amines
+  ThermoSysPro.WaterSteam.BoundaryConditions.SourcePQ sourcePQ(
+    P0=6700000,
+    Q0=20,
+    h0=1134.511729e3,
+    redeclare package Species = ChimiScope.Amines,
+    Cin={1,1,1,1})
+    annotation (Placement(transformation(extent={{-86,-10},{-66,10}})));
+  WaterSteam.Volumes.VolumeA volumeA(
+    P0=6700000,
+    dynamic_mass_balance=false,
+    redeclare package Species = ChimiScope.Amines,
+    sub_massBalance(sink_and_source=ChimiScope.None.sink_and_source_list.none))
+    annotation (Placement(transformation(extent={{-6,-10},{14,10}})));
+  ThermoSysPro.WaterSteam.PressureLosses.SingularPressureLoss
+    singularPressureLoss(redeclare package Species = ChimiScope.Amines)
+    annotation (Placement(transformation(extent={{-48,-10},{-28,10}})));
+  ThermoSysPro.WaterSteam.BoundaryConditions.Sink sink(h0=1134.511729e3,
+                                                                  redeclare
+      package Species = ChimiScope.Amines)
+    annotation (Placement(transformation(extent={{40,-10},{60,10}})));
+
+equation
+  connect(sourcePQ.C, singularPressureLoss.C1)
+    annotation (Line(points={{-66,0},{-48,0}}, color={0,0,255}));
+  connect(volumeA.Ce1, singularPressureLoss.C2)
+    annotation (Line(points={{-6,0},{-28,0}}, color={0,0,255}));
+  connect(volumeA.Cs1, sink.C)
+    annotation (Line(points={{14,0},{40,0}}, color={0,0,255}));
+  annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{
+            -160,-100},{100,100}})),                             Diagram(
+        coordinateSystem(preserveAspectRatio=false, extent={{-160,-100},{
+            100,100}})));
+end Test_VolumeA_amines;

@@ -4,7 +4,7 @@ model SensorP "Pressure sensor"
     "true : continuous flow reversal - false : discontinuous flow reversal";
 
 replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      ChimiScope.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 protected

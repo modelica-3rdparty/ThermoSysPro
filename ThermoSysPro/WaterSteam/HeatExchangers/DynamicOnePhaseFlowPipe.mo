@@ -33,7 +33,7 @@ model DynamicOnePhaseFlowPipe "Dynamic one-phase flow pipe"
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 replaceable package Species =
-  ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+  ChimiScope.None   annotation (
   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 protected
@@ -123,15 +123,16 @@ public
   ThermoSysPro.Thermal.Connectors.ThermalPort CTh[Ns]
     annotation (Placement(transformation(extent={{-10,20},{10,40}}, rotation=0)));
   ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance [N-1](redeclare
-      package
-Species = Species,
+      package Species =
+          Species,
 each n_in=1,
 each n_out=1,
 each V=A*L/(N-1),
 each dynamic_mass_balance=dynamic_mass_balance,
 Qin = transpose({Q[1:N-1]}),
 Qout = transpose({Q[2:N]}),
-rho = rho1)
+rho = rho1,
+T=T1)
     annotation (Placement(transformation(extent={{-90,38},{-50,78}})));
 
 initial equation
