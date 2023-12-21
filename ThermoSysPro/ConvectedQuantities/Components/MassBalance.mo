@@ -21,8 +21,7 @@ block MassBalance "Mass Balance block for transported substances"
   parameter Species.sink_and_source_list sink_and_source = Species.sink_and_source_list.none;
 
   parameter Boolean dynamic_mass_balance = false "true: dynamic mass balance equation - false: static mass balance equation";
-  parameter SI.Volume V = 0 "Volume used to compute the fluid mass for dynamic calculations"
-                                                                                            annotation(Dialog(enable=dynamic_mass_balance));
+  parameter SI.Volume V = 0 "Volume used to compute the fluid mass for dynamic calculations and for degradation";
 
   input MixtureConnector                                mix_in[n_in](redeclare
       package Species = Species)
