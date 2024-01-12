@@ -2,7 +2,7 @@ within ThermoSysPro.WaterSteam.PressureLosses;
 model LumpedStraightPipe "Lumped straight pipe (circular duct)"
   parameter Units.SI.Length L=10. "Pipe length";
   parameter Units.SI.Diameter D=0.2 "Pipe internal diameter";
-  parameter Integer ntubes=1 "Number of pipes in parallel";
+  parameter Real ntubes=1 "Number of pipes in parallel";
   parameter Real lambda=0.03
     "Friction pressure loss coefficient (active if lambda_fixed=true)";
   parameter Real rugosrel=0.0001
