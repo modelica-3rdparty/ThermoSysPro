@@ -7,13 +7,13 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback reactio
   parameter ThermoSysPro.Units.SI.Temperature t0_doppler=944
     "Doppler Temperature associated (K)";
   parameter Real L=200 "Length of the control rods (cm)";
-  parameter Real step_size= L/25;
+//  parameter Real step_size= L/25;
   // parameter Real Reac_worth_G=1250;
- //  parameter Real Reac_worth_R=1800;
+ //  parameter Real Reac_worth_R=30;
  // Ediffg0 = Reac_worth_G/L (pcm/cm);
  // Ediffr0 = Reac_worth_R/L (pcm/cm);
- // parameter Integer g_rods_number = 20 "Total number of control rods assemblies of the group G";
- // parameter Integer r_rods_number = 10 "Total number of control rods assemblies of the group R";
+ // parameter Integer g_rods_number = 10 "Total number of control rods assemblies of the group G";
+ // parameter Integer r_rods_number = 20 "Total number of control rods assemblies of the group R";
  parameter Boolean steady_state = true;
 
   parameter Real PosR0=0 "Control rods initial position is assumed to be 0, the control
@@ -26,15 +26,13 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback reactio
   parameter ThermoSysPro.Units.SI.Temperature Tref_fuel(start=973.15, fixed=false)
     "fuel effective reference temperature (K)";
 
-  parameter Real XPosgYEdiffg[26, 2]=[0, 0; step_size, 6.25; 2*step_size, 6.25; 3*step_size, 6.25; 4*step_size, 6.25; 5*step_size, 6.25;
-   6*step_size, 6.25; 7*step_size, 6.25; 8*step_size, 6.25; 9*step_size, 6.25; 10*step_size, 6.25; 11*step_size, 6.25; 12*step_size, 6.25; 13*step_size, 6.25; 14*step_size, 6.25;
-    15*step_size, 6.25; 16*step_size, 6.25; 17*step_size, 6.25; 18*step_size, 6.25; 19*step_size, 6.25; 20*step_size, 6.25; 21*step_size, 6.25;
-    22*step_size, 6.25; 23*step_size, 6.25; 24*step_size, 6.25;  25*step_size, 6.25]
+  parameter Real XPosgYEdiffg[27, 2]=[25*8, -62.5; 24*8, -62.5; 23*8, -62.5; 22*8, -62.5; 21*8, -62.5; 20*8, -62.5; 19*8, -62.5;
+   18*8, -62.5; 17*8, -62.5; 16*8, -62.5; 15*8, -62.5; 14*8, -62.5; 13*8, -62.5; 12*8, -62.5; 11*8, -62.5; 10*8, -62.5;
+   9*8, -62.5; 8*8, -62.5; 7*8, -62.5; 6*8, -62.5; 5*8, -62.5; 4*8, -62.5; 3*8, -62.5; 2*8, -62.5; 8, -62.5; 0, -62.5; 0, 0]
     "XPosgYEdiffg (input = first column, output = second column)";
-  parameter Real XPosrYEdiffr[26, 2]=[0, 0; step_size, 90; 2*step_size, 90; 3*step_size, 90; 4*step_size, 90; 5*step_size, 90; 6*step_size, 90;
-   7*step_size, 90; 8*step_size, 90; 9*step_size, 90; 10*step_size, 90; 11*step_size, 90; 12*step_size, 90; 13*step_size, 90; 14*step_size, 90; 15*step_size, 90;
-   16*step_size, 90; 17*step_size, 90; 18*step_size, 90; 19*step_size, 90; 20*step_size, 90; 21*step_size, 90; 22*step_size, 90; 23*step_size, 90; 24*step_size, 90;
-   25*step_size, 90]
+  parameter Real XPosrYEdiffr[27, 2]=[25*8, -3; 24*8, -3; 23*8, -3; 22*8, -3; 21*8, -3; 20*8, -3; 19*8, -3;
+   18*8, -3; 17*8, -3; 16*8, -3; 15*8, -3; 14*8, -3; 13*8, -3; 12*8, -3; 11*8, -3; 10*8, -3;
+   9*8, -3; 8*8, -3; 7*8, -3; 6*8, -3; 5*8, -3; 4*8, -3; 3*8, -3; 2*8, -3; 8, -3; 0, -3; 0, 0]
     "XPosrYEdiffr (input = first column, output = second column)";
 
 protected
@@ -100,6 +98,7 @@ initial equation
 
  if steady_state then
    Reac=0;
+   //Tref_fuel=T_fuel;
  end if;
 
 equation

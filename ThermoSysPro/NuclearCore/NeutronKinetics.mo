@@ -13,7 +13,7 @@ model NeutronKinetics "This module contains a model of the neutronic flux with s
     "Radioactivity constants of the groups of the delayed neutrons (1/s)";
   parameter Real Beta[6]={0.00021,0.00142,0.00131,0.00274,0.000932,0.000313}
     "Fraction of delayed neutrons in each group with respect to the total number of neutrons emitted per fission";
-                                                                             // metto 7 gruppi??
+
   parameter Boolean steady_state=false;
   parameter Real Puo20=524e6 "Initial power of the core";
 
