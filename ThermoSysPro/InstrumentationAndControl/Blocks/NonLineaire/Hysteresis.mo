@@ -4,14 +4,12 @@ block Hysteresis
   parameter Real uMax=1 "Maximum value of the hysteresis interval";
   parameter Real uMin=0 "Minimum value of the hysteresis interval";
 
-
   Connectors.InputReal u
  annotation (Placement(transformation(extent={{-120,-10},{-100,10}})));
   Connectors.OutputLogical y
  annotation (Placement(transformation(extent={{100,-12},{120,8}})));
 initial equation
  y.signal=if (u.signal > (uMin+uMax)/2) then false else true;
-
 
 algorithm
 when u.signal > uMax then
@@ -20,9 +18,6 @@ when u.signal > uMax then
 when u.signal < uMin then
   y.signal:=true;
 end when;
-
-
-
 
   annotation (Icon(graphics={
      Rectangle(
