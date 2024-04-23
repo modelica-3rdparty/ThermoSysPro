@@ -3,7 +3,7 @@ model DynamicOnePhaseFlowPipe "Dynamic one-phase flow pipe"
   parameter Units.SI.Length L=10. "Pipe length";
   parameter Units.SI.Diameter D=0.2 "Internal pipe diameter";
   parameter Real rugosrel=0.0007 "Pipe relative roughness";
-  parameter Integer ntubes=1 "Number of pipes in parallel";
+  parameter Real ntubes=1 "Number of pipes in parallel";
   parameter Units.SI.Position z1=0 "Pipe inlet altitude";
   parameter Units.SI.Position z2=0 "Pipe outlet altitude";
   parameter Real dpfCorr=1.00
