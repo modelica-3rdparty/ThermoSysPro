@@ -22,6 +22,9 @@ model Pressurizer "Pressurizer"
   parameter Units.SI.SpecificHeatCapacity cpp=600 "Wall specific heat";
   parameter Boolean steady_state=true
     "true: start from steady state - false: start from (P0, Yw0)";
+   parameter Boolean surge_mixing=true
+   "true: the surge water instantly mixes with the liquid in the volume - false: the surge water enters the volume with enthalpy hls";
+   Units.SI.Power Wliq_mix "Power exchange term due to the enthalpy difference between the liquid in the volume and the liquid in the surge line";
 
 protected
   constant Real pi=Modelica.Constants.pi "Pi";
@@ -152,7 +155,13 @@ equation
 
   /* Liquid phase energy balance equation */
   rhol*Vl*der(hl) - Vl*der(P) = (Qcond + Cas.Q)*(hls - hl) - Qevap*(hvs - hl)
-                                - Cex.Q*(Cex.h - hl) - Wpl + Wlv + Wch;
+                                - Wliq_mix - Wpl + Wlv + Wch;
+
+   if surge_mixing then
+      Wliq_mix =  Cex.Q*(Cex.h - hl);
+   else
+     Wliq_mix = 0;
+   end if;
 
   /* Gas phase energy balance equation */
   rhov*Vv*der(hv) - Vv*der(P) = Qevap*(hvs - hv) - Qcond*(hls - hv)
