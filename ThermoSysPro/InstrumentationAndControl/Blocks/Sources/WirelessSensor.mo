@@ -21,30 +21,13 @@ equation
   neg_col = fill(255,3) - measure_col;
 
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
-        Rectangle(
-          extent={{-100,100},{100,-100}},
-          lineColor={255,255,255},
-          fillColor={255,255,255},
-          fillPattern=FillPattern.Solid),
         Ellipse(
-          extent={{-60,60},{60,-60}},
+          extent={{20,70},{130,-40}},
           lineColor={0,0,0},
-          lineThickness=0.5),
-        Ellipse(
-          extent={{-80,80},{80,-80}},
-          lineColor={0,0,0},
-          lineThickness=0.5),
-        Ellipse(
-          extent={{-98,98},{98,-98}},
-          lineColor={0,0,0},
-          lineThickness=0.5),
-        Rectangle(
-          extent={{-47,100},{47,-100}},
-          lineColor={255,255,255},
-          fillColor={255,255,255},
-          fillPattern=FillPattern.Solid,
-          origin={1,0},
-          rotation=90),
+          lineThickness=0.5,
+          startAngle=-80,
+          endAngle=-10,
+          closure=EllipseClosure.None),
         Polygon(
 points={{-86,28},{86,28},{92,22},{92,-22},{86,-28},{-86,-28},{-92,-22},{-92,22},
               {-86,28}},
@@ -59,6 +42,41 @@ points={{-86,28},{86,28},{92,22},{92,-22},{86,-28},{-86,-28},{-92,-22},{-92,22},
         Text(
           extent={{-140,-92},{140,-134}},
           textColor={95,95,95},
-          textString="%m")}),                            Diagram(
+          textString="%m"),
+        Ellipse(
+          extent={{38,58},{118,-22}},
+          lineColor={0,0,0},
+          lineThickness=0.5,
+          startAngle=-80,
+          endAngle=-10,
+          closure=EllipseClosure.None),
+        Ellipse(
+          extent={{56,46},{106,-4}},
+          lineColor={0,0,0},
+          lineThickness=0.5,
+          startAngle=-80,
+          endAngle=-10,
+          closure=EllipseClosure.None),
+        Ellipse(
+          extent={{-132,42},{-22,-68}},
+          lineColor={0,0,0},
+          lineThickness=0.5,
+          startAngle=100,
+          endAngle=170,
+          closure=EllipseClosure.None),
+        Ellipse(
+          extent={{-120,24},{-40,-56}},
+          lineColor={0,0,0},
+          lineThickness=0.5,
+          startAngle=100,
+          endAngle=170,
+          closure=EllipseClosure.None),
+        Ellipse(
+          extent={{-108,6},{-58,-44}},
+          lineColor={0,0,0},
+          lineThickness=0.5,
+          startAngle=100,
+          endAngle=170,
+          closure=EllipseClosure.None)}),                Diagram(
         coordinateSystem(preserveAspectRatio=false)));
 end WirelessSensor;
