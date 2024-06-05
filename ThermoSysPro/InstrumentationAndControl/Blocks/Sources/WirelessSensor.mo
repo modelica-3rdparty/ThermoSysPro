@@ -4,39 +4,53 @@ block WirelessSensor
 
   Real m=0.0 "Measure Expression" annotation (Dialog(group="Measured data"));
 
-  parameter Real max_range = 14 "Color Scale Max Value" annotation (Dialog(group="Animation"));
+  parameter Boolean ValidityRange=false "Intensity colorscale by default (jet colormap);\\n ValidityRange: green if close to nominal value"
+                                                                                                                                           annotation(Dialog(group="Animation"),choices(checkBox=true));
   parameter Real min_range = 0 "Color Scale Min Value" annotation (Dialog(group="Animation"));
+  parameter Real max_range = 14 "Color Scale Max Value" annotation (Dialog(group="Animation"));
+  parameter Real m_nominal = 10 "Color Scale nominal Value" annotation (Dialog(enable=ValidityRange,group="Animation",groupImage = ("modelica://ThermoSysPro/colorMap_WirelessSensor4.png")));
   parameter String format = ".2g" "Numeric Value Format" annotation (Dialog(group="Animation"));
+
 
   Real measure_col[3](each min=0, each max=255) "pH corrspondig color";
   Real neg_col[3](each min=0, each max=255) "Negative pH color";
 
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal y
-    annotation (Placement(transformation(extent={{92,-10},{112,10}}),
-        iconTransformation(extent={{92,-10},{112,10}})));
+    annotation (Placement(transformation(extent={{100,-10},{120,10}}),
+        iconTransformation(extent={{100,-10},{120,10}})));
 
 equation
   y.signal=m;
-  measure_col = Modelica.Mechanics.MultiBody.Visualizers.Colors.scalarToColor(m,min_range,max_range,Modelica.Mechanics.MultiBody.Visualizers.Colors.ColorMaps.jet());
+  if ValidityRange then
+  measure_col =ThermoSysPro.Functions.Utilities.scalarToColor_validityRange(
+    T=m,
+    T_nominal=m_nominal,
+    T_min=min_range,
+    T_max=max_range,
+    colorMap=ThermoSysPro.Functions.Utilities.RedGreen_colorMap());
+  else
+    measure_col = Modelica.Mechanics.MultiBody.Visualizers.Colors.scalarToColor(m,min_range,max_range,Modelica.Mechanics.MultiBody.Visualizers.Colors.ColorMaps.jet());
+  end if;
+
   neg_col = fill(255,3) - measure_col;
 
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Ellipse(
-          extent={{20,70},{130,-40}},
+          extent={{30,70},{140,-40}},
           lineColor={0,0,0},
           lineThickness=0.5,
           startAngle=-80,
           endAngle=-10,
           closure=EllipseClosure.None),
         Polygon(
-points={{-86,28},{86,28},{92,22},{92,-22},{86,-28},{-86,-28},{-92,-22},{-92,22},
-              {-86,28}},
+          points={{-94,28},{94,28},{100,24},{100,-24},{94,-28},{-94,-28},{-100,-22},
+              {-100,22},{-94,28}},
           lineColor={0,0,0},
-          fillColor=DynamicSelect({255,255,170},measure_col),
+          fillColor=DynamicSelect({255,255,170}, measure_col),
           fillPattern=FillPattern.Solid,
           lineThickness=0.5),
         Text(
-          extent={{-92,32},{92,-24}},
+          extent={{-100,28},{100,-24}},
           textColor=DynamicSelect({0,0,0},neg_col),
           textString=DynamicSelect("M", String(m,format=format))),
         Text(
@@ -44,39 +58,40 @@ points={{-86,28},{86,28},{92,22},{92,-22},{86,-28},{-86,-28},{-92,-22},{-92,22},
           textColor={95,95,95},
           textString="%m"),
         Ellipse(
-          extent={{38,58},{118,-22}},
+          extent={{48,58},{128,-22}},
           lineColor={0,0,0},
           lineThickness=0.5,
           startAngle=-80,
           endAngle=-10,
           closure=EllipseClosure.None),
         Ellipse(
-          extent={{56,46},{106,-4}},
+          extent={{66,46},{116,-4}},
           lineColor={0,0,0},
           lineThickness=0.5,
           startAngle=-80,
           endAngle=-10,
           closure=EllipseClosure.None),
         Ellipse(
-          extent={{-132,42},{-22,-68}},
+          extent={{-140,42},{-30,-68}},
           lineColor={0,0,0},
           lineThickness=0.5,
           startAngle=100,
           endAngle=170,
           closure=EllipseClosure.None),
         Ellipse(
-          extent={{-120,24},{-40,-56}},
+          extent={{-128,26},{-48,-56}},
           lineColor={0,0,0},
           lineThickness=0.5,
           startAngle=100,
           endAngle=170,
           closure=EllipseClosure.None),
         Ellipse(
-          extent={{-108,6},{-58,-44}},
+          extent={{-116,6},{-66,-44}},
           lineColor={0,0,0},
           lineThickness=0.5,
           startAngle=100,
           endAngle=170,
           closure=EllipseClosure.None)}),                Diagram(
-        coordinateSystem(preserveAspectRatio=false)));
+        coordinateSystem(preserveAspectRatio=false)),
+    uses(ThermoSysPro(version="4.0"), Modelica(version="4.0.0")));
 end WirelessSensor;
