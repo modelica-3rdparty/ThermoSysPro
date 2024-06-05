@@ -8,7 +8,7 @@ block WirelessSensor
                                                                                                                                            annotation(Dialog(group="Animation"),choices(checkBox=true));
   parameter Real min_range = 0 "Color Scale Min Value" annotation (Dialog(group="Animation"));
   parameter Real max_range = 14 "Color Scale Max Value" annotation (Dialog(group="Animation"));
-  parameter Real m_nominal = 10 "Color Scale nominal Value" annotation (Dialog(enable=ValidityRange,group="Animation",groupImage = ("modelica://ThermoSysPro/colorMap_WirelessSensor4.png")));
+  parameter Real m_nominal = 10 "Color Scale nominal Value" annotation (Dialog(enable=ValidityRange,group="Animation",groupImage = ("modelica://ThermoSysPro/InstrumentationAndControl/Blocks/Sources/colorMap_WirelessSensor.png")));
   parameter String format = ".2g" "Numeric Value Format" annotation (Dialog(group="Animation"));
 
 

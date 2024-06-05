@@ -12,21 +12,21 @@ algorithm
   annotation (Documentation(info="<html>
 <h4>Syntax</h4>
 <blockquote><pre>
-ColorMaps.<strong>spring</strong>();
-ColorMaps.<strong>spring</strong>(n_colors=64);
+ColorMaps.<strong>RedGreen</strong>();
+ColorMaps.<strong>RedGreen</strong>(n_colors=64);
 </pre></blockquote>
 <h4>Description</h4>
 <p>
-This function returns the color map \"spring.\" A color map
+This function returns the color map \"RedGreen.\" A color map
 is a Real[:,3] array where every row represents a color.
 With the optional argument \"n_colors\" the number of rows
 of the returned array can be defined. The default value is
 \"n_colors=64\" (it is usually best if n_colors is a multiple of 4).
-Image of the \"spring\" color map:
+Image of the \"RedGreen\" color map:
 </p>
 
 <blockquote>
-<img src=\"modelica://Modelica/Resources/Images/Mechanics/MultiBody/Visualizers/Colors/ColorMaps/spring.png\">
+<img src=\"modelica:modelica://ThermoSysPro/InstrumentationAndControl/Blocks/Sources/colorMap_RedGreen.png\">
 </blockquote>
 
 <h4>See also</h4>
