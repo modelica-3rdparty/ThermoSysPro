@@ -126,6 +126,5 @@ annotation (
 <p><b>Copyright &copy; EDF 2002 - 2020</b> </p>
 <h4>ThermoSysPro version 4.0 </h4>
 </html>"),
-  version="4.0",
-  uses(ChimiScope(version="4.1"), Modelica(version="3.2.2")));
+  version="4.0");
 end ThermoSysPro;

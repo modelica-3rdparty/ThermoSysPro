@@ -4,8 +4,10 @@ DynamicOnePhaseFlowPipe
 DynamicOnePhaseFlowShell
 DynamicTwoFlowHeatExchangerShell
 DynamicTwoPhaseFlowPipe
+DynamicTwoPhaseFlowRiser
 DynamicWaterHeating
 DynamicWaterHeatingOnePipe
+DynamicWaterWaterExchanger
 NTUWaterHeating
 SimpleDynamicCondenser
 SimpleStaticCondenser
@@ -13,7 +15,5 @@ StaticCondenser
 StaticCondenserHEI
 StaticWaterWaterExchanger
 StaticWaterWaterExchangerDTorWorEff
-SteamGenerator_4SG
 SteamGenerator_1SG
-DynamicTwoPhaseFlowRiser
-DynamicWaterWaterExchanger
+SteamGenerator_4SG

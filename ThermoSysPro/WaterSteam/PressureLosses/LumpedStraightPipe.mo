@@ -21,8 +21,13 @@ model LumpedStraightPipe "Lumped straight pipe (circular duct)"
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 replaceable package Species =
-      ChimiScope.None      annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None     annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+replaceable package SinkAndSource =
+      ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 
 protected
   constant ThermoSysPro.Units.SI.Acceleration g=Modelica.Constants.g_n
@@ -61,18 +66,18 @@ public
             0)));
   ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(
     redeclare package Species = Species,
+    redeclare package SinkAndSource = SinkAndSource,
     n_in=1,
     n_out=1,
     D=D,
     L=L,
-    sink_and_source=Species.sink_and_source_list.none,
     dynamic_mass_balance=false,
     capa=1,
     Qin={C1.Q},
     Qout={C2.Q},
     rho=rho,
     T=T,
-    SaS_resine(choix_resine=1))
+    SaS(choix_resine=1))
     annotation (Placement(transformation(extent={{68,70},{88,90}})));
 
 initial equation

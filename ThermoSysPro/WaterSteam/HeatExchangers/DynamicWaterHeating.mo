@@ -43,10 +43,11 @@ model DynamicWaterHeating "Dynamic water heater"
     "Corrective term for Heat exchange coefficient or Fouling coefficient liquid side";
 
 replaceable package Species =
-      ChimiScope.None   annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
   Volumes.TwoPhaseCavity WaterHeating(
+    redeclare package Species = Species,
     Vf0=Vf0,
     P0=P0c,
     Ns=Ns,
@@ -68,6 +69,7 @@ replaceable package Species =
     annotation (                        Placement(transformation(extent={{-100,
             -100},{100,100}}, rotation=0)));
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicOnePhaseFlowPipe pipe_3(
+    redeclare package Species = Species,
     option_temperature=2,
     advection=true,
     mode=0,
@@ -111,6 +113,7 @@ replaceable package Species =
     ntubes=ntubes3)
     annotation (Placement(transformation(extent={{-34,-24},{60,24}}, rotation=0)));
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicOnePhaseFlowPipe pipe_1(
+    redeclare package Species = Species,
     option_temperature=2,
     advection=true,
     mode=0,
@@ -136,6 +139,7 @@ replaceable package Species =
     annotation (Placement(transformation(extent={{-35,-69},{59,-21}}, rotation=
             0)));
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicOnePhaseFlowPipe pipe_2(
+    redeclare package Species = Species,
     option_temperature=2,
     advection=true,
     mode=0,
@@ -161,17 +165,20 @@ replaceable package Species =
     ntubes=ntubes2)
     annotation (Placement(transformation(extent={{-35,21},{59,69}}, rotation=0)));
   Volumes.VolumeC volumeC(
+    redeclare package Species = Species,
     mode=1,
     h0=890e3,
     dynamic_mass_balance=true)  annotation (Placement(transformation(extent={{
             -56,35},{-74,53}}, rotation=0)));
   Volumes.VolumeA volumeD(
+    redeclare package Species = Species,
     mode=1,
     h0=790e3,
     dynamic_mass_balance=false)
                    annotation (Placement(transformation(extent={{-74,-54},{-56,
             -36}}, rotation=0)));
   Volumes.VolumeA volumeD1(
+    redeclare package Species = Species,
     mode=1,
     h0=850e3,
     dynamic_mass_balance=true)

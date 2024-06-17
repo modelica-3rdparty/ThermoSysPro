@@ -43,10 +43,12 @@ model DynamicWaterHeatingOnePipe "Dynamic WaterHeating"
     "Corrective terme for Heat exchange coefficient or Fouling coefficient liquid side";
 
 replaceable package Species =
-      ChimiScope.None   annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
+
   Volumes.TwoPhaseCavity WaterHeating(
+    redeclare package Species = Species,
     Vf0=Vf0,
     P0=P0c,
     Ns=Ns,
@@ -68,6 +70,7 @@ replaceable package Species =
     annotation (                        Placement(transformation(extent={{-100,
             -100},{100,100}}, rotation=0)));
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicOnePhaseFlowPipe pipe_3(
+    redeclare package Species = Species,
     option_temperature=2,
     advection=true,
     mode=0,

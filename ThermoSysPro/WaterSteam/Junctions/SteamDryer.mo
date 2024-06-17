@@ -5,7 +5,7 @@ model SteamDryer "Steam dryer"
   parameter Integer mode_e=0
     "IF97 region at the inlet. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
     replaceable package Species =
-      ChimiScope.None   annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group=
           "Transported Substances"));
 
@@ -43,7 +43,7 @@ public
 equation
   assert((eta > 0) and (eta <= 1), "SteamDryer - Parameter eta should be > 0 and <= 1");
 
-    sub_massBalance.mix_in.SubC = {Cev.SubC};
+  sub_massBalance.mix_in.SubC = {Cev.SubC};
   sub_massBalance.mix_out_gas.SubC = {Csv.SubC};
   sub_massBalance.mix_out_liq.SubC = {Csl.SubC};
 
@@ -81,7 +81,7 @@ equation
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},
         grid={2,2}), graphics={Polygon(
-          points={{-98,40},{-18,-100},{22,-100},{102,40},{-98,40}},
+          points={{-96,42},{-16,-98},{24,-98},{104,42},{-96,42}},
           lineColor={0,0,255},
           fillColor={255,255,0},
           fillPattern=FillPattern.Solid)}),

@@ -1,64 +1,62 @@
 ﻿within ThermoSysPro.WaterSteam.Volumes;
 model VolumeA "Mixing volume with 2 inlets and 2 outlets"
-  parameter ThermoSysPro.Units.SI.Volume V=1 "Volume";
-  parameter ThermoSysPro.Units.SI.AbsolutePressure P0=1e5
+  parameter Units.SI.Volume V=1 "Volume";
+  parameter Units.SI.AbsolutePressure P0=1e5
     "Initial fluid pressure (active if dynamic_mass_balance=true and steady_state=false)";
-  parameter ThermoSysPro.Units.SI.SpecificEnthalpy h0=1e5
+  parameter Units.SI.SpecificEnthalpy h0=1e5
     "Initial fluid specific enthalpy (active if steady_state=false)";
   parameter Boolean dynamic_mass_balance=false
     "true: dynamic mass balance equation - false: static mass balance equation";
   parameter Boolean steady_state=true
     "true: start from steady state - false: start from (P0, h0)";
   parameter Integer fluid=1 "1: water/steam - 2: C3H3F5";
-  parameter ThermoSysPro.Units.SI.Density p_rho=0
-    "If > 0, fixed fluid density";
+  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density";
   parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
       replaceable package Species =
-      ChimiScope.None         annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
+replaceable package SinkAndSource =
+  ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 public
-  ThermoSysPro.Units.SI.Temperature T "Fluid temperature";
-  ThermoSysPro.Units.SI.AbsolutePressure P(start=1.e5) "Fluid pressure";
-  ThermoSysPro.Units.SI.SpecificEnthalpy h(start=100000)
-    "Fluid specific enthalpy";
-  ThermoSysPro.Units.SI.Density rho(start=998) "Fluid density";
-  ThermoSysPro.Units.SI.MassFlowRate BQ
-    "Right hand side of the mass balance equation";
-  ThermoSysPro.Units.SI.Power BH
-    "Right hand side of the energybalance equation";
+  Units.SI.Temperature T "Fluid temperature";
+  Units.SI.AbsolutePressure P(start=1.e5) "Fluid pressure";
+  Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
+  Units.SI.Density rho(start=998) "Fluid density";
+  Units.SI.MassFlowRate BQ "Right hand side of the mass balance equation";
+  Units.SI.Power BH "Right hand side of the energybalance equation";
 public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
     "Propriétés de l'eau"
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
            0)));
-  Connectors.FluidInlet Ce1(redeclare package Species = Species)
+ WaterSteam.Connectors.FluidInlet Ce1(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
            0)));
-  Connectors.FluidInlet Ce2(redeclare package Species = Species)
+  WaterSteam.Connectors.FluidInlet Ce2(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-10,90},{10,110}}, rotation=0),
         iconTransformation(extent={{-10,90},{10,110}})));
-  Connectors.FluidOutlet Cs1(redeclare package Species = Species)
+  WaterSteam.Connectors.FluidOutlet Cs1(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
-  Connectors.FluidOutlet Cs2(redeclare package Species = Species)
+  WaterSteam.Connectors.FluidOutlet Cs2(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-10,-110},{10,-90}}, rotation=
            0)));
-  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(redeclare
-      package
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(
+  redeclare package
       Species =                                                                          Species,
+   redeclare package SinkAndSource = SinkAndSource,
    n_in=2, n_out=2,
-    D=1,
-    L=1,
-    capa=1,
    dynamic_mass_balance=dynamic_mass_balance,
    V=V,
    Qin = {Ce1.Q,Ce2.Q},
    Qout = {Cs1.Q,Cs2.Q},
    rho = rho,
    T=T)
-    annotation (Placement(transformation(extent={{-100,34},{-60,74}})));
+    annotation (Placement(transformation(extent={{-80,60},{-40,100}})));
 initial equation
   if steady_state then
     if dynamic_mass_balance then

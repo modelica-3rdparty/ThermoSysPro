@@ -37,8 +37,14 @@ model DynamicTwoPhaseFlowRiser "Riser: Dynamic two-phase flow pipe"
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 replaceable package Species =
-      ChimiScope.None      annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None       annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+replaceable package SinkAndSource =
+  ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
 
 protected
   constant ThermoSysPro.Units.SI.Acceleration g=Modelica.Constants.g_n
@@ -214,6 +220,7 @@ public
   ThermoSysPro.ConvectedQuantities.Components.MassBalance_mixedphases
     sub_massBalance[N - 1](
     redeclare package Species = Species,
+    redeclare package SinkAndSource = SinkAndSource,
     each n_in=1,
     each n_out_mixed=1,
     each V=A*L/(N),

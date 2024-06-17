@@ -7,9 +7,10 @@ DynamicReliefValve
 IdealCheckValve
 IdealSwitchValve
 InvSingularPressureLoss
+LumpedStraightPipe
 NonBoilingValve
 PipePressureLoss
 SingularPressureLoss
 SwitchValve
 ThreeWayValve
-LumpedStraightPipe
+SubstInsert

@@ -6,7 +6,7 @@ model Sensor_pH "pH sensor"
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
     replaceable package Species =
-      ChimiScope.None          annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
       //Units.SI.Density rho;
@@ -46,8 +46,8 @@ public
   ThermoSysPro.WaterSteam.Connectors.FluidInlet C1(redeclare package Species =
         Species) annotation (Placement(transformation(extent={{-110,-90},{-90,-70}},
           rotation=0)));
-  ThermoSysPro.WaterSteam.Connectors.FluidOutlet C2(redeclare package Species =
-        Species) annotation (Placement(transformation(extent={{92,-90},{112,-70}},
+  ThermoSysPro.WaterSteam.Connectors.FluidOutlet C2(redeclare package Species
+      = Species) annotation (Placement(transformation(extent={{92,-90},{112,-70}},
           rotation=0)));
   Species.pH pH(T=T, rho_liquidPhase=rho_liquidPhase, x=x, SubC=C1.SubC)
     annotation (Placement(transformation(extent={{-90,70},{-70,90}})));

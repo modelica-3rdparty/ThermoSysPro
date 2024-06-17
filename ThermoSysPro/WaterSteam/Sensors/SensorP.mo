@@ -4,7 +4,7 @@ model SensorP "Pressure sensor"
     "true : continuous flow reversal - false : discontinuous flow reversal";
 
 replaceable package Species =
-      ChimiScope.None   annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 protected
@@ -20,10 +20,10 @@ public
         origin={0,102},
         extent={{-10,-10},{10,10}},
         rotation=90)));
-  Connectors.FluidInlet C1(redeclare package Species = Species)
+  Connectors.FluidInlet C1( redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{-110,
             -90},{-90,-70}}, rotation=0)));
-  Connectors.FluidOutlet C2(redeclare package Species = Species)
+  Connectors.FluidOutlet C2( redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{92,-90},
             {112,-70}}, rotation=0)));
 equation
@@ -31,6 +31,7 @@ equation
   C1.P = C2.P;
   C1.h = C2.h;
   C1.Q = C2.Q;
+
   C1.SubC = C2.SubC;
 
   Q = C1.Q;

@@ -2,7 +2,7 @@ within ThermoSysPro.ConvectedQuantities.Components;
 connector MixtureConnector
 
   replaceable package Species =
-      ChimiScope.None;
+      Substances.None;
 
   Real SubC[Species.Concentrations];
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(

@@ -857,8 +857,8 @@ critical pressure.
     end TwoPhaseToProps_dT;
 
   end ThermoFluidSpecial;
-
 public
+
   record SaturationProperties "Properties in the two phase region"
     extends Modelica.Icons.Record;
     Units.SI.Temp_K T "Temperature";

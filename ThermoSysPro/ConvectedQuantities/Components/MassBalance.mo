@@ -1,24 +1,29 @@
 within ThermoSysPro.ConvectedQuantities.Components;
 block MassBalance "Mass Balance block for transported substances"
+
   import      ThermoSysPro.Units.SI;
   constant Real pi=Modelica.Constants.pi "pi";
 
   replaceable package Species =
-      ChimiScope.None;
+      Substances.None;
+
+  replaceable package SinkAndSource =
+      Sink_and_Source.None;
 
   parameter Integer n_in = 1 "Number of inlets";
   parameter Integer n_out = 1 "Number of outlets";
   parameter SI.Length D=1 annotation(Dialog(enable = (sink_and_source == Species.sink_and_source_list.resine)));
   parameter SI.Length L=1 annotation(Dialog(enable = (sink_and_source == Species.sink_and_source_list.resine)));
   parameter Real capa=1 annotation(Dialog(enable = (sink_and_source == Species.sink_and_source_list.resine)));
+  //parameter Real choix_resine=1;
 
   Real InternalConcentrations[Species.Concentrations];
   Real in_Cflows[Species.Concentrations];
   SI.MassFlowRate out_Tflow;
-  Real dist[Species.Concentrations](start=fill(0,size(InternalConcentrations,1)), fixed=true);
-  Real t_sat[Species.Concentrations];
+//   Real dist[Species.Concentrations](start=fill(0,size(InternalConcentrations,1)), fixed=true);
+//   Real t_sat[Species.Concentrations];
 
-  parameter Species.sink_and_source_list sink_and_source = Species.sink_and_source_list.none;
+  //parameter Species.sink_and_source_list sink_and_source = Species.sink_and_source_list.none;
 
   parameter Boolean dynamic_mass_balance = false "true: dynamic mass balance equation - false: static mass balance equation";
   parameter SI.Volume V = 0 "Volume used to compute the fluid mass for dynamic calculations and for degradation";
@@ -36,74 +41,92 @@ block MassBalance "Mass Balance block for transported substances"
   input SI.Density rho;
   input SI.Temperature T;
 
-  Species.Sink_and_Source SaS_degradation(
-    T=T,
-    SubC=InternalConcentrations)
-    annotation (Placement(transformation(extent={{-100,60},{-60,100}})));
-  Species.Sink_and_Source_1 SaS_resine(
+
+  SinkAndSource.SaS_None SaS(
     SubC=InternalConcentrations,
     T=T,
-    Q=sum(Qin[n_in]),
+    Q=sum(Qin),
     capa=capa,
     S=pi*D^2/4,
     rho_liquidPhase=rho,
     x=0,
-    choix_resine=1)
-    annotation (Placement(transformation(extent={{60,-100},{100,-60}})));
+    choix_resine=1,
+    L=L,
+    D=D)           annotation (Placement(transformation(extent={{-100,60},{-60,100}})));
+
+
+
+//   Species.Sink_and_Source SaS_degradation(
+//     T=T,
+//     SubC=InternalConcentrations)
+//     annotation (Placement(transformation(extent={{-100,60},{-60,100}})));
+//   Species.Sink_and_Source_1 SaS_resine(
+//     SubC=InternalConcentrations,
+//     T=T,
+//     Q=sum(Qin[n_in]),
+//     capa=capa,
+//     S=pi*D^2/4,
+//     rho_liquidPhase=rho,
+//     x=0,
+//     choix_resine=1)
+//     annotation (Placement(transformation(extent={{60,-100},{100,-60}})));
+
 initial equation
 
-  if dynamic_mass_balance == true then
+   if dynamic_mass_balance == true then
     der(InternalConcentrations) = zeros(size(InternalConcentrations,1));
   end if;
 
 equation
-  if sink_and_source == Species.sink_and_source_list.degradation then
+
+
     if dynamic_mass_balance == false then
-      in_Cflows - out_Tflow * InternalConcentrations = V*rho*SaS_degradation.C;
+      in_Cflows - out_Tflow * InternalConcentrations = V*rho*SaS.C;
     else
-      in_Cflows - out_Tflow * InternalConcentrations = V*rho*der(InternalConcentrations) + InternalConcentrations*(sum(Qin)-out_Tflow) + V*rho*SaS_degradation.C;
+      in_Cflows - out_Tflow * InternalConcentrations = V*rho*der(InternalConcentrations) + InternalConcentrations*(sum(Qin)-out_Tflow) + V*rho*SaS.C;
     end if;
-    dist=zeros(size(InternalConcentrations,1));
-    t_sat=zeros(size(InternalConcentrations,1));
-  else
-    if dynamic_mass_balance == false then
-      in_Cflows - out_Tflow * InternalConcentrations = zeros(size(InternalConcentrations,1));
-    else
-      in_Cflows - out_Tflow * InternalConcentrations = V*rho*der(InternalConcentrations) + InternalConcentrations*(sum(Qin)-out_Tflow);
-    end if;
-    if sink_and_source == Species.sink_and_source_list.resine then
-      der(dist)=SaS_resine.v;
-      for s in Species.Concentrations loop
-        if abs(SaS_resine.v[s])<1e-18 then
-            t_sat[s]=0;
-        else
-            t_sat[s]=L/(60*60*24*SaS_resine.v[s]);
-        end if;
-      end for;
-    else
-      dist=zeros(size(InternalConcentrations,1));
-      t_sat=zeros(size(InternalConcentrations,1));
-    end if;
-  end if;
+
+//     dist=zeros(size(InternalConcentrations,1));
+//     t_sat=zeros(size(InternalConcentrations,1));
+//
+
+//  if sink_and_source == Species.sink_and_source_list.resine then
+//     der(dist)=SaS.v;
+//     for s in Species.Concentrations loop
+//       if abs(SaS.v[s])<1e-18 then
+//           t_sat[s]=0;
+//       else
+//           t_sat[s]=L/(60*60*24*SaS.v[s]);
+//       end if;
+//     end for;
+
 
   out_Tflow = sum(Qout);
+
+
   for s in Species.Concentrations loop
     in_Cflows[s] = sum(Qin .* mix_in.SubC[s]);
   end for;
 
+
+//   for i in 1:n_out loop
+//     for s in Species.Concentrations loop
+
+//       if dist[s]>=L then
+//         mix_out[i].SubC[s] = InternalConcentrations[s];
+//       else
+//         mix_out[i].SubC[s] = 0;
+//       end if;
+
+//     end for;
+//   end for;
+
   for i in 1:n_out loop
-    if sink_and_source == Species.sink_and_source_list.resine then
-      for s in Species.Concentrations loop
-        if dist[s]>=L then
-          mix_out[i].SubC[s] = InternalConcentrations[s];
-        else
-          mix_out[i].SubC[s] = 0;
-        end if;
-      end for;
-    else
-       mix_out[i].SubC = InternalConcentrations;
-    end if;
+    for s in Species.Concentrations loop
+        mix_out[i].SubC[s] = InternalConcentrations[s]*SaS.SatRes[s];
+    end for;
   end for;
+
 
 
   annotation (

@@ -2,7 +2,7 @@ within ThermoSysPro.WaterSteam.LoopBreakers;
 model LoopBreakerP "Pressure loop breaker for the water/steam connector"
 
   replaceable package Species =
-      ChimiScope.None          annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 public

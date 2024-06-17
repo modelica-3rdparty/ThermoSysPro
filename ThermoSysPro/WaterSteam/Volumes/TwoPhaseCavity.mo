@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.Volumes;
+within ThermoSysPro.WaterSteam.Volumes;
 model TwoPhaseCavity "TwoPhaseCavity for one shell pass "
   parameter Boolean Vertical=true
     "true: vertical cylinder - false: horizontal cylinder";
@@ -76,7 +76,7 @@ model TwoPhaseCavity "TwoPhaseCavity for one shell pass "
   parameter Units.SI.Area S4=1 " S4 = 1, Heat exchange surface  ";
 
 replaceable package Species =
-  ChimiScope.None   annotation (
+  ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 public
@@ -222,6 +222,9 @@ public
    rho = (rhol*Vl+rhov*Vv)/V,
    T=Tl)
     annotation (Placement(transformation(extent={{-254,-68},{-214,-28}})));
+
+//ATTENTION^^^^: VERIFY WHICH TEMPERATURE TO PASS TO SUBMASSBALANCE (T=Tl FOR NOW...)
+
 initial equation
   if steady_state then
     der(hl) = 0;

@@ -32,8 +32,14 @@ model DynamicWaterWaterExchanger "Dynamic plate heat exchanger"
   parameter Integer pressure_loss_correlation=1
     "Correlation for the computation of the pressure loss coefficient - 0: no correlation. 1: SRI correlations";
 replaceable package Species =
-      ChimiScope.None      annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None      annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+replaceable package SinkAndSource =
+  ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
 
 public
   ThermoSysPro.Units.SI.Power dW[N]
@@ -121,6 +127,7 @@ public
             0)));
   ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance_C[N](
     redeclare package Species = Species,
+    redeclare package SinkAndSource = SinkAndSource,
     each n_in=1,
     each n_out=1,
     each dynamic_mass_balance=false,
@@ -129,11 +136,12 @@ public
     Qout=transpose({Qcc[2:N + 1]}),
     rho=proc.d,
     T=proc.T,
-    SaS_resine(each choix_resine=1))
+    SaS(each choix_resine=1))
     annotation (Placement(transformation(extent={{-108,14},{-68,54}})));
 
   ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance_F[N](
     redeclare package Species = Species,
+    redeclare package SinkAndSource = SinkAndSource,
     each n_in=1,
     each n_out=1,
     each dynamic_mass_balance=false,
@@ -142,7 +150,7 @@ public
     Qout=transpose({Qcf[2:N + 1]}),
     rho=proc.d,
     T=proc.T,
-    SaS_resine(each choix_resine=1))
+    SaS(each choix_resine=1))
     annotation (Placement(transformation(extent={{-20,-80},{20,-40}})));
 
 public

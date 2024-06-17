@@ -9,7 +9,7 @@ model SingularPressureLoss "Singular pressure loss"
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 replaceable package Species =
-      ChimiScope.None          annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 protected

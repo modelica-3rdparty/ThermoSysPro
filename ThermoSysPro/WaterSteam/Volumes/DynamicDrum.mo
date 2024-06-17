@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.Volumes;
+within ThermoSysPro.WaterSteam.Volumes;
 model DynamicDrum "Dynamic drum"
   parameter Boolean Vertical=true
     "true: vertical cylinder - false: horizontal cylinder";
@@ -30,8 +30,13 @@ model DynamicDrum "Dynamic drum"
     "true: start from steady state - false: start from (P0, Vf0)";
 
 replaceable package Species =
-      ChimiScope.None      annotation (
+  ThermoSysPro.ConvectedQuantities.Substances.None      annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+replaceable package SinkAndSource =
+  ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 
 protected
   constant Real pi=Modelica.Constants.pi "pi";
@@ -141,6 +146,7 @@ public
   ThermoSysPro.ConvectedQuantities.Components.MassBalance_HeterogeneousPhases
     sub_massBalance(
     redeclare package Species = Species,
+    redeclare package SinkAndSource = SinkAndSource,
     n_in=4,
     n_out_liq=2,
     n_out_gas=1,
@@ -151,7 +157,9 @@ public
     rho=prom.d,
     rho_liquidPhase=rhol,
     x=prom.x,
-    T=prom.T)
+    T=prom.T,
+    D=2*R,
+    L=L)
     annotation (Placement(transformation(extent={{-102,-18},{-72,12}})));
 
 initial equation

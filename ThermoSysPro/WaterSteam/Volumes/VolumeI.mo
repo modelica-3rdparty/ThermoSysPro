@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.Volumes;
+within ThermoSysPro.WaterSteam.Volumes;
 model VolumeI "Mixing volume with 4 inlets and 4 outlets"
   parameter Units.SI.Volume V=1 "Volume";
   parameter Units.SI.AbsolutePressure P0=1e5
@@ -15,7 +15,7 @@ model VolumeI "Mixing volume with 4 inlets and 4 outlets"
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 replaceable package Species =
-      ChimiScope.None   annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 public

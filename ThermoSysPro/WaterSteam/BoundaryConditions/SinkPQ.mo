@@ -33,7 +33,7 @@ public
            0)));
 
 replaceable package Species =
-      ChimiScope.None          annotation (
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group=
           "Transported Substances"));
 

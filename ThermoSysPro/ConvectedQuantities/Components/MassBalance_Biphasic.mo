@@ -2,15 +2,27 @@ within ThermoSysPro.ConvectedQuantities.Components;
 partial block MassBalance_Biphasic
   "Mass Balance block for transported substances"
 
+  // Varibles resine. A enlever ? --------------------
+  constant Real pi=Modelica.Constants.pi "pi";
+  parameter SI.Length L=1;
+  parameter SI.Length D=1;
+  parameter Real capa=1;
+  //----------------
+
+
+
   import      ThermoSysPro.Units.SI;
 
   replaceable package Species =
-      ChimiScope.None;
+      Substances.None;
+
+  replaceable package SinkAndSource =
+      Sink_and_Source.None;
 
   parameter Integer n_in = 1 "Number of inlets";
   parameter Boolean dynamic_mass_balance = false "true: dynamic mass balance equation - false: static mass balance equation";
   parameter Boolean steady_state = true "true: start from steady state - false: start from (C0)";
-  parameter Species.sink_and_source_list sink_and_source = Species.sink_and_source_list.none;
+  //parameter Species.sink_and_source_list sink_and_source = Species.sink_and_source_list.none;
   parameter Real C0[Species.Concentrations] = zeros(size(InternalConcentrations,1)) "Initial Concentrations (active if steady_state=false)";
   parameter SI.Volume V = 0 "Volume used to compute the fluid mass for dynamic calculations"
                                                                                             annotation(Dialog(enable=dynamic_mass_balance));
@@ -33,10 +45,27 @@ partial block MassBalance_Biphasic
             {{-70,-10},{-50,10}})));
   Species.PhasesSeparation phasesSeparation(T=T, rho_liquidPhase=rho_liquidPhase, x=x, SubC=InternalConcentrations)
     annotation (Placement(transformation(extent={{-100,40},{-40,100}})));
-  Species.Sink_and_Source Sink_and_Source(
+  SinkAndSource.SaS_None SaS(
   T=T,
-  SubC = phasesSeparation.Cl)
+  SubC = phasesSeparation.Cl,
+  Q=sum(Qin),
+  capa=capa,
+  S=pi*D^2/4,
+  rho_liquidPhase=rho_liquidPhase,
+  x=0,
+  choix_resine=1,
+  D=D,
+  L=L)
     annotation (Placement(transformation(extent={{100,-40},{40,-100}})));
+
+
+//   Species.Sink_and_Source Sink_and_Source(
+//   T=T,
+//   SubC = phasesSeparation.Cl)
+//     annotation (Placement(transformation(extent={{100,-40},{40,-100}})));
+
+
+
 
 initial equation
 
@@ -50,19 +79,27 @@ initial equation
 
 equation
 
+//     if dynamic_mass_balance == false then
+//       if sink_and_source == Species.sink_and_source_list.degradation then
+//         in_Cflows - out_Tflow_liq*phasesSeparation.Cl - out_Tflow_gas*phasesSeparation.Cg = zeros(size(InternalConcentrations,1));
+//       else
+//         in_Cflows - out_Tflow_liq*phasesSeparation.Cl - out_Tflow_gas*phasesSeparation.Cg = zeros(size(InternalConcentrations,1)) + Vl*rho_liquidPhase*Sink_and_Source.C;
+//       end if;
+//     else
+//       if sink_and_source == Species.sink_and_source_list.degradation then
+//         in_Cflows - out_Tflow_liq*phasesSeparation.Cl - out_Tflow_gas*phasesSeparation.Cg = V*rho*der(InternalConcentrations) + InternalConcentrations*(sum(Qin)-out_Tflow_gas-out_Tflow_liq);
+//       else
+//         in_Cflows - out_Tflow_liq*phasesSeparation.Cl - out_Tflow_gas*phasesSeparation.Cg = V*rho*der(InternalConcentrations) + InternalConcentrations*(sum(Qin)-out_Tflow_gas-out_Tflow_liq) + Vl*rho_liquidPhase*Sink_and_Source.C;
+//       end if;
+//     end if;
+
     if dynamic_mass_balance == false then
-      if sink_and_source == Species.sink_and_source_list.degradation then
-        in_Cflows - out_Tflow_liq*phasesSeparation.Cl - out_Tflow_gas*phasesSeparation.Cg = zeros(size(InternalConcentrations,1));
-      else
-        in_Cflows - out_Tflow_liq*phasesSeparation.Cl - out_Tflow_gas*phasesSeparation.Cg = zeros(size(InternalConcentrations,1)) + Vl*rho_liquidPhase*Sink_and_Source.C;
-      end if;
+        in_Cflows - out_Tflow_liq*phasesSeparation.Cl - out_Tflow_gas*phasesSeparation.Cg = zeros(size(InternalConcentrations,1)) + Vl*rho_liquidPhase*SaS.C;
     else
-      if sink_and_source == Species.sink_and_source_list.degradation then
-        in_Cflows - out_Tflow_liq*phasesSeparation.Cl - out_Tflow_gas*phasesSeparation.Cg = V*rho*der(InternalConcentrations) + InternalConcentrations*(sum(Qin)-out_Tflow_gas-out_Tflow_liq);
-      else
-        in_Cflows - out_Tflow_liq*phasesSeparation.Cl - out_Tflow_gas*phasesSeparation.Cg = V*rho*der(InternalConcentrations) + InternalConcentrations*(sum(Qin)-out_Tflow_gas-out_Tflow_liq) + Vl*rho_liquidPhase*Sink_and_Source.C;
-      end if;
+        in_Cflows - out_Tflow_liq*phasesSeparation.Cl - out_Tflow_gas*phasesSeparation.Cg = V*rho*der(InternalConcentrations) + InternalConcentrations*(sum(Qin)-out_Tflow_gas-out_Tflow_liq) + Vl*rho_liquidPhase*SaS.C;
     end if;
+
+
 
   for s in Species.Concentrations loop
     in_Cflows[s] = sum(Qin .* mix_in.SubC[s]);
