@@ -292,7 +292,7 @@ equation
       rho2[i] = p_rho;
     else
 
-      if fluid_c==8 then
+      if fluid==8 then
         rho2[i] =Medium_CoolProp.density_ph(p=(P[i] + P[i + 1])/2, h=hb[i], phase=0);
       else
         rho2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((P[i] + P[i + 1])/2, hb[i], fluid, 0, Xco2, Xh2o, Xo2, Xso2);

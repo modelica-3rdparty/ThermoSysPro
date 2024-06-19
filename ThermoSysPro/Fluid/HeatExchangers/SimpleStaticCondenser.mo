@@ -4,11 +4,6 @@ model SimpleStaticCondenser "Simple static condenser"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
-  replaceable package Medium_CoolProp_c =
-      ThermoSysPro.Properties.CoolPropMedium                                     "CoolProp Medium Hot" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
-  replaceable package Medium_CoolProp_f =
-      ThermoSysPro.Properties.CoolPropMedium                                     "CoolProp Medium Cold" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
-
   parameter Real Kc=10 "Friction pressure loss coefficient for the hot side";
   parameter Real Kf=10 "Friction pressure loss coefficient for the cold side";
   parameter Units.SI.Position z1c=0 "Hot inlet altitude";
@@ -101,8 +96,6 @@ equation
   /* Check that the fluid type for both sides is water/steam */
   assert((ftype_c == FluidType.WaterSteam) or (ftype_c == FluidType.WaterSteamSimple), "SimpleStaticCondenser: the fluid type must be water/steam for the hot side");
   assert((ftype_f == FluidType.WaterSteam) or (ftype_f == FluidType.WaterSteamSimple), "SimpleStaticCondenser: the fluid type must be water/steam for the cold side");
-  //   assert((ftype_c == FluidType.WaterSteam) or (ftype_c == FluidType.WaterSteamSimple) or (ftype_c == FluidType.CoolPropMedium), "SimpleStaticCondenser: the fluid type must be water/steam for the hot side");
-  //   assert((ftype_f == FluidType.WaterSteam) or (ftype_f == FluidType.WaterSteamSimple) or (ftype_f == FluidType.CoolPropMedium), "SimpleStaticCondenser: the fluid type must be water/steam for the cold side");
 
   /* Mass flow rates */
   Ec.Q = Sc.Q;
