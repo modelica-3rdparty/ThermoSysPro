@@ -1,0 +1,6 @@
+# Linux users : please configure your git with `git config --global core.autocrlf true` 
+
+# .gitattributes file
+*.mo text eol=crlf
+*.mos text eol=crlf
+*.order text eol=crlf
