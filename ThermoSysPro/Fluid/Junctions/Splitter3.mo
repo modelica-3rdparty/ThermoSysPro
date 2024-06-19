@@ -6,6 +6,8 @@ model Splitter3 "Splitter with three outlets"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.CoolPropMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false
@@ -195,7 +197,12 @@ equation
   Cs3.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
+  if fluid==8 then
+      T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=mode);
+    else
+      T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
+  end if;
+
   annotation (
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{
             100,100}}), graphics={
