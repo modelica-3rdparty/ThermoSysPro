@@ -6,7 +6,8 @@ type FluidType = enumeration(
     MoltenSalt "4 - Molten salt",
     Oil_TherminolVP1 "5 - Oil Therminol VP1",
     DryAirIdealGas "6 - Dry air (compressible)",
-    WaterSteamSimple "7 - Simplified water/steam (compressible)") annotation (
+    WaterSteamSimple "7 - Simplified water/steam (compressible)",
+    CoolPropMedium "8 - CoolPropMedium (replaceable package)") annotation (
     Documentation(info="<html>
 <p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
 <p><b>ThermoSysPro Version 4.0</b> </p>

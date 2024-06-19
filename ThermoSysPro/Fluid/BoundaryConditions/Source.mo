@@ -5,6 +5,8 @@ model Source "MultiFluids Source"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.CoolPropMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Units.SI.Temperature T0=290
     "Source temperature (active if option_temperature=true)"
     annotation (Evaluate=true, Dialog(enable=option_temperature));
@@ -92,10 +94,18 @@ equation
 
   if option_temperature then
     T = ISpecificEnthalpyOrTemperature.signal;
-    h = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, T, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    if fluid==8 then
+      h = Medium_CoolProp.specificEnthalpy_pT(p=P, T=T, phase=mode);
+      else
+      h = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, T, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    end if;
   else
     h = ISpecificEnthalpyOrTemperature.signal;
-    T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    if fluid==8 then
+      T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=mode);
+    else
+      T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    end if;
   end if;
 
   /* Flow reversal */
