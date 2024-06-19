@@ -4,6 +4,11 @@ model StaticExchangerKS "Static heat exchanger with fixed K and S (Coefficient o
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp_c =
+      ThermoSysPro.Properties.CoolPropMedium                                     "CoolProp Medium Hot" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+  replaceable package Medium_CoolProp_f =
+      ThermoSysPro.Properties.CoolPropMedium                                     "CoolProp Medium Cold" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Units.SI.CoefficientOfHeatTransfer K=100
     "Global heat exchange coefficient";
   parameter Units.SI.Area S=10 "Heat exchange surface";
@@ -149,30 +154,61 @@ equation
   W = Qc*(Ec.h-Sc.h);
   W = Qf*(Sf.h - Ef.h);
 
-  /* Fluid specific enthalpy at the inlet */
-  Tef = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ef.P, Ef.h, fluid_f, 0, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
-  Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sf.P, Sf.h, fluid_f, 0, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
+  if fluid_f==8 then
+      /* Fluid specific enthalpy at the inlet */
+      Tef = Medium_CoolProp_f.temperature_ph(p=Ef.P, h=Ef.h, phase=0);
+      Tsf = Medium_CoolProp_f.temperature_ph(p=Sf.P, h=Sf.h, phase=0);
 
-  /* Fluid specific enthalpy at the outlet */
-  Tec = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ec.P, Ec.h, fluid_c, 0, Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
-  Tsc = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sc.P, Sc.h, fluid_c, 0, Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
+      /* Specific heat capacities */
+      Cpf = Medium_CoolProp_f.specificHeatCapacityCp(Medium_CoolProp_f.setState_ph(p=Ef.P, h=Ef.h, phase=0));
+    else
+      /* Fluid specific enthalpy at the inlet */
+      Tef = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ef.P, Ef.h, fluid_f, 0, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
+      Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sf.P, Sf.h, fluid_f, 0, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
 
-  /* Specific heat capacities */
-  Cpf = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Ef.P, Ef.h, fluid_f, 0, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
-  Cpc = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Ec.P, Ec.h, fluid_c, 0, Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
+      /* Specific heat capacities */
+      Cpf = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Ef.P, Ef.h, fluid_f, 0, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
+  end if;
+  if fluid_c==8 then
+      /* Fluid specific enthalpy at the outlet */
+      Tec = Medium_CoolProp_c.temperature_ph(p=Ec.P, h=Ec.h, phase=0);
+      Tsc = Medium_CoolProp_c.temperature_ph(p=Sc.P, h=Sc.h, phase=0);
+
+      /* Specific heat capacities */
+      Cpc = Medium_CoolProp_c.specificHeatCapacityCp(Medium_CoolProp_c.setState_ph(p=Ec.P, h=Ec.h, phase=0));
+    else
+      /* Fluid specific enthalpy at the outlet */
+      Tec = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ec.P, Ec.h, fluid_c, 0, Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
+      Tsc = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sc.P, Sc.h, fluid_c, 0, Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
+
+      /* Specific heat capacities */
+      Cpc = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Ec.P, Ec.h, fluid_c, 0, Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
+  end if;
+
+
 
   /* Hot fluid density */
   if (p_rhoc > 0) then
     rhoc = p_rhoc;
   else
-    rhoc = ThermoSysPro.Properties.Fluid.Density_Ph((Ec.P + Sc.P)/2,(Ec.h + Sc.h)/2, fluid_c, 0, Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
+    if fluid_c==8 then
+      rhoc =Medium_CoolProp_c.density_ph(p=(Ec.P + Sc.P)/2, h=(Ec.h + Sc.h)/2, phase=0);
+    else
+      rhoc = ThermoSysPro.Properties.Fluid.Density_Ph((Ec.P + Sc.P)/2,(Ec.h + Sc.h)/2, fluid_c, 0, Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
+    end if;
+
   end if;
 
   /* Cold fluid density */
   if (p_rhof > 0) then
     rhof = p_rhof;
   else
-    rhof = ThermoSysPro.Properties.Fluid.Density_Ph((Ef.P+Sf.P)/2,(Ef.h + Sf.h)/2, fluid_f, 0, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
+    if fluid_f==8 then
+      rhof =Medium_CoolProp_f.density_ph(p=(Ef.P + Sf.P)/2, h=(Ef.h + Sf.h)/2, phase=0);
+    else
+      rhof = ThermoSysPro.Properties.Fluid.Density_Ph((Ef.P+Sf.P)/2,(Ef.h + Sf.h)/2, fluid_f, 0, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
+    end if;
+
   end if;
 
   annotation (
