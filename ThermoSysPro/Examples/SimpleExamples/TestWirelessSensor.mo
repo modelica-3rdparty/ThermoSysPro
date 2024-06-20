@@ -25,7 +25,7 @@ model TestWirelessSensor
     m=Tank1.yLevel.signal,
     ValidityRange=true,
     min_range=Tank1.zs2,
-    max_range=35,
+    max_range=40,
     m_nominal=5,
     format=".7g")
     annotation (Placement(transformation(extent={{-16,32},{20,62}})));
@@ -40,7 +40,7 @@ equation
     annotation (Line(points={{-69,40},{-40,40},{-40,23}}));
   connect(VanneReglante1.C2, Tank1.Ce1) annotation (Line(points={{-30,6},{-10,6},
           {-10,8}},               color={0,0,255}));
-  annotation (experiment(StopTime=2000, __Dymola_Algorithm="Dassl"),
+  annotation (experiment(StopTime=400, __Dymola_Algorithm="Dassl"),
     Icon(graphics={
         Rectangle(
           lineColor={200,200,200},
