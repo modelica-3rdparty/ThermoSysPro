@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestCentrifugalPump8
-
   ThermoSysPro.WaterSteam.Machines.CentrifugalPump centrifugalPump(mode_car_hn=
         1, mode_car_Cr=1,
     mode_car=1)      annotation (Placement(transformation(extent={{-20,20},{0,

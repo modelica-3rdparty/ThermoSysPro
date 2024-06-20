@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestSteamDryer1
-
   ThermoSysPro.WaterSteam.Junctions.SteamDryer steamDryer(
     eta=1,
     P(start=100e5),

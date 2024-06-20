@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestStaticWaterWaterExchangerDTorWorEff
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceQ sourceWaterSteam_FF(
     C(P(start=219.E5)),
     Q0=481.07,

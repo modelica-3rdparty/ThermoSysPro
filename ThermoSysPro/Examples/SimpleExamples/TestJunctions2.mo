@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestJunctions2
-
   ThermoSysPro.WaterSteam.Junctions.Mixer2 mixer2_1
     annotation (Placement(transformation(extent={{0,60},{20,80}}, rotation=0)));
   ThermoSysPro.WaterSteam.PressureLosses.SingularPressureLoss

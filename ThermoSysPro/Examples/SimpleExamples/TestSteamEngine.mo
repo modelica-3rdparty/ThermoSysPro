@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestSteamEngine
-
   ThermoSysPro.WaterSteam.Machines.SteamEngine steamEngine1
     annotation (Placement(transformation(extent={{-60,60},{-40,80}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP puitsP(                 mode=0, P0=100000)

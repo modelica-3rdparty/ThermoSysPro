@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestVolumes2
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP
     annotation (Placement(transformation(extent={{-98,40},{-78,60}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP1(Q(start=-3.0336524914069486E-68))

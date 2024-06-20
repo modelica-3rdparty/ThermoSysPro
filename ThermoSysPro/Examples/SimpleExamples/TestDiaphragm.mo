@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestDiaphragm
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP SourceP1
     annotation (Placement(transformation(extent={{-64,-10},{-44,10}},rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP PuitsP1

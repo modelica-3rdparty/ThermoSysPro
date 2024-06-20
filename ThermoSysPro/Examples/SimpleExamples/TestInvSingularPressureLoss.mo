@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestInvSingularPressureLoss
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourcePQ sourcePQ
     annotation (Placement(transformation(extent={{-80,0},{-60,20}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP sinkQ

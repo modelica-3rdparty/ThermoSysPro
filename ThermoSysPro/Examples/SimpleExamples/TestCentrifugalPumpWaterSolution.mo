@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestCentrifugalPumpWaterSolution
-
   ThermoSysPro.WaterSolution.BoundaryConditions.RefP refP
     annotation (Placement(transformation(extent={{-100,0},{-80,20}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Constante constante(

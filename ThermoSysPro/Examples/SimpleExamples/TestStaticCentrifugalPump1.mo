@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestStaticCentrifugalPump1
-
   ThermoSysPro.WaterSteam.Machines.StaticCentrifugalPump StaticCentrifugalPump1(
       fixed_rot_or_power=2, MPower=0.15e6)
     annotation (Placement(transformation(extent={{-20,20},{0,40}}, rotation=0)));

@@ -1,13 +1,11 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestStaticCondenser
-
   parameter Units.SI.AbsolutePressure Pin_1(fixed=false, start=20000)
     "Flow pressure at inlet 1 (sourceP)";
   parameter Units.SI.AbsolutePressure Pin_2(fixed=false, start=20000)
     "Flow pressure at inlet 2 (sourceP1)";
   parameter Units.SI.AbsolutePressure Pin_3(fixed=false, start=20000)
     "Flow pressure at inlet 3 (sourceP2)";
-
   WaterSteam.BoundaryConditions.SourceQ Source_condenseur(
     h0=60e3, Q0(fixed=true) = 4000)
           annotation (Placement(transformation(extent={{-180,0},{-160,20}},
@@ -73,7 +71,6 @@ model TestStaticCondenser
     singularPressureLoss5(K=1e-4)
                           annotation (Placement(transformation(extent={{40,-100},
             {60,-80}}, rotation=0)));
-
 equation
   connect(sourceP1.C, singularPressureLoss.C1)
     annotation (Line(points={{-162,90},{-100,90}}, color={0,0,255}));

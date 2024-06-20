@@ -1,11 +1,9 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestPressurizer2
-
   parameter Units.SI.Power Wch(fixed=false) = 0.29e6
     "Power released by the electrical heaters";
   parameter Real OUVfeedwaterValve( fixed=false)=0.01
     "OUV feed water valve";
-
   ThermoSysPro.WaterSteam.PressureLosses.ControlValve FeedwaterValve_Spray(
     Cv(start=100),
     C1(

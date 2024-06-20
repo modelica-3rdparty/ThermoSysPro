@@ -4,8 +4,8 @@ block WirelessSensor
 
   Real m=0.0 "Measure Expression" annotation (Dialog(group="Measured data"));
 
-  parameter Boolean ValidityRange=false "Intensity colorscale by default (jet colormap);\\n ValidityRange: green if close to nominal value"
-                                                                                                                                           annotation(Dialog(group="Animation"),choices(checkBox=true));
+  parameter Boolean ValidityRange=false "Intensity colorscale by default (jet colormap); ValidityRange: green if close to nominal value"
+                                                                                                                                        annotation(Dialog(group="Animation"),choices(checkBox=true));
   parameter Real min_range = 0 "Color Scale Min Value" annotation (Dialog(group="Animation"));
   parameter Real max_range = 14 "Color Scale Max Value" annotation (Dialog(group="Animation"));
   parameter Real m_nominal = 10 "Color Scale nominal Value" annotation (Dialog(enable=ValidityRange,group="Animation",groupImage = ("modelica://ThermoSysPro/InstrumentationAndControl/Blocks/Sources/colorMap_WirelessSensor.png")));

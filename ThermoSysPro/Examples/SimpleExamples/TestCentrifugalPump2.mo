@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestCentrifugalPump2
-
   ThermoSysPro.WaterSteam.Machines.CentrifugalPump centrifugalPump(
     continuous_flow_reversal=false,
     hn_nom_p=10,

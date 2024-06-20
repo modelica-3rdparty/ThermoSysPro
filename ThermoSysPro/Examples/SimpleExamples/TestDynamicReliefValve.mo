@@ -6,7 +6,6 @@ model TestDynamicReliefValve
   parameter ThermoSysPro.Units.SI.AbsolutePressure Pfinal=Pinitial
     "Final pressure";
   parameter ThermoSysPro.Units.SI.AbsolutePressure Pmax=21e5 "Maximum pressure";
-
   ThermoSysPro.WaterSteam.PressureLosses.DynamicReliefValve reliefValve(
     mech_steady_state=false,
     caract=[0,0; 0.1,2745; 0.2,4915; 0.3,6391; 0.4,7339; 0.5,7949; 0.6,8351;

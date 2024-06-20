@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestStaticWaterWaterExchanger
-
   ThermoSysPro.WaterSteam.HeatExchangers.StaticWaterWaterExchanger
     plateHeatExchanger(modec=1, modef=1)
                annotation (Placement(transformation(extent={{-20,44},{0,64}},
