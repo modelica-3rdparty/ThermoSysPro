@@ -19,10 +19,12 @@ block WirelessSensor
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal y
     annotation (Placement(transformation(extent={{100,-10},{120,10}}),
         iconTransformation(extent={{100,-10},{120,10}})));
+
 protected
 parameter Integer n_colors=64 "Number of colors in the colorMap";
-parameter Real colorMapData_jet[n_colors,3] = Modelica.Mechanics.MultiBody.Visualizers.Colors.ColorMaps.jet(n_colors);
-parameter Real colorMapData_redGreen[n_colors,3] = ThermoSysPro.Functions.Utilities.RedGreen_colorMap(n_colors);
+parameter Real colorMapData_jet[n_colors,3] = Modelica.Mechanics.MultiBody.Visualizers.Colors.ColorMaps.jet(n_colors);  //Defined as parameters to have less equations, not defined directly in scalarToColor because of compatibility with OpenModelica
+parameter Real colorMapData_redGreen[n_colors,3] = ThermoSysPro.Functions.Utilities.RedGreen_colorMap(n_colors);    //Defined as parameters to have less equations, not defined directly in scalarToColor because of compatibility with OpenModelica
+
 equation
   y.signal=m;
   if ValidityRange then
