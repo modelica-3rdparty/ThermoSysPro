@@ -39,7 +39,7 @@ equation
         T=m,
         T_min=min_range,
         T_max=max_range,
-        colorMap=Modelica.Mechanics.MultiBody.Visualizers.Colors.ColorMaps.jet(n_colors));
+        colorMap=colorMapData);
   end if;
 
   neg_col = fill(255,3) - measure_col;
