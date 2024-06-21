@@ -9,27 +9,37 @@ block WirelessSensor
   parameter Real min_range = 0 "Color Scale Min Value" annotation (Dialog(group="Animation"));
   parameter Real max_range = 14 "Color Scale Max Value" annotation (Dialog(group="Animation"));
   parameter Real m_nominal = 10 "Color Scale nominal Value" annotation (Dialog(enable=ValidityRange,group="Animation",groupImage = ("modelica://ThermoSysPro/InstrumentationAndControl/Blocks/Sources/colorMap_WirelessSensor.png")));
-  parameter String format = ".2g" "Numeric Value Format" annotation (Dialog(group="Animation"));
+  parameter Integer significantDigits(min=1) = 2
+    "Number of significant digits to be shown" annotation (Dialog(group="Animation"));
 
 
-  Real measure_col[3](each min=0, each max=255) "pH corrspondig color";
-  Real neg_col[3](each min=0, each max=255) "Negative pH color";
+  Real measure_col[3](each min=0, each max=255) "Corrspondig color for the box";
+  Real neg_col[3](each min=0, each max=255) "Negative color for the text";
 
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal y
     annotation (Placement(transformation(extent={{100,-10},{120,10}}),
         iconTransformation(extent={{100,-10},{120,10}})));
+protected
+parameter Integer n_colors=64 "Number of colors in the colorMap";
+Real colorMapData[n_colors,3];
 
 equation
   y.signal=m;
   if ValidityRange then
+  colorMapData=ThermoSysPro.Functions.Utilities.RedGreen_colorMap(n_colors);
   measure_col =ThermoSysPro.Functions.Utilities.scalarToColor_validityRange(
     T=m,
     T_nominal=m_nominal,
     T_min=min_range,
     T_max=max_range,
-    colorMap=ThermoSysPro.Functions.Utilities.RedGreen_colorMap());
+    colorMap=colorMapData);
   else
-    measure_col = Modelica.Mechanics.MultiBody.Visualizers.Colors.scalarToColor(m,min_range,max_range,Modelica.Mechanics.MultiBody.Visualizers.Colors.ColorMaps.jet());
+  colorMapData=Modelica.Mechanics.MultiBody.Visualizers.Colors.ColorMaps.jet(n_colors);
+  measure_col = Modelica.Mechanics.MultiBody.Visualizers.Colors.scalarToColor(
+        T=m,
+        T_min=min_range,
+        T_max=max_range,
+        colorMap=Modelica.Mechanics.MultiBody.Visualizers.Colors.ColorMaps.jet(n_colors));
   end if;
 
   neg_col = fill(255,3) - measure_col;
@@ -46,13 +56,13 @@ equation
           points={{-94,28},{94,28},{100,24},{100,-24},{94,-28},{-94,-28},{-100,-22},
               {-100,22},{-94,28}},
           lineColor={0,0,0},
-          fillColor=DynamicSelect({255,255,170}, measure_col),
+          fillColor=DynamicSelect({255,255,170}, {measure_col[1],measure_col[2],measure_col[3]}),
           fillPattern=FillPattern.Solid,
           lineThickness=0.5),
         Text(
           extent={{-100,28},{100,-24}},
-          textColor=DynamicSelect({0,0,0},neg_col),
-          textString=DynamicSelect("M", String(m,format=format))),
+          textColor=DynamicSelect({0,0,0},{neg_col[1],neg_col[2],neg_col[3]}),
+          textString=DynamicSelect("M", String(m,significantDigits=significantDigits))),
         Text(
           extent={{-140,-92},{140,-134}},
           textColor={95,95,95},

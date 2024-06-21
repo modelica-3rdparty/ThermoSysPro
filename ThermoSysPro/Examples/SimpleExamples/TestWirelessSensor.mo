@@ -19,16 +19,15 @@ model TestWirelessSensor
     m=PerteDP1.C1.Q,
     min_range=0,
     max_range=1000,
-    format=".7g")
+    significantDigits=5)
     annotation (Placement(transformation(extent={{-14,64},{22,94}})));
   InstrumentationAndControl.Blocks.Sources.WirelessSensor wirelessSensor_tank(
     m=Tank1.yLevel.signal,
     ValidityRange=true,
     min_range=Tank1.zs2,
     max_range=40,
-    m_nominal=5,
-    format=".7g")
-    annotation (Placement(transformation(extent={{-16,32},{20,62}})));
+    m_nominal=5)
+    annotation (Placement(transformation(origin = {2, -2}, extent = {{-16, 32}, {20, 62}})));
 equation
   connect(PerteDP1.C2, PuitsP1.C)
     annotation (Line(points={{50,-40},{70,-40}}, color={0,0,255}));
@@ -61,6 +60,6 @@ equation
           points={{-58.0,46.0},{42.0,-14.0},{-58.0,-74.0},{-58.0,46.0}})}),
     Documentation(info="<html>
 <p><b>Copyright &copy; EDF 2002 - 2019 </p>
-<p><b>ThermoSysPro Version 3.2 </h4>
+<p><b>ThermoSysPro Version 4.0 </h4>
 </html>"));
 end TestWirelessSensor;
