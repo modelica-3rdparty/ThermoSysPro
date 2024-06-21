@@ -21,25 +21,23 @@ block WirelessSensor
         iconTransformation(extent={{100,-10},{120,10}})));
 protected
 parameter Integer n_colors=64 "Number of colors in the colorMap";
-Real colorMapData[n_colors,3];
-
+parameter Real colorMapData_jet[n_colors,3] = Modelica.Mechanics.MultiBody.Visualizers.Colors.ColorMaps.jet(n_colors);
+parameter Real colorMapData_redGreen[n_colors,3] = ThermoSysPro.Functions.Utilities.RedGreen_colorMap(n_colors);
 equation
   y.signal=m;
   if ValidityRange then
-  colorMapData=ThermoSysPro.Functions.Utilities.RedGreen_colorMap(n_colors);
   measure_col =ThermoSysPro.Functions.Utilities.scalarToColor_validityRange(
     T=m,
     T_nominal=m_nominal,
     T_min=min_range,
     T_max=max_range,
-    colorMap=colorMapData);
+    colorMap=colorMapData_redGreen);
   else
-  colorMapData=Modelica.Mechanics.MultiBody.Visualizers.Colors.ColorMaps.jet(n_colors);
   measure_col = Modelica.Mechanics.MultiBody.Visualizers.Colors.scalarToColor(
         T=m,
         T_min=min_range,
         T_max=max_range,
-        colorMap=colorMapData);
+        colorMap=colorMapData_jet);
   end if;
 
   neg_col = fill(255,3) - measure_col;
