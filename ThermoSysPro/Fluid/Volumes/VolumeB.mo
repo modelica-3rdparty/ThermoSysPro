@@ -329,8 +329,13 @@ equation
 
   /* Fluid thermodynamic properties */
   if isCompressible and dynamic_mass_balance then
-    ddph = ThermoSysPro.Properties.Fluid.Density_derp_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    ddhp = ThermoSysPro.Properties.Fluid.Density_derh_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    if fluid==8 then
+      ddph = Medium_CoolProp.density_derp_h(Medium_CoolProp.setState_ph(p=P, h=h, phase=mode));
+      ddhp = Medium_CoolProp.density_derh_p(Medium_CoolProp.setState_ph(p=P, h=h, phase=mode));
+    else
+      ddph = ThermoSysPro.Properties.Fluid.Density_derp_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      ddhp = ThermoSysPro.Properties.Fluid.Density_derh_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    end if;
   else
     ddph = 0;
     ddhp = 0;

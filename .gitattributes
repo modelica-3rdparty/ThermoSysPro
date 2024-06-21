@@ -1,4 +1,4 @@
-# Linux users : please configure your git with `git config --global core.autocrlf true` 
+# Linux users : please configure your git with `git config --global core.autocrlf input` 
 
 # .gitattributes file
 *.mo text 
