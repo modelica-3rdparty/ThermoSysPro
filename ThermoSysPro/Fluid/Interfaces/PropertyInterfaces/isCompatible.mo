@@ -6,14 +6,15 @@ function isCompatible "Determines whether fluids are comptaible"
   /* The size of each dimension of the compatibility table must be equal to the
   number of elements in the FluidType enumeration */
 protected
-  Boolean compatibility_table[7, 7]=
-  [true,  false, false, false, false, false, true;
-   false, true,  false, false, false, false, false;
-   false, false, true,  false, false, false, false;
-   false, false, false, true,  false, false, false;
-   false, false, false, false, true,  false, false;
-   false, false, false, false, false, true,  false;
-   true,  false, false, false, false, false, true];
+  Boolean compatibility_table[8, 8]=
+  [true,  false, false, false, false, false, true,  false;
+   false, true,  false, false, false, false, false, false;
+   false, false, true,  false, false, false, false, false;
+   false, false, false, true,  false, false, false, false;
+   false, false, false, false, true,  false, false, false;
+   false, false, false, false, false, true,  false, false;
+   true,  false, false, false, false, false, true, false;
+   false, false, false, false, false,  false, false, true];
 
 algorithm
 

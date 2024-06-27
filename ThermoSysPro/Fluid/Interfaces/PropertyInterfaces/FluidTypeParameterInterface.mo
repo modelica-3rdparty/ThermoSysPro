@@ -6,7 +6,7 @@ partial model FluidTypeParameterInterface "Interface to display the fluid type a
 
 protected
   parameter Integer fluid=Integer(ftype) "Fluid number" annotation(Evaluate=true);
-  parameter Boolean isCompressible=(ftype==FluidType.WaterSteam or ftype==FluidType.FlueGases or ftype==FluidType.DryAirIdealGas or ftype==FluidType.WaterSteamSimple) "Compressible fluid" annotation(Evaluate=true);
+  parameter Boolean isCompressible=(ftype==FluidType.WaterSteam or ftype==FluidType.FlueGases or ftype==FluidType.DryAirIdealGas or ftype==FluidType.WaterSteamSimple or ftype ==FluidType.CoolPropMedium) "Compressible fluid" annotation(Evaluate=true);
 
 public
   Integer fluid1=Integer(ftype) "Fluid number";
