@@ -36,6 +36,9 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ps props
     annotation (Placement(transformation(extent={{-100,-100},{-80,-80}},
           rotation=0)));
+  ThermoSysPro.Properties.Fluid.Ph proe_calc(P = Pe, h = C1.h, mode = 0, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph pros_calc(P = Ps, h = C2.h, mode = 0, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ps props_calc(P = Ps, s = proe.s, mode = 0, fluid = fluid);// To be verified MAZU
 equation
 
   /* Check that the fluid type is C3H3F5 */
@@ -78,15 +81,18 @@ equation
   His - C1.h = max(xm, 0.01)*eta*(C2.h - C1.h);
 
   /* Fluid thermodynamic properties before the compression */
-  proe = ThermoSysPro.Properties.Fluid.Ph(Pe, C1.h, 0, fluid);
+//   proe = ThermoSysPro.Properties.Fluid.Ph(Pe, C1.h, 0, fluid);// Commented automatically, to be verified MAZU
+  proe = proe_calc.pro;// To be verified MAZU
   Te = proe.T;
 
   /* Fluid thermodynamic properties after the compression */
-  pros = ThermoSysPro.Properties.Fluid.Ph(Ps, C2.h, 0, fluid);
+//   pros = ThermoSysPro.Properties.Fluid.Ph(Ps, C2.h, 0, fluid);// Commented automatically, to be verified MAZU
+  pros = pros_calc.pro;// To be verified MAZU
   Ts = pros.T;
 
   /* Fluid thermodynamic properties after the identropic compression */
-  props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, 0, fluid);
+//   props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, 0, fluid);// Commented automatically, to be verified MAZU
+  props = props_calc.pro;// To be verified MAZU
   His = props.h;
 
   annotation (

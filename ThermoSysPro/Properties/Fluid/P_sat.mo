@@ -1,5 +1,5 @@
 within ThermoSysPro.Properties.Fluid;
-function P_sat
+block P_sat
   input Units.SI.Temperature T "Temperature (K)";
   input Integer fluid  "Fluid number - 1: IF97 - 7: SimpleWater";
 

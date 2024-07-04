@@ -79,6 +79,7 @@ public
     annotation (Placement(transformation(extent={{72,68},{100,100}}, rotation=0)));
   Thermal.Connectors.ThermalPort Cth annotation (Placement(transformation(
           extent={{-10,-10},{10,10}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsatvsat_calc(P = P, fluid = fluid);// To be verified MAZU
 equation
 
   /* Check that incoming fluids are compatible with fluid in volume */
@@ -331,7 +332,9 @@ equation
   Cs_sur.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);
+//   (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);// Commented automatically, to be verified MAZU
+  lsat = lsatvsat_calc.lsat;// To be verified MAZU
+  vsat = lsatvsat_calc.vsat;// To be verified MAZU
 
   hl = lsat.h;
   hv = vsat.h;

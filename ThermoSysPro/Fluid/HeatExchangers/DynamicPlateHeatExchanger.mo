@@ -232,6 +232,34 @@ public
           extent={{40,-70},{60,-50}}, rotation=0)));
   Interfaces.Connectors.FluidOutlet Sc annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT hc_calc[N - 1](each P = Pc0, T = Tc0[1:N - 1], each fluid = fluid_c, each mode = mode_c, each Xco2 = Xco2_c, each Xh2o = Xh2o_c, each Xo2 = Xo2_c, each Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT hf_calc[N - 1](each P = Pf0, T = Tf0[1:N - 1], each fluid = fluid_f, each mode = mode_f, each Xco2 = Xco2_f, each Xh2o = Xh2o_f, each Xo2 = Xo2_f, each Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_Ph rhoc1_calc[N - 1](P = Pc[2:N], h = hc[2:N], each fluid = fluid_c, each mode = mode_c, each Xco2 = Xco2_c, each Xh2o = Xh2o_c, each Xo2 = Xo2_c, each Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tc1_calc[N - 1](P = Pc[2:N], h = hc[2:N], each fluid = fluid_c, each mode = mode_c, each Xco2 = Xco2_c, each Xh2o = Xh2o_c, each Xo2 = Xo2_c, each Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph cpc1_calc[N - 1](P = Pc[2:N], h = hc[2:N], each fluid = fluid_c, each mode = mode_c, each Xco2 = Xco2_c, each Xh2o = Xh2o_c, each Xo2 = Xo2_c, each Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph muc1_calc[N - 1](P = Pc[2:N], h = hc[2:N], each fluid = fluid_c, each mode = mode_c, each Xco2 = Xco2_c, each Xh2o = Xh2o_c, each Xo2 = Xo2_c, each Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph kc1_calc[N - 1](P = Pc[2:N], h = hc[2:N], each fluid = fluid_c, each mode = mode_c, each Xco2 = Xco2_c, each Xh2o = Xh2o_c, each Xo2 = Xo2_c, each Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT lambdac1_calc[N - 1](rho = rhoc1[1:N - 1], T = Tc1[1:N - 1], P = Pc[2:N], each region = 0, each fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_Ph rhof1_calc[N - 1](P = Pf[2:N], h = hf[2:N], each fluid = fluid_f, each mode = mode_f, each Xco2 = Xco2_f, each Xh2o = Xh2o_f, each Xo2 = Xo2_f, each Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tf1_calc[N - 1](P = Pf[2:N], h = hf[2:N], each fluid = fluid_f, each mode = mode_f, each Xco2 = Xco2_f, each Xh2o = Xh2o_f, each Xo2 = Xo2_f, each Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph cpf1_calc[N - 1](P = Pf[2:N], h = hf[2:N], each fluid = fluid_f, each mode = mode_f, each Xco2 = Xco2_f, each Xh2o = Xh2o_f, each Xo2 = Xo2_f, each Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph muf1_calc[N - 1](P = Pf[2:N], h = hf[2:N], each fluid = fluid_f, each mode = mode_f, each Xco2 = Xco2_f, each Xh2o = Xh2o_f, each Xo2 = Xo2_f, each Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph kf1_calc[N - 1](P = Pf[2:N], h = hf[2:N], each fluid = fluid_f, each mode = mode_f, each Xco2 = Xco2_f, each Xh2o = Xh2o_f, each Xo2 = Xo2_f, each Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT lambdaf1_calc[N - 1](rho = rhof1[1:N - 1], T = Tf1[1:N - 1], P = Pf[2:N], each region = 0, each fluid = fluid_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_Ph rhoc2_calc[N](P = (Pc[1:N] + Pc[2:N + 1])/2, h = hbc[1:N], each fluid = fluid_c, each mode = mode_c, each Xco2 = Xco2_c, each Xh2o = Xh2o_c, each Xo2 = Xo2_c, each Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tc2_calc[N](P = (Pc[1:N] + Pc[2:N + 1])/2, h = hbc[1:N], each fluid = fluid_c, each mode = mode_c, each Xco2 = Xco2_c, each Xh2o = Xh2o_c, each Xo2 = Xo2_c, each Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph cpc2_calc[N](P = (Pc[1:N] + Pc[2:N + 1])/2, h = hbc[1:N], each fluid = fluid_c, each mode = mode_c, each Xco2 = Xco2_c, each Xh2o = Xh2o_c, each Xo2 = Xo2_c, each Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph muc2_calc[N](P = (Pc[1:N] + Pc[2:N + 1])/2, h = hbc[1:N], each fluid = fluid_c, each mode = mode_c, each Xco2 = Xco2_c, each Xh2o = Xh2o_c, each Xo2 = Xo2_c, each Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph kc2_calc[N](P = (Pc[1:N] + Pc[2:N + 1])/2, h = hbc[1:N], each fluid = fluid_c, each mode = mode_c, each Xco2 = Xco2_c, each Xh2o = Xh2o_c, each Xo2 = Xo2_c, each Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_Ph rhof2_calc[N](P = (Pf[1:N] + Pf[2:N + 1])/2, h = hbf[1:N], each fluid = fluid_f, each mode = mode_f, each Xco2 = Xco2_f, each Xh2o = Xh2o_f, each Xo2 = Xo2_f, each Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tf2_calc[N](P = (Pf[1:N] + Pf[2:N + 1])/2, h = hbf[1:N], each fluid = fluid_f, each mode = mode_f, each Xco2 = Xco2_f, each Xh2o = Xh2o_f, each Xo2 = Xo2_f, each Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph cpf2_calc[N](P = (Pf[1:N] + Pf[2:N + 1])/2, h = hbf[1:N], each fluid = fluid_f, each mode = mode_f, each Xco2 = Xco2_f, each Xh2o = Xh2o_f, each Xo2 = Xo2_f, each Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph muf2_calc[N](P = (Pf[1:N] + Pf[2:N + 1])/2, h = hbf[1:N], each fluid = fluid_f, each mode = mode_f, each Xco2 = Xco2_f, each Xh2o = Xh2o_f, each Xo2 = Xo2_f, each Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph kf2_calc[N](P = (Pf[1:N] + Pf[2:N + 1])/2, h = hbf[1:N], each fluid = fluid_f, each mode = mode_f, each Xco2 = Xco2_f, each Xh2o = Xh2o_f, each Xo2 = Xo2_f, each Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tec_calc(P = Ec.P, h = Ec.h, fluid = fluid_c, mode = mode_c, Xco2 = Xco2_c, Xh2o = Xh2o_c, Xo2 = Xo2_c, Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tsc_calc(P = Sc.P, h = Sc.h, fluid = fluid_c, mode = mode_c, Xco2 = Xco2_c, Xh2o = Xh2o_c, Xo2 = Xo2_c, Xso2 = Xso2_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tef_calc(P = Ef.P, h = Ef.h, fluid = fluid_f, mode = mode_f, Xco2 = Xco2_f, Xh2o = Xh2o_f, Xo2 = Xo2_f, Xso2 = Xso2_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tsf_calc(P = Sf.P, h = Sf.h, fluid = fluid_f, mode = mode_f, Xco2 = Xco2_f, Xh2o = Xh2o_f, Xo2 = Xo2_f, Xso2 = Xso2_f);// To be verified MAZU
 initial equation
   if dynamic_energy_balance then
     if steady_state then
@@ -242,8 +270,10 @@ initial equation
     else
       if option_temperature then
         for i in 2:N loop
-          hc[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pc0, Tc0[i - 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-          hf[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pf0, Tf0[i - 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
+//           hc[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pc0, Tc0[i - 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+          hc[i] = hc_calc[i - 1].h;// To be verified MAZU
+//           hf[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pf0, Tf0[i - 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+          hf[i] = hf_calc[i - 1].h;// To be verified MAZU
         end for;
       else
         for i in 2:N loop
@@ -457,26 +487,38 @@ equation
     if (p_rhoc > 0) then
       rhoc1[i] = p_rhoc;
     else
-      rhoc1[i] = ThermoSysPro.Properties.Fluid.Density_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
+//       rhoc1[i] = ThermoSysPro.Properties.Fluid.Density_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+      rhoc1[i] = rhoc1_calc[i].rho;// To be verified MAZU
     end if;
 
-    Tc1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    cpc1[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    muc1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    kc1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    lambdac1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhoc1[i], Tc1[i], Pc[i + 1], 0, fluid_c);
+//     Tc1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+    Tc1[i] = Tc1_calc[i].T;// To be verified MAZU
+//     cpc1[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+    cpc1[i] = cpc1_calc[i].cp;// To be verified MAZU
+//     muc1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+    muc1[i] = muc1_calc[i].mu;// To be verified MAZU
+//     kc1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+    kc1[i] = kc1_calc[i].k;// To be verified MAZU
+//     lambdac1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhoc1[i], Tc1[i], Pc[i + 1], 0, fluid_c);// Commented automatically, to be verified MAZU
+    lambdac1[i] = lambdac1_calc[i].k;// To be verified MAZU
 
     if (p_rhof > 0) then
       rhof1[i] = p_rhof;
     else
-      rhof1[i] = ThermoSysPro.Properties.Fluid.Density_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
+//       rhof1[i] = ThermoSysPro.Properties.Fluid.Density_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+      rhof1[i] = rhof1_calc[i].rho;// To be verified MAZU
     end if;
 
-    Tf1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    cpf1[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    muf1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    kf1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    lambdaf1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhof1[i], Tf1[i], Pf[i + 1], 0, fluid_f);
+//     Tf1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+    Tf1[i] = Tf1_calc[i].T;// To be verified MAZU
+//     cpf1[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+    cpf1[i] = cpf1_calc[i].cp;// To be verified MAZU
+//     muf1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+    muf1[i] = muf1_calc[i].mu;// To be verified MAZU
+//     kf1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+    kf1[i] = kf1_calc[i].k;// To be verified MAZU
+//     lambdaf1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhof1[i], Tf1[i], Pf[i + 1], 0, fluid_f);// Commented automatically, to be verified MAZU
+    lambdaf1[i] = lambdaf1_calc[i].k;// To be verified MAZU
   end for;
 
   /* Pressure losses correlations */
@@ -517,32 +559,46 @@ equation
     if (p_rhoc > 0) then
       rhoc2[i] = p_rhoc;
     else
-      rhoc2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
+//       rhoc2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+      rhoc2[i] = rhoc2_calc[i].rho;// To be verified MAZU
     end if;
 
-    Tc2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    cpc2[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    muc2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    kc2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
+//     Tc2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+    Tc2[i] = Tc2_calc[i].T;// To be verified MAZU
+//     cpc2[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+    cpc2[i] = cpc2_calc[i].cp;// To be verified MAZU
+//     muc2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+    muc2[i] = muc2_calc[i].mu;// To be verified MAZU
+//     kc2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+    kc2[i] = kc2_calc[i].k;// To be verified MAZU
 
     if (p_rhof > 0) then
       rhof2[i] = p_rhof;
     else
-      rhof2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
+//       rhof2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+      rhof2[i] = rhof2_calc[i].rho;// To be verified MAZU
     end if;
 
-    Tf2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    cpf2[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    muf2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    kf2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
+//     Tf2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+    Tf2[i] = Tf2_calc[i].T;// To be verified MAZU
+//     cpf2[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+    cpf2[i] = cpf2_calc[i].cp;// To be verified MAZU
+//     muf2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+    muf2[i] = muf2_calc[i].mu;// To be verified MAZU
+//     kf2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+    kf2[i] = kf2_calc[i].k;// To be verified MAZU
   end for;
 
   /* Calcul des températures en entrée et en sortie de l'échangeur */
-   Tec = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ec.P, Ec.h, fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-   Tsc = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sc.P, Sc.h, fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
+//    Tec = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ec.P, Ec.h, fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+   Tec = Tec_calc.T;// To be verified MAZU
+//    Tsc = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sc.P, Sc.h, fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);// Commented automatically, to be verified MAZU
+   Tsc = Tsc_calc.T;// To be verified MAZU
 
-   Tef = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ef.P, Ef.h, fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-   Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sf.P, Sf.h, fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
+//    Tef = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ef.P, Ef.h, fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+   Tef = Tef_calc.T;// To be verified MAZU
+//    Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sf.P, Sf.h, fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);// Commented automatically, to be verified MAZU
+   Tsf = Tsf_calc.T;// To be verified MAZU
 
   /* Total fluid diffusion resistance */
   diff_res_t_c = sum(diff_res_c);

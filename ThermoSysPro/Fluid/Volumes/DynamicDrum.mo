@@ -159,6 +159,11 @@ public
       Placement(transformation(extent={{-110,-50},{-90,-30}}, rotation=0)));
   Interfaces.Connectors.FluidOutlet Cs "Water outlet" annotation (Placement(
         transformation(extent={{90,-50},{110,-30}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Ph prol_calc(P = P, h = hl, mode = 0, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prov_calc(P = P, h = hv, mode = 0, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prod_calc(P = Pfond, h = Cd.h, mode = 0, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prom_calc(P = P, h = Cm.h, mode = 0, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsatvsat_calc(P = P, fluid = fluid);// To be verified MAZU
 initial equation
   if dynamic_energy_balance then
     if steady_state then
@@ -473,11 +478,17 @@ equation
   Cv.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  prol = ThermoSysPro.Properties.Fluid.Ph(P, hl, 0, fluid);
-  prov = ThermoSysPro.Properties.Fluid.Ph(P, hv, 0, fluid);
-  prod = ThermoSysPro.Properties.Fluid.Ph(Pfond, Cd.h, 0, fluid);
-  prom = ThermoSysPro.Properties.Fluid.Ph(P, Cm.h, 0, fluid);
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);
+//   prol = ThermoSysPro.Properties.Fluid.Ph(P, hl, 0, fluid);// Commented automatically, to be verified MAZU
+  prol = prol_calc.pro;// To be verified MAZU
+//   prov = ThermoSysPro.Properties.Fluid.Ph(P, hv, 0, fluid);// Commented automatically, to be verified MAZU
+  prov = prov_calc.pro;// To be verified MAZU
+//   prod = ThermoSysPro.Properties.Fluid.Ph(Pfond, Cd.h, 0, fluid);// Commented automatically, to be verified MAZU
+  prod = prod_calc.pro;// To be verified MAZU
+//   prom = ThermoSysPro.Properties.Fluid.Ph(P, Cm.h, 0, fluid);// Commented automatically, to be verified MAZU
+  prom = prom_calc.pro;// To be verified MAZU
+//   (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);// Commented automatically, to be verified MAZU
+  lsat = lsatvsat_calc.lsat;// To be verified MAZU
+  vsat = lsatvsat_calc.vsat;// To be verified MAZU
 
   Tl = prol.T;
   rhol = prol.d;

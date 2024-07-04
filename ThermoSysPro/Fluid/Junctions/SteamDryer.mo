@@ -56,6 +56,8 @@ public
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Csl annotation (
       Placement(transformation(extent={{-9,-110},{11,-90}}, rotation=0)));
 
+  ThermoSysPro.Properties.Fluid.Ph proe_calc(P = Cev.P, h = Cev.h, mode = mode_e, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsat1vsat1_calc(P = Cev.P, fluid = fluid);// To be verified MAZU
 equation
   /* Check that incoming fluids are compatible with fluid in volume */
   fluids[1] = ftype;
@@ -152,13 +154,16 @@ equation
   Csl.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  proe = ThermoSysPro.Properties.Fluid.Ph(Cev.P, Cev.h, mode_e, fluid);
+//   proe = ThermoSysPro.Properties.Fluid.Ph(Cev.P, Cev.h, mode_e, fluid);// Commented automatically, to be verified MAZU
+  proe = proe_calc.pro;// To be verified MAZU
 
   /* Vapor mass fraction at the inlet */
   xe = proe.x;
 
   /* Fluid thermodynamic properties at the saturation point */
-  (lsat1,vsat1) = ThermoSysPro.Properties.Fluid.Water_sat_P(Cev.P, fluid);
+//   (lsat1,vsat1) = ThermoSysPro.Properties.Fluid.Water_sat_P(Cev.P, fluid);// Commented automatically, to be verified MAZU
+  lsat1 = lsat1vsat1_calc.lsat;// To be verified MAZU
+  vsat1 = lsat1vsat1_calc.vsat;// To be verified MAZU
 
   annotation (
     Diagram(coordinateSystem(

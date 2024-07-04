@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.Properties.Fluid;
-function Prandtl_Ph
+block Prandtl_Ph
   "Prandtl number computation for all fluids (inputs: P, h, fluid)"
 
   input Units.SI.AbsolutePressure P "Pressure (Pa)";

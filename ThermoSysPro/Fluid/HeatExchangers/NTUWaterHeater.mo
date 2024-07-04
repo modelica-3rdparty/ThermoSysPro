@@ -155,6 +155,21 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph flashepC
     "Flash fluid properties (near 4C)"
     annotation (Placement(transformation(extent={{80,80},{100,100}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Ph proeeF_calc(P = Ee.P, h = Ee.h, mode = mode_eeF, fluid = fluid_e);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proseF_calc(P = Se.P, h = Se.h, mode = mode_seF, fluid = fluid_e);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph promeF_calc(P = (Ee.P + Se.P)/2, h = (Ee.h + Se.h)/2, mode = mode_eeF, fluid = fluid_e);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proevC_calc(P = Ev.P, h = Ev.h, mode = mode_evC, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prospC_calc(P = Sp.P, h = Sp.h, mode = mode_spC, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prosp_calc(P = Ev.P, h = Hep, mode = mode_spC, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prodesF_calc(P = Se.P, h = HDesF, mode = mode_seF, fluid = fluid_e);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prompC_calc(P = Ev.P, h = (Hep + Sp.h)/2, mode = mode_spC, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prodesmC_calc(P = Ev.P, h = (vsatC.h + Ev.h)/2, mode = mode_evC, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prompF_calc(P = Ee.P, h = (Ee.h + HeiF)/2, mode = mode_eeF, fluid = fluid_e);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph promcF_calc(P = (Ee.P + Se.P)/2, h = (HeiF + HDesF)/2, mode = mode_mF, fluid = fluid_e);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prodesmF_calc(P = Se.P, h = (HDesF + Se.h)/2, mode = mode_seF, fluid = fluid_e);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proecF_calc(P = Ee.P, h = HeiF, mode = mode_eeF, fluid = fluid_e);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph flashepC_calc(P = Ev.P, h = Ep.h, mode = mode_flash, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsatCvsatC_calc(P = Ev.P, fluid = fluid);// To be verified MAZU
 equation
 
   /* Check that incoming fluids are compatible with fluid in volume */
@@ -349,26 +364,42 @@ equation
   Sp.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  proeeF = ThermoSysPro.Properties.Fluid.Ph(Ee.P, Ee.h, mode_eeF, fluid_e);
-  proseF = ThermoSysPro.Properties.Fluid.Ph(Se.P, Se.h, mode_seF, fluid_e);
-  promeF = ThermoSysPro.Properties.Fluid.Ph((Ee.P + Se.P)/2,(Ee.h + Se.h)/2, mode_eeF, fluid_e);
-  proevC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, Ev.h, mode_evC, fluid);
-  prospC = ThermoSysPro.Properties.Fluid.Ph(Sp.P, Sp.h, mode_spC, fluid);
-  prosp = ThermoSysPro.Properties.Fluid.Ph(Ev.P, Hep, mode_spC, fluid);
-  prodesF = ThermoSysPro.Properties.Fluid.Ph(Se.P, HDesF, mode_seF, fluid_e);
-  prompC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, (Hep + Sp.h)/2, mode_spC, fluid);
-  prodesmC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, (vsatC.h + Ev.h)/2, mode_evC, fluid);
-  prompF = ThermoSysPro.Properties.Fluid.Ph(Ee.P, (Ee.h + HeiF)/2, mode_eeF, fluid_e);
-  promcF = ThermoSysPro.Properties.Fluid.Ph((Ee.P + Se.P)/2, (HeiF + HDesF)/2, mode_mF, fluid_e);
-  prodesmF = ThermoSysPro.Properties.Fluid.Ph(Se.P, (HDesF + Se.h)/2, mode_seF, fluid_e);
-  proecF = ThermoSysPro.Properties.Fluid.Ph(Ee.P, HeiF, mode_eeF, fluid_e);
-  flashepC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, Ep.h, mode_flash, fluid);
+//   proeeF = ThermoSysPro.Properties.Fluid.Ph(Ee.P, Ee.h, mode_eeF, fluid_e);// Commented automatically, to be verified MAZU
+  proeeF = proeeF_calc.pro;// To be verified MAZU
+//   proseF = ThermoSysPro.Properties.Fluid.Ph(Se.P, Se.h, mode_seF, fluid_e);// Commented automatically, to be verified MAZU
+  proseF = proseF_calc.pro;// To be verified MAZU
+//   promeF = ThermoSysPro.Properties.Fluid.Ph((Ee.P + Se.P)/2,(Ee.h + Se.h)/2, mode_eeF, fluid_e);// Commented automatically, to be verified MAZU
+  promeF = promeF_calc.pro;// To be verified MAZU
+//   proevC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, Ev.h, mode_evC, fluid);// Commented automatically, to be verified MAZU
+  proevC = proevC_calc.pro;// To be verified MAZU
+//   prospC = ThermoSysPro.Properties.Fluid.Ph(Sp.P, Sp.h, mode_spC, fluid);// Commented automatically, to be verified MAZU
+  prospC = prospC_calc.pro;// To be verified MAZU
+//   prosp = ThermoSysPro.Properties.Fluid.Ph(Ev.P, Hep, mode_spC, fluid);// Commented automatically, to be verified MAZU
+  prosp = prosp_calc.pro;// To be verified MAZU
+//   prodesF = ThermoSysPro.Properties.Fluid.Ph(Se.P, HDesF, mode_seF, fluid_e);// Commented automatically, to be verified MAZU
+  prodesF = prodesF_calc.pro;// To be verified MAZU
+//   prompC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, (Hep + Sp.h)/2, mode_spC, fluid);// Commented automatically, to be verified MAZU
+  prompC = prompC_calc.pro;// To be verified MAZU
+//   prodesmC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, (vsatC.h + Ev.h)/2, mode_evC, fluid);// Commented automatically, to be verified MAZU
+  prodesmC = prodesmC_calc.pro;// To be verified MAZU
+//   prompF = ThermoSysPro.Properties.Fluid.Ph(Ee.P, (Ee.h + HeiF)/2, mode_eeF, fluid_e);// Commented automatically, to be verified MAZU
+  prompF = prompF_calc.pro;// To be verified MAZU
+//   promcF = ThermoSysPro.Properties.Fluid.Ph((Ee.P + Se.P)/2, (HeiF + HDesF)/2, mode_mF, fluid_e);// Commented automatically, to be verified MAZU
+  promcF = promcF_calc.pro;// To be verified MAZU
+//   prodesmF = ThermoSysPro.Properties.Fluid.Ph(Se.P, (HDesF + Se.h)/2, mode_seF, fluid_e);// Commented automatically, to be verified MAZU
+  prodesmF = prodesmF_calc.pro;// To be verified MAZU
+//   proecF = ThermoSysPro.Properties.Fluid.Ph(Ee.P, HeiF, mode_eeF, fluid_e);// Commented automatically, to be verified MAZU
+  proecF = proecF_calc.pro;// To be verified MAZU
+//   flashepC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, Ep.h, mode_flash, fluid);// Commented automatically, to be verified MAZU
+  flashepC = flashepC_calc.pro;// To be verified MAZU
 
   /* Fluid density */
   rho = promeF.d;
 
   /* Saturation point at the vapor inlet pressure */
-  (lsatC, vsatC) = ThermoSysPro.Properties.Fluid.Water_sat_P(Ev.P, fluid);
+//   (lsatC, vsatC) = ThermoSysPro.Properties.Fluid.Water_sat_P(Ev.P, fluid);// Commented automatically, to be verified MAZU
+  lsatC = lsatCvsatC_calc.lsat;// To be verified MAZU
+  vsatC = lsatCvsatC_calc.vsat;// To be verified MAZU
 
   TsatC  = lsatC.T;
   HsateC = lsatC.h;

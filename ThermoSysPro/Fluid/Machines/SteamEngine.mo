@@ -44,6 +44,9 @@ public
           extent={{60,-10},{80,10}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ps props
     annotation (Placement(transformation(extent={{-80,40},{-60,60}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Ph proe_calc(P = Pe, h = C1.h, mode = mode_e, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph pros_calc(P = Ps, h = C2.h, mode = mode_s, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ps props_calc(P = Ps, s = proe.s, mode = mode_s, fluid = fluid);// To be verified MAZU
 equation
 
   /* Check that the fluid type is water/steam */
@@ -93,15 +96,18 @@ equation
   W = Q*eta_stato*(C1.h - C2.h)*(1 - W_frot/100);
 
   /* Fluid thermodynamic properties before the expansion */
-  proe = ThermoSysPro.Properties.Fluid.Ph(Pe, C1.h, mode_e,fluid);
+//   proe = ThermoSysPro.Properties.Fluid.Ph(Pe, C1.h, mode_e,fluid);// Commented automatically, to be verified MAZU
+  proe = proe_calc.pro;// To be verified MAZU
   Te = proe.T;
 
   /* Fluid thermodynamic properties after the expansion */
-  pros = ThermoSysPro.Properties.Fluid.Ph(Ps, C2.h, mode_s,fluid);
+//   pros = ThermoSysPro.Properties.Fluid.Ph(Ps, C2.h, mode_s,fluid);// Commented automatically, to be verified MAZU
+  pros = pros_calc.pro;// To be verified MAZU
   Ts = pros.T;
 
   /* Fluid thermodynamic properties after the isentropic expansion */
-  props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, mode_s,fluid);
+//   props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, mode_s,fluid);// Commented automatically, to be verified MAZU
+  props = props_calc.pro;// To be verified MAZU
   His = props.h;
 
   annotation (

@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.Properties.Fluid;
-function Temperature_Ph
+block Temperature_Ph
   "Temperature computation for all fluids (inputs: P, h, fluid)"
 
   input Units.SI.AbsolutePressure P "Pressure (Pa)";

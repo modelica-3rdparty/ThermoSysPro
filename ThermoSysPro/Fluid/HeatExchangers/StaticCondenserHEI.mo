@@ -213,6 +213,15 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph promf
     "Proprietes eau"
     annotation (Placement(transformation(extent={{80,80},{100,100}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Ph proce_calc(P = Cvt.P, h = Hmv, mode = mode_c, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph procs_calc(P = Cex.P, h = Cex.h, mode = mode_cs, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsatvsat_calc(P = Pcond, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph profe_calc(P = Cee.P, h = Cee.h, mode = mode_f, fluid = fluid_p);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph profs_calc(P = Cse.P, h = Cse.h, mode = mode_f, fluid = fluid_p);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph promf_calc(P = (Cee.P + Cse.P)/2, h = (Cee.h + Cse.h)/2, mode = mode_f, fluid = fluid_p);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.P_sat Psat_att_calc(T = Tsat_att, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.T_sat Tcut_off_calc(P = Pcut_off, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.T_sat Tsat_calc(P = Pcond, fluid = fluid);// To be verified MAZU
 equation
 
   /* Check that incoming fluids are compatible with fluid in volume */
@@ -392,14 +401,18 @@ equation
   W = Qf*(Cse.h - Cee.h);
 
   /* Fluid thermodynamic properties of the hot side */
-  proce = ThermoSysPro.Properties.Fluid.Ph(Cvt.P, Hmv, mode_c, fluid);
-  procs = ThermoSysPro.Properties.Fluid.Ph(Cex.P, Cex.h, mode_cs, fluid);
+//   proce = ThermoSysPro.Properties.Fluid.Ph(Cvt.P, Hmv, mode_c, fluid);// Commented automatically, to be verified MAZU
+  proce = proce_calc.pro;// To be verified MAZU
+//   procs = ThermoSysPro.Properties.Fluid.Ph(Cex.P, Cex.h, mode_cs, fluid);// Commented automatically, to be verified MAZU
+  procs = procs_calc.pro;// To be verified MAZU
   //procs = ThermoSysPro.Properties.Fluid.Ph(Pcond + Cex.P)/2, (lsat.h + Cex.h)/2, modecs);
 
   Tec = proce.T;
   Tsc = procs.T;
 
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(Pcond, fluid);
+//   (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(Pcond, fluid);// Commented automatically, to be verified MAZU
+  lsat = lsatvsat_calc.lsat;// To be verified MAZU
+  vsat = lsatvsat_calc.vsat;// To be verified MAZU
 
   if (p_rhoc > 0) then
     rho_ex = p_rhoc;
@@ -408,9 +421,12 @@ equation
   end if;
 
   /* Fluid thermodynamic properties of the cold side */
-  profe = ThermoSysPro.Properties.Fluid.Ph(Cee.P, Cee.h, mode_f, fluid_p);
-  profs = ThermoSysPro.Properties.Fluid.Ph(Cse.P, Cse.h, mode_f, fluid_p);
-  promf = ThermoSysPro.Properties.Fluid.Ph((Cee.P + Cse.P)/2, (Cee.h + Cse.h)/2, mode_f, fluid_p);
+//   profe = ThermoSysPro.Properties.Fluid.Ph(Cee.P, Cee.h, mode_f, fluid_p);// Commented automatically, to be verified MAZU
+  profe = profe_calc.pro;// To be verified MAZU
+//   profs = ThermoSysPro.Properties.Fluid.Ph(Cse.P, Cse.h, mode_f, fluid_p);// Commented automatically, to be verified MAZU
+  profs = profs_calc.pro;// To be verified MAZU
+//   promf = ThermoSysPro.Properties.Fluid.Ph((Cee.P + Cse.P)/2, (Cee.h + Cse.h)/2, mode_f, fluid_p);// Commented automatically, to be verified MAZU
+  promf = promf_calc.pro;// To be verified MAZU
 
   Tef = profe.T;
   Tsf = profs.T;
@@ -467,13 +483,15 @@ equation
   Tsat_att = Tef + (W/(Qf*Cpmf))*(1/(1 - Modelica.Math.exp(-(U*S_ech)/(Qf*Cpmf))));
 
   /* Calculation of expected HEI saturation pressure  */
-  Psat_att = ThermoSysPro.Properties.Fluid.P_sat(Tsat_att, fluid);
+//   Psat_att = ThermoSysPro.Properties.Fluid.P_sat(Tsat_att, fluid);// Commented automatically, to be verified MAZU
+  Psat_att = Psat_att_calc.P;// To be verified MAZU
 
   /* Calculation of the HEI pressure cut-off */
   Pcut_off = (5.752433E-04*(Tef-273.15)^3 + 1.735162E-02*(Tef-273.15)^2 + 8.052739E-02*(Tef-273.15) + 2.109159E+01)*100;
 
   /* Calculation of the HEI saturation temperature at pressure cut-off  */
-  Tcut_off = ThermoSysPro.Properties.Fluid.T_sat(Pcut_off, fluid);
+//   Tcut_off = ThermoSysPro.Properties.Fluid.T_sat(Pcut_off, fluid);// Commented automatically, to be verified MAZU
+  Tcut_off = Tcut_off_calc.T;// To be verified MAZU
 
   /* Calculation of HEI zero-load  pressure */
   Pzero_load = (5.008000E-04*(Tef - 273.15)^3 + 2.039549E-02*(Tef - 273.15)^2 + 2.277566E-01*(Tef - 273.15) + 1.027824E+01)*100;
@@ -489,7 +507,8 @@ equation
   end if;
 
   /* Calculation of the expected HEI corrected saturation pressure */
-  Tsat = ThermoSysPro.Properties.Fluid.T_sat(Pcond, fluid);
+//   Tsat = ThermoSysPro.Properties.Fluid.T_sat(Pcond, fluid);// Commented automatically, to be verified MAZU
+  Tsat = Tsat_calc.T;// To be verified MAZU
 
   /* Calculation of the Terminal Temperature Difference */
   TTD = Tsat - Tsf;

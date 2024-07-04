@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.Properties.Fluid;
-function Density_Ph "Density computation for all fluids (inputs: P, h, fluid)"
+block Density_Ph "Density computation for all fluids (inputs: P, h, fluid)"
 
   input Units.SI.AbsolutePressure P "Pressure (Pa)";
   input Units.SI.SpecificEnthalpy h "Specific enthalpy";
@@ -29,7 +29,7 @@ algorithm
 
   // C3H3F5
   elseif fluid==2 then
-    pro := ThermoSysPro.Properties.Fluid.Ph(P, h, mode,fluid);
+    pro := ThermoSysPro.Properties.C3H3F5.C3H3F5_Ph(P, h);
     rho := pro.d;
 
   // FlueGas

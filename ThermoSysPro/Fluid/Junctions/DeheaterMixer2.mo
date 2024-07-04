@@ -47,6 +47,8 @@ public
 public
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce annotation (Placement(
         transformation(extent={{-110,50},{-90,70}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Temperature_Ph T_calc(P = P, h = h, fluid = fluid, mode = mode, Xco2 = Cs.Xco2, Xh2o = Cs.Xh2o, Xo2 = Cs.Xo2, Xso2 = Cs.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT hmax_calc(P = P, T = Tmax, fluid = fluid, mode = mode, Xco2 = Cs.Xco2, Xh2o = Cs.Xh2o, Xo2 = Cs.Xo2, Xso2 = Cs.Xso2);// To be verified MAZU
 equation
 
   /* Check that incoming fluids are compatible with fluid in volume */
@@ -137,9 +139,11 @@ equation
   Cs.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
+//   T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);// Commented automatically, to be verified MAZU
+  T = T_calc.T;// To be verified MAZU
 
-  hmax = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, Tmax, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
+//   hmax = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, Tmax, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);// Commented automatically, to be verified MAZU
+  hmax = hmax_calc.h;// To be verified MAZU
 
   annotation (
     Diagram(coordinateSystem(

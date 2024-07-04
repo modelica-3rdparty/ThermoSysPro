@@ -81,6 +81,10 @@ public
         rotation=180)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pros1
     annotation (Placement(transformation(extent={{-20,80},{0,100}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Ph proe_calc(P = Pe, h = Ce.h, mode = mode_e, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph pros1_calc(P = Ps, h = Hrs, mode = mode_s, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph pros_calc(P = Ps, h = Cs.h, mode = mode_s, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ps props_calc(P = Ps, s = proe.s, mode = mode_ps, fluid = fluid);// To be verified MAZU
 equation
   /* Check that the fluid type is water/steam */
   assert((ftype == FluidType.WaterSteam) or (ftype == FluidType.WaterSteamSimple), "StodolaTurbine: the fluid type must be water/steam");
@@ -146,21 +150,25 @@ equation
   MechPower.signal = W;
 
   /* Fluid thermodynamic properties before the expansion */
-  proe = ThermoSysPro.Properties.Fluid.Ph(Pe, Ce.h, mode_e, fluid);
+//   proe = ThermoSysPro.Properties.Fluid.Ph(Pe, Ce.h, mode_e, fluid);// Commented automatically, to be verified MAZU
+  proe = proe_calc.pro;// To be verified MAZU
 
   Te = proe.T;
 
   /* Fluid thermodynamic properties after the expansion */
-  pros1 = ThermoSysPro.Properties.Fluid.Ph(Ps, Hrs, mode_s, fluid);
+//   pros1 = ThermoSysPro.Properties.Fluid.Ph(Ps, Hrs, mode_s, fluid);// Commented automatically, to be verified MAZU
+  pros1 = pros1_calc.pro;// To be verified MAZU
 
   /* Fluid thermodynamic properties at the outlet of the nozzle */
-  pros = ThermoSysPro.Properties.Fluid.Ph(Ps, Cs.h, mode_s, fluid);
+//   pros = ThermoSysPro.Properties.Fluid.Ph(Ps, Cs.h, mode_s, fluid);// Commented automatically, to be verified MAZU
+  pros = pros_calc.pro;// To be verified MAZU
 
   Ts = pros.T;
   rhos = pros.d;
 
   /* Fluid thermodynamic properties after the isentropic expansion */
-  props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, mode_ps, fluid);
+//   props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, mode_ps, fluid);// Commented automatically, to be verified MAZU
+  props = props_calc.pro;// To be verified MAZU
   His = props.h;
 
   annotation (

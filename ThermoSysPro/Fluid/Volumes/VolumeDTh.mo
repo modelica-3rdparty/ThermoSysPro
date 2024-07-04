@@ -112,6 +112,10 @@ public
   Thermal.Connectors.ThermalPort              Cth
                                      annotation (Placement(transformation(
           extent={{-10,-10},{10,10}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Density_derp_Ph ddph_calc(P = P, h = h, fluid = fluid, mode = mode, Xco2 = Xco2, Xh2o = Xh2o, Xo2 = Xo2, Xso2 = Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_derh_Ph ddhp_calc(P = P, h = h, fluid = fluid, mode = mode, Xco2 = Xco2, Xh2o = Xh2o, Xo2 = Xo2, Xso2 = Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph T_calc(P = P, h = h, fluid = fluid, mode = mode, Xco2 = Xco2, Xh2o = Xh2o, Xo2 = Xo2, Xso2 = Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_Ph rho_calc(P = P, h = h, fluid = fluid, mode = mode, Xco2 = Xco2, Xh2o = Xh2o, Xo2 = Xo2, Xso2 = Xso2);// To be verified MAZU
 initial equation
   if dynamic_energy_balance and dynamic_mass_balance then
     if steady_state then
@@ -330,21 +334,25 @@ equation
 
   /* Fluid thermodynamic properties */
   if isCompressible and dynamic_mass_balance then
-    ddph = ThermoSysPro.Properties.Fluid.Density_derp_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    ddhp = ThermoSysPro.Properties.Fluid.Density_derh_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+//     ddph = ThermoSysPro.Properties.Fluid.Density_derp_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);// Commented automatically, to be verified MAZU
+    ddph = ddph_calc.ddph;// To be verified MAZU
+//     ddhp = ThermoSysPro.Properties.Fluid.Density_derh_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);// Commented automatically, to be verified MAZU
+    ddhp = ddhp_calc.ddhp;// To be verified MAZU
   else
     ddph = 0;
     ddhp = 0;
   end if;
 
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+//   T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);// Commented automatically, to be verified MAZU
+  T = T_calc.T;// To be verified MAZU
 
   Cth.T = T;
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+//     rho = ThermoSysPro.Properties.Fluid.Density_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);// Commented automatically, to be verified MAZU
+    rho = rho_calc.rho;// To be verified MAZU
   end if;
 
   annotation (

@@ -1,5 +1,5 @@
 within ThermoSysPro.Properties.Fluid;
-function IsobaricExpansionCoefficient_Ph
+block IsobaricExpansionCoefficient_Ph
   "Isobaric Expansion Coefficient computation for all fluids (inputs: P, h, fluid)"
 
   input Units.SI.AbsolutePressure P "Pressure (Pa)";

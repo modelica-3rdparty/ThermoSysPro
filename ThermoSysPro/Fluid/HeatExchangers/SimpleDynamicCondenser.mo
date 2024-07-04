@@ -133,6 +133,13 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proe
     "Propriétés de l'eau "                   annotation (Placement(
         transformation(extent={{40,20},{60,40}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Ph prol_calc(P = P, h = hl, mode = 0, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prov_calc(P = P, h = hv, mode = 0, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prod_calc(P = Pfond, h = Cl.h, mode = 0, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proe_calc(P = Pm, h = hm, mode = mode, fluid = fluid_p);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsatvsat_calc(P = P, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph k_calc(P = Pm, h = hm, fluid = fluid_p, mode = mode, Xco2 = Cee.Xco2, Xh2o = Cee.Xh2o, Xo2 = Cee.Xo2, Xso2 = Cee.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph cp_calc(P = Pm, h = hm, fluid = fluid_p, mode = mode, Xco2 = Cee.Xco2, Xh2o = Cee.Xh2o, Xo2 = Cee.Xo2, Xso2 = Cee.Xso2);// To be verified MAZU
 initial equation
   if dynamic_energy_balance then
     if steady_state then
@@ -339,12 +346,18 @@ equation
   Pm = (Cee.P + Cse.P)/2;
   hm = (Cee.h + Cse.h)/2;
 
-  prol = ThermoSysPro.Properties.Fluid.Ph(P, hl,0, fluid_c);
-  prov = ThermoSysPro.Properties.Fluid.Ph(P, hv,0, fluid_c);
-  prod = ThermoSysPro.Properties.Fluid.Ph(Pfond, Cl.h, 0, fluid_c);
-  proe = ThermoSysPro.Properties.Fluid.Ph(Pm, hm, mode, fluid_p);
+//   prol = ThermoSysPro.Properties.Fluid.Ph(P, hl,0, fluid_c);// Commented automatically, to be verified MAZU
+  prol = prol_calc.pro;// To be verified MAZU
+//   prov = ThermoSysPro.Properties.Fluid.Ph(P, hv,0, fluid_c);// Commented automatically, to be verified MAZU
+  prov = prov_calc.pro;// To be verified MAZU
+//   prod = ThermoSysPro.Properties.Fluid.Ph(Pfond, Cl.h, 0, fluid_c);// Commented automatically, to be verified MAZU
+  prod = prod_calc.pro;// To be verified MAZU
+//   proe = ThermoSysPro.Properties.Fluid.Ph(Pm, hm, mode, fluid_p);// Commented automatically, to be verified MAZU
+  proe = proe_calc.pro;// To be verified MAZU
 
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid_c);
+//   (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid_c);// Commented automatically, to be verified MAZU
+  lsat = lsatvsat_calc.lsat;// To be verified MAZU
+  vsat = lsatvsat_calc.vsat;// To be verified MAZU
 
   rhom = proe.d;
 
@@ -356,8 +369,10 @@ equation
   rhov = prov.d;
   xv = prov.x;
 
-  k =  ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(Pm, hm, fluid_p, mode, Cee.Xco2, Cee.Xh2o,Cee.Xo2, Cee.Xso2);
-  cp = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Pm, hm, fluid_p, mode, Cee.Xco2, Cee.Xh2o, Cee.Xo2, Cee.Xso2);
+//   k =  ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(Pm, hm, fluid_p, mode, Cee.Xco2, Cee.Xh2o,Cee.Xo2, Cee.Xso2);// Commented automatically, to be verified MAZU
+  k = k_calc.k;// To be verified MAZU
+//   cp = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Pm, hm, fluid_p, mode, Cee.Xco2, Cee.Xh2o, Cee.Xo2, Cee.Xso2);// Commented automatically, to be verified MAZU
+  cp = cp_calc.cp;// To be verified MAZU
 
   annotation (
     Diagram(coordinateSystem(

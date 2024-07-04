@@ -1,5 +1,5 @@
 within ThermoSysPro.Properties.Fluid;
-function Ph
+block Ph
   input Units.SI.AbsolutePressure P "Pressure";
   input Units.SI.SpecificEnthalpy h "Specific enthalpy";
   input Integer mode = 0 "IF97 region - 0:automatic computation";

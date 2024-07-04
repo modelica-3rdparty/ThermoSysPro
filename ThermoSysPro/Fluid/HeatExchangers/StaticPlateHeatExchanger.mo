@@ -113,6 +113,16 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prof
     annotation (Placement(transformation(extent={{-100,-100},{-80,-80}},
           rotation=0)));
+  ThermoSysPro.Properties.Fluid.Ph proc_calc(P = Pmc, h = Hmc, mode = mode_c, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prof_calc(P = Pmf, h = Hmf, mode = mode_f, fluid = fluid_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT muc_calc(rho = rhoc, T = Tmc, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT muf_calc(rho = rhof, T = Tmf, fluid = fluid_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT lambdac_calc(rho = rhoc, T = Tmc, P = Pmc, region = 0, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT lambdaf_calc(rho = rhof, T = Tmf, P = Pmf, region = 0, fluid = fluid_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proce_calc(P = Ec.P, h = Ec.h, mode = mode_c, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph procs_calc(P = Sc.P, h = Sc.h, mode = mode_c, fluid = fluid_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph profe_calc(P = Ef.P, h = Ef.h, mode = mode_f, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph profs_calc(P = Sf.P, h = Sf.h, mode = mode_f, fluid = fluid_f);// To be verified MAZU
 equation
 
   /* Mass flow rates */
@@ -245,8 +255,10 @@ equation
   Hmc = (Ec.h + Sc.h)/2;
   Hmf = (Ef.h + Sf.h)/2;
 
-  proc = ThermoSysPro.Properties.Fluid.Ph(Pmc, Hmc, mode_c, fluid_c);
-  prof = ThermoSysPro.Properties.Fluid.Ph(Pmf, Hmf, mode_f, fluid_f);
+//   proc = ThermoSysPro.Properties.Fluid.Ph(Pmc, Hmc, mode_c, fluid_c);// Commented automatically, to be verified MAZU
+  proc = proc_calc.pro;// To be verified MAZU
+//   prof = ThermoSysPro.Properties.Fluid.Ph(Pmf, Hmf, mode_f, fluid_f);// Commented automatically, to be verified MAZU
+  prof = prof_calc.pro;// To be verified MAZU
 
   Tmc = proc.T;
   Tmf = prof.T;
@@ -263,18 +275,26 @@ equation
     rhof = prof.d;
   end if;
 
-  muc = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhoc, Tmc, fluid_c);
-  muf = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhof, Tmf, fluid_f);
+//   muc = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhoc, Tmc, fluid_c);// Commented automatically, to be verified MAZU
+  muc = muc_calc.mu;// To be verified MAZU
+//   muf = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhof, Tmf, fluid_f);// Commented automatically, to be verified MAZU
+  muf = muf_calc.mu;// To be verified MAZU
 
-  lambdac = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhoc, Tmc, Pmc, 0, fluid_c);
-  lambdaf = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhof, Tmf, Pmf, 0, fluid_f);
+//   lambdac = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhoc, Tmc, Pmc, 0, fluid_c);// Commented automatically, to be verified MAZU
+  lambdac = lambdac_calc.k;// To be verified MAZU
+//   lambdaf = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhof, Tmf, Pmf, 0, fluid_f);// Commented automatically, to be verified MAZU
+  lambdaf = lambdaf_calc.k;// To be verified MAZU
 
   /* Calcul des températures en entrée et en sortie de l'échangeur */
-  proce = ThermoSysPro.Properties.Fluid.Ph(Ec.P, Ec.h, mode_c, fluid_c);
-  procs = ThermoSysPro.Properties.Fluid.Ph(Sc.P, Sc.h, mode_c, fluid_f);
+//   proce = ThermoSysPro.Properties.Fluid.Ph(Ec.P, Ec.h, mode_c, fluid_c);// Commented automatically, to be verified MAZU
+  proce = proce_calc.pro;// To be verified MAZU
+//   procs = ThermoSysPro.Properties.Fluid.Ph(Sc.P, Sc.h, mode_c, fluid_f);// Commented automatically, to be verified MAZU
+  procs = procs_calc.pro;// To be verified MAZU
 
-  profe = ThermoSysPro.Properties.Fluid.Ph(Ef.P, Ef.h, mode_f, fluid_c);
-  profs = ThermoSysPro.Properties.Fluid.Ph(Sf.P, Sf.h, mode_f, fluid_f);
+//   profe = ThermoSysPro.Properties.Fluid.Ph(Ef.P, Ef.h, mode_f, fluid_c);// Commented automatically, to be verified MAZU
+  profe = profe_calc.pro;// To be verified MAZU
+//   profs = ThermoSysPro.Properties.Fluid.Ph(Sf.P, Sf.h, mode_f, fluid_f);// Commented automatically, to be verified MAZU
+  profs = profs_calc.pro;// To be verified MAZU
 
   Tec = proce.T;
   Tsc = procs.T;

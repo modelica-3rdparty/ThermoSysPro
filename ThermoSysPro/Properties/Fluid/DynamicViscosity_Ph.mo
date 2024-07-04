@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.Properties.Fluid;
-function DynamicViscosity_Ph
+block DynamicViscosity_Ph
   "Dynamic Viscosity computation for all fluids (inputs: P, h, fluid)"
 
   input Units.SI.AbsolutePressure P "Pressure (Pa)";

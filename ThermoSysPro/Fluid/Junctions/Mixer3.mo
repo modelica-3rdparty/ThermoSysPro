@@ -64,6 +64,7 @@ public
            0)));
   InstrumentationAndControl.Connectors.OutputReal Oalpha2
     annotation (Placement(transformation(extent={{-20,-70},{0,-50}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Temperature_Ph T_calc(P = P, h = h, fluid = fluid, mode = mode, Xco2 = Cs.Xco2, Xh2o = Cs.Xh2o, Xo2 = Cs.Xo2, Xso2 = Cs.Xso2);// To be verified MAZU
 equation
 
   /* Check that incoming fluids are compatible with fluid in volume */
@@ -182,7 +183,8 @@ equation
   Cs.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
+//   T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);// Commented automatically, to be verified MAZU
+  T = T_calc.T;// To be verified MAZU
 
   annotation (
     Diagram(coordinateSystem(

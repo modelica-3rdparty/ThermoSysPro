@@ -1,5 +1,5 @@
 within ThermoSysPro.Properties.Fluid;
-function Reynolds_vrhoDmu
+block Reynolds_vrhoDmu
   "Reynolds number computation for all fluids (inputs: v, rho, D, mu, fluid)"
 
   input Units.SI.Velocity v "Mean velocity of fluid flow";

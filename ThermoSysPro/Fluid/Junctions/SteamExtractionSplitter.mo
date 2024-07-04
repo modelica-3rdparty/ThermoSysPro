@@ -56,6 +56,8 @@ public
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cex "Extraction outlet"
     annotation (Placement(transformation(extent={{30,-110},{50,-90}}, rotation=
             0)));
+  ThermoSysPro.Properties.Fluid.Ph proe_calc(P = P, h = Ce.h, mode = mode_e, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsatvsat_calc(P = P, fluid = fluid);// To be verified MAZU
 equation
   /* Check that incoming fluids are compatible with fluid in volume */
   fluids[1] = ftype;
@@ -146,10 +148,13 @@ equation
   Cex.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties at the inlet */
-  proe = ThermoSysPro.Properties.Fluid.Ph(P, Ce.h, mode_e,fluid);
+//   proe = ThermoSysPro.Properties.Fluid.Ph(P, Ce.h, mode_e,fluid);// Commented automatically, to be verified MAZU
+  proe = proe_calc.pro;// To be verified MAZU
 
   /* Fluid thermodynamic properties at the saturation point */
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P,fluid);
+//   (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P,fluid);// Commented automatically, to be verified MAZU
+  lsat = lsatvsat_calc.lsat;// To be verified MAZU
+  vsat = lsatvsat_calc.vsat;// To be verified MAZU
 
   /* Vapor mass fraction at the extraction outlet */
   x_ex = alpha*proe.x;

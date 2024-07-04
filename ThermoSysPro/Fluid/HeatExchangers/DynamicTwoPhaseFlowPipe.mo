@@ -236,6 +236,21 @@ public
     annotation (Placement(transformation(extent={{-10,20},{10,40}}, rotation=0)));
   Interfaces.Connectors.FluidOutlet C2 annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT h_calc[N - 1](P = Pb[2:N], T = T0[1:N - 1], each fluid = fluid, each mode = mode, each Xco2 = Xco2, each Xh2o = Xh2o, each Xo2 = Xo2, each Xso2 = Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph pro1_calc[N - 1](P = P[2:N], h = h[2:N], each mode = mode, each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsat1vsat1_calc[N - 1](P = P[2:N], each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT mul1_calc[N - 1](rho = rhol1[1:N - 1], T = T1[1:N - 1], each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT muv1_calc[N - 1](rho = rhov1[1:N - 1], T = T1[1:N - 1], each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT kl1_calc[N - 1](rho = rhol1[1:N - 1], T = T1[1:N - 1], P = P[2:N], each region = mode, each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT kv1_calc[N - 1](rho = rhov1[1:N - 1], T = T1[1:N - 1], P = P[2:N], each region = mode, each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph pro2_calc[N](P = (P[1:N] + P[2:N + 1])/2, h = hb[1:N], each mode = mode, each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsat2vsat2_calc[N](P = (P[1:N] + P[2:N + 1])/2, each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT mul2_calc[N](rho = rhol2[1:N], T = T2[1:N], each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT muv2_calc[N](rho = rhov2[1:N], T = T2[1:N], each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT kl2_calc[N](rho = rhol2[1:N], T = T2[1:N], P = (P[1:N] + P[2:N + 1])/2, each region = mode, each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT kv2_calc[N](rho = rhov2[1:N], T = T2[1:N], P = (P[1:N] + P[2:N + 1])/2, each region = mode, each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proc1_calc(P = P[1], h = h[1], mode = mode, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proc2_calc(P = P[N + 1], h = h[N + 1], mode = mode, fluid = fluid);// To be verified MAZU
 initial equation
   if dynamic_energy_balance then
     if steady_state then
@@ -245,7 +260,8 @@ initial equation
     else
       if option_temperature then
         for i in 2:N loop
-          h[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pb[i], T0[i - 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+//           h[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pb[i], T0[i - 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);// Commented automatically, to be verified MAZU
+          h[i] = h_calc[i - 1].h;// To be verified MAZU
         end for;
       else
         for i in 2:N loop
@@ -421,13 +437,16 @@ equation
     end if;
 
     /* Fluid thermodynamic properties */
-    pro1[i] = ThermoSysPro.Properties.Fluid.Ph(P[i + 1], h[i + 1], mode, fluid);
+//     pro1[i] = ThermoSysPro.Properties.Fluid.Ph(P[i + 1], h[i + 1], mode, fluid);// Commented automatically, to be verified MAZU
+    pro1[i] = pro1_calc[i].pro;// To be verified MAZU
 
     rho1[i] = pro1[i].d;
     T1[i] = pro1[i].T;
     xv1[i] = if noEvent((P[i+1] > pcrit) or (T1[i] > Tcrit)) then 1 else pro1[i].x;
 
-    (lsat1[i],vsat1[i]) = ThermoSysPro.Properties.Fluid.Water_sat_P(P[i + 1], fluid);
+//     (lsat1[i],vsat1[i]) = ThermoSysPro.Properties.Fluid.Water_sat_P(P[i + 1], fluid);// Commented automatically, to be verified MAZU
+    lsat1[i] = lsat1vsat1_calc[i].lsat;// To be verified MAZU
+    vsat1[i] = lsat1vsat1_calc[i].vsat;// To be verified MAZU
 
     if noEvent((P[i+1] > pcrit) or (T1[i] > Tcrit)) then
       xbs[i]   = 0;
@@ -447,11 +466,15 @@ equation
       lv[i]    = vsat1[i].h - lsat1[i].h;
     end if;
 
-    mul1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol1[i], T1[i], fluid);
-    muv1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhov1[i], T1[i], fluid);
+//     mul1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol1[i], T1[i], fluid);// Commented automatically, to be verified MAZU
+    mul1[i] = mul1_calc[i].mu;// To be verified MAZU
+//     muv1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhov1[i], T1[i], fluid);// Commented automatically, to be verified MAZU
+    muv1[i] = muv1_calc[i].mu;// To be verified MAZU
 
-    kl1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol1[i], T1[i], P[i + 1], mode, fluid);
-    kv1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhov1[i], T1[i], P[i + 1], mode, fluid);
+//     kl1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol1[i], T1[i], P[i + 1], mode, fluid);// Commented automatically, to be verified MAZU
+    kl1[i] = kl1_calc[i].k;// To be verified MAZU
+//     kv1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhov1[i], T1[i], P[i + 1], mode, fluid);// Commented automatically, to be verified MAZU
+    kv1[i] = kv1_calc[i].k;// To be verified MAZU
 
     Pb[i + 1] = max(min(P[i + 1], pcrit - 1), ptriple);
   end for;
@@ -506,13 +529,16 @@ equation
     gamma[i] = if diffusion then 1/diff_res[i] else gamma0;
 
     /* Fluid thermodynamic properties */
-    pro2[i] = ThermoSysPro.Properties.Fluid.Ph((P[i] + P[i + 1])/2, hb[i], mode, fluid);
+//     pro2[i] = ThermoSysPro.Properties.Fluid.Ph((P[i] + P[i + 1])/2, hb[i], mode, fluid);// Commented automatically, to be verified MAZU
+    pro2[i] = pro2_calc[i].pro;// To be verified MAZU
 
     rho2[i] = pro2[i].d;
     xv2[i] = if noEvent(((P[i] + P[i + 1])/2 > pcrit) or (T2[i] > Tcrit)) then 1 else pro2[i].x;
     T2[i] = pro2[i].T;
 
-    (lsat2[i],vsat2[i]) = ThermoSysPro.Properties.Fluid.Water_sat_P((P[i] + P[i + 1])/2, fluid);
+//     (lsat2[i],vsat2[i]) = ThermoSysPro.Properties.Fluid.Water_sat_P((P[i] + P[i + 1])/2, fluid);// Commented automatically, to be verified MAZU
+    lsat2[i] = lsat2vsat2_calc[i].lsat;// To be verified MAZU
+    vsat2[i] = lsat2vsat2_calc[i].vsat;// To be verified MAZU
 
     if noEvent((P[i+1] > pcrit) or (T2[i] > Tcrit)) then
       rhol2[i] = pro2[i].d;
@@ -526,11 +552,15 @@ equation
       cpv2[i]  = if noEvent(xv2[i] >= 1.0) then pro2[i].cp else vsat2[i].cp;
     end if;
 
-    mul2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol2[i], T2[i], fluid);
-    muv2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhov2[i], T2[i], fluid);
+//     mul2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol2[i], T2[i], fluid);// Commented automatically, to be verified MAZU
+    mul2[i] = mul2_calc[i].mu;// To be verified MAZU
+//     muv2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhov2[i], T2[i], fluid);// Commented automatically, to be verified MAZU
+    muv2[i] = muv2_calc[i].mu;// To be verified MAZU
 
-    kl2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol2[i], T2[i], (P[i] + P[i + 1])/2, mode, fluid);
-    kv2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhov2[i], T2[i], (P[i] + P[i + 1])/2, mode, fluid);
+//     kl2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol2[i], T2[i], (P[i] + P[i + 1])/2, mode, fluid);// Commented automatically, to be verified MAZU
+    kl2[i] = kl2_calc[i].k;// To be verified MAZU
+//     kv2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhov2[i], T2[i], (P[i] + P[i + 1])/2, mode, fluid);// Commented automatically, to be verified MAZU
+    kv2[i] = kv2_calc[i].k;// To be verified MAZU
   end for;
 
   /* Fluid densities at the boundaries of the nodes */
@@ -538,8 +568,10 @@ equation
     rhoc[i] = rho1[i - 1];
   end for;
 
-  proc[1] = ThermoSysPro.Properties.Fluid.Ph(P[1], h[1], mode, fluid);
-  proc[2] = ThermoSysPro.Properties.Fluid.Ph(P[N + 1], h[N + 1], mode, fluid);
+//   proc[1] = ThermoSysPro.Properties.Fluid.Ph(P[1], h[1], mode, fluid);// Commented automatically, to be verified MAZU
+  proc[1] = proc1_calc.pro;// To be verified MAZU
+//   proc[2] = ThermoSysPro.Properties.Fluid.Ph(P[N + 1], h[N + 1], mode, fluid);// Commented automatically, to be verified MAZU
+  proc[2] = proc2_calc.pro;// To be verified MAZU
 
   rhoc[1] = proc[1].d;
   rhoc[N + 1] = proc[2].d;

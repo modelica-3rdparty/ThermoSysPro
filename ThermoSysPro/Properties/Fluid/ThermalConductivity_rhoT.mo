@@ -1,5 +1,5 @@
 within ThermoSysPro.Properties.Fluid;
-function ThermalConductivity_rhoT
+block ThermalConductivity_rhoT
   "Thermal Conductivity computation for all fluids (inputs: rho,T, fluid)"
 
   input Units.SI.Density rho "Density";
@@ -11,9 +11,9 @@ function ThermalConductivity_rhoT
 
   output Units.SI.ThermalConductivity k "Thermal Conductivity (W/m/K)";
 
-protected
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro annotation (Placement(
-        transformation(extent={{-80,40},{-40,80}}, rotation=0)));
+// protected
+//   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro annotation (Placement(
+//         transformation(extent={{-80,40},{-40,80}}, rotation=0)));
 
 algorithm
   // Water/Steam  ///

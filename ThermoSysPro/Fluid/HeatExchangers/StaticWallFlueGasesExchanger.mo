@@ -126,6 +126,9 @@ public
     annotation (Placement(transformation(extent={{-10,20},{10,40}}, rotation=0)));
   Interfaces.Connectors.FluidOutlet C2 annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Temperature_Ph T1_calc[N - 1](P = P[2:N], h = h[2:N], each fluid = fluid, each mode = 0, each Xco2 = Xco2, each Xh2o = Xh2o, each Xo2 = Xo2, each Xso2 = Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_Ph rho2_calc[N](P = (P[1:N] + P[2:N + 1])/2, h = hb[1:N], each fluid = fluid, each mode = 0, each Xco2 = Xco2, each Xh2o = Xh2o, each Xo2 = Xo2, each Xso2 = Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph T2_calc[N](P = (P[1:N] + P[2:N + 1])/2, h = hb[1:N], each fluid = fluid, each mode = 0, each Xco2 = Xco2, each Xh2o = Xh2o, each Xo2 = Xo2, each Xso2 = Xso2);// To be verified MAZU
 equation
 
   /* Check that the fluid type is flue gases */
@@ -267,7 +270,8 @@ equation
     J[i] = Je[i] + Js[i];
 
     /* Fluid thermodynamic properties */
-    T1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(P[i + 1], h[i + 1], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
+//     T1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(P[i + 1], h[i + 1], fluid, 0, Xco2, Xh2o, Xo2, Xso2);// Commented automatically, to be verified MAZU
+    T1[i] = T1_calc[i].T;// To be verified MAZU
   end for;
 
   /* Momentum balance equations (hydraulic nodes) */
@@ -283,10 +287,12 @@ equation
     if (p_rho > 0) then
       rho2[i] = p_rho;
     else
-      rho2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((P[i] + P[i + 1])/2, hb[i], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
+//       rho2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((P[i] + P[i + 1])/2, hb[i], fluid, 0, Xco2, Xh2o, Xo2, Xso2);// Commented automatically, to be verified MAZU
+      rho2[i] = rho2_calc[i].rho;// To be verified MAZU
     end if;
 
-    T2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((P[i] + P[i + 1])/2, hb[i], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
+//     T2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((P[i] + P[i + 1])/2, hb[i], fluid, 0, Xco2, Xh2o, Xo2, Xso2);// Commented automatically, to be verified MAZU
+    T2[i] = T2_calc[i].T;// To be verified MAZU
   end for;
 
   /* Total heat exchange coefficient ??? */

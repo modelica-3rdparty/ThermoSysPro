@@ -1,5 +1,5 @@
 within ThermoSysPro.Properties.Fluid;
-function T_sat
+block T_sat
   input Units.SI.AbsolutePressure P "Pressure";
   input Integer fluid  "Fluid number - 1: IF97 - 7: SimpleWater";
 

@@ -215,6 +215,15 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph provIn
     "Propri鴩s de la vapeur dans le ballon" annotation (Placement(
         transformation(extent={{12,70},{52,110}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT mult_calc[Ns](each rho = rhol, T = Tp1[1:Ns], each fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proe_calc(P = P, h = Ce.h, mode = 0, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prol_calc(P = (P + Pfond)/2, h = hl, mode = 0, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph provIn_calc(P = P, h = Cv.h, mode = 0, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prov_calc(P = P, h = hv, mode = 0, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prod_calc(P = Pfond, h = Cl.h, mode = 0, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsatvsat_calc(P = P, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT mul_calc(rho = rhol, T = Tl, fluid = fluid);// To be verified MAZU
+  noEvent kl_calc(rho = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol, T = Tl, fluid = fluid));// To be verified MAZU
 initial equation
   if dynamic_energy_balance then
     if steady_state then
@@ -407,7 +416,8 @@ equation
   assert(PasL - Dext > 0, "Error Data for TwoPhaseCavity model (PasL - Dext)<= 0 ");
 
   for i in 1:Ns loop
-    mult[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol, Tp1[i], fluid);
+//     mult[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol, Tp1[i], fluid);// Commented automatically, to be verified MAZU
+    mult[i] = mult_calc[i].mu;// To be verified MAZU
 
     EE[i]= max((PasT/Dext - 1/2/((((PasL/Dext)^2 + (PasT/Dext/2)^2)^0.5/Dext) - 1)), 1);
 
@@ -530,12 +540,19 @@ equation
   Cl.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  proe = ThermoSysPro.Properties.Fluid.Ph(P, Ce.h, 0, fluid);
-  prol = ThermoSysPro.Properties.Fluid.Ph((P + Pfond)/2, hl, 0, fluid);
-  provIn = ThermoSysPro.Properties.Fluid.Ph(P, Cv.h, 0, fluid);
-  prov = ThermoSysPro.Properties.Fluid.Ph(P, hv, 0, fluid);
-  prod = ThermoSysPro.Properties.Fluid.Ph(Pfond, Cl.h, 0, fluid);
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);
+//   proe = ThermoSysPro.Properties.Fluid.Ph(P, Ce.h, 0, fluid);// Commented automatically, to be verified MAZU
+  proe = proe_calc.pro;// To be verified MAZU
+//   prol = ThermoSysPro.Properties.Fluid.Ph((P + Pfond)/2, hl, 0, fluid);// Commented automatically, to be verified MAZU
+  prol = prol_calc.pro;// To be verified MAZU
+//   provIn = ThermoSysPro.Properties.Fluid.Ph(P, Cv.h, 0, fluid);// Commented automatically, to be verified MAZU
+  provIn = provIn_calc.pro;// To be verified MAZU
+//   prov = ThermoSysPro.Properties.Fluid.Ph(P, hv, 0, fluid);// Commented automatically, to be verified MAZU
+  prov = prov_calc.pro;// To be verified MAZU
+//   prod = ThermoSysPro.Properties.Fluid.Ph(Pfond, Cl.h, 0, fluid);// Commented automatically, to be verified MAZU
+  prod = prod_calc.pro;// To be verified MAZU
+//   (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);// Commented automatically, to be verified MAZU
+  lsat = lsatvsat_calc.lsat;// To be verified MAZU
+  vsat = lsatvsat_calc.vsat;// To be verified MAZU
 
   Tl = prol.T;
   rhol = prol.d;
@@ -545,8 +562,10 @@ equation
   rhov = prov.d;
   xv = prov.x;
 
-  mul = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol, Tl, fluid);
-  kl = noEvent(ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol, Tl, P, 0, fluid));
+//   mul = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol, Tl, fluid);// Commented automatically, to be verified MAZU
+  mul = mul_calc.mu;// To be verified MAZU
+//   kl = noEvent(ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol, Tl, P, 0, fluid));// Commented automatically, to be verified MAZU
+  kl = kl_calc.mu;// To be verified MAZU
 
   annotation (
     Diagram(coordinateSystem(

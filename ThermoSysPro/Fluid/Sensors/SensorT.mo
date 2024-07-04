@@ -33,6 +33,7 @@ public
         transformation(extent={{-110,-90},{-90,-70}}, rotation=0)));
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
         transformation(extent={{92,-90},{112,-70}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Temperature_Ph T_calc(P = P, h = h, fluid = fluid, mode = mode, Xco2 = C1.Xco2, Xh2o = C1.Xh2o, Xo2 = C1.Xo2, Xso2 = C1.Xso2);// To be verified MAZU
 equation
 
   C1.P = C2.P;
@@ -66,7 +67,8 @@ equation
   P = (C1.P + C2.P)/2;
   h = (C1.h + C2.h)/2;
 
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h,fluid,mode,C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+//   T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h,fluid,mode,C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);// Commented automatically, to be verified MAZU
+  T = T_calc.T;// To be verified MAZU
 
   annotation (
     Diagram(coordinateSystem(

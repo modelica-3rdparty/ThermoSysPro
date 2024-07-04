@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.Properties.Fluid;
-function SpecificHeatCapacityCp_Ph
+block SpecificHeatCapacityCp_Ph
   "Specific Heat Capacity at constant P computation for all fluids (inputs: P, h, fluid)"
 
   input Units.SI.AbsolutePressure P "Pressure (Pa)";

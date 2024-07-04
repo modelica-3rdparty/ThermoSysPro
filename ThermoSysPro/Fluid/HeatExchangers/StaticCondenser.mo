@@ -133,6 +133,11 @@ public
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cev "Vapor inlet"
     annotation (Placement(transformation(extent={{-112,50},{-88,72}}, rotation=
             0)));
+  ThermoSysPro.Properties.Fluid.Ph proee_calc(P = Pee, h = Hee, mode = mode_ee, fluid = fluid_p);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proex_calc(P = Pex, h = Hex, mode = mode_ex, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph prose_calc(P = Pse, h = Hse, mode = mode_se, fluid = fluid_p);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.P_sat Pcond_calc(T = Tsat, fluid = fluid);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsat1vsat1_calc(P = Pcond, fluid = fluid);// To be verified MAZU
 equation
 
   /* Check that incoming fluids are compatible with fluid in volume */
@@ -326,9 +331,12 @@ equation
   W = Qee*(Hse - Hee);
 
   /* Fluid thermodynamic properties */
-  proee = ThermoSysPro.Properties.Fluid.Ph(Pee, Hee, mode_ee, fluid_p);
-  proex = ThermoSysPro.Properties.Fluid.Ph(Pex, Hex, mode_ex, fluid);
-  prose = ThermoSysPro.Properties.Fluid.Ph(Pse, Hse, mode_se, fluid_p);
+//   proee = ThermoSysPro.Properties.Fluid.Ph(Pee, Hee, mode_ee, fluid_p);// Commented automatically, to be verified MAZU
+  proee = proee_calc.pro;// To be verified MAZU
+//   proex = ThermoSysPro.Properties.Fluid.Ph(Pex, Hex, mode_ex, fluid);// Commented automatically, to be verified MAZU
+  proex = proex_calc.pro;// To be verified MAZU
+//   prose = ThermoSysPro.Properties.Fluid.Ph(Pse, Hse, mode_se, fluid_p);// Commented automatically, to be verified MAZU
+  prose = prose_calc.pro;// To be verified MAZU
 
   rho_ee = proee.d;
   rho_ex = proex.d;
@@ -337,10 +345,13 @@ equation
   Tse = prose.T;
 
   /* Vapor pressure inside the condenser */
-  Pcond = ThermoSysPro.Properties.Fluid.P_sat(Tsat, fluid);
+//   Pcond = ThermoSysPro.Properties.Fluid.P_sat(Tsat, fluid);// Commented automatically, to be verified MAZU
+  Pcond = Pcond_calc.P;// To be verified MAZU
 
   /* Fluid thermodynamic properties at the saturation point */
-  (lsat1,vsat1) = ThermoSysPro.Properties.Fluid.Water_sat_P(Pcond, fluid);
+//   (lsat1,vsat1) = ThermoSysPro.Properties.Fluid.Water_sat_P(Pcond, fluid);// Commented automatically, to be verified MAZU
+  lsat1 = lsat1vsat1_calc.lsat;// To be verified MAZU
+  vsat1 = lsat1vsat1_calc.vsat;// To be verified MAZU
 
   Hsate = lsat1.h;
 

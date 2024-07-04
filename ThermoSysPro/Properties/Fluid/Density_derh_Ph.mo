@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.Properties.Fluid;
-function Density_derh_Ph
+block Density_derh_Ph
   "Density derivative w.r.t enthalpy computation for all fluids (inputs: P, h, fluid)"
 
   input Units.SI.AbsolutePressure P "Pressure (Pa)";

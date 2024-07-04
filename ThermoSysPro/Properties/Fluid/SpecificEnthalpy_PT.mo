@@ -1,5 +1,5 @@
 within ThermoSysPro.Properties.Fluid;
-function SpecificEnthalpy_PT "Specific Enthalpy computation for all fluids (inputs: P, T, fluid)"
+block SpecificEnthalpy_PT "Specific Enthalpy computation for all fluids (inputs: P, T, fluid)"
 
   input Units.SI.AbsolutePressure P "Pressure (Pa)";
   input Units.SI.Temperature T "Temperature (K)";

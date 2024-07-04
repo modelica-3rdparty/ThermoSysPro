@@ -55,6 +55,11 @@ public
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Density_Ph rho_calc(P = Pm, h = h, fluid = fluid, mode = mode, Xco2 = C1.Xco2, Xh2o = C1.Xh2o, Xo2 = C1.Xo2, Xso2 = C1.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph T_calc(P = Pm, h = h, fluid = fluid, mode = mode, Xco2 = C1.Xco2, Xh2o = C1.Xh2o, Xo2 = C1.Xo2, Xso2 = C1.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph mu_calc(P = Pm, h = h, fluid = fluid, mode = mode, Xco2 = C1.Xco2, Xh2o = C1.Xh2o, Xo2 = C1.Xo2, Xso2 = C1.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph k_calc(P = Pm, h = h, fluid = fluid, mode = mode, Xco2 = C1.Xco2, Xh2o = C1.Xh2o, Xo2 = C1.Xo2, Xso2 = C1.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph cp_calc(P = Pm, h = h, fluid = fluid, mode = mode, Xco2 = C1.Xco2, Xh2o = C1.Xh2o, Xo2 = C1.Xo2, Xso2 = C1.Xso2);// To be verified MAZU
 initial equation
   if inertia then
     der(Q) = 0;
@@ -121,13 +126,18 @@ equation
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+//     rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);// Commented automatically, to be verified MAZU
+    rho = rho_calc.rho;// To be verified MAZU
   end if;
 
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
-  mu = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
-  k =  ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o,C1.Xo2, C1.Xso2);
-  cp = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+//   T = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);// Commented automatically, to be verified MAZU
+  T = T_calc.T;// To be verified MAZU
+//   mu = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);// Commented automatically, to be verified MAZU
+  mu = mu_calc.mu;// To be verified MAZU
+//   k =  ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o,C1.Xo2, C1.Xso2);// Commented automatically, to be verified MAZU
+  k = k_calc.k;// To be verified MAZU
+//   cp = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);// Commented automatically, to be verified MAZU
+  cp = cp_calc.cp;// To be verified MAZU
 
   annotation (
     Diagram(coordinateSystem(

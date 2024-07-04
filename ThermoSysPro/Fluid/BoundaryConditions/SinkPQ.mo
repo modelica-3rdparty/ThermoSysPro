@@ -59,6 +59,8 @@ public
         origin={0,-50},
         extent={{10,-10},{-10,10}},
         rotation=270)));
+  ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT h_calc(P = P, T = T, fluid = fluid, mode = mode, Xco2 = Xco2, Xh2o = Xh2o, Xo2 = Xo2, Xso2 = Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph T_calc(P = P, h = h, fluid = fluid, mode = mode, Xco2 = Xco2, Xh2o = Xh2o, Xo2 = Xo2, Xso2 = Xso2);// To be verified MAZU
 equation
 
   C.Q = Q;
@@ -100,10 +102,12 @@ equation
 
   if option_temperature then
     T = ISpecificEnthalpyOrTemperature.signal;
-    h = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, T, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+//     h = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, T, fluid, mode, Xco2, Xh2o, Xo2, Xso2);// Commented automatically, to be verified MAZU
+    h = h_calc.h;// To be verified MAZU
   else
     h = ISpecificEnthalpyOrTemperature.signal;
-    T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+//     T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);// Commented automatically, to be verified MAZU
+    T = T_calc.T;// To be verified MAZU
   end if;
 
   annotation (

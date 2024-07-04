@@ -78,6 +78,16 @@ public
         transformation(extent={{90,-9},{110,11}}, rotation=0)));
   Interfaces.Connectors.FluidOutlet Sc "Hot outlet" annotation (Placement(
         transformation(extent={{30,31},{50,51}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT Sf_h_calc(P = Sf.P, T = Tsf, fluid = fluid_f, mode = mode_f, Xco2 = Ef.Xco2, Xh2o = Ef.Xh2o, Xo2 = Ef.Xo2, Xso2 = Ef.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tsf_calc(P = Sf.P, h = Sf.h, fluid = fluid_f, mode = mode_f, Xco2 = Ef.Xco2, Xh2o = Ef.Xh2o, Xo2 = Ef.Xo2, Xso2 = Ef.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tsf__calc(P = Sf.P, h = Sf.h, fluid = fluid_f, mode = mode_f, Xco2 = Ef.Xco2, Xh2o = Ef.Xh2o, Xo2 = Ef.Xo2, Xso2 = Ef.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tec_calc(P = Ec.P, h = Ec.h, fluid = fluid_c, mode = mode_c, Xco2 = Ec.Xco2, Xh2o = Ec.Xh2o, Xo2 = Ec.Xo2, Xso2 = Ec.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tsc_calc(P = Sc.P, h = Sc.h, fluid = fluid_c, mode = mode_cs, Xco2 = Ec.Xco2, Xh2o = Ec.Xh2o, Xo2 = Ec.Xo2, Xso2 = Ec.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_Ph rhoc_calc(P = (Ec.P + Sc.P)/2, h = (Ec.h + Sc.h)/2, fluid = fluid_c, mode = mode_c, Xco2 = Ec.Xco2, Xh2o = Ec.Xh2o, Xo2 = Ec.Xo2, Xso2 = Ec.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tef_calc(P = Ef.P, h = Ef.h, fluid = fluid_f, mode = mode_f, Xco2 = Ef.Xco2, Xh2o = Ef.Xh2o, Xo2 = Ef.Xo2, Xso2 = Ef.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_Ph rhof_calc(P = (Ef.P + Sf.P)/2, h = (Ef.h + Sf.h)/2, fluid = fluid_f, mode = mode_f, Xco2 = Ef.Xco2, Xh2o = Ef.Xh2o, Xo2 = Ef.Xo2, Xso2 = Ef.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph Cpf_calc(P = Ef.P, h = Ef.h, fluid = fluid_f, mode = mode_f, Xco2 = Ef.Xco2, Xh2o = Ef.Xh2o, Xo2 = Ef.Xo2, Xso2 = Ef.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph Cpc_calc(P = Ec.P, h = Ec.h, fluid = fluid_c, mode = mode_c, Xco2 = Ec.Xco2, Xh2o = Ec.Xh2o, Xo2 = Ec.Xo2, Xso2 = Ec.Xso2);// To be verified MAZU
 equation
 
   /* Mass flow rates */
@@ -128,18 +138,21 @@ equation
   if (exchanger_type == 1) then
     W = Qf*(Sf.h - Ef.h);
     W = Qc*(Ec.h - Sc.h);
-    Sf.h = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Sf.P, Tsf, fluid_f, mode_f, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
+//     Sf.h = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Sf.P, Tsf, fluid_f, mode_f, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);// Commented automatically, to be verified MAZU
+    Sf.h = Sf_h_calc.h;// To be verified MAZU
     Tsf = Tef + DTfroid;
   elseif (exchanger_type == 2) then
     W = Qf*(Sf.h - Ef.h);
     DW = Qf*(Sf.h - Ef.h);
     DW = Qc*(Ec.h - Sc.h);
-    Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sf.P, Sf.h, fluid_f, mode_f,  Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
+//     Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sf.P, Sf.h, fluid_f, mode_f,  Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);// Commented automatically, to be verified MAZU
+    Tsf = Tsf_calc.T;// To be verified MAZU
   elseif (exchanger_type == 3) then
     W = noEvent(min(Qc*Cpc, Qf*Cpf)*EffEch*(Tec - Tef));
     Sf.h = Ef.h + W/Qf;
     Sc.h = Ec.h - W/Qc;
-    Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sf.P, Sf.h, fluid_f, mode_f,  Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
+//     Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sf.P, Sf.h, fluid_f, mode_f,  Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);// Commented automatically, to be verified MAZU
+    Tsf = Tsf__calc.T;// To be verified MAZU
   else
     assert(false, "StaticWaterWaterExchangerDTorWorEff: invalid option");
   end if;
@@ -159,29 +172,36 @@ equation
   DPf  = DPff + DPgf;
 
  /* Hot fluid Temperature at the inlet and at the outlet */
-  Tec = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ec.P, Ec.h, fluid_c, mode_c,  Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
-  Tsc = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sc.P, Sc.h, fluid_c, mode_cs,  Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
+//   Tec = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ec.P, Ec.h, fluid_c, mode_c,  Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);// Commented automatically, to be verified MAZU
+  Tec = Tec_calc.T;// To be verified MAZU
+//   Tsc = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sc.P, Sc.h, fluid_c, mode_cs,  Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);// Commented automatically, to be verified MAZU
+  Tsc = Tsc_calc.T;// To be verified MAZU
 
   /* Hot fluid density */
   if (p_rhoc > 0) then
     rhoc = p_rhoc;
   else
-    rhoc = ThermoSysPro.Properties.Fluid.Density_Ph((Ec.P + Sc.P)/2,(Ec.h + Sc.h)/2, fluid_c, mode_c, Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
+//     rhoc = ThermoSysPro.Properties.Fluid.Density_Ph((Ec.P + Sc.P)/2,(Ec.h + Sc.h)/2, fluid_c, mode_c, Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);// Commented automatically, to be verified MAZU
+    rhoc = rhoc_calc.rho;// To be verified MAZU
   end if;
 
   /* Cold fluid Temperature at the inlet */
-  Tef = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ef.P, Ef.h, fluid_f, mode_f, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
+//   Tef = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ef.P, Ef.h, fluid_f, mode_f, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);// Commented automatically, to be verified MAZU
+  Tef = Tef_calc.T;// To be verified MAZU
 
   /* Cold fluid density */
   if (p_rhof > 0) then
     rhof = p_rhof;
   else
-    rhof = ThermoSysPro.Properties.Fluid.Density_Ph((Ef.P + Sf.P)/2,(Ef.h + Sf.h)/2, fluid_f, mode_f, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
+//     rhof = ThermoSysPro.Properties.Fluid.Density_Ph((Ef.P + Sf.P)/2,(Ef.h + Sf.h)/2, fluid_f, mode_f, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);// Commented automatically, to be verified MAZU
+    rhof = rhof_calc.rho;// To be verified MAZU
   end if;
 
   /* Average specific heat capacities */
-  Cpf = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Ef.P, Ef.h, fluid_f, mode_f,  Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);
-  Cpc = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Ec.P, Ec.h, fluid_c, mode_c,  Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);
+//   Cpf = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Ef.P, Ef.h, fluid_f, mode_f,  Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);// Commented automatically, to be verified MAZU
+  Cpf = Cpf_calc.cp;// To be verified MAZU
+//   Cpc = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Ec.P, Ec.h, fluid_c, mode_c,  Ec.Xco2, Ec.Xh2o, Ec.Xo2, Ec.Xso2);// Commented automatically, to be verified MAZU
+  Cpc = Cpc_calc.cp;// To be verified MAZU
 
   annotation (
     Icon(coordinateSystem(

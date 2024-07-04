@@ -26,6 +26,7 @@ public
         extent={{-10,-10},{10,10}},
         rotation=270)));
 
+  ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT h_calc(P = P, T = ITemperature.signal, fluid = fluid, mode = mode, Xco2 = C1.Xco2, Xh2o = C1.Xh2o, Xo2 = C1.Xo2, Xso2 = C1.Xso2);// To be verified MAZU
 equation
   if (cardinality(ITemperature) == 0) then
     ITemperature.signal = T0;
@@ -58,7 +59,8 @@ equation
   ftype = C1.ftype;
 
   /* Computation of the fluid specific enthalpy */
-  h = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, ITemperature.signal, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+//   h = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, ITemperature.signal, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);// Commented automatically, to be verified MAZU
+  h = h_calc.h;// To be verified MAZU
 
   annotation (
     Diagram(coordinateSystem(

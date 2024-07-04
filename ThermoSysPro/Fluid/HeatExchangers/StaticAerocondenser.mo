@@ -94,6 +94,12 @@ public
     annotation (Placement(transformation(extent={{80,80},{100,100}}, rotation=0)));
   Properties.WaterSteam.Common.PropThermoSat lsat annotation (Placement(
         transformation(extent={{-100,80},{-80,100}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.P_sat Pcond_calc(T = Tcond, fluid = fluid_w);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proe_calc(P = (Pfond + Pcond)/2, h = he, mode = mode_s, fluid = fluid_w);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsat_calc(P = Pcond, fluid = fluid_w);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT hae_calc(P = Pae, T = Tae, fluid = fluid_a, mode = 0, Xco2 = Cair1.Xco2, Xh2o = Cair1.Xh2o, Xo2 = Cair1.Xo2, Xso2 = Cair1.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT has_calc(P = Pas, T = Tas, fluid = fluid_a, mode = 0, Xco2 = Cair1.Xco2, Xh2o = Cair1.Xh2o, Xo2 = Cair1.Xo2, Xso2 = Cair1.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_Ph rho_a_calc(P = Pae, h = hae, fluid = fluid_a, mode = 0, Xco2 = Cair1.Xco2, Xh2o = Cair1.Xh2o, Xo2 = Cair1.Xo2, Xso2 = Cair1.Xso2);// To be verified MAZU
 equation
 
   /* Check that incoming fluids are compatible with fluid in volume */
@@ -242,20 +248,26 @@ equation
   Tcond = ((Tas + Tae*(Ef - 1.0))/Ef);
 
   /* Condensation pressure */
-  Pcond = ThermoSysPro.Properties.Fluid.P_sat(Tcond, fluid_w);
+//   Pcond = ThermoSysPro.Properties.Fluid.P_sat(Tcond, fluid_w);// Commented automatically, to be verified MAZU
+  Pcond = Pcond_calc.P;// To be verified MAZU
 
   /* Water/steam thermodynamic properties */
-  proe = ThermoSysPro.Properties.Fluid.Ph((Pfond + Pcond)/2, he, mode_s, fluid_w);
+//   proe = ThermoSysPro.Properties.Fluid.Ph((Pfond + Pcond)/2, he, mode_s, fluid_w);// Commented automatically, to be verified MAZU
+  proe = proe_calc.pro;// To be verified MAZU
   rho_e = proe.d;
 
   /* Water specific enthalpy at the saturation point with pressure Pcond */
-  lsat = ThermoSysPro.Properties.Fluid.Water_sat_P(Pcond, fluid_w);
+//   lsat = ThermoSysPro.Properties.Fluid.Water_sat_P(Pcond, fluid_w);// Commented automatically, to be verified MAZU
+  lsat = lsat_calc.lsat;// To be verified MAZU
   he = lsat.h;
 
   /* Air thermodynamic properties */
-  hae = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pae, Tae, fluid_a, 0, Cair1.Xco2, Cair1.Xh2o, Cair1.Xo2, Cair1.Xso2);
-  has = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pas, Tas, fluid_a, 0, Cair1.Xco2, Cair1.Xh2o, Cair1.Xo2, Cair1.Xso2);
-  rho_a = ThermoSysPro.Properties.Fluid.Density_Ph(Pae, hae,  fluid_a, 0, Cair1.Xco2, Cair1.Xh2o, Cair1.Xo2, Cair1.Xso2);
+//   hae = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pae, Tae, fluid_a, 0, Cair1.Xco2, Cair1.Xh2o, Cair1.Xo2, Cair1.Xso2);// Commented automatically, to be verified MAZU
+  hae = hae_calc.h;// To be verified MAZU
+//   has = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pas, Tas, fluid_a, 0, Cair1.Xco2, Cair1.Xh2o, Cair1.Xo2, Cair1.Xso2);// Commented automatically, to be verified MAZU
+  has = has_calc.h;// To be verified MAZU
+//   rho_a = ThermoSysPro.Properties.Fluid.Density_Ph(Pae, hae,  fluid_a, 0, Cair1.Xco2, Cair1.Xh2o, Cair1.Xo2, Cair1.Xso2);// Commented automatically, to be verified MAZU
+  rho_a = rho_a_calc.rho;// To be verified MAZU
   cp_a = ThermoSysPro.Properties.FlueGases.FlueGases_cp((Pae + Pas)/2, (Tae + Tas)/2, Cair1.Xco2, Cair1.Xh2o, Cair1.Xo2, Cair1.Xso2);
   //cp_a = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_PT((Pae + Pas)/2, (Tae + Tas)/2, fluid_a, 0, Cair1.Xco2, Cair1.Xh2o, Cair1.Xo2, Cair1.Xso2);
 

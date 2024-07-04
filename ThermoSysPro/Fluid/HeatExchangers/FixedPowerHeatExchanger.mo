@@ -51,6 +51,10 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph profs
     annotation (Placement(transformation(extent={{-60,80},{-40,100}}, rotation=
             0)));
+  ThermoSysPro.Properties.Fluid.Ph proce_calc(P = Ec.P, h = Ec.h, mode = mode_c, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph procs_calc(P = Sc.P, h = Sc.h, mode = mode_c, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph profe_calc(P = Ef.P, h = Ef.h, mode = mode_f, fluid = fluid_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph profs_calc(P = Sf.P, h = Sf.h, mode = mode_f, fluid = fluid_f);// To be verified MAZU
 equation
 
   /* Mass flow rates */
@@ -106,15 +110,19 @@ equation
   Sf.P = if (Qf > 0) then Ef.P - DPf*Ef.P/100 else Ef.P + DPf*Ef.P/100;
 
   /* Fluid thermodynamic properties for the hot fluid */
-  proce = ThermoSysPro.Properties.Fluid.Ph(Ec.P, Ec.h, mode_c, fluid_c);
-  procs = ThermoSysPro.Properties.Fluid.Ph(Sc.P, Sc.h, mode_c, fluid_c);
+//   proce = ThermoSysPro.Properties.Fluid.Ph(Ec.P, Ec.h, mode_c, fluid_c);// Commented automatically, to be verified MAZU
+  proce = proce_calc.pro;// To be verified MAZU
+//   procs = ThermoSysPro.Properties.Fluid.Ph(Sc.P, Sc.h, mode_c, fluid_c);// Commented automatically, to be verified MAZU
+  procs = procs_calc.pro;// To be verified MAZU
 
   Tec = proce.T;
   Tsc = procs.T;
 
   /* Fluid thermodynamic properties for the cold fluid */
-  profe = ThermoSysPro.Properties.Fluid.Ph(Ef.P, Ef.h, mode_f, fluid_f);
-  profs = ThermoSysPro.Properties.Fluid.Ph(Sf.P, Sf.h, mode_f, fluid_f);
+//   profe = ThermoSysPro.Properties.Fluid.Ph(Ef.P, Ef.h, mode_f, fluid_f);// Commented automatically, to be verified MAZU
+  profe = profe_calc.pro;// To be verified MAZU
+//   profs = ThermoSysPro.Properties.Fluid.Ph(Sf.P, Sf.h, mode_f, fluid_f);// Commented automatically, to be verified MAZU
+  profs = profs_calc.pro;// To be verified MAZU
 
   Tef = profe.T;
   Tsf = profs.T;

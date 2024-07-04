@@ -91,6 +91,13 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph profs
     annotation (Placement(transformation(extent={{-60,80},{-40,100}}, rotation=
             0)));
+  ThermoSysPro.Properties.Fluid.Ph proce_calc(P = Ec.P, h = Ec.h, mode = mode_c, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph procs_calc(P = Sc.P, h = Sc.h, mode = mode_cs, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph promc_calc(P = (Ec.P + Sc.P)/2, h = (Ec.h + Sc.h)/2, mode = mode_c, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsatvsat_calc(P = Ec.P, fluid = fluid_c);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph profe_calc(P = Ef.P, h = Ef.h, mode = mode_f, fluid = fluid_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph profs_calc(P = Sf.P, h = Sf.h, mode = mode_f, fluid = fluid_f);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph promf_calc(P = (Ef.P + Sf.P)/2, h = (Ef.h + Sf.h)/2, mode = mode_f, fluid = fluid_f);// To be verified MAZU
 equation
 
   /* Check that the fluid type for both sides is water/steam */
@@ -163,14 +170,19 @@ equation
   DPf  = DPff + DPgf;
 
   /* Fluid thermodynamic properties at the hot side */
-  proce = ThermoSysPro.Properties.Fluid.Ph(Ec.P, Ec.h, mode_c, fluid_c);
-  procs = ThermoSysPro.Properties.Fluid.Ph(Sc.P, Sc.h, mode_cs, fluid_c);
-  promc = ThermoSysPro.Properties.Fluid.Ph((Ec.P + Sc.P)/2, (Ec.h + Sc.h)/2, mode_c, fluid_c);
+//   proce = ThermoSysPro.Properties.Fluid.Ph(Ec.P, Ec.h, mode_c, fluid_c);// Commented automatically, to be verified MAZU
+  proce = proce_calc.pro;// To be verified MAZU
+//   procs = ThermoSysPro.Properties.Fluid.Ph(Sc.P, Sc.h, mode_cs, fluid_c);// Commented automatically, to be verified MAZU
+  procs = procs_calc.pro;// To be verified MAZU
+//   promc = ThermoSysPro.Properties.Fluid.Ph((Ec.P + Sc.P)/2, (Ec.h + Sc.h)/2, mode_c, fluid_c);// Commented automatically, to be verified MAZU
+  promc = promc_calc.pro;// To be verified MAZU
 
   Tec = proce.T;
   Tsc = procs.T;
 
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(Ec.P, fluid_c);
+//   (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(Ec.P, fluid_c);// Commented automatically, to be verified MAZU
+  lsat = lsatvsat_calc.lsat;// To be verified MAZU
+  vsat = lsatvsat_calc.vsat;// To be verified MAZU
 
   if (p_rhoc > 0) then
     rhoc = p_rhoc;
@@ -179,9 +191,12 @@ equation
   end if;
 
   /* Fluid thermodynamic properties at the cold side */
-  profe = ThermoSysPro.Properties.Fluid.Ph(Ef.P, Ef.h, mode_f, fluid_f);
-  profs = ThermoSysPro.Properties.Fluid.Ph(Sf.P, Sf.h, mode_f, fluid_f);
-  promf = ThermoSysPro.Properties.Fluid.Ph((Ef.P + Sf.P)/2, (Ef.h + Sf.h)/2, mode_f, fluid_f);
+//   profe = ThermoSysPro.Properties.Fluid.Ph(Ef.P, Ef.h, mode_f, fluid_f);// Commented automatically, to be verified MAZU
+  profe = profe_calc.pro;// To be verified MAZU
+//   profs = ThermoSysPro.Properties.Fluid.Ph(Sf.P, Sf.h, mode_f, fluid_f);// Commented automatically, to be verified MAZU
+  profs = profs_calc.pro;// To be verified MAZU
+//   promf = ThermoSysPro.Properties.Fluid.Ph((Ef.P + Sf.P)/2, (Ef.h + Sf.h)/2, mode_f, fluid_f);// Commented automatically, to be verified MAZU
+  promf = promf_calc.pro;// To be verified MAZU
 
   Tef = profe.T;
   Tsf = profs.T;

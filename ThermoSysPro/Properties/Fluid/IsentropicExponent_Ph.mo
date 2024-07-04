@@ -1,5 +1,5 @@
 within ThermoSysPro.Properties.Fluid;
-function IsentropicExponent_Ph
+block IsentropicExponent_Ph
   "Isentropic Exponent computation for all fluids (inputs: P, h, fluid)"
 
   input Units.SI.AbsolutePressure P "Pressure (Pa)";

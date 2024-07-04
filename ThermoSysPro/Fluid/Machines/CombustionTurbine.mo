@@ -49,6 +49,8 @@ public
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal MechPower
     annotation (Placement(transformation(extent={{100,-100},{120,-80}},
           rotation=0)));
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Te_calc(P = Pe, h = He, fluid = fluid, mode = 0, Xco2 = Ce.Xco2, Xh2o = Ce.Xh2o, Xo2 = Ce.Xo2, Xso2 = Ce.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Ts_calc(P = Ps, h = Hs, fluid = fluid, mode = 0, Xco2 = Ce.Xco2, Xh2o = Ce.Xh2o, Xo2 = Ce.Xo2, Xso2 = Ce.Xso2);// To be verified MAZU
 equation
   /* Check that the fluid type is flue gases */
   assert(ftype == FluidType.FlueGases, "CombustionTurbine: the fluid type must be flue gases");
@@ -104,7 +106,8 @@ equation
   MechPower.signal = Wmech;
 
   /* Temperature at the inlet */
-  Te = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pe, He, fluid, 0, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
+//   Te = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pe, He, fluid, 0, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);// Commented automatically, to be verified MAZU
+  Te = Te_calc.T;// To be verified MAZU
 
   /* Specific entropy at the inlet */
   Se = ThermoSysPro.Properties.FlueGases.FlueGases_s(Pe, Te, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
@@ -117,7 +120,8 @@ equation
   Hs = is_eff*(His - He) +  He;
 
   /* Temperature at the outlet */
-  Ts = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ps, Hs, fluid, 0, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
+//   Ts = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ps, Hs, fluid, 0, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);// Commented automatically, to be verified MAZU
+  Ts = Ts_calc.T;// To be verified MAZU
 
   annotation (
     Diagram(coordinateSystem(

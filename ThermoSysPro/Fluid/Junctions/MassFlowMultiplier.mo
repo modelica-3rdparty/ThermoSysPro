@@ -44,6 +44,8 @@ public
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Temperature_Ph T_calc(P = P, h = h, fluid = fluid, mode = mode, Xco2 = Cs.Xco2, Xh2o = Cs.Xh2o, Xo2 = Cs.Xo2, Xso2 = Cs.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_Ph rho_calc(P = P, h = h, fluid = fluid, mode = mode, Xco2 = Cs.Xco2, Xh2o = Cs.Xh2o, Xo2 = Cs.Xo2, Xso2 = Cs.Xso2);// To be verified MAZU
 equation
 
   /* Check that incoming fluids are compatible with fluid in volume */
@@ -116,12 +118,14 @@ equation
   Cs.diff_on_1 = diffusion;
 
  /* Fluid thermodynamic properties */
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
+//   T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);// Commented automatically, to be verified MAZU
+  T = T_calc.T;// To be verified MAZU
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(P,h,fluid,mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
+//     rho = ThermoSysPro.Properties.Fluid.Density_Ph(P,h,fluid,mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);// Commented automatically, to be verified MAZU
+    rho = rho_calc.rho;// To be verified MAZU
   end if;
 
   annotation (

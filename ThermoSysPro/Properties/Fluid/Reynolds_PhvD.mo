@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.Properties.Fluid;
-function Reynolds_PhvD
+block Reynolds_PhvD
   "Reynolds number computation for all fluids (inputs: P, h, fluid, v, D)"
 
   input Units.SI.AbsolutePressure P "Pressure (Pa)";

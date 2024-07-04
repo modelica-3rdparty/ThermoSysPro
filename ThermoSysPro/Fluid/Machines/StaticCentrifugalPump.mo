@@ -69,6 +69,7 @@ public
         origin={0,-110},
         extent={{-10,-10},{10,10}},
         rotation=90)));
+  ThermoSysPro.Properties.Fluid.Density_Ph rho_calc(P = Pm, h = h, fluid = fluid, mode = mode, Xco2 = C1.Xco2, Xh2o = C1.Xh2o, Xo2 = C1.Xo2, Xso2 = C1.Xso2);// To be verified MAZU
 equation
   if (cardinality(rpm_or_mpower) == 0) then
     if (fixed_rot_or_power == 1) then
@@ -143,7 +144,8 @@ equation
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm,h,fluid,mode,C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+//     rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm,h,fluid,mode,C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);// Commented automatically, to be verified MAZU
+    rho = rho_calc.rho;// To be verified MAZU
   end if;
   annotation (
     Diagram(coordinateSystem(

@@ -66,6 +66,13 @@ public
           extent={{80,80},{100,100}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat
     annotation (Placement(transformation(extent={{58,80},{78,100}}, rotation=0)));
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tef_calc(P = Pef, h = Hef, fluid = fluid_fg, mode = 0, Xco2 = Cfg1.Xco2, Xh2o = Cfg1.Xh2o, Xo2 = Cfg1.Xo2, Xso2 = Cfg1.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Temperature_Ph Tsf_calc(P = Psf, h = Hsf, fluid = fluid_fg, mode = 0, Xco2 = Cfg1.Xco2, Xh2o = Cfg1.Xh2o, Xo2 = Cfg1.Xo2, Xso2 = Cfg1.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Density_Ph rhof_calc(P = Pef, h = Hef, fluid = fluid_fg, mode = 0, Xco2 = Cfg1.Xco2, Xh2o = Cfg1.Xh2o, Xo2 = Cfg1.Xo2, Xso2 = Cfg1.Xso2);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proee_calc(P = Pee, h = Hee, mode = mode, fluid = fluid_ws);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proem_calc(P = (Pee + Pse)/2, h = (Hee + Hse)/2, mode = mode, fluid = fluid_ws);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Ph proes_calc(P = Pse, h = Hse, mode = mode, fluid = fluid_ws);// To be verified MAZU
+  ThermoSysPro.Properties.Fluid.Water_sat_P lsatvsat_calc(P = Pse, fluid = fluid_ws);// To be verified MAZU
 equation
   /* Check that the fluid type for the water/steam side is water/steam */
   assert((ftype_ws == FluidType.WaterSteam) or (ftype_ws == FluidType.WaterSteamSimple), "SimpleEvaporatorWaterSteamFlueGases: the fluid type must be water/steam for the water/steam side");
@@ -135,25 +142,33 @@ equation
   W = Qe*(Hse - Hee);
 
   /* Flue gases specific enthalpy at the inlet */
-  Tef = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pef, Hef, fluid_fg, 0, Cfg1.Xco2,  Cfg1.Xh2o,  Cfg1.Xo2,  Cfg1.Xso2);
+//   Tef = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pef, Hef, fluid_fg, 0, Cfg1.Xco2,  Cfg1.Xh2o,  Cfg1.Xo2,  Cfg1.Xso2);// Commented automatically, to be verified MAZU
+  Tef = Tef_calc.T;// To be verified MAZU
 
   /* Flue gases specific enthalpy at the outlet */
-  Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Psf, Hsf, fluid_fg, 0, Cfg1.Xco2,  Cfg1.Xh2o,  Cfg1.Xo2,  Cfg1.Xso2);
+//   Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Psf, Hsf, fluid_fg, 0, Cfg1.Xco2,  Cfg1.Xh2o,  Cfg1.Xo2,  Cfg1.Xso2);// Commented automatically, to be verified MAZU
+  Tsf = Tsf_calc.T;// To be verified MAZU
 
   /* Flue gases density */
-  rhof = ThermoSysPro.Properties.Fluid.Density_Ph(Pef, Hef, fluid_fg, 0, Cfg1.Xco2,  Cfg1.Xh2o,  Cfg1.Xo2,  Cfg1.Xso2);
+//   rhof = ThermoSysPro.Properties.Fluid.Density_Ph(Pef, Hef, fluid_fg, 0, Cfg1.Xco2,  Cfg1.Xh2o,  Cfg1.Xo2,  Cfg1.Xso2);// Commented automatically, to be verified MAZU
+  rhof = rhof_calc.rho;// To be verified MAZU
 
   /* Water/steam thermodynamic properties */
-  proee = ThermoSysPro.Properties.Fluid.Ph(Pee, Hee, mode, fluid_ws);
+//   proee = ThermoSysPro.Properties.Fluid.Ph(Pee, Hee, mode, fluid_ws);// Commented automatically, to be verified MAZU
+  proee = proee_calc.pro;// To be verified MAZU
   Tee = proee.T;
 
-  proem = ThermoSysPro.Properties.Fluid.Ph((Pee + Pse)/2, (Hee + Hse)/2, mode, fluid_ws);
+//   proem = ThermoSysPro.Properties.Fluid.Ph((Pee + Pse)/2, (Hee + Hse)/2, mode, fluid_ws);// Commented automatically, to be verified MAZU
+  proem = proem_calc.pro;// To be verified MAZU
   rhoe = proem.d;
 
-  proes = ThermoSysPro.Properties.Fluid.Ph(Pse, Hse, mode, fluid_ws);
+//   proes = ThermoSysPro.Properties.Fluid.Ph(Pse, Hse, mode, fluid_ws);// Commented automatically, to be verified MAZU
+  proes = proes_calc.pro;// To be verified MAZU
   Tse = proes.T;
 
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(Pse, fluid_ws);
+//   (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(Pse, fluid_ws);// Commented automatically, to be verified MAZU
+  lsat = lsatvsat_calc.lsat;// To be verified MAZU
+  vsat = lsatvsat_calc.vsat;// To be verified MAZU
   Hse = vsat.h;
 
   annotation (Diagram(graphics={

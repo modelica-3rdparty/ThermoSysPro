@@ -1,5 +1,5 @@
 within ThermoSysPro.Properties.Fluid;
-function PT
+block PT
   input Units.SI.AbsolutePressure P "Pressure";
   input Units.SI.Temperature T "Temperature";
   input Integer mode = 0 "IF97 region - 0:automatic computation";
