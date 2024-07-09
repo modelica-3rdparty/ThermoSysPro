@@ -40,10 +40,14 @@ replaceable package Species =
       ThermoSysPro.ConvectedQuantities.Substances.None       annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
-replaceable package SinkAndSource =
-  ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
-  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+// replaceable package SinkAndSource =
+//   ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+//   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
+replaceable model SinkAndSource =
+      ThermoSysPro.ConvectedQuantities.Components.SaSnone
+constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation (
+   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 
 protected
@@ -220,7 +224,7 @@ public
   ThermoSysPro.ConvectedQuantities.Components.MassBalance_mixedphases
     sub_massBalance[N - 1](
     redeclare package Species = Species,
-    redeclare package SinkAndSource = SinkAndSource,
+    redeclare SinkAndSource SaS,
     each n_in=1,
     each n_out_mixed=1,
     each V=A*L/(N),
@@ -231,6 +235,7 @@ public
     rho_liquidPhase=rhol1,
     x=xv1,
     T=pro1.T) annotation (Placement(transformation(extent={{38,70},{74,106}})));
+    //redeclare package SinkAndSource = SinkAndSource,
 
 initial equation
   if steady_state then

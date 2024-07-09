@@ -1,4 +1,4 @@
-within ThermoSysPro.WaterSteam.Volumes;
+﻿within ThermoSysPro.WaterSteam.Volumes;
 model DynamicDrum "Dynamic drum"
   parameter Boolean Vertical=true
     "true: vertical cylinder - false: horizontal cylinder";
@@ -33,9 +33,14 @@ replaceable package Species =
   ThermoSysPro.ConvectedQuantities.Substances.None      annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
-replaceable package SinkAndSource =
-  ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
-  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+// replaceable package SinkAndSource =
+//   ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+//   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+replaceable model SinkAndSource =
+      ThermoSysPro.ConvectedQuantities.Components.SaSnone
+constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation (
+   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 
 protected
@@ -146,7 +151,7 @@ public
   ThermoSysPro.ConvectedQuantities.Components.MassBalance_HeterogeneousPhases
     sub_massBalance(
     redeclare package Species = Species,
-    redeclare package SinkAndSource = SinkAndSource,
+    redeclare SinkAndSource SaS,
     n_in=4,
     n_out_liq=2,
     n_out_gas=1,
@@ -158,9 +163,9 @@ public
     rho_liquidPhase=rhol,
     x=prom.x,
     T=prom.T,
-    D=2*R,
     L=L)
     annotation (Placement(transformation(extent={{-102,-18},{-72,12}})));
+    //redeclare package SinkAndSource = SinkAndSource,
 
 initial equation
   if steady_state then

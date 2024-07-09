@@ -1,7 +1,7 @@
 ﻿within ThermoSysPro.WaterSteam.Volumes;
 model VolumeC "Mixing volume with 3 inlets and 1 outlet"
   parameter Units.SI.Volume V=1 "Volume";
-  parameter Units.SI.AbsolutePressure P0=1e5
+  parameter Units.SI.AbsolutePressure P0=100000
     "Initial fluid pressure (active if dynamic_mass_balance=true and steady_state=false)";
   parameter Units.SI.SpecificEnthalpy h0=1e5
     "Initial fluid specific enthalpy (active if steady_state=false)";
@@ -18,9 +18,17 @@ replaceable package Species =
   ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
-replaceable package SinkAndSource =
-  ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
-  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+// replaceable package SinkAndSource =
+//   ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+//   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
+replaceable model SinkAndSource =
+      ThermoSysPro.ConvectedQuantities.Components.SaSnone
+constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation (
+   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
 
 public
   Units.SI.Temperature T "Fluid temperature";
@@ -48,7 +56,7 @@ public
             -110},{10,-90}}, rotation=0)));
   ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(
   redeclare package Species =  Species,
-  redeclare package SinkAndSource = SinkAndSource,
+  redeclare SinkAndSource SaS,
    n_in=3, n_out=1,
    dynamic_mass_balance=dynamic_mass_balance,
    V=V,
@@ -57,6 +65,10 @@ public
    rho = rho,
    T=T)
     annotation (Placement(transformation(extent={{-100,34},{-60,74}})));
+
+  //redeclare ThermoSysPro.ConvectedQuantities.Components.SaSnone SaS,
+   //SaS = SinkAndSource,
+
 
 
 

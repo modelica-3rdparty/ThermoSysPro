@@ -1,4 +1,4 @@
-within ThermoSysPro.WaterSteam.HeatExchangers;
+﻿within ThermoSysPro.WaterSteam.HeatExchangers;
 model SimpleDynamicCondenser
   parameter Units.SI.Volume V=1 "Cavity volume";
   parameter Units.SI.Area A=1 "Cavity cross-sectional area";
@@ -40,10 +40,10 @@ replaceable package Species =
       ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
-replaceable package SinkAndSource =
-  ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
-  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
-
+replaceable model SinkAndSource =
+      ThermoSysPro.ConvectedQuantities.Components.SaSnone
+constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation (
+   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
@@ -115,7 +115,7 @@ public
   ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(redeclare
       package
       Species =                                                                          Species,
-   redeclare package SinkAndSource = SinkAndSource,
+   redeclare SinkAndSource SaS,
    n_in=1, n_out=1,
    V=V,
    Qin = {Cv.Q},

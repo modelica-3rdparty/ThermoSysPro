@@ -24,9 +24,15 @@ replaceable package Species =
       ThermoSysPro.ConvectedQuantities.Substances.None     annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
-replaceable package SinkAndSource =
-      ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
-      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+// replaceable package SinkAndSource =
+//       ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+//       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+replaceable model SinkAndSource =
+      ThermoSysPro.ConvectedQuantities.Components.SaSnone
+constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation (
+   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 
 
 protected
@@ -66,7 +72,7 @@ public
             0)));
   ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(
     redeclare package Species = Species,
-    redeclare package SinkAndSource = SinkAndSource,
+    redeclare SinkAndSource SaS,
     n_in=1,
     n_out=1,
     D=D,
@@ -76,9 +82,9 @@ public
     Qin={C1.Q},
     Qout={C2.Q},
     rho=rho,
-    T=T,
-    SaS(choix_resine=1))
+    T=T)
     annotation (Placement(transformation(extent={{68,70},{88,90}})));
+    //redeclare package SinkAndSource = SinkAndSource,
 
 initial equation
   if inertia then

@@ -18,9 +18,17 @@ model VolumeA "Mixing volume with 2 inlets and 2 outlets"
       ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
-replaceable package SinkAndSource =
-  ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
-  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+// replaceable package SinkAndSource =
+//   ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+//   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+replaceable model SinkAndSource =
+      ThermoSysPro.ConvectedQuantities.Components.SaSnone
+constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation (
+   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
+
 
 public
   Units.SI.Temperature T "Fluid temperature";
@@ -46,9 +54,8 @@ public
     annotation (Placement(transformation(extent={{-10,-110},{10,-90}}, rotation=
            0)));
   ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(
-  redeclare package
-      Species =                                                                          Species,
-   redeclare package SinkAndSource = SinkAndSource,
+  redeclare package Species = Species,
+  redeclare SinkAndSource SaS,
    n_in=2, n_out=2,
    dynamic_mass_balance=dynamic_mass_balance,
    V=V,
@@ -57,6 +64,7 @@ public
    rho = rho,
    T=T)
     annotation (Placement(transformation(extent={{-80,60},{-40,100}})));
+
 initial equation
   if steady_state then
     if dynamic_mass_balance then

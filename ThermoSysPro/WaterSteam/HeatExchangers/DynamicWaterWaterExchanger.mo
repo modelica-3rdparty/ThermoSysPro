@@ -35,9 +35,16 @@ replaceable package Species =
       ThermoSysPro.ConvectedQuantities.Substances.None      annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
-replaceable package SinkAndSource =
-  ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
-  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+// replaceable package SinkAndSource =
+//   ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+//   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+replaceable model SinkAndSource =
+      ThermoSysPro.ConvectedQuantities.Components.SaSnone
+constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation (
+   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
 
 
 
@@ -127,7 +134,7 @@ public
             0)));
   ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance_C[N](
     redeclare package Species = Species,
-    redeclare package SinkAndSource = SinkAndSource,
+    redeclare SinkAndSource SaS(each choix_resine=1),
     each n_in=1,
     each n_out=1,
     each dynamic_mass_balance=false,
@@ -135,13 +142,13 @@ public
     Qin=transpose({Qcc[1:N]}),
     Qout=transpose({Qcc[2:N + 1]}),
     rho=proc.d,
-    T=proc.T,
-    SaS(each choix_resine=1))
+    T=proc.T)
     annotation (Placement(transformation(extent={{-108,14},{-68,54}})));
+    //redeclare package SinkAndSource = SinkAndSource,
 
   ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance_F[N](
     redeclare package Species = Species,
-    redeclare package SinkAndSource = SinkAndSource,
+    redeclare SinkAndSource SaS(each choix_resine=1),
     each n_in=1,
     each n_out=1,
     each dynamic_mass_balance=false,
@@ -149,9 +156,9 @@ public
     Qin=transpose({Qcf[1:N]}),
     Qout=transpose({Qcf[2:N + 1]}),
     rho=proc.d,
-    T=proc.T,
-    SaS(each choix_resine=1))
+    T=proc.T)
     annotation (Placement(transformation(extent={{-20,-80},{20,-40}})));
+    //redeclare package SinkAndSource = SinkAndSource,
 
 public
   Connectors.FluidInlet            Ec(redeclare package Species = Species)

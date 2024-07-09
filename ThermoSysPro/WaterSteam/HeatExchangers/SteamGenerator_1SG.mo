@@ -6,10 +6,14 @@ model SteamGenerator_1SG "Individual steam generator"
       ThermoSysPro.ConvectedQuantities.Substances.None   annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 
-replaceable package SinkAndSource =
-  ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
-  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+// replaceable package SinkAndSource =
+//   ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+//   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
+replaceable model SinkAndSource =
+      ThermoSysPro.ConvectedQuantities.Components.SaSnone
+constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation (
+   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
 public
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicOnePhaseFlowPipe UtubeHotLeg(
@@ -55,7 +59,7 @@ public
 
   ThermoSysPro.WaterSteam.Volumes.DynamicDrum                           DomeGV(
     redeclare package Species =                         Species,
-    redeclare package SinkAndSource = SinkAndSource,
+    redeclare model SinkAndSource = SinkAndSource,
     hl(start=1257382.15477056),
     hv(start=2771260.46625813),
     steady_state=true,
@@ -67,6 +71,7 @@ public
     R=4.2818979,
     Mp=32000) annotation (Placement(transformation(extent={{-22,64},{22,107}},
           rotation=0)));
+    //redeclare package SinkAndSource = SinkAndSource,
   ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DPSeparateurCyclone(
     redeclare package Species =                         Species,
     L=1,
@@ -121,7 +126,7 @@ public
             0)));
   ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DownComerGV(
     redeclare package Species =                         Species,
-    redeclare package SinkAndSource = SinkAndSource,
+    redeclare model SinkAndSource = SinkAndSource,
     p_rho=0,
     h(start=1194851.3),
     mode=1,
@@ -144,6 +149,7 @@ public
         origin={94.5,-41},
         extent={{-31,16.5},{31,-16.5}},
         rotation=270)));
+    //redeclare package SinkAndSource = SinkAndSource,
   ThermoSysPro.Thermal.HeatTransfer.HeatExchangerWall heatExchangerWall(
     L=10.848,
     D=0.01687,
@@ -173,7 +179,7 @@ public
 
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicTwoPhaseFlowRiser RiserGV(
     redeclare package Species =                         Species,
-    redeclare package SinkAndSource = SinkAndSource,
+    redeclare model SinkAndSource = SinkAndSource,
     Ns=5,
     P(start={6866734.6044951,6862203.9025063,6853535.2456408,6846247.0825137,
           6840314.8313501,6834912.1497303,6828884.4924605}),
@@ -195,6 +201,7 @@ public
         origin={-2.5,-41},
         extent={{-32,31.5},{32,-31.5}},
         rotation=90)));
+    //redeclare package SinkAndSource = SinkAndSource,
 
   ThermoSysPro.WaterSteam.Volumes.VolumeA volumeA(
     redeclare package Species = Species,

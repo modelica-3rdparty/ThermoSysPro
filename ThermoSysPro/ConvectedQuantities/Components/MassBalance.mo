@@ -5,10 +5,26 @@ block MassBalance "Mass Balance block for transported substances"
   constant Real pi=Modelica.Constants.pi "pi";
 
   replaceable package Species =
-      Substances.None;
+      Substances.None annotation (
+  choicesAllMatching=true);
 
-  replaceable package SinkAndSource =
-      Sink_and_Source.None;
+  //replaceable package SinkAndSource =
+      //Sink_and_Source.None;
+
+  replaceable ThermoSysPro.ConvectedQuantities.Components.SaSnone SaS
+    constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS(
+      SubC=InternalConcentrations,
+      T=T,
+      Q=sum(Qin),
+      capa=capa,
+      S=pi*D^2/4,
+      rho_liquidPhase=rho,
+      choix_resine=1,
+      L=L) "Sink and Source of Species"
+    annotation (
+  choicesAllMatching=true);
+
+
 
   parameter Integer n_in = 1 "Number of inlets";
   parameter Integer n_out = 1 "Number of outlets";
@@ -42,17 +58,22 @@ block MassBalance "Mass Balance block for transported substances"
   input SI.Temperature T;
 
 
-  SinkAndSource.SaS_None SaS(
-    SubC=InternalConcentrations,
-    T=T,
-    Q=sum(Qin),
-    capa=capa,
-    S=pi*D^2/4,
-    rho_liquidPhase=rho,
-    x=0,
-    choix_resine=1,
-    L=L,
-    D=D)           annotation (Placement(transformation(extent={{-100,60},{-60,100}})));
+
+
+
+
+
+//   SinkAndSource.SaS_None SaS(
+//     SubC=InternalConcentrations,
+//     T=T,
+//     Q=sum(Qin),
+//     capa=capa,
+//     S=pi*D^2/4,
+//     rho_liquidPhase=rho,
+//     x=0,
+//     choix_resine=1,
+//     L=L,
+//     D=D)           annotation (Placement(transformation(extent={{-100,60},{-60,100}})));
 
 
 

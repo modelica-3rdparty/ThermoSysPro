@@ -16,8 +16,24 @@ partial block MassBalance_Biphasic
   replaceable package Species =
       Substances.None;
 
-  replaceable package SinkAndSource =
-      Sink_and_Source.None;
+//   replaceable package SinkAndSource =
+//       Sink_and_Source.None;
+
+
+  replaceable ThermoSysPro.ConvectedQuantities.Components.SaSnone SaS
+    constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS(
+      SubC=InternalConcentrations,
+      T=T,
+      Q=sum(Qin),
+      capa=capa,
+      S=pi*D^2/4,
+      rho_liquidPhase=rho,
+      choix_resine=1,
+      L=L) "Sink and Source of Species"
+    annotation (
+  choicesAllMatching=true);
+
+
 
   parameter Integer n_in = 1 "Number of inlets";
   parameter Boolean dynamic_mass_balance = false "true: dynamic mass balance equation - false: static mass balance equation";
@@ -45,18 +61,18 @@ partial block MassBalance_Biphasic
             {{-70,-10},{-50,10}})));
   Species.PhasesSeparation phasesSeparation(T=T, rho_liquidPhase=rho_liquidPhase, x=x, SubC=InternalConcentrations)
     annotation (Placement(transformation(extent={{-100,40},{-40,100}})));
-  SinkAndSource.SaS_None SaS(
-  T=T,
-  SubC = phasesSeparation.Cl,
-  Q=sum(Qin),
-  capa=capa,
-  S=pi*D^2/4,
-  rho_liquidPhase=rho_liquidPhase,
-  x=0,
-  choix_resine=1,
-  D=D,
-  L=L)
-    annotation (Placement(transformation(extent={{100,-40},{40,-100}})));
+//   SinkAndSource.SaS_None SaS(
+//   T=T,
+//   SubC = phasesSeparation.Cl,
+//   Q=sum(Qin),
+//   capa=capa,
+//   S=pi*D^2/4,
+//   rho_liquidPhase=rho_liquidPhase,
+//   x=0,
+//   choix_resine=1,
+//   D=D,
+//   L=L)
+//     annotation (Placement(transformation(extent={{100,-40},{40,-100}})));
 
 
 //   Species.Sink_and_Source Sink_and_Source(
