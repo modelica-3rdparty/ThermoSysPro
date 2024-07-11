@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestStaticCentrifugalPumpWaterSolution
-
   ThermoSysPro.InstrumentationAndControl.Blocks.Logique.Pulse Pulse1(
                                           width=200, period=400)
     annotation (Placement(transformation(extent={{-40,60},{-20,80}}, rotation=0)));

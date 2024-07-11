@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestJunctions1
-
   ThermoSysPro.WaterSteam.Junctions.Splitter2 splitter2
     annotation (Placement(transformation(extent={{-20,40},{0,60}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceQ sourceP(Q0=200)

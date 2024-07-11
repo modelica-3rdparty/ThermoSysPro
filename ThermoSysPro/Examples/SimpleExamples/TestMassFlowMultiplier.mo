@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestMassFlowMultiplier
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourcePQ sourcePQ
     annotation (Placement(transformation(extent={{-100,0},{-80,20}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.Sink sink

@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestSensors
-
   ThermoSysPro.WaterSteam.Sensors.SensorH specificEnthalpySensor
     annotation (Placement(transformation(extent={{-60,8},{-40,28}}, rotation=0)));
   ThermoSysPro.WaterSteam.Sensors.SensorQ massFlowSensor

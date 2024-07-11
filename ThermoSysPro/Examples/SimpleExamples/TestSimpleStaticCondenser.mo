@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestSimpleStaticCondenser
-
   ThermoSysPro.WaterSteam.HeatExchangers.SimpleStaticCondenser
     simpleStaticCondenser(
     Ec(h(start=532983.7176868258)),

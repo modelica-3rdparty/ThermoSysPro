@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestStodolaTurbine3
-
   ThermoSysPro.WaterSteam.Machines.StodolaTurbine stodolaTurbine
     annotation (Placement(transformation(extent={{-60,60},{-40,80}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP puitsP(                 mode=0, P0=

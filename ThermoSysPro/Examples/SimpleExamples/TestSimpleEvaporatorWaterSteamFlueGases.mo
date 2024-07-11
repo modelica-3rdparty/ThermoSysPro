@@ -1,10 +1,8 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestSimpleEvaporatorWaterSteamFlueGases
-
   ThermoSysPro.WaterSteam.BoundaryConditions.Sink puits_Eau
                                           annotation (Placement(transformation(
           extent={{64,-17},{84,3}}, rotation=0)));
-
   ThermoSysPro.MultiFluids.HeatExchangers.SimpleEvaporatorWaterSteamFlueGases
     EchangeurEfficacite(Kdpf=1, Kdpe=1)
                 annotation (Placement(transformation(extent={{-44,-35},{44,21}},

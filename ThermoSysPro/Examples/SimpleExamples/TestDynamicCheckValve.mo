@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestDynamicCheckValve
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP1
                                      annotation (Placement(transformation(
           extent={{-38,-10},{-18,10}},rotation=0)));

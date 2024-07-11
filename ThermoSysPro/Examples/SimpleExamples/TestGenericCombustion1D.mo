@@ -1,8 +1,6 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestGenericCombustion1D
-
   parameter Integer NCEL = 7;
-
   Combustion.CombustionChambers.GenericCombustion1D genericCombustionCCS(
     NCEL=7,
     Qm(fixed=false),

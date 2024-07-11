@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestStaticDrum2
-
   ThermoSysPro.WaterSteam.Junctions.StaticDrum StaticDrumTh1
     annotation (Placement(transformation(extent={{-54,0},{-34,20}}, rotation=0)));
   ThermoSysPro.WaterSteam.PressureLosses.SingularPressureLoss

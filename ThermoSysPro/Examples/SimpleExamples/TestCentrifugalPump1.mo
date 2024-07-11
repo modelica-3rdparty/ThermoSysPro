@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestCentrifugalPump1
-
   ThermoSysPro.WaterSteam.Machines.CentrifugalPump centrifugalPump(
     mode_car=1,
     mode_car_hn=1,

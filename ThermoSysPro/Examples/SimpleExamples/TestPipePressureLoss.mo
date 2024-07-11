@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestPipePressureLoss
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP SourceP1
     annotation (Placement(transformation(extent={{-85,-10},{-65,10}}, rotation=
             0)));

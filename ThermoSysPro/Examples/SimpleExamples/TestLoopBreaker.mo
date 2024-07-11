@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestLoopBreaker
-
   WaterSteam.BoundaryConditions.SourcePQ sourcePQ
     annotation (Placement(transformation(extent={{-100,0},{-80,20}}, rotation=0)));
   WaterSteam.PressureLosses.SingularPressureLoss singularPressureLoss1

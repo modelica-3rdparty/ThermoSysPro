@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestLumpedStraightPipe
-
   ThermoSysPro.WaterSteam.Volumes.Tank tank1(h0=2e5) annotation (Placement(
         transformation(extent={{-50,16},{-30,36}},   rotation=0)));
   ThermoSysPro.WaterSteam.Volumes.Tank tank2(z0=10) annotation (Placement(

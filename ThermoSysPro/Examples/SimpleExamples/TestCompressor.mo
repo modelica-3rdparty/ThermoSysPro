@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestCompressor
-
   ThermoSysPro.WaterSteam.Machines.Compressor compressor(Pe(start=100000))
     annotation (Placement(transformation(extent={{-20,60},{0,80}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.Sink puitsP

@@ -6,7 +6,6 @@ model TestDynamicDrum1
     "Friction pressure loss coefficient (active if lambda_fixed=true)";
   parameter Real SteamValveOuv(fixed=false,start=0.4933)
     "Position of the SteamValve (between 0 and 1) ";
-
   ThermoSysPro.WaterSteam.Volumes.DynamicDrum Drum(
     Vv(start=39),
     Vertical=false,

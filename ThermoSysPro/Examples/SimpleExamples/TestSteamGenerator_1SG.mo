@@ -530,7 +530,6 @@ model TestSteamGenerator_1SG
     volumeA(P(start=6758875.370722485), h(start=1214441.5268755823)),
     volumeA1(P(start=6708825.183275267), h(start=1472510.1268426012)))
     annotation (Placement(transformation(extent={{-34,-32},{32,44}})));
-
 equation
   connect(sinkP1.C, singularPressureLoss1.C2)
     annotation (Line(points={{74,66},{52,66},{50,66}}));

@@ -537,7 +537,6 @@ model TestSteamGenerator_4SG
         u(start=2583903.7193358056),
         x(start=0.9999999445568193))))
     annotation (Placement(transformation(extent={{-34,-32},{32,44}})));
-
 equation
   connect(sinkP1.C, singularPressureLoss1.C2)
     annotation (Line(points={{74,66},{52,66},{50,66}}));

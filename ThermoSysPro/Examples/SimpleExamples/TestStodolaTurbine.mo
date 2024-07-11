@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestStodolaTurbine
-
   ThermoSysPro.WaterSteam.Machines.StodolaTurbine stodolaTurbine(fluid=1, Hrs(
         start=2987.37e3))
     annotation (Placement(transformation(extent={{-60,60},{-40,80}}, rotation=0)));

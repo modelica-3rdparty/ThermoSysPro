@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestVolumeATh
-
   WaterSteam.Volumes.VolumeATh volumeATh(
     h0=1.2e5,
     V=1,

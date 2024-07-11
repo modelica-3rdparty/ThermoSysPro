@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestCentrifugalPump12
-
   ThermoSysPro.WaterSteam.Machines.CentrifugalPump centrifugalPump(
     J=5.685,
     dynamic_mech_equation=true,

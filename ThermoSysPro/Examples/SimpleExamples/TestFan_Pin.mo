@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestFan_Pin
-
   FlueGases.BoundaryConditions.SourceP               Source_Fumees(
     Xso2=0,
     Xco2=0.0,

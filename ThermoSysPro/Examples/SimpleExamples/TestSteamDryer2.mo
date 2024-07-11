@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestSteamDryer2
-
   ThermoSysPro.WaterSteam.Junctions.SteamDryer steamDryer(eta=0.9, P(start=
           10000000)) annotation (Placement(transformation(extent={{-10,-8},{10,
             12}}, rotation=0)));

@@ -1,8 +1,6 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestAlternatingEngine
-
   parameter Integer NCEL = 7;
-
   Combustion.BoundaryConditions.FuelSourcePQ fuelSourcePQ(
     Hum=0,
     Xh=0.25,

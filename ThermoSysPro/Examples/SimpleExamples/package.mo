@@ -1,8 +1,5 @@
 within ThermoSysPro.Examples;
 package SimpleExamples
-
-
-
 annotation (
   Window(
     x=0.05,

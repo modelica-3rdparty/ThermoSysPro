@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestThreeWayValve
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP SourceP1
     annotation (Placement(transformation(extent={{-90,-10},{-70,10}}, rotation=
             0)));

@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestFlueGasesJunctions
-
   ThermoSysPro.FlueGases.Junctions.Splitter2 splitter2
     annotation (Placement(transformation(extent={{-20,40},{0,60}}, rotation=0)));
   ThermoSysPro.FlueGases.BoundaryConditions.SourceQ sourceP( Q0=200)

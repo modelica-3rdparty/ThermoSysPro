@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestDynamicCentrifugalPump
-
   ThermoSysPro.InstrumentationAndControl.Blocks.Logique.Pulse Pulse1(
                                           width=200, period=400)
     annotation (Placement(transformation(extent={{-100,-60},{-80,-40}},

@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestSteamExtractionSplitter
-
   ThermoSysPro.WaterSteam.Junctions.SteamExtractionSplitter
     steamExtractionSplitter(alpha=0.9)
                             annotation (Placement(transformation(extent={{-20,
