@@ -71,7 +71,7 @@ protected
   parameter Real rh_min=0.05 "Minimum efficiency";
   parameter Units.SI.MassFlowRate Qeps=1.e-3
     "Small mass flow for continuous flow reversal";
-  parameter Boolean dyn_mech_equation=((cardinality(M) <> 0) and dynamic_mech_equation);
+  parameter Boolean dyn_mech_equation;
 
 public
   Real w_a "Dimensionless angular velocity";
@@ -139,6 +139,12 @@ initial equation
   end if;
 
 equation
+
+  if ((cardinality(M) <> 0) and dynamic_mech_equation) then
+    dyn_mech_equation = true;
+  else 
+    dyn_mech_equation = false;
+  end if;
 
   if (cardinality(M) == 0) then
     M.w = pi/30*N;
