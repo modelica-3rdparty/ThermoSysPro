@@ -71,7 +71,7 @@ protected
   parameter Real rh_min=0.05 "Minimum efficiency";
   parameter Units.SI.MassFlowRate Qeps=1.e-3
     "Small mass flow for continuous flow reversal";
-  parameter Boolean dyn_mech_equation;
+  Boolean dyn_mech_equation;
 
 public
   Real w_a "Dimensionless angular velocity";
