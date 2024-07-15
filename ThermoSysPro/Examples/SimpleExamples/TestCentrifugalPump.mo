@@ -5,7 +5,7 @@ model TestCentrifugalPump
     mode_car=1,
     Pm(start=262606),
     Qv_a(start=0.79311),
-    Q(start=791.06))
+    Q(start=791.06), nMechPorts = 1)
     annotation (Placement(transformation(extent={{0,-40},{-20,-20}}, rotation=0)));
   ThermoSysPro.WaterSteam.Volumes.Tank Bache1(
                                         ze2=10, zs2=10,
@@ -41,8 +41,8 @@ equation
     annotation (Line(points={{21,70},{50,70},{50,41}}, color={0,0,255}));
   connect(pulse.y, sourceAngularVelocity.IAngularVelocity)
     annotation (Line(points={{-79,-50},{-55,-50}}));
-  connect(centrifugalPump1.M, sourceAngularVelocity.M)
-    annotation (Line(points={{-10,-41},{-10,-50},{-39,-50}}));
+  connect(sourceAngularVelocity.M, centrifugalPump1.M[1]) annotation(
+    Line(points = {{-38, -50}, {-10, -50}, {-10, -40}}, color = {0, 0, 255}));
   annotation (experiment(StopTime=1000),
     Window(
       x=0.32,
@@ -53,24 +53,9 @@ equation
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},
         grid={2,2}), graphics),
-    Icon(graphics={
-        Rectangle(
-          lineColor={200,200,200},
-          fillColor={248,248,248},
-          fillPattern=FillPattern.HorizontalCylinder,
-          extent={{-100.0,-100.0},{100.0,100.0}},
-          radius=25.0),
-        Rectangle(
-          lineColor={128,128,128},
-          extent={{-100.0,-100.0},{100.0,100.0}},
-          radius=25.0),
-        Polygon(
-          origin={8.0,14.0},
-          lineColor={78,138,73},
-          fillColor={78,138,73},
-          pattern=LinePattern.None,
-          fillPattern=FillPattern.Solid,
-          points={{-58.0,46.0},{42.0,-14.0},{-58.0,-74.0},{-58.0,46.0}})}),
+    Icon(graphics={Rectangle(lineColor = {200, 200, 200}, fillColor = {248, 248, 248}, fillPattern = FillPattern.HorizontalCylinder, extent = {{-100, -100}, {100, 100}}, radius = 25),
+        Rectangle(lineColor = {128, 128, 128}, extent = {{-100, -100}, {100, 100}}, radius = 25),
+        Polygon(origin = {8, 14}, lineColor = {78, 138, 73}, fillColor = {78, 138, 73}, pattern = LinePattern.None, fillPattern = FillPattern.Solid, points = {{-58, 46}, {42, -14}, {-58, -74}, {-58, 46}})}),
     Documentation(info="<html>
 <p><b>Copyright &copy; EDF 2002 - 2019 </p>
 <p><b>ThermoSysPro Version 3.2 </h4>

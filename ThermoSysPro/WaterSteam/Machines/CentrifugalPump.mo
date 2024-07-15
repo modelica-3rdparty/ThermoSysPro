@@ -25,6 +25,8 @@ model CentrifugalPump "Centrifugal pump"
     "1:complete pump head characteristics - 2:semi-parabolic pump head characteristics";
   parameter Integer mode_car_Cr=2
     "1:complete torque characteristics - 2:analytic formula";
+  parameter Integer nMechPorts = 0 "Number of mechanical torque port" annotation(
+    Dialog(connectorSizing = true));
 
   parameter Units.SI.VolumeFlowRate Qv_nom_p=0.4781
     "Nominal volumetric flow (active if mode_car=1)";
@@ -71,7 +73,7 @@ protected
   parameter Real rh_min=0.05 "Minimum efficiency";
   parameter Units.SI.MassFlowRate Qeps=1.e-3
     "Small mass flow for continuous flow reversal";
-  Boolean dyn_mech_equation;
+  parameter Boolean dyn_mech_equation=((nMechPorts <> 0) and dynamic_mech_equation);
 
 public
   Real w_a "Dimensionless angular velocity";
@@ -124,7 +126,7 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
            0)));
-  ElectroMechanics.Connectors.MechanichalTorque M
+  ElectroMechanics.Connectors.MechanichalTorque M[nMechPorts]
     annotation (Placement(transformation(
         origin={0,-110},
         extent={{-10,-10},{10,10}},
@@ -139,16 +141,7 @@ initial equation
   end if;
 
 equation
-
-  if ((cardinality(M) <> 0) and dynamic_mech_equation) then
-    dyn_mech_equation = true;
-  else 
-    dyn_mech_equation = false;
-  end if;
-
-  if (cardinality(M) == 0) then
-    M.w = pi/30*N;
-  end if;
+  assert(nMechPorts<=1, "More than one mechanical port used in CentrifugalPump");
 
   deltaP = C2.P - C1.P;
   deltaH = C2.h - C1.h;
@@ -266,8 +259,12 @@ equation
 
   w_rpm = 30/pi*w;
 
-  w = M.w;
-  Cm = M.Ctr;
+  if (nMechPorts == 0) then
+    w = pi/30*N;
+  else
+    w = sum(M.w);
+    Cm = sum(M.Ctr);
+  end if;
 
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
