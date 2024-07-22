@@ -36,9 +36,9 @@ block MassBalance "Mass Balance block for transported substances"
   Real InternalConcentrations[Species.Concentrations];
   Real in_Cflows[Species.Concentrations];
   SI.MassFlowRate out_Tflow;
-//   Real dist[Species.Concentrations](start=fill(0,size(InternalConcentrations,1)), fixed=true);
-//   Real t_sat[Species.Concentrations];
 
+  //Real dist[Species.Concentrations](start=fill(0,size(InternalConcentrations,1)), fixed=true);
+  //Real t_sat[Species.Concentrations];
   //parameter Species.sink_and_source_list sink_and_source = Species.sink_and_source_list.none;
 
   parameter Boolean dynamic_mass_balance = false "true: dynamic mass balance equation - false: static mass balance equation";
@@ -92,11 +92,15 @@ block MassBalance "Mass Balance block for transported substances"
 //     choix_resine=1)
 //     annotation (Placement(transformation(extent={{60,-100},{100,-60}})));
 
+
+
+
 initial equation
 
    if dynamic_mass_balance == true then
     der(InternalConcentrations) = zeros(size(InternalConcentrations,1));
-  end if;
+   end if;
+
 
 equation
 
