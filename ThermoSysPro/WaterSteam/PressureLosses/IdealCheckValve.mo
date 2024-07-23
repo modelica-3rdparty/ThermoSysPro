@@ -12,6 +12,11 @@ protected
   parameter Units.SI.MassFlowRate Qeps=1.e-3
     "Small mass flow for continuous flow reversal";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
 public
   Boolean ouvert(start=true, fixed=true) "Valve state";
   discrete Boolean touvert(start=false, fixed=true);
@@ -19,14 +24,16 @@ public
   Units.SI.MassFlowRate Q "Mass flow rate";
   ThermoSysPro.Units.SI.PressureDifference deltaP
     "Pressure difference between the inlet and the outlet";
-  Connectors.FluidOutlet C2         annotation (Placement(transformation(extent=
+  Connectors.FluidOutlet C2(   redeclare package Species = Species)      annotation (Placement(transformation(extent=
            {{90,-10},{110,10}}, rotation=0)));
-  Connectors.FluidInlet C1          annotation (Placement(transformation(extent=
+  Connectors.FluidInlet C1(  redeclare package Species = Species)        annotation (Placement(transformation(extent=
            {{-110,-10},{-90,10}}, rotation=0)));
 equation
 
   C1.Q = C2.Q;
   C1.h = C2.h;
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   deltaP = C1.P - C2.P;
