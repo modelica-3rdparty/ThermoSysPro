@@ -44,6 +44,10 @@ protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi;
 
+replaceable package Species =
+  ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+  choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 public
   Units.SI.Pressure P(start=10000) "Fluid average pressure";
   Units.SI.Pressure Pfond(start=11000)
@@ -121,10 +125,12 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat
                                            annotation (Placement(transformation(
           extent={{58,-200},{98,-160}}, rotation=0)));
-  Connectors.FluidInlet CvBP "Steam input"
+  Connectors.FluidInlet CvBP( redeclare package Species = Species)
+                                                                  "Steam input"
                                     annotation (Placement(transformation(extent=
            {{-86,50},{-66,70}}, rotation=0)));
-  Connectors.FluidOutlet Cl "Water output"
+  Connectors.FluidOutlet Cl( redeclare package Species = Species)
+                                                                 "Water output"
                                      annotation (Placement(transformation(
           extent={{-85,-170},{-65,-150}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort Cth3[Ns]
@@ -137,7 +143,8 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prod
     annotation (Placement(transformation(extent={{-250,-16},{-210,24}},
           rotation=0)));
-  Connectors.FluidInlet Ce "Water input"
+  Connectors.FluidInlet Ce( redeclare package Species = Species)
+                                                                "Water input"
                                     annotation (Placement(transformation(extent=
            {{-219,19},{-199,39}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proe
@@ -146,9 +153,20 @@ public
   Properties.WaterSteam.Common.ThermoProperties_ph provIn
     "Propriétés de la vapeur dans le ballon" annotation (Placement(
         transformation(extent={{0,70},{40,110}}, rotation=0)));
-  Connectors.FluidInlet CvGCT "Steam input"
+  Connectors.FluidInlet CvGCT( redeclare package Species = Species)
+                                                                   "Steam input"
                                     annotation (Placement(transformation(extent=
            {{-160,50},{-140,70}}, rotation=0)));
+  ConvectedQuantities.Components.MassBalance              sub_massBalance(
+    redeclare package Species = Species,
+    n_in=3,
+    n_out=1,
+    V=V,
+    Qin={Ce.Q,CvGCT.Q,CvBP.Q},
+    Qout={Cl.Q},
+    rho=(rhol*Vl + rhov*Vv)/V,
+    T=Tl)
+    annotation (Placement(transformation(extent={{44,2},{84,42}})));
 initial equation
   if steady_state then
     der(hl) = 0;
@@ -166,6 +184,10 @@ initial equation
   end if;
 
 equation
+
+  sub_massBalance.mix_in.SubC = {Ce.SubC,CvGCT.SubC,CvBP.SubC};
+  sub_massBalance.mix_out.SubC = {Cl.SubC};
+
   /* Unconnected connectors */
   if (cardinality(Cl) == 0) then
     Cl.Q = 0;
@@ -183,12 +205,14 @@ equation
     CvGCT.Q = 0;
     CvGCT.h = 1.e5;
     CvGCT.b = true;
+    CvGCT.SubC = fill(0,size(CvGCT.SubC,1));
   end if;
 
   if (cardinality(Ce) == 0) then
     Ce.Q = 0;
     Ce.h = 1.e5;
     Ce.b = true;
+    Ce.SubC = fill(0,size(Ce.SubC,1));
   end if;
 
   /* Wall temperature and HeatFlowRate*/
