@@ -23,6 +23,12 @@ model DynamicCondenser "Dynamic Cavity"
   //parameter Modelica.SIunits.CoefficientOfHeatTransfer hcond=25000
   //  "Heat transfer coefficient between the vapor and the cooling pipes";
 
+ replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
+
   Volumes.TwoPhaseCavityOnePipe DynamicCondenser(
     Vf0=Vf0,
     P0=P0c,
@@ -47,21 +53,26 @@ model DynamicCondenser "Dynamic Cavity"
     ntubes=ntubest,
     Ns=Ns)
     annotation (Placement(transformation(extent={{-58,-20},{54,18}}, rotation=0)));
-  Connectors.FluidInletI C1vap "Vapor inlet"
+  Connectors.FluidInletI C1vap( redeclare package Species = Species)
+                                                                    "Vapor inlet"
     annotation (Placement(transformation(extent={{-10,90},{10,110}}, rotation=0)));
-  Connectors.FluidOutletI C2ex "Condensed water extraction outlet"
+  Connectors.FluidOutletI C2ex( redeclare package Species = Species)
+                                                                    "Condensed water extraction outlet"
     annotation (Placement(transformation(extent={{-10,-110},{10,-90}}, rotation=
            0)));
-  Connectors.FluidInletI Ce1 "Cooling water inlet"
+  Connectors.FluidInletI Ce1( redeclare package Species = Species)
+                                                                  "Cooling water inlet"
     annotation (Placement(transformation(extent={{-110,-11},{-90,9}}, rotation=
             0)));
-  Connectors.FluidOutletI Ce2 "Cooling water outlet"
+  Connectors.FluidOutletI Ce2( redeclare package Species = Species)
+                                                                   "Cooling water outlet"
     annotation (Placement(transformation(extent={{89,-11},{109,9}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal sortieReelle
     annotation (Placement(transformation(extent={{98,-62},{118,-42}}, rotation=
             0)));
 
-  Connectors.FluidInletI C1 "Extra water inlet"
+  Connectors.FluidInletI C1( redeclare package Species = Species)
+                                                                 "Extra water inlet"
     annotation (Placement(transformation(extent={{-107,71},{-87,91}}, rotation=
             0)));
   Thermal.HeatTransfer.HeatExchangerWall Wall_3(
@@ -83,17 +94,19 @@ equation
     C1.Q = 0;
     C1.h = 1.e5;
     C1.b = true;
+    C1.SubC=fill(0,size(C1.SubC,1));
   end if;
 
   if (cardinality(C2vap) == 1) then
     C2vap.Q = 0;
     C2vap.h = 1.e5;
     C2vap.b = true;
+    C2vap.SubC=fill(0,size(C2vap.SubC,1));
   end if;
 
   connect(DynamicCondenser.Cl, C2ex)
-                               annotation (Line(points={{7.10543e-015,-73.3333},
-          {7.10543e-015,-98},{0,-98},{0,-100}}, color={0,0,255}));
+                               annotation (Line(points={{7.10543e-15,-73.3333},
+          {7.10543e-15,-98},{0,-98},{0,-100}},  color={0,0,255}));
   connect(C1, DynamicCondenser.Ce)
     annotation (Line(points={{-97,81},{-80,81},{-80,54},{-78,54},{-78,52.6667},
           {-76.5714,52.6667}}));
