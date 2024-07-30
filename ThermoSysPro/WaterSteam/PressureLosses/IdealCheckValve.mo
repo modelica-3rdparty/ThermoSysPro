@@ -7,14 +7,17 @@ model IdealCheckValve "Ideal check valve"
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
 
+
+    replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
   constant Real pi=Modelica.Constants.pi "pi";
   parameter Units.SI.MassFlowRate Qeps=1.e-3
     "Small mass flow for continuous flow reversal";
 
-replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
-      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 
 
 public

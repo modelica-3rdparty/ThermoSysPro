@@ -40,13 +40,16 @@ model TwoPhaseCavityOnePipe "TwoPhaseCavity for one shell pass "
     "Section heat exchange surface";
   parameter Units.SI.Area Surf_tot=Surf_exe*Ns "Total heat exchange surface";
 
-protected
-  constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
-  constant Real pi=Modelica.Constants.pi;
 
 replaceable package Species =
   ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
+protected
+  constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
+  constant Real pi=Modelica.Constants.pi;
+
 
 public
   Units.SI.Pressure P(start=10000) "Fluid average pressure";

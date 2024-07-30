@@ -146,6 +146,7 @@ equation
   sub_massBalance.mix_out.SubC = {Cl.SubC};
 
   Cee.SubC=Cse.SubC;
+
   /* Unconnected connectors */
   if (cardinality(Cl) == 0) then
     Cl.Q = 0;
