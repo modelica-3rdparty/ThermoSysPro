@@ -84,3 +84,9 @@ TestTwoPhaseVolume
 TestVolumeA
 TestVolumeA1
 TestVolumeI
+TestVolume_vectorPorts
+TestVolume1_vectorPorts
+TestVolumeI_vectorPorts
+TestVolumeATh
+TestVolumeATh_vectorPorts
+TestSimpleDynamicCondenser1_vectorPorts
