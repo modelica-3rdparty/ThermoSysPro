@@ -1,6 +1,7 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefH "Fixed specific enthalpy reference"
   parameter Units.SI.SpecificEnthalpy h0=1.e5 "Fixed fluid specific enthalpy";
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
 public
   Units.SI.MassFlowRate Q "Fluid mass flow rate";

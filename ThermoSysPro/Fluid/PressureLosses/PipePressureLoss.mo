@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.PressureLosses;
 model PipePressureLoss "Pipe generic pressure loss"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Real K=10 "Friction pressure loss coefficient";
   parameter Units.SI.Position z1=0 "Inlet altitude";

@@ -1,6 +1,7 @@
 within ThermoSysPro.Fluid.Machines;
 model Compressor "Gas compressor"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Integer mass_flow_rate_comp=1 "Ways for computing the mass flow rate - 1: Q = rho*Qv - 2: Q = rho*f(T)";
   parameter Units.SI.Temperature Tmax=284.16

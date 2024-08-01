@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.PressureLosses;
 model SingularPressureLoss "Singular pressure loss"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Real K=1.e-4 "Pressure loss coefficient";
   parameter Units.SI.MassFlowRate gamma_diff=1e-4

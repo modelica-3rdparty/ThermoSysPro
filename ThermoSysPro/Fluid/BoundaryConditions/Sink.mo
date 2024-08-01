@@ -4,6 +4,7 @@ model Sink "MultiFluids sink"
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeVariableInterface;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Units.SI.Temperature T0=290
     "Source temperature (active if option_temperature=true)"

@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.Machines;
 model HeatPumpCompressor "Heat pump compressor "
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Real pi=10.0 "Compression factor (Ps/Pe)";
   parameter Real eta=0.85 "Isentropic efficiency";

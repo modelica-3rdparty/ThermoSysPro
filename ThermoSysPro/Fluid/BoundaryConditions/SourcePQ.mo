@@ -4,6 +4,7 @@ model SourcePQ "MultiFluids source with fixed pressure and mass flow rate"
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Units.SI.AbsolutePressure P0=300000
     "Fluid pressure (active if IPressure connector is not connected)";

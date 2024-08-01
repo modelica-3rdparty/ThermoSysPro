@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.Machines;
 model SteamEngine "Steam engine"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Real caract[:, 2]=[0, 0; 15e5, 20.0] "Engine charateristics Q=f(deltaP)";
   parameter Real eta_is=0.85 "Isentropic efficiency";

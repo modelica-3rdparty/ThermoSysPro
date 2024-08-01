@@ -4,6 +4,7 @@ model SinkP "Multi-fluid sink with fixed pressure"
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeVariableInterface;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Units.SI.AbsolutePressure P0=100000 "Sink pressure";
   parameter Units.SI.Temperature T0=290

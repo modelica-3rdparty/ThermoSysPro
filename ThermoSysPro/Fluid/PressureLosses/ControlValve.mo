@@ -2,6 +2,7 @@
 model ControlValve "Control valve"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter ThermoSysPro.Units.xSI.Cv Cvmax=8005.42
     "Maximum CV (active if mode_caract=0)";

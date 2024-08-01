@@ -1,5 +1,8 @@
 within ThermoSysPro.Fluid.Machines;
 model GasTurbine "Combustion turbine for CICO and Barilla plants"
+
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
   parameter Real comp_tau_n=15 "Nominal compression nominal rate";
   parameter Real comp_eff_n=0.9 "Compressor nominal efficiency";
   parameter Real A0=0.1725914;

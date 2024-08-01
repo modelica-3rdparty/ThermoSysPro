@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.PressureLosses;
 model InvSingularPressureLoss "Inverse singular pressure loss"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";

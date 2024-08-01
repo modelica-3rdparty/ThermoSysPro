@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.Machines;
 model StaticCentrifugalPump "Static centrifugal pump"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter ThermoSysPro.Units.nonSI.AngularVelocity_rpm VRot=1400
     "Fixed rotational speed (active if fixed_rot_or_power=1 and rpm_or_mpower connector not connected)";

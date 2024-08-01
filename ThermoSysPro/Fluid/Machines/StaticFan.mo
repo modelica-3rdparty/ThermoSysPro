@@ -1,6 +1,7 @@
 within ThermoSysPro.Fluid.Machines;
 model StaticFan "Static fan"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter ThermoSysPro.Units.nonSI.AngularVelocity_rpm VRot=1400
     "Rotational speed";

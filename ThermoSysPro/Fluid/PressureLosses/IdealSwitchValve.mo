@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.PressureLosses;
 model IdealSwitchValve "Ideal switch valve"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Units.SI.MassFlowRate Qmin=1.e-6
     "Mass flow when the valve is closed";

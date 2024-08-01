@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.PressureLosses;
 model SwitchValve "Switch valve"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter ThermoSysPro.Units.xSI.PressureLossCoefficient k=1000
     "Pressure loss coefficient";

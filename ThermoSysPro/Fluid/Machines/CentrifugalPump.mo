@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.Machines;
 model CentrifugalPump "Centrifugal pump"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter ThermoSysPro.Units.nonSI.AngularVelocity_rpm N=1400
     "Pump angular velocity in rpm (active if input M is not connected)";

@@ -4,6 +4,7 @@ model SourceQ "Multi-fluid source with fixed mass flow rate"
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Units.SI.MassFlowRate Q0=100
     "Mass flow (active if IMassFlow connector is not connected)";

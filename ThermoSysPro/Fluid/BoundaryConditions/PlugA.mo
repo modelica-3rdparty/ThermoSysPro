@@ -3,6 +3,7 @@ model PlugA "Plug"
   extends
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";

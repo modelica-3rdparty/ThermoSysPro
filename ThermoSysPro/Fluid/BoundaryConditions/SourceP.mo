@@ -4,6 +4,7 @@ model SourceP "Multi-fluid source with fixed pressure"
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Units.SI.AbsolutePressure P0=300000 "Source pressure";
   parameter Units.SI.Temperature T0=290

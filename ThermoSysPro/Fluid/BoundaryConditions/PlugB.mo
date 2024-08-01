@@ -3,6 +3,7 @@ model PlugB "Plug"
   extends
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeVariableInterface;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Boolean diffusion=false "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
 

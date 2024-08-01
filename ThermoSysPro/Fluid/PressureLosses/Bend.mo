@@ -2,6 +2,7 @@
 model Bend "Bend"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Units.SI.Diameter D=0.2 "Pipe diameter";
   parameter Units.SI.Radius R0=0.2 "Pipe radius";

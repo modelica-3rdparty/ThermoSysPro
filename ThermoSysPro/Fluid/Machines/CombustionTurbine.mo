@@ -1,6 +1,7 @@
 within ThermoSysPro.Fluid.Machines;
 model CombustionTurbine "Combustion turbine"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Real A3=0 "X^3 coefficient of the efficiency curve";
   parameter Real A2=-0.04778 "X^2 coefficient of the efficiency curve";

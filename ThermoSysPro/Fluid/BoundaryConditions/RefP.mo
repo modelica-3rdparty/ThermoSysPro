@@ -1,6 +1,7 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefP "Fixed pressure reference"
   parameter Units.SI.AbsolutePressure P0=1.e5 "Fixed fluid pressure";
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
 public
   Units.SI.MassFlowRate Q "Fluid mass flow rate";

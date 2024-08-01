@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.BoundaryConditions;
 model SinkPQ "MultiFluids sink with fixed pressure and mass flow rate"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Units.SI.AbsolutePressure P0=100000
     "Fluid pressure (active if IPressure connector is not connected)";

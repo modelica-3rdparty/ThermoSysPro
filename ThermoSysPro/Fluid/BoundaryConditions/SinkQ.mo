@@ -2,6 +2,8 @@ within ThermoSysPro.Fluid.BoundaryConditions;
 model SinkQ "Multi-fluids sink with fixed mass flow rate"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+  
 
   parameter Units.SI.MassFlowRate Q0=100
     "Mass flow (active if IMassFlow connector is not connected)";

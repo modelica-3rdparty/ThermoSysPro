@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.BoundaryConditions;
 model AirHumidity "Air humidity"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Real hum0=0.5 "Air humidiy";
   parameter Units.SI.Temperature T0=290 "Fixed fluid temperature";

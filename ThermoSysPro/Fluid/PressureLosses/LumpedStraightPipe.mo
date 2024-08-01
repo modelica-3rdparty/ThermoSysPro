@@ -3,6 +3,7 @@ model LumpedStraightPipe "Lumped straight pipe (circular duct)"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Units.SI.Length L=10. "Pipe length";
   parameter Units.SI.Diameter D=0.2 "Pipe internal hydraulic diameter";

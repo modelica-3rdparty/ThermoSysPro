@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.PressureLosses;
 model IdealCheckValve "Ideal check valve"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter ThermoSysPro.Units.SI.PressureDifference dPOuvert=0.01
     "Pressure difference when the valve opens";

@@ -1,6 +1,8 @@
 within ThermoSysPro.Fluid.Sensors;
 model SensorP "Pressure sensor"
 
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Measure
     annotation (Placement(transformation(

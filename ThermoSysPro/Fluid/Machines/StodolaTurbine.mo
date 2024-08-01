@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.Machines;
 model StodolaTurbine "Multistage turbine group using Stodola's ellipse"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Real Cst=1.e7 "Stodola's ellipse coefficient";
   parameter Real W_fric=0.0
