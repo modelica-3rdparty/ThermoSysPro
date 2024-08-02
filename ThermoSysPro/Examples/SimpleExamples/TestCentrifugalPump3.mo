@@ -12,7 +12,7 @@ model TestCentrifugalPump3
     mode_car=1,
     dynamic_mech_equation=true,
     w_a(start=1),
-    C2(P(start=300000)))
+    C2(P(start=300000)), nMechPorts = 1)
     annotation (Placement(transformation(extent={{0,-40},{-20,-20}}, rotation=0)));
   WaterSteam.Volumes.Tank              Tank(
     ze2=10,
@@ -43,8 +43,8 @@ equation
     annotation (Line(points={{0,-30},{40,-30}}));
   connect(lumpedStraightPipe.C1, Valve.C2)
     annotation (Line(points={{60,-30},{80,-30},{80,24},{60,24}}));
-  connect(Motor1.C, centrifugalPump1.M)
-    annotation (Line(points={{-59.8,-70},{-10,-70},{-10,-41}}));
+  connect(Motor1.C, centrifugalPump1.M[1]) annotation(
+    Line(points = {{-60, -70}, {-10, -70}, {-10, -40}}, color = {0, 0, 255}));
   annotation (experiment(StopTime=1000),
     Window(
       x=0.32,

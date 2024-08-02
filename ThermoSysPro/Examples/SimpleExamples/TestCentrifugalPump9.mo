@@ -5,7 +5,7 @@ model TestCentrifugalPump9
     mode_car=1,
     dynamic_mech_equation=false,
     Cm(start=0),
-    w_a(start=0))    annotation (Placement(transformation(extent={{-20,20},{0,
+    w_a(start=0), nMechPorts = 1)    annotation (Placement(transformation(extent={{-20,20},{0,
             40}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourcePQ sourcePQ(Q0=100)
     annotation (Placement(transformation(extent={{-80,20},{-60,40}}, rotation=0)));
@@ -19,8 +19,8 @@ equation
     annotation (Line(points={{-60,30},{-20,30}}, color={0,0,255}));
   connect(centrifugalPump.C2, sink.C)
     annotation (Line(points={{0,30},{40,30}}, color={0,0,255}));
-  connect(sourceMechanicalPower.M, centrifugalPump.M)
-    annotation (Line(points={{-59,-10},{-10,-10},{-10,19}}));
+  connect(sourceMechanicalPower.M, centrifugalPump.M[1]) annotation(
+    Line(points = {{-58, -10}, {-10, -10}, {-10, 20}}, color = {0, 0, 255}));
   annotation (experiment(StopTime=1000),
     Diagram(graphics={
         Text(

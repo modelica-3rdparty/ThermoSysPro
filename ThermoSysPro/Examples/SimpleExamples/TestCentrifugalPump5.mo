@@ -3,7 +3,7 @@ model TestCentrifugalPump5
   ThermoSysPro.WaterSteam.Machines.CentrifugalPump centrifugalPump(mode_car_hn=
         1, mode_car_Cr=1,
     mode_car=1,
-    w_a(start=1))
+    w_a(start=1), nMechPorts = 1)
            annotation (Placement(transformation(extent={{20,20},{40,40}},
           rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourcePQ sourcePQ(Q0=0)
@@ -28,11 +28,11 @@ equation
           80,30}}, color={0,0,255}));
   connect(synchronousMotor.C, shaft.C1) annotation (Line(points={{-19.8,-10},{
           -1,-10}}));
-  connect(shaft.C2, centrifugalPump.M)
-    annotation (Line(points={{21,-10},{30,-10},{30,19}}));
   connect(echelon.yL, nONL.uL) annotation (Line(points={{-79,10},{-61,10}}));
   connect(nONL.yL, synchronousMotor.marche)
     annotation (Line(points={{-39,10},{-30,10},{-30,-5.6}}));
+  connect(shaft.C2, centrifugalPump.M[1]) annotation(
+    Line(points = {{22, -10}, {30, -10}, {30, 20}}, color = {0, 0, 255}));
   annotation (experiment(StopTime=1000),
     Diagram(graphics={
         Text(

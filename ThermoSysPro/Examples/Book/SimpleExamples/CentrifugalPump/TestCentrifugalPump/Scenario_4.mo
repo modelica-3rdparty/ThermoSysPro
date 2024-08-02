@@ -14,7 +14,7 @@ model Scenario_4
     mode=0,
     C1(h(start=650000.0)),
     Qv(start=0.010949905982587188),
-    pro(d(start=913.2498503550851)))
+    pro(d(start=913.2498503550851)), nMechPorts = 1)
     annotation (Placement(transformation(extent={{20,20},{40,40}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourcePQ sourceP(
     Q0=10,
@@ -36,10 +36,10 @@ equation
     annotation (Line(points={{0,30},{20,30}}, color={0,0,255}));
   connect(centrifugalPump.C2, sinkP.C)
     annotation (Line(points={{40,30},{60,30}}, color={0,0,255}));
-  connect(sourceTorque.M, centrifugalPump.M)
-    annotation (Line(points={{1,-10},{30,-10},{30,19}}));
   connect(rampe3.y, sourceP.IPressure)
     annotation (Line(points={{-39,30},{-15,30}}));
+  connect(sourceTorque.M, centrifugalPump.M[1]) annotation(
+    Line(points = {{2, -10}, {30, -10}, {30, 20}}, color = {0, 0, 255}));
   annotation (Diagram(graphics={
         Text(
           extent={{-100,94},{-80,86}},

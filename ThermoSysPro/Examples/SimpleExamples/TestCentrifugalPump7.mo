@@ -18,7 +18,7 @@ model TestCentrifugalPump7
     Pm(start=330941.1543408615),
     h(start=100076.56881800787),
     C2(h_vol(start=100134), h(start=100153.13763601574),
-      P(start=365270.5994503353)))
+      P(start=365270.5994503353)), nMechPorts = 1)
     annotation (Placement(transformation(extent={{40,-40},{20,-20}}, rotation=0)));
   ThermoSysPro.WaterSteam.Volumes.Tank Tank(
     ze2=10,
@@ -65,8 +65,6 @@ equation
     annotation (Line(points={{-39,-50},{-30,-50},{-30,-65.6}}));
   connect(Motor1.C, Shaft1.C1)
     annotation (Line(points={{-19.8,-70},{-1,-70}}));
-  connect(centrifugalPump.M, Shaft1.C2)
-    annotation (Line(points={{30,-41},{30,-70},{21,-70}}));
   connect(rampe.y, Valve.Ouv) annotation (Line(points={{-79,70},{-70,70},{-70,
           41}}));
   connect(centrifugalPump.C2, volumeA.Ce1)         annotation (Line(points={{20,
@@ -91,6 +89,8 @@ equation
     annotation (Line(points={{41,90},{80,90},{80,60},{-10,60},{-10,53}}));
   connect(centrifugalPump.C1, Tank.Cs2)
     annotation (Line(points={{40,-30},{80,-30},{80,24},{40,24}}));
+  connect(Shaft1.C2, centrifugalPump.M[1]) annotation(
+    Line(points = {{22, -70}, {30, -70}, {30, -40}}, color = {0, 0, 255}));
   annotation (experiment(StopTime=1000),
     Window(
       x=0.32,

@@ -3,7 +3,7 @@ model Scenario_2
 
   ThermoSysPro.WaterSteam.Machines.CentrifugalPump centrifugalPump(mode_car_hn=
         1, mode_car_Cr=1,
-    mode_car=1)      annotation (Placement(transformation(extent={{-20,20},{0,
+    mode_car=1, nMechPorts = 1)      annotation (Placement(transformation(extent={{-20,20},{0,
             40}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourcePQ sourcePQ(Q0=100)
     annotation (Placement(transformation(extent={{-80,20},{-60,40}}, rotation=0)));
@@ -25,8 +25,8 @@ equation
     annotation (Line(points={{0,30},{40,30}}, color={0,0,255}));
   connect(rampe.y, sourceAngularVelocity.IAngularVelocity)
     annotation (Line(points={{-59,-10},{-35,-10}}));
-  connect(sourceAngularVelocity.M, centrifugalPump.M)
-    annotation (Line(points={{-19,-10},{-10,-10},{-10,19}}));
+  connect(sourceAngularVelocity.M, centrifugalPump.M[1]) annotation(
+    Line(points = {{-18, -10}, {-10, -10}, {-10, 20}}, color = {0, 0, 255}));
   annotation (experiment(StopTime=1000),
     Diagram(graphics={
         Text(

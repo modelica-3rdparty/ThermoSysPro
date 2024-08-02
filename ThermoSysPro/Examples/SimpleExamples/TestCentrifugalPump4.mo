@@ -8,7 +8,7 @@ model TestCentrifugalPump4
     C2(P(start=297050)),
     pro(d(start=997.375)),
     hn(start=22),
-    Pm(start=189095))
+    Pm(start=189095), nMechPorts = 1)
     annotation (Placement(transformation(extent={{0,-40},{-20,-20}}, rotation=0)));
   ThermoSysPro.WaterSteam.Volumes.Tank Tank(
     ze2=10,
@@ -50,8 +50,8 @@ equation
     annotation (Line(points={{60,-30},{80,-30},{80,24},{60,24}}));
   connect(pulse.y, sourceTorque.IPower) annotation (Line(points={{-79,-70},{-55,
           -70}}));
-  connect(sourceTorque.M, centrifugalPump1.M)
-    annotation (Line(points={{-39,-70},{-10,-70},{-10,-41}}));
+  connect(sourceTorque.M, centrifugalPump1.M[1]) annotation(
+    Line(points = {{-38, -70}, {-10, -70}, {-10, -40}}, color = {0, 0, 255}));
   annotation (experiment(StopTime=1000),
     Window(
       x=0.32,
