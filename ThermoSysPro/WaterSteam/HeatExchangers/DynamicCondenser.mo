@@ -85,7 +85,8 @@ model DynamicCondenser "Dynamic Cavity"
     Ns=Ns,
     ntubes=ntubest)
     annotation (Placement(transformation(extent={{-58,-4},{54,40}}, rotation=0)));
-  Connectors.FluidInletI C2vap "Vapor inlet"
+  Connectors.FluidInletI C2vap(  redeclare package Species = Species)
+                                                                     "Vapor inlet"
     annotation (Placement(transformation(extent={{-63,90},{-43,110}}, rotation=
             0)));
 equation
