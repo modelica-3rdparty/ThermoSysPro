@@ -30,6 +30,7 @@ model DynamicCondenser "Dynamic Cavity"
 
 
   Volumes.TwoPhaseCavityOnePipe DynamicCondenser(
+    redeclare package Species = Species,
     Vf0=Vf0,
     P0=P0c,
     Ns=Ns,
@@ -44,6 +45,7 @@ model DynamicCondenser "Dynamic Cavity"
     annotation (                        Placement(transformation(extent={{-100,
             -100},{100,100}}, rotation=0)));
   DynamicOnePhaseFlowPipe pipe_3(
+    redeclare package Species = Species,
     option_temperature=2,
     advection=true,
     mode=0,

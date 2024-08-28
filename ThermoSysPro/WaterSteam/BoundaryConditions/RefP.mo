@@ -4,6 +4,10 @@ model RefP "Fixed pressure reference"
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
 protected
   constant Real pi=Modelica.Constants.pi "pi";
   parameter Units.SI.MassFlowRate Qeps=1.e-3
@@ -12,10 +16,10 @@ protected
 public
   Units.SI.MassFlowRate Q "Mass flow rate";
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
-  Connectors.FluidInlet C1
+  Connectors.FluidInlet C1(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
            0)));
-  Connectors.FluidOutlet C2
+  Connectors.FluidOutlet C2(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal IPressure
     annotation (Placement(transformation(
@@ -27,6 +31,8 @@ equation
   if (cardinality(IPressure) == 0) then
     IPressure.signal = P0;
   end if;
+
+  C1.SubC = C2.SubC;
 
   C1.P = C2.P;
   C1.h = C2.h;

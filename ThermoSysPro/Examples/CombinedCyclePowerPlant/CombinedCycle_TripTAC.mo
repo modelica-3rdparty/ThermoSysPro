@@ -1170,8 +1170,8 @@ model CombinedCycle_TripTAC
     h(start=194500),
     Cv(start=2000),
     Pm(start=1587120.4167526974))
-                 annotation (Placement(transformation(extent={{769,-440},{789,
-            -420}}, rotation=0)));
+                 annotation (Placement(transformation(extent={{769,-438},{789,
+            -418}}, rotation=0)));
   ThermoSysPro.WaterSteam.Sensors.SensorQ CapteurDebitVapHP(C1(h_vol(start=2674000),
         h(start=2674000)))
     annotation (Placement(transformation(
@@ -1564,7 +1564,8 @@ equation
                                          annotation (Line(points={{689,-436},{
           709,-436}}, color={0,0,255}));
   connect(vanne_extraction.C2, perteChargeK2.C1) annotation (Line(points={{789,
-          -436},{807,-436}}, color={0,0,255}));
+          -434},{798,-434},{798,-436},{807,-436}},
+                             color={0,0,255}));
   connect(vanne_alimentationHP.C1, CapteurDebitEauHP.C2)
     annotation (Line(points={{45,50},{53.3,50},{53.3,38.12}}));
   connect(vanne_vapeurHP.C2, CapteurDebitVapHP.C1) annotation (Line(points={{-75,50},
@@ -1605,7 +1606,8 @@ equation
   connect(DoubleDebitBP.Cs, PerteChargeZero2.C1) annotation (Line(points={{235,
           -110},{235,-278},{301,-278}}, color={255,0,0}));
   connect(PompeAlimBP.C2, vanne_extraction.C1) annotation (Line(points={{729,
-          -436},{769,-436}}, color={0,0,255}));
+          -436},{750,-436},{750,-434},{769,-434}},
+                             color={0,0,255}));
   connect(BallonHP.yLevel,regulation_Niveau_HP. MesureNiveauEau)
     annotation (Line(points={{-37,30},{-101,30},{-101,125},{-73.5,125}}));
   connect(regulation_Niveau_HP.SortieReelle1, vanne_alimentationHP.Ouv)
@@ -1623,7 +1625,7 @@ equation
   connect(ConsigneNiveauCondenseur1.y, regulation_Niveau_Condenseur.ConsigneNiveauEau)
     annotation (Line(points={{708.2,-238},{719,-238},{719,-269},{724.5,-269}}));
   connect(regulation_Niveau_Condenseur.SortieReelle1, vanne_extraction.Ouv)
-    annotation (Line(points={{745.5,-281},{779,-281},{779,-419}}));
+    annotation (Line(points={{745.5,-281},{779,-281},{779,-417}}));
   connect(CapteurDebitEauBP.C1, EconomiseurBP.Cws2)
     annotation (Line(points={{625.3,28},{627,28},{627,6},{647,6},{647,-30}}));
   connect(EconomiseurBP.Cws1, perteChargeKCond1.C2) annotation (Line(points={{647,-70},
