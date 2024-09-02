@@ -6,7 +6,8 @@ model VolumeB "Mixing volume with 2 inlets and 2 outlets"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
-  replaceable package Medium_CoolProp = ThermoSysPro.Properties.CoolPropMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+  replaceable package Medium_CoolProp =
+      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium               "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 
   parameter Boolean dynamic_energy_balance=true
     "true: dynamic energy balance equation - false: static energy balance equation";

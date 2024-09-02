@@ -946,8 +946,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
         extent={{20,-20},{-20,20}},
         rotation=90)));
 
-  ThermoSysPro.Fluid.BoundaryConditions.SinkP PuitsFumees(P0=1.013e5, C(h_vol_1
-        (start=329093.3007791504)))
+  ThermoSysPro.Fluid.BoundaryConditions.SinkP PuitsFumees(P0=1.013e5, C(h_vol_1(
+         start=329093.3007791504)))
     annotation (Placement(transformation(
         origin={722,-50},
         extent={{10,-10},{-10,10}},

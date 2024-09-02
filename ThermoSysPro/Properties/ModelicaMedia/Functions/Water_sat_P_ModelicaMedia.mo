@@ -11,7 +11,7 @@ block Water_sat_P_ModelicaMedia
   Medium_CoolProp.ThermodynamicState state_v;
 
 replaceable package Medium_CoolProp =
-      ThermoSysPro.Properties.ModelicaMedia.CoolPropMedium                   "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium             "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 
 equation
 
