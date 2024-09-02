@@ -6,6 +6,8 @@ model ThreeWayValve "Three way valve"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.CoolPropMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter ThermoSysPro.Units.xSI.Cv Cvmax1=8005.42 "Valve 1 max CV";
   parameter ThermoSysPro.Units.xSI.Cv Cvmax2=8005.42 "Valve 2 max CV";
   parameter Real caract1[:, 2]=[0, 0; 1, Cvmax1]
@@ -68,6 +70,7 @@ model ThreeWayValve "Three way valve"
   Interfaces.Connectors.FluidOutlet C2 annotation (layer="icon", Placement(
         transformation(extent={{90,-50},{110,-30}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve Valve1(
+    redeclare package Medium_CoolProp = Medium_CoolProp,
     Cvmax=Cvmax1,
     caract=caract1,
     mode_caract=mode_caract1,
@@ -81,6 +84,7 @@ model ThreeWayValve "Three way valve"
   Interfaces.Connectors.FluidOutlet C3 annotation (Placement(transformation(
           extent={{-10,-110},{10,-90}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve Valve2(
+    redeclare package Medium_CoolProp = Medium_CoolProp,
     Cvmax=Cvmax2,
     caract=caract2,
     mode_caract=mode_caract2,
@@ -95,6 +99,7 @@ model ThreeWayValve "Three way valve"
   ThermoSysPro.InstrumentationAndControl.Blocks.Math.Add Add1(k2=-1) annotation (Placement(transformation(
           extent={{-40,40},{-20,60}}, rotation=0)));
   Volumes.VolumeA VolumeA1(
+    redeclare package Medium_CoolProp = Medium_CoolProp,
     V=V,
     p_rho=p_rho,
     dynamic_energy_balance=dynamic_energy_balance,
@@ -108,7 +113,9 @@ model ThreeWayValve "Three way valve"
     Xo20=Xo20,
     Xso20=Xso20)            annotation (Placement(transformation(extent={{-10,
             -10},{10,10}}, rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.PipePressureLoss PerteDP1(K=0, region=region, gamma_diff=gamma_diff)
+  ThermoSysPro.Fluid.PressureLosses.PipePressureLoss PerteDP1(
+    redeclare package Medium_CoolProp = Medium_CoolProp,      K=0,
+    p_rho=p_rho,                                                   region=region, gamma_diff=gamma_diff)
     annotation (Placement(transformation(extent={{-60,-10},{-40,10}}, rotation=
             0)));
 equation

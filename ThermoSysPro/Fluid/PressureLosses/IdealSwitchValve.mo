@@ -3,6 +3,8 @@ model IdealSwitchValve "Ideal switch valve"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.CoolPropMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Units.SI.MassFlowRate Qmin=1.e-6
     "Mass flow when the valve is closed";
   parameter Units.SI.MassFlowRate gamma_diff=1e-4
