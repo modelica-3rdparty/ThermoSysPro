@@ -3,6 +3,8 @@ model StodolaTurbine "Multistage turbine group using Stodola's ellipse"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Real Cst=1.e7 "Stodola's ellipse coefficient";
   parameter Real W_fric=0.0
     "Power losses due to hydrodynamic friction (percent)";
@@ -81,9 +83,15 @@ public
         rotation=180)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pros1
     annotation (Placement(transformation(extent={{-20,80},{0,100}}, rotation=0)));
+protected
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia proe_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Pe, h = Ce.h);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia pros1_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Ps, h = Hrs);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia pros_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Ps, h = Cs.h);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ps_ModelicaMedia props_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Ps, s= proe.s);
+
 equation
   /* Check that the fluid type is water/steam */
-  assert((ftype == FluidType.WaterSteam) or (ftype == FluidType.WaterSteamSimple), "StodolaTurbine: the fluid type must be water/steam");
+  assert((ftype == FluidType.WaterSteam) or (ftype == FluidType.WaterSteamSimple) or (ftype == FluidType.CoolPropMedium), "StodolaTurbine: the fluid type must be water/steam");
 
   if (cardinality(M) == 0) then
     M.Ctr = 0;
@@ -146,21 +154,31 @@ equation
   MechPower.signal = W;
 
   /* Fluid thermodynamic properties before the expansion */
-  proe = ThermoSysPro.Properties.Fluid.Ph(Pe, Ce.h, mode_e, fluid);
+  if fluid==8 then
+    /* Fluid thermodynamic properties before the expansion */
+    proe = proe_calc.pro;
+    pros1 = pros1_calc.pro;
+    pros = pros_calc.pro;
+    props = props_calc.pro;
+  else
+    /* Fluid thermodynamic properties before the expansion */
+    proe = ThermoSysPro.Properties.Fluid.Ph(Pe, Ce.h, mode_e, fluid);
+
+    /* Fluid thermodynamic properties after the expansion */
+    pros1 = ThermoSysPro.Properties.Fluid.Ph(Ps, Hrs, mode_s, fluid);
+
+   /* Fluid thermodynamic properties at the outlet of the nozzle */
+    pros = ThermoSysPro.Properties.Fluid.Ph(Ps, Cs.h, mode_s, fluid);
+
+    /* Fluid thermodynamic properties after the isentropic expansion */
+    props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, mode_ps, fluid);
+  end if;
 
   Te = proe.T;
-
-  /* Fluid thermodynamic properties after the expansion */
-  pros1 = ThermoSysPro.Properties.Fluid.Ph(Ps, Hrs, mode_s, fluid);
-
-  /* Fluid thermodynamic properties at the outlet of the nozzle */
-  pros = ThermoSysPro.Properties.Fluid.Ph(Ps, Cs.h, mode_s, fluid);
 
   Ts = pros.T;
   rhos = pros.d;
 
-  /* Fluid thermodynamic properties after the isentropic expansion */
-  props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, mode_ps, fluid);
   His = props.h;
 
   annotation (

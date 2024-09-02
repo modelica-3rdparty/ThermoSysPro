@@ -5,8 +5,7 @@ model SinkP "Multi-fluid sink with fixed pressure"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
 
-  replaceable package Medium_CoolProp =
-      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium               "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 
   parameter Units.SI.AbsolutePressure P0=100000 "Sink pressure";
   parameter Units.SI.Temperature T0=290

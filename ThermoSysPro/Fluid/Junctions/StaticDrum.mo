@@ -6,6 +6,8 @@ model StaticDrum "Static drum"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Real x=1 "Vapor separation efficiency at the outlet";
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
@@ -79,6 +81,8 @@ public
     annotation (Placement(transformation(extent={{72,68},{100,100}}, rotation=0)));
   Thermal.Connectors.ThermalPort Cth annotation (Placement(transformation(
           extent={{-10,-10},{10,10}}, rotation=0)));
+protected
+  Properties.ModelicaMedia.Functions.Water_sat_P_ModelicaMedia lsatvsat_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P);
 equation
 
   /* Check that incoming fluids are compatible with fluid in volume */
@@ -331,7 +335,12 @@ equation
   Cs_sur.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);
+  if fluid==8 then
+    lsat = lsatvsat_calc.lsat;
+    vsat = lsatvsat_calc.vsat;
+  else
+    (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);
+  end if;
 
   hl = lsat.h;
   hv = vsat.h;

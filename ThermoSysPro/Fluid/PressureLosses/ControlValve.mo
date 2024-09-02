@@ -3,8 +3,7 @@ model ControlValve "Control valve"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
-  replaceable package Medium_CoolProp =
-      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium               "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 
   parameter ThermoSysPro.Units.xSI.Cv Cvmax=8005.42
     "Maximum CV (active if mode_caract=0)";
@@ -113,6 +112,7 @@ equation
     rho = p_rho;
   else
     if fluid==8 then
+//       rho = Medium_CoolProp.density(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=mode));
       rho = Medium_CoolProp.density_ph(p=Pm, h=h, phase=mode);
     else
       rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);

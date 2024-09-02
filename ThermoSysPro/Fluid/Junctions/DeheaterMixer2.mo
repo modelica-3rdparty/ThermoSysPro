@@ -6,6 +6,8 @@ model DeheaterMixer2
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Units.SI.Temperature Tmax=700 "Maximum fluid temperature";
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
@@ -137,9 +139,13 @@ equation
   Cs.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
-
-  hmax = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, Tmax, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
+  if fluid==8 then
+      T = Medium_CoolProp.temperature_ph(p=Pm, h=h, phase=mode);
+      hmax = Medium_CoolProp.specificEnthalpy_pT(P, Tmax, mode);
+    else
+      T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
+      hmax = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, Tmax, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
+  end if;
 
   annotation (
     Diagram(coordinateSystem(

@@ -6,6 +6,8 @@ model SteamExtractionSplitter "Splitter for steam extraction"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Real alpha = 1
     "Vapor mass fraction at the extraction/Vapor mass fraction at the inlet (0 <= alpha <= 1)";
   parameter Boolean continuous_flow_reversal=false
@@ -56,6 +58,9 @@ public
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cex "Extraction outlet"
     annotation (Placement(transformation(extent={{30,-110},{50,-90}}, rotation=
             0)));
+protected
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia proe_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P, h = Ce.h);
+  Properties.ModelicaMedia.Functions.Water_sat_P_ModelicaMedia lsatvsat_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P);
 equation
   /* Check that incoming fluids are compatible with fluid in volume */
   fluids[1] = ftype;
@@ -145,11 +150,18 @@ equation
   Cs.diff_on_1 = diffusion;
   Cex.diff_on_1 = diffusion;
 
-  /* Fluid thermodynamic properties at the inlet */
+  if fluid==8 then
+    proe = proe_calc.pro;
+
+    lsat = lsatvsat_calc.lsat;
+    vsat = lsatvsat_calc.vsat;
+  else
+    /* Fluid thermodynamic properties at the inlet */
   proe = ThermoSysPro.Properties.Fluid.Ph(P, Ce.h, mode_e,fluid);
 
   /* Fluid thermodynamic properties at the saturation point */
   (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P,fluid);
+  end if;
 
   /* Vapor mass fraction at the extraction outlet */
   x_ex = alpha*proe.x;

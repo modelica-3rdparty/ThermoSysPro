@@ -3,8 +3,7 @@ model IdealCheckValve "Ideal check valve"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
-  replaceable package Medium_CoolProp =
-      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium               "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 
   parameter ThermoSysPro.Units.SI.PressureDifference dPOuvert=0.01
     "Pressure difference when the valve opens";

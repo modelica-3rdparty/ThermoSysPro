@@ -74,13 +74,13 @@ equation
     annotation (Line(points={{-20,-20},{-20,-50},{0,-50}}, color={0,0,0}));
   connect(sourceP1.C, steamValve.C1)
     annotation (Line(points={{-80,140},{-60,140}},   color={0,0,0}));
-  connect(twoPhaseVolume.Cl, lumpedStraightPipe.C1) annotation (Line(points={{
-          -19.5556,30.6667},{-19.5556,15.3333},{-20,15.3333},{-20,0}}, color={0,
+  connect(twoPhaseVolume.Cl, lumpedStraightPipe.C1) annotation (Line(points={{-19.5556,30.6667},{-19.5556,15.3333},{-20,15.3333},{-20,0}},
+                                                                       color={0,
           0,0}));
-  connect(steamValve.C2, twoPhaseVolume.Cv) annotation (Line(points={{-40,140},
-          {-19.5556,140},{-19.5556,89.3333}}, color={0,0,0}));
-  connect(feedwaterValve.C2, twoPhaseVolume.Ce) annotation (Line(points={{-78,100},
-          {-35.5556,100},{-35.5556,89.3333}},      color={0,0,0}));
+  connect(steamValve.C2, twoPhaseVolume.Cv) annotation (Line(points={{-40,140},{-19.5556,140},{-19.5556,89.3333}},
+                                              color={0,0,0}));
+  connect(feedwaterValve.C2, twoPhaseVolume.Ce) annotation (Line(points={{-78,100},{-35.5556,100},{-35.5556,89.3333}},
+                                                   color={0,0,0}));
   annotation (experiment(__Dymola_Algorithm="Dassl"),
     Window(
       x=0.43,

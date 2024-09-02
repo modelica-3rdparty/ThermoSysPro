@@ -6,6 +6,8 @@ model SteamDryer "Steam dryer"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Real eta=1 "Steam dryer efficiency (0 <= eta <= 1)";
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
@@ -55,7 +57,9 @@ public
            0)));
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Csl annotation (
       Placement(transformation(extent={{-9,-110},{11,-90}}, rotation=0)));
-
+protected
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia proe_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Cev.P, h = Cev.h);
+  Properties.ModelicaMedia.Functions.Water_sat_P_ModelicaMedia lsatvsat_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Cev.P);
 equation
   /* Check that incoming fluids are compatible with fluid in volume */
   fluids[1] = ftype;
@@ -151,14 +155,22 @@ equation
   Csv.diff_on_1 = diffusion;
   Csl.diff_on_1 = diffusion;
 
-  /* Fluid thermodynamic properties */
-  proe = ThermoSysPro.Properties.Fluid.Ph(Cev.P, Cev.h, mode_e, fluid);
+  /* Fluid thermodynamic properties at the saturation point */
+  if fluid==8 then
+    proe = proe_calc.pro;
+
+    lsat1 = lsatvsat_calc.lsat;
+    vsat1 = lsatvsat_calc.vsat;
+  else
+    /* Fluid thermodynamic properties */
+    proe = ThermoSysPro.Properties.Fluid.Ph(Cev.P, Cev.h, mode_e, fluid);
+
+    (lsat1,vsat1) = ThermoSysPro.Properties.Fluid.Water_sat_P(Cev.P, fluid);
+  end if;
 
   /* Vapor mass fraction at the inlet */
   xe = proe.x;
 
-  /* Fluid thermodynamic properties at the saturation point */
-  (lsat1,vsat1) = ThermoSysPro.Properties.Fluid.Water_sat_P(Cev.P, fluid);
 
   annotation (
     Diagram(coordinateSystem(
