@@ -355,7 +355,6 @@ equation
     else
       rho = ThermoSysPro.Properties.Fluid.Density_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
     end if;
-
   end if;
 
   annotation (

@@ -6,6 +6,8 @@ model VolumeI "Mixing volume with 4 inlets and 4 outlets"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.CoolPropMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Boolean dynamic_energy_balance=true
     "true: dynamic energy balance equation - false: static energy balance equation";
   parameter Units.SI.Volume V=1
@@ -453,19 +455,32 @@ equation
 
   /* Fluid thermodynamic properties */
   if isCompressible and dynamic_mass_balance then
-    ddph = ThermoSysPro.Properties.Fluid.Density_derp_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    ddhp = ThermoSysPro.Properties.Fluid.Density_derh_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    if fluid==8 then
+      ddph = Medium_CoolProp.density_derp_h(Medium_CoolProp.setState_ph(p=P, h=h, phase=mode));
+      ddhp = Medium_CoolProp.density_derh_p(Medium_CoolProp.setState_ph(p=P, h=h, phase=mode));
+    else
+      ddph = ThermoSysPro.Properties.Fluid.Density_derp_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      ddhp = ThermoSysPro.Properties.Fluid.Density_derh_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    end if;
   else
     ddph = 0;
     ddhp = 0;
   end if;
 
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+  if fluid==8 then
+      T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=mode);
+    else
+      T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    end if;
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    if fluid==8 then
+      rho = Medium_CoolProp.density_ph(p=P, h=h, phase=mode);
+    else
+      rho = ThermoSysPro.Properties.Fluid.Density_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    end if;
   end if;
 
   annotation (
