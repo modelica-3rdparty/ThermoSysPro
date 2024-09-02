@@ -5,6 +5,8 @@ model TwoPhaseVolume "TwoPhaseVolume"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Units.SI.Volume V=1 "Cavity volume";
   parameter Units.SI.Area A=1 "Cavity cross-sectional area";
   parameter Real Ccond=0.01 "Condensation coefficient";
@@ -104,6 +106,11 @@ public
             0)));
   Interfaces.Connectors.FluidInlet Ce "Water input" annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
+protected
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prol_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = (P + Pfond)/2, h = hl);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prov_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P, h = hv);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prod_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Pfond, h = Cl.h);
+  Properties.ModelicaMedia.Functions.Water_sat_P_ModelicaMedia lsatvsat_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P);
 initial equation
   if dynamic_energy_balance then
     if steady_state then
@@ -278,10 +285,19 @@ equation
   Cl.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  prol = ThermoSysPro.Properties.Fluid.Ph((P + Pfond)/2, hl, 0,fluid);
-  prov = ThermoSysPro.Properties.Fluid.Ph(P, hv, 0,fluid);
-  prod = ThermoSysPro.Properties.Fluid.Ph(Pfond, Cl.h, 0,fluid);
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P,fluid);
+  if fluid==8 then
+    prol = prol_calc.pro;
+    prov = prov_calc.pro;
+    prod = prod_calc.pro;
+
+    lsat = lsatvsat_calc.lsat;
+    vsat = lsatvsat_calc.vsat;
+  else
+    prol = ThermoSysPro.Properties.Fluid.Ph((P + Pfond)/2, hl, 0,fluid);
+    prov = ThermoSysPro.Properties.Fluid.Ph(P, hv, 0,fluid);
+    prod = ThermoSysPro.Properties.Fluid.Ph(Pfond, Cl.h, 0,fluid);
+    (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P,fluid);
+  end if;
 
   Tl = prol.T;
   rhol = prol.d;

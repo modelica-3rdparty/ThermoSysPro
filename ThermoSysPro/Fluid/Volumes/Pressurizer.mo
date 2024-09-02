@@ -5,6 +5,8 @@ model Pressurizer "Pressurizer"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Units.SI.Volume V=61.1 "Pressurizer volume";
   parameter Units.SI.Radius Rp=1.265 "Pressurizer cross-sectional radius";
   parameter Units.SI.Area Ae=1 "Wall surface";
@@ -122,6 +124,11 @@ public
   Properties.WaterSteam.Common.PropThermoSat vsat
                                            annotation (Placement(transformation(
           extent={{16,4},{56,44}}, rotation=0)));
+
+protected
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prol_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P, h = hl);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prov_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P, h = hv);
+  Properties.ModelicaMedia.Functions.Water_sat_P_ModelicaMedia lsatvsat_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P);
 initial equation
   if dynamic_energy_balance then
     if steady_state then
@@ -325,9 +332,18 @@ equation
   Cs.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  prol = ThermoSysPro.Properties.Fluid.Ph(P, hl,0,fluid);
-  prov = ThermoSysPro.Properties.Fluid.Ph(P, hv,0,fluid);
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P,fluid);
+  if fluid==8 then
+    prol = prol_calc.pro;
+    prov = prov_calc.pro;
+
+    lsat = lsatvsat_calc.lsat;
+    vsat = lsatvsat_calc.vsat;
+  else
+    prol = ThermoSysPro.Properties.Fluid.Ph(P, hl, 0, fluid);
+    prov = ThermoSysPro.Properties.Fluid.Ph(P, hv, 0, fluid);
+
+    (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);
+  end if;
 
   Tl = prol.T;
   Tv = prov.T;

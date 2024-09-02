@@ -5,8 +5,7 @@ model DynamicDrum "Dynamic drum"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
 
-  replaceable package Medium_CoolProp =
-      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium               "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 
   parameter Boolean Vertical=true
     "true: vertical cylinder - false: horizontal cylinder";
@@ -164,22 +163,11 @@ public
         transformation(extent={{90,-50},{110,-30}}, rotation=0)));
 
 protected
-  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prol_calc(redeclare
-      package                                                                                      Medium_CoolProp =
-        Medium_CoolProp, P = P, h = hl);
-  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prov_calc(redeclare
-      package                                                                                      Medium_CoolProp =
-        Medium_CoolProp, P = P, h = hv);
-  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prod_calc(redeclare
-      package                                                                                      Medium_CoolProp =
-        Medium_CoolProp, P = Pfond, h = Cd.h);
-  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prom_calc(redeclare
-      package                                                                                      Medium_CoolProp =
-        Medium_CoolProp, P = P, h = Cm.h);
-  Properties.ModelicaMedia.Functions.Water_sat_P_ModelicaMedia lsatvsat_calc(redeclare
-      package                                                                                  Medium_CoolProp =
-        Medium_CoolProp, P = P);
-
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prol_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P, h = hl);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prov_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P, h = hv);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prod_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Pfond, h = Cd.h);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prom_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P, h = Cm.h);
+  Properties.ModelicaMedia.Functions.Water_sat_P_ModelicaMedia lsatvsat_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P);
 initial equation
   if dynamic_energy_balance then
     if steady_state then

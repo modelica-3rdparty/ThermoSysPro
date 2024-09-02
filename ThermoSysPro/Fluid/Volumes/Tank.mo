@@ -6,6 +6,8 @@ model Tank "Open vertical tank"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Units.SI.AbsolutePressure Patm=1.013e5
     "Pressure above the fluid level";
   parameter Units.SI.Area A=1 "Tank cross sectional area";
@@ -393,17 +395,30 @@ equation
   /* Fluid thermodynamic properties */
   P = Patm + rho*g*z/2;
 
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs1.Xco2, Cs1.Xh2o, Cs1.Xo2, Cs1.Xso2);
+  if fluid==8 then
+    T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=mode);
+  else
+    T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+  end if;
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(P, h, fluid,mode, Cs1.Xco2, Cs1.Xh2o, Cs1.Xo2, Cs1.Xso2);
+    if fluid==8 then
+      rho = Medium_CoolProp.density_ph(p=P, h=h, phase=mode);
+    else
+      rho = ThermoSysPro.Properties.Fluid.Density_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    end if;
   end if;
 
   if dynamic_mass_balance then
-    ddph = ThermoSysPro.Properties.Fluid.Density_derp_Ph(P, h, fluid,mode, Cs1.Xco2, Cs1.Xh2o, Cs1.Xo2, Cs1.Xso2);
-    ddhp = ThermoSysPro.Properties.Fluid.Density_derh_Ph(P, h, fluid,mode, Cs1.Xco2, Cs1.Xh2o, Cs1.Xo2, Cs1.Xso2);
+    if fluid==8 then
+      ddph = Medium_CoolProp.density_derp_h(Medium_CoolProp.setState_ph(p=P, h=h, phase=mode));
+      ddhp = Medium_CoolProp.density_derh_p(Medium_CoolProp.setState_ph(p=P, h=h, phase=mode));
+    else
+      ddph = ThermoSysPro.Properties.Fluid.Density_derp_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      ddhp = ThermoSysPro.Properties.Fluid.Density_derh_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    end if;
   else
     ddph = 0;
     ddhp = 0;

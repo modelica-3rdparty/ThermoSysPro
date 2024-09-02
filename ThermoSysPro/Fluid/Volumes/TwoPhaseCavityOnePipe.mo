@@ -5,6 +5,8 @@ model TwoPhaseCavityOnePipe "TwoPhaseCavity for one shell pass "
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Boolean Vertical=true "true: vertical cylinder - false: horizontal cylinder";
   parameter Units.SI.Radius R=1.05 "Radius of the Cavity cross-sectional area";
   parameter Units.SI.Length L=16.27 "Cavity length";
@@ -165,6 +167,14 @@ public
         transformation(extent={{0,70},{40,110}}, rotation=0)));
   Interfaces.Connectors.FluidInlet CvGCT "Steam input" annotation (Placement(
         transformation(extent={{-160,50},{-140,70}}, rotation=0)));
+
+protected
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia proe_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P, h = Ce.h);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prol_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = (P + Pfond)/2, h = hl);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia provIn_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P, h = hvIn);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prov_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P, h = hv);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prod_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Pfond, h = Cl.h);
+  Properties.ModelicaMedia.Functions.Water_sat_P_ModelicaMedia lsatvsat_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P);
 initial equation
   if dynamic_energy_balance then
     if steady_state then
@@ -398,13 +408,36 @@ equation
   Cl.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties*/
-  proe = ThermoSysPro.Properties.Fluid.Ph(P, Ce.h, 0, fluid);
-  prol = ThermoSysPro.Properties.Fluid.Ph((P+Pfond)/2, hl, 0, fluid);
+  if fluid==8 then
+    proe = proe_calc.pro;
+    prol = prol_calc.pro;
 
-  provIn = ThermoSysPro.Properties.Fluid.Ph(P,  hvIn,  0, fluid);
-  prov = ThermoSysPro.Properties.Fluid.Ph(P,  hv,  0, fluid);
-  prod = ThermoSysPro.Properties.Fluid.Ph(Pfond,  Cl.h, 0, fluid);
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P,fluid);
+    provIn = provIn_calc.pro;
+    prov = prov_calc.pro;
+    prod = prod_calc.pro;
+
+    lsat = lsatvsat_calc.lsat;
+    vsat = lsatvsat_calc.vsat;
+
+    mul=Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_ph(p=(P + Pfond)/2, h=hl, phase=0));
+    muv=Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_ph(p=P, h=hvIn, phase=0));
+    kl =Medium_CoolProp.thermalConductivity(Medium_CoolProp.setState_ph(p=(P + Pfond)/2, h=hl, phase=0));
+    kv =Medium_CoolProp.thermalConductivity(Medium_CoolProp.setState_ph(p=P, h=hvIn, phase=0));
+
+  else
+    proe = ThermoSysPro.Properties.Fluid.Ph(P, Ce.h, 0, fluid);
+    prol = ThermoSysPro.Properties.Fluid.Ph((P+Pfond)/2, hl, 0, fluid);
+
+    provIn = ThermoSysPro.Properties.Fluid.Ph(P,  hvIn,  0, fluid);
+    prov = ThermoSysPro.Properties.Fluid.Ph(P,  hv,  0, fluid);
+    prod = ThermoSysPro.Properties.Fluid.Ph(Pfond,  Cl.h, 0, fluid);
+    (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P,fluid);
+
+    muv = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(provIn.d, provIn.T, fluid);
+    mul = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol, Tl, fluid);
+    kl = noEvent(ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol, Tl, P, 0, fluid));
+    kv = noEvent(ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(provIn.d, provIn.T, P, 0,fluid));
+  end if;
 
   Tl = prol.T;
   rhol = prol.d;
@@ -413,11 +446,6 @@ equation
   Tv = prov.T;
   rhov = prov.d;
   xv = prov.x;
-
-  muv = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(provIn.d, provIn.T, fluid);
-  mul = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol, Tl, fluid);
-  kl = noEvent(ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol, Tl, P, 0, fluid));
-  kv = noEvent(ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(provIn.d, provIn.T, P, 0,fluid));
 
   /* Heat transfer coefficient between liquid and wall*/
   /* SACADURA, Von Karman equation*/
