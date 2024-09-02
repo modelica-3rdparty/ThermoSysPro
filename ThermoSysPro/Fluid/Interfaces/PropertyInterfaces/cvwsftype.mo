@@ -8,10 +8,17 @@ function cvwsftype "Converts water/steam fluid type into fluid type"
 
 algorithm
 
-  assert((wsftype == WaterSteamFluidType.WaterSteam) or (wsftype == WaterSteamFluidType.WaterSteamSimple), "cvwsftype: wrong fluid type");
+  assert((wsftype == WaterSteamFluidType.WaterSteam) or (wsftype == WaterSteamFluidType.WaterSteamSimple) or (wsftype == WaterSteamFluidType.CoolPropMedium), "cvwsftype: wrong fluid type");
 
-  ftype := if wsftype == WaterSteamFluidType.WaterSteam then FluidType.WaterSteam
-           else FluidType.WaterSteamSimple;
+  if wsftype == WaterSteamFluidType.WaterSteam then
+    ftype :=FluidType.WaterSteam;
+  elseif wsftype == WaterSteamFluidType.WaterSteamSimple then
+    ftype :=FluidType.WaterSteamSimple;
+  elseif wsftype == WaterSteamFluidType.CoolPropMedium then
+    ftype :=FluidType.CoolPropMedium;
+  else
+    assert(true,"cvwsftype: wrong fluid type in if-loop");
+  end if;
 
   annotation (Documentation(info="<html>
 <p><b>Copyright &copy; EDF 2002 - 2021</b> </p>

@@ -125,6 +125,7 @@ equation
     rho = p_rho;
   else
     if fluid==8 then
+//       rho = Medium_CoolProp.density(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=mode));
       rho = Medium_CoolProp.density_ph(p=Pm, h=h, phase=mode);
     else
       rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);

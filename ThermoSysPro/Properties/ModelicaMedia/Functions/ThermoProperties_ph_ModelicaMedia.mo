@@ -6,27 +6,30 @@ block ThermoProperties_ph_ModelicaMedia
 
   output ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro;
 
-  Medium_CoolProp.ThermodynamicState state=Medium_CoolProp.setState_ph(p=P, h=h, phase=0);
+  Medium_CoolProp.ThermodynamicState state = Medium_CoolProp.setState_ph(p=P, h=h, phase=0);
   Medium_CoolProp.SaturationProperties sat = Medium_CoolProp.setSat_p(P);
 
-replaceable package Medium_CoolProp = ThermoSysPro.Properties.CoolPropMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+replaceable package Medium_CoolProp =
+      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "Modelica Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+// replaceable package Medium_CoolProp =
+//       ThermoSysPro.Properties.ModelicaMedia.Media.CoolPropMedium                                 "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 
 equation
-  pro.cp = state.cp;
+  pro.cp = Medium_CoolProp.specificHeatCapacityCp(state);
   pro.d = state.d;
   pro.T = state.T;
-  pro.ddph = state.ddph;
-  pro.ddhp = state.ddhp;
-  pro.s = state.s;
-  pro.u = -Modelica.Constants.inf;
+  pro.ddph = Medium_CoolProp.density_derp_h(state);
+  pro.ddhp = Medium_CoolProp.density_derh_p(state);
+  pro.s = Medium_CoolProp.specificEntropy(state);
+  pro.u = Medium_CoolProp.specificInternalEnergy(state);
   pro.duhp = -Modelica.Constants.inf;
   pro.duph = -Modelica.Constants.inf;
 
-  if sat.hl<>sat.hv then // from ThermoSysPro.Properties.WaterSteam.Common.water_ph_r4
-    if h<sat.hl then
+    if noEvent((Medium_CoolProp.bubbleEnthalpy(sat)-Medium_CoolProp.dewEnthalpy(sat)) > Modelica.Constants.eps) then // from ThermoSysPro.Properties.WaterSteam.Common.water_ph_r4
+    if noEvent(h<Medium_CoolProp.bubbleEnthalpy(sat)) then
       pro.x = 0;
-    elseif (sat.hl<h and h<sat.hv) then
-      pro.x=(h - sat.hl)/(sat.hv - sat.hl);  // from ThermoSysPro.Properties.WaterSteam.Common.water_ph_r4
+    elseif noEvent(Medium_CoolProp.bubbleEnthalpy(sat)<h and h<Medium_CoolProp.dewEnthalpy(sat)) then
+      pro.x=(h - Medium_CoolProp.bubbleEnthalpy(sat))/(Medium_CoolProp.dewEnthalpy(sat) - Medium_CoolProp.bubbleEnthalpy(sat));  // from ThermoSysPro.Properties.WaterSteam.Common.water_ph_r4
     else
       pro.x = 1;
     end if;

@@ -1,9 +1,12 @@
-﻿within ThermoSysPro.Fluid.Volumes;
+within ThermoSysPro.Fluid.Volumes;
 model DynamicDrum "Dynamic drum"
   extends
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.WaterSteamFluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+
+  replaceable package Medium_CoolProp =
+      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium               "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 
   parameter Boolean Vertical=true
     "true: vertical cylinder - false: horizontal cylinder";
@@ -116,10 +119,10 @@ public
   Real rv "Value of r(Q/gamma) for outlet Cv";
 
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prol
-    "Propri鴩s de l'eau dans le ballon" annotation (Placement(transformation(
+    "Properties of the water in the drum" annotation (Placement(transformation(
           extent={{-60,40},{-20,80}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prov
-    "Propri鴩s de la vapeur dans le ballon" annotation (Placement(
+    "Properties of the steam in the drum" annotation (Placement(
         transformation(extent={{0,40},{40,80}}, rotation=0)));
 public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prom
@@ -159,6 +162,24 @@ public
       Placement(transformation(extent={{-110,-50},{-90,-30}}, rotation=0)));
   Interfaces.Connectors.FluidOutlet Cs "Water outlet" annotation (Placement(
         transformation(extent={{90,-50},{110,-30}}, rotation=0)));
+
+protected
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prol_calc(redeclare
+      package                                                                                      Medium_CoolProp =
+        Medium_CoolProp, P = P, h = hl);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prov_calc(redeclare
+      package                                                                                      Medium_CoolProp =
+        Medium_CoolProp, P = P, h = hv);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prod_calc(redeclare
+      package                                                                                      Medium_CoolProp =
+        Medium_CoolProp, P = Pfond, h = Cd.h);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prom_calc(redeclare
+      package                                                                                      Medium_CoolProp =
+        Medium_CoolProp, P = P, h = Cm.h);
+  Properties.ModelicaMedia.Functions.Water_sat_P_ModelicaMedia lsatvsat_calc(redeclare
+      package                                                                                  Medium_CoolProp =
+        Medium_CoolProp, P = P);
+
 initial equation
   if dynamic_energy_balance then
     if steady_state then
@@ -473,11 +494,22 @@ equation
   Cv.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  prol = ThermoSysPro.Properties.Fluid.Ph(P, hl, 0, fluid);
-  prov = ThermoSysPro.Properties.Fluid.Ph(P, hv, 0, fluid);
-  prod = ThermoSysPro.Properties.Fluid.Ph(Pfond, Cd.h, 0, fluid);
-  prom = ThermoSysPro.Properties.Fluid.Ph(P, Cm.h, 0, fluid);
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);
+  if fluid==8 then
+    prol = prol_calc.pro;
+    prov = prov_calc.pro;
+    prod = prod_calc.pro;
+    prom = prom_calc.pro;
+
+    lsat = lsatvsat_calc.lsat;
+    vsat = lsatvsat_calc.vsat;
+  else
+    prol = ThermoSysPro.Properties.Fluid.Ph(P, hl, 0, fluid);
+    prov = ThermoSysPro.Properties.Fluid.Ph(P, hv, 0, fluid);
+    prod = ThermoSysPro.Properties.Fluid.Ph(Pfond, Cd.h, 0, fluid);
+    prom = ThermoSysPro.Properties.Fluid.Ph(P, Cm.h, 0, fluid);
+
+    (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);
+  end if;
 
   Tl = prol.T;
   rhol = prol.d;
