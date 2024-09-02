@@ -28,9 +28,9 @@ equation
   vsat.cv=Medium_CoolProp.specificHeatCapacityCv(state_v);
 
   lsat.P=P "Pressure";
-  lsat.T=state_v.T "Temperature";
-  lsat.rho=state_v.d "Density";
-  lsat.h=state_v.h "Specific enthalpy";
+  lsat.T=state_l.T "Temperature";
+  lsat.rho=state_l.d "Density";
+  lsat.h=state_l.h "Specific enthalpy";
   lsat.cp=Medium_CoolProp.specificHeatCapacityCp(state_l);
   lsat.pt=-Modelica.Constants.inf "Derivative of pressure wrt. temperature";
   lsat.cv=Medium_CoolProp.specificHeatCapacityCv(state_l);
