@@ -6,7 +6,7 @@ block ThermoProperties_ph_ModelicaMedia
 
   output ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro;
 
-  Medium_CoolProp.ThermodynamicState state = Medium_CoolProp.setState_ph(p=P, h=h, phase=0);
+  Medium_CoolProp.ThermodynamicState state = Medium_CoolProp.setState_ph(P, h, 0);
   Medium_CoolProp.SaturationProperties sat = Medium_CoolProp.setSat_p(P);
 
 replaceable package Medium_CoolProp =

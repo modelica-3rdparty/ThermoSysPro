@@ -3,6 +3,8 @@ model HeatPumpCompressor "Heat pump compressor "
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Real pi=10.0 "Compression factor (Ps/Pe)";
   parameter Real eta=0.85 "Isentropic efficiency";
   parameter Units.SI.Power W_fric=0.0
@@ -36,10 +38,15 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ps props
     annotation (Placement(transformation(extent={{-100,-100},{-80,-80}},
           rotation=0)));
+protected
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia proe_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Pe, h = C1.h);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia pros_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Ps, h = C2.h);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ps_ModelicaMedia props_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Ps, s= proe.s);
 equation
 
   /* Check that the fluid type is C3H3F5 */
-  assert(ftype == FluidType.C3H3F5, "HeatPumpCompressor: the fluid type must be C3H3F5");
+  assert((ftype == FluidType.C3H3F5) or (ftype == FluidType.CoolPropMedium), "HeatPumpCompressor: the fluid type must be C3H3F5");
+  assert(ftype <> FluidType.CoolPropMedium, "HeatPumpCompressor: ModelicaMedium is used, make sure it is compatible with HeatPumpCompressor and C3H3F5 components", AssertionLevel.warning);
 
   C1.Q = C2.Q;
 
@@ -77,16 +84,25 @@ equation
   /* Compression efficiency */
   His - C1.h = max(xm, 0.01)*eta*(C2.h - C1.h);
 
-  /* Fluid thermodynamic properties before the compression */
-  proe = ThermoSysPro.Properties.Fluid.Ph(Pe, C1.h, 0, fluid);
+
+  if fluid==8 then
+    /* Fluid thermodynamic properties before the compression*/
+    proe = proe_calc.pro;
+    /* Fluid thermodynamic properties after the compression */
+    pros = pros_calc.pro;
+    /* Fluid thermodynamic properties after the identropic compression */
+    props = props_calc.pro;
+  else
+    /* Fluid thermodynamic properties before the compression */
+    proe = ThermoSysPro.Properties.Fluid.Ph(Pe, C1.h, 0, fluid);
+    /* Fluid thermodynamic properties after the compression */
+    pros = ThermoSysPro.Properties.Fluid.Ph(Ps, C2.h, 0, fluid);
+    /* Fluid thermodynamic properties after the identropic compression */
+    props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, 0, fluid);
+  end if;
+
   Te = proe.T;
-
-  /* Fluid thermodynamic properties after the compression */
-  pros = ThermoSysPro.Properties.Fluid.Ph(Ps, C2.h, 0, fluid);
   Ts = pros.T;
-
-  /* Fluid thermodynamic properties after the identropic compression */
-  props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, 0, fluid);
   His = props.h;
 
   annotation (

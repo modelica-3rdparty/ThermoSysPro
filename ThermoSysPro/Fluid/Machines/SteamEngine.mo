@@ -3,6 +3,8 @@ model SteamEngine "Steam engine"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Real caract[:, 2]=[0, 0; 15e5, 20.0] "Engine charateristics Q=f(deltaP)";
   parameter Real eta_is=0.85 "Isentropic efficiency";
   parameter Real W_frot=0.0 "Power losses due to hydrodynamic friction (percent)";
@@ -44,10 +46,15 @@ public
           extent={{60,-10},{80,10}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ps props
     annotation (Placement(transformation(extent={{-80,40},{-60,60}}, rotation=0)));
+protected
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia proe_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Pe, h = C1.h);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia pros_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Ps, h = C2.h);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ps_ModelicaMedia props_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Ps, s= proe.s);
 equation
 
   /* Check that the fluid type is water/steam */
-  assert((ftype == FluidType.WaterSteam) or (ftype == FluidType.WaterSteamSimple), "SteamEngine: the fluid type must be water/steam");
+  assert((ftype == FluidType.WaterSteam) or (ftype == FluidType.WaterSteamSimple) or (ftype == FluidType.CoolPropMedium), "SteamEngine: the fluid type must be water/steam");
+  assert(ftype <> FluidType.CoolPropMedium, "SteamEngine: ModelicaMedium is used, make sure it is compatible with SteamEngine and water/steam components", AssertionLevel.warning);
 
   C1.Q = C2.Q;
 
@@ -92,16 +99,25 @@ equation
   /* Mechanical power produced by the engine */
   W = Q*eta_stato*(C1.h - C2.h)*(1 - W_frot/100);
 
-  /* Fluid thermodynamic properties before the expansion */
-  proe = ThermoSysPro.Properties.Fluid.Ph(Pe, C1.h, mode_e,fluid);
+  /* Fluid thermodynamic properties */
+  if fluid==8 then
+    /* Fluid thermodynamic properties before the expansion */
+    proe = proe_calc.pro;
+    /* Fluid thermodynamic properties after the expansion */
+    pros = pros_calc.pro;
+    /* Fluid thermodynamic properties after the isentropic expansion */
+    props = props_calc.pro;
+  else
+    /* Fluid thermodynamic properties before the expansion */
+    proe = ThermoSysPro.Properties.Fluid.Ph(Pe, C1.h, mode_e,fluid);
+    /* Fluid thermodynamic properties after the expansion */
+    pros = ThermoSysPro.Properties.Fluid.Ph(Ps, C2.h, mode_s,fluid);
+    /* Fluid thermodynamic properties after the isentropic expansion */
+    props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, mode_s,fluid);
+  end if;
+
   Te = proe.T;
-
-  /* Fluid thermodynamic properties after the expansion */
-  pros = ThermoSysPro.Properties.Fluid.Ph(Ps, C2.h, mode_s,fluid);
   Ts = pros.T;
-
-  /* Fluid thermodynamic properties after the isentropic expansion */
-  props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, mode_s,fluid);
   His = props.h;
 
   annotation (

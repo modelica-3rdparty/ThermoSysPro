@@ -153,32 +153,30 @@ equation
   W = Q*eta_stato*(Ce.h - Cs.h)*(1 - W_fric/100);
   MechPower.signal = W;
 
-  /* Fluid thermodynamic properties before the expansion */
+  /* Fluid thermodynamic properties */
   if fluid==8 then
     /* Fluid thermodynamic properties before the expansion */
     proe = proe_calc.pro;
+    /* Fluid thermodynamic properties after the expansion */
     pros1 = pros1_calc.pro;
+    /* Fluid thermodynamic properties at the outlet of the nozzle */
     pros = pros_calc.pro;
+    /* Fluid thermodynamic properties after the isentropic expansion */
     props = props_calc.pro;
   else
     /* Fluid thermodynamic properties before the expansion */
     proe = ThermoSysPro.Properties.Fluid.Ph(Pe, Ce.h, mode_e, fluid);
-
     /* Fluid thermodynamic properties after the expansion */
     pros1 = ThermoSysPro.Properties.Fluid.Ph(Ps, Hrs, mode_s, fluid);
-
    /* Fluid thermodynamic properties at the outlet of the nozzle */
     pros = ThermoSysPro.Properties.Fluid.Ph(Ps, Cs.h, mode_s, fluid);
-
     /* Fluid thermodynamic properties after the isentropic expansion */
     props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, mode_ps, fluid);
   end if;
 
   Te = proe.T;
-
   Ts = pros.T;
   rhos = pros.d;
-
   His = props.h;
 
   annotation (
