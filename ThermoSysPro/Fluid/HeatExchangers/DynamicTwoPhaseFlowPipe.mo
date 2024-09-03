@@ -4,6 +4,8 @@ model DynamicTwoPhaseFlowPipe "Dynamic two-phase flow pipe"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(use_ModelicaMedia)));
+
   parameter Units.SI.Length L=10. "Pipe length";
   parameter Units.SI.Diameter D=0.2 "Internal pipe diameter";
   parameter Units.SI.Length rugosrel=0.0007 "Pipe relative roughness";
@@ -42,6 +44,7 @@ model DynamicTwoPhaseFlowPipe "Dynamic two-phase flow pipe"
   parameter Boolean diffusion=false
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
   parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
+  parameter Boolean use_ModelicaMedia=false "Boolean to be true if ModelicaMedia is used in the component" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)"));
 
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
@@ -236,6 +239,16 @@ public
     annotation (Placement(transformation(extent={{-10,20},{10,40}}, rotation=0)));
   Interfaces.Connectors.FluidOutlet C2 annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
+
+protected
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia pro1_calc[N - 1](redeclare package Medium_CoolProp = Medium_CoolProp, P = P[2:N], h = h[2:N]);
+  Properties.ModelicaMedia.Functions.Water_sat_P_ModelicaMedia lsat1vsat1_calc[N - 1](redeclare package Medium_CoolProp = Medium_CoolProp, P = P[2:N]);
+
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia pro2_calc[N](redeclare package Medium_CoolProp = Medium_CoolProp, P = (P[1:N] + P[2:N + 1])/2, h = hb[1:N]);
+  Properties.ModelicaMedia.Functions.Water_sat_P_ModelicaMedia lsat2vsat2_calc[N](redeclare package Medium_CoolProp = Medium_CoolProp, P = (P[1:N] + P[2:N + 1])/2);
+
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia proc1_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P[1], h = h[1]);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia proc2_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = P[N+1], h = h[N+1]);
 initial equation
   if dynamic_energy_balance then
     if steady_state then
@@ -245,7 +258,11 @@ initial equation
     else
       if option_temperature then
         for i in 2:N loop
-          h[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pb[i], T0[i - 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+          if fluid==8 then
+            h[i] = Medium_CoolProp.specificEnthalpy_pT(Pb[i], T0[i - 1]);
+          else
+            h[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pb[i], T0[i - 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+          end if;
         end for;
       else
         for i in 2:N loop
@@ -270,7 +287,11 @@ initial equation
 equation
 
   /* Check that the fluid type is water/steam */
-  assert((ftype == FluidType.WaterSteam) or (ftype == FluidType.WaterSteamSimple), "DynamicTwoPhaseFlowPipe: the fluid type must be water/steam");
+  assert((ftype == FluidType.WaterSteam) or (ftype == FluidType.WaterSteamSimple) or (ftype == FluidType.CoolPropMedium), "DynamicTwoPhaseFlowPipe: the fluid type must be water/steam");
+  assert((if (((ftype == FluidType.WaterSteam) or (ftype == FluidType.WaterSteamSimple)) and (use_ModelicaMedia ==  true)) then false else true), "DynamicTwoPhaseFlowPipe: ThermoSysPro WaterSteam or WaterSteamSimple is used but use_ModelicaMedia == true. Please change it to false.");
+
+  assert(ftype <> FluidType.CoolPropMedium, "DynamicTwoPhaseFlowPipe: ModelicaMedium is used, make sure it is compatible with DynamicTwoPhaseFlowPipe and water/steam components", AssertionLevel.warning);
+  assert((if ((ftype == FluidType.CoolPropMedium) and (use_ModelicaMedia ==  false)) then false else true), "DynamicTwoPhaseFlowPipe: ModelicaMedium is used but use_ModelicaMedia == false. Please change it to true.");
 
   /* Wall temperature */
   Tp1 = CTh.T;
@@ -421,13 +442,22 @@ equation
     end if;
 
     /* Fluid thermodynamic properties */
-    pro1[i] = ThermoSysPro.Properties.Fluid.Ph(P[i + 1], h[i + 1], mode, fluid);
+    if use_ModelicaMedia then
+      pro1[i] = pro1_calc[i].pro;
+    else
+      pro1[i] = ThermoSysPro.Properties.Fluid.Ph(P[i + 1], h[i + 1], mode, fluid);
+    end if;
 
     rho1[i] = pro1[i].d;
     T1[i] = pro1[i].T;
     xv1[i] = if noEvent((P[i+1] > pcrit) or (T1[i] > Tcrit)) then 1 else pro1[i].x;
 
-    (lsat1[i],vsat1[i]) = ThermoSysPro.Properties.Fluid.Water_sat_P(P[i + 1], fluid);
+    if use_ModelicaMedia then
+      lsat1[i] = lsat1vsat1_calc[i].lsat;
+      vsat1[i] = lsat1vsat1_calc[i].vsat;
+    else
+      (lsat1[i],vsat1[i]) = ThermoSysPro.Properties.Fluid.Water_sat_P(P[i + 1], fluid);
+    end if;
 
     if noEvent((P[i+1] > pcrit) or (T1[i] > Tcrit)) then
       xbs[i]   = 0;
@@ -447,11 +477,19 @@ equation
       lv[i]    = vsat1[i].h - lsat1[i].h;
     end if;
 
-    mul1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol1[i], T1[i], fluid);
-    muv1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhov1[i], T1[i], fluid);
+    if fluid==8 then
+      mul1[i] = Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_dT(rhol1[i], T1[i]));
+      muv1[i] = Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_dT(rhov1[i], T1[i]));
 
-    kl1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol1[i], T1[i], P[i + 1], mode, fluid);
-    kv1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhov1[i], T1[i], P[i + 1], mode, fluid);
+      kl1[i] = Medium_CoolProp.thermalConductivity(Medium_CoolProp.setState_dT(rhol1[i], T1[i]));
+      kv1[i] = Medium_CoolProp.thermalConductivity(Medium_CoolProp.setState_dT(rhov1[i], T1[i]));
+    else
+      mul1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol1[i], T1[i], fluid);
+      muv1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhov1[i], T1[i], fluid);
+
+      kl1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol1[i], T1[i], P[i + 1], mode, fluid);
+      kv1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhov1[i], T1[i], P[i + 1], mode, fluid);
+    end if;
 
     Pb[i + 1] = max(min(P[i + 1], pcrit - 1), ptriple);
   end for;
@@ -506,13 +544,22 @@ equation
     gamma[i] = if diffusion then 1/diff_res[i] else gamma0;
 
     /* Fluid thermodynamic properties */
-    pro2[i] = ThermoSysPro.Properties.Fluid.Ph((P[i] + P[i + 1])/2, hb[i], mode, fluid);
+    if use_ModelicaMedia then
+      pro2[i] = pro2_calc[i].pro;
+    else
+      pro2[i] = ThermoSysPro.Properties.Fluid.Ph((P[i] + P[i + 1])/2, hb[i], mode, fluid);
+    end if;
 
     rho2[i] = pro2[i].d;
     xv2[i] = if noEvent(((P[i] + P[i + 1])/2 > pcrit) or (T2[i] > Tcrit)) then 1 else pro2[i].x;
     T2[i] = pro2[i].T;
 
-    (lsat2[i],vsat2[i]) = ThermoSysPro.Properties.Fluid.Water_sat_P((P[i] + P[i + 1])/2, fluid);
+    if use_ModelicaMedia then
+      lsat2[i]=lsat2vsat2_calc[i].lsat;
+      vsat2[i]=lsat2vsat2_calc[i].vsat;
+    else
+      (lsat2[i],vsat2[i]) = ThermoSysPro.Properties.Fluid.Water_sat_P((P[i] + P[i + 1])/2, fluid);
+    end if;
 
     if noEvent((P[i+1] > pcrit) or (T2[i] > Tcrit)) then
       rhol2[i] = pro2[i].d;
@@ -526,11 +573,19 @@ equation
       cpv2[i]  = if noEvent(xv2[i] >= 1.0) then pro2[i].cp else vsat2[i].cp;
     end if;
 
-    mul2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol2[i], T2[i], fluid);
-    muv2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhov2[i], T2[i], fluid);
+    if fluid==8 then
+      mul2[i] = Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_dT(rhol2[i], T2[i]));
+      muv2[i] = Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_dT(rhov2[i], T2[i]));
 
-    kl2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol2[i], T2[i], (P[i] + P[i + 1])/2, mode, fluid);
-    kv2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhov2[i], T2[i], (P[i] + P[i + 1])/2, mode, fluid);
+      kl2[i] = Medium_CoolProp.thermalConductivity(Medium_CoolProp.setState_dT(rhol2[i], T2[i]));
+      kv2[i] = Medium_CoolProp.thermalConductivity(Medium_CoolProp.setState_dT(rhov2[i], T2[i]));
+    else
+      mul2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol2[i], T2[i], fluid);
+      muv2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhov2[i], T2[i], fluid);
+
+      kl2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol2[i], T2[i], (P[i] + P[i + 1])/2, mode, fluid);
+      kv2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhov2[i], T2[i], (P[i] + P[i + 1])/2, mode, fluid);
+    end if;
   end for;
 
   /* Fluid densities at the boundaries of the nodes */
@@ -538,8 +593,13 @@ equation
     rhoc[i] = rho1[i - 1];
   end for;
 
-  proc[1] = ThermoSysPro.Properties.Fluid.Ph(P[1], h[1], mode, fluid);
-  proc[2] = ThermoSysPro.Properties.Fluid.Ph(P[N + 1], h[N + 1], mode, fluid);
+  if fluid==8 then
+    proc[1] = proc1_calc.pro;
+    proc[2] = proc2_calc.pro;
+  else
+    proc[1] = ThermoSysPro.Properties.Fluid.Ph(P[1], h[1], mode, fluid);
+    proc[2] = ThermoSysPro.Properties.Fluid.Ph(P[N + 1], h[N + 1], mode, fluid);
+  end if;
 
   rhoc[1] = proc[1].d;
   rhoc[N + 1] = proc[2].d;

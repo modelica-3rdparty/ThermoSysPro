@@ -124,8 +124,8 @@ equation
     rho = p_rho;
   else
     if fluid==8 then
-//       rho = Medium_CoolProp.density(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=mode));
-      rho = Medium_CoolProp.density_ph(p=Pm, h=h, phase=mode);
+//       rho = Medium_CoolProp.density(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=0));
+      rho = Medium_CoolProp.density_ph(p=Pm, h=h, phase=0);
     else
       rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
     end if;
@@ -135,10 +135,10 @@ equation
 
 
   if fluid==8 then
-      T = Medium_CoolProp.temperature_ph(p=Pm, h=h, phase=mode);
-      mu = Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=mode));
-      k =  Medium_CoolProp.thermalConductivity(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=mode));
-      cp = Medium_CoolProp.specificHeatCapacityCp(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=mode));
+      T = Medium_CoolProp.temperature_ph(p=Pm, h=h, phase=0);
+      mu = Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=0));
+      k =  Medium_CoolProp.thermalConductivity(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=0));
+      cp = Medium_CoolProp.specificHeatCapacityCp(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=0));
     else
       T = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
       mu = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);

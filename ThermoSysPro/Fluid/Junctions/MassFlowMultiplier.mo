@@ -119,7 +119,7 @@ equation
 
  /* Fluid thermodynamic properties */
  if fluid==8 then
-      T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=mode);
+      T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=0);
     else
       T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P,h,fluid,mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
   end if;
@@ -128,7 +128,7 @@ equation
     rho = p_rho;
   else
     if fluid==8 then
-      rho = Medium_CoolProp.density_ph(p=P, h=h, phase=mode);
+      rho = Medium_CoolProp.density_ph(p=P, h=h, phase=0);
     else
       rho = ThermoSysPro.Properties.Fluid.Density_Ph(P,h,fluid,mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
     end if;

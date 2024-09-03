@@ -199,7 +199,7 @@ equation
 
   /* Fluid thermodynamic properties */
   if fluid==8 then
-      T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=mode);
+      T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=0);
     else
       T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
   end if;

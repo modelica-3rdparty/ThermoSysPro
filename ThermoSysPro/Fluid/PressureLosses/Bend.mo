@@ -138,7 +138,7 @@ equation
   Pm = (C1.P + C2.P)/2;
 
   if fluid==8 then
-      T = Medium_CoolProp.temperature_ph(p=Pm, h=h, phase=mode);
+      T = Medium_CoolProp.temperature_ph(p=Pm, h=h, phase=0);
     else
       T = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
   end if;
@@ -147,13 +147,13 @@ equation
     rho = p_rho;
   else
     if fluid==8 then
-      rho = Medium_CoolProp.density_ph(p=Pm, h=h, phase=mode);
+      rho = Medium_CoolProp.density_ph(p=Pm, h=h, phase=0);
     else
       rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
     end if;
   end if;
 
-  mu = Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=mode));
+  mu = Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_ph(p=Pm, h=h, phase=0));
 
   annotation (
     Diagram(coordinateSystem(

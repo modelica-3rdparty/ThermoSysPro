@@ -3,15 +3,15 @@ block Water_sat_P_ModelicaMedia
   import ThermoSysPro.Units;
   input Units.SI.AbsolutePressure P "Pressure";
 
-  output ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat;
   output ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat;
+  output ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat;
 
   Medium_CoolProp.SaturationProperties sat = Medium_CoolProp.setSat_p(P);
   Medium_CoolProp.ThermodynamicState state_l;
   Medium_CoolProp.ThermodynamicState state_v;
 
 replaceable package Medium_CoolProp =
-      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "Modelica Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "Modelica Medium" annotation(Evaluate=true);
 // replaceable package Medium_CoolProp =
 //       ThermoSysPro.Properties.ModelicaMedia.Media.CoolPropMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 

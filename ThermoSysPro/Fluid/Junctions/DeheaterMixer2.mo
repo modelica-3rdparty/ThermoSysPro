@@ -140,7 +140,7 @@ equation
 
   /* Fluid thermodynamic properties */
   if fluid==8 then
-      T = Medium_CoolProp.temperature_ph(p=Pm, h=h, phase=mode);
+      T = Medium_CoolProp.temperature_ph(p=Pm, h=h, phase=0);
       hmax = Medium_CoolProp.specificEnthalpy_pT(P, Tmax, mode);
     else
       T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);

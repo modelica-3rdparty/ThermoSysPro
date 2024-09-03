@@ -10,7 +10,7 @@ block ThermoProperties_ps_ModelicaMedia
   Medium_CoolProp.SaturationProperties sat = Medium_CoolProp.setSat_p(P);
 
 replaceable package Medium_CoolProp =
-      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "Modelica Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "Modelica Medium" annotation(Evaluate=true);
 // replaceable package Medium_CoolProp =
 //       ThermoSysPro.Properties.ModelicaMedia.Media.CoolPropMedium                                 "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 

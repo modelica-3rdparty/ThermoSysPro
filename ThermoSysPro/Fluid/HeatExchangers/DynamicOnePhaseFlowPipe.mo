@@ -4,6 +4,8 @@ model DynamicOnePhaseFlowPipe "Dynamic one-phase flow pipe"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Units.SI.Length L=10. "Pipe length";
   parameter Units.SI.Diameter D=0.2 "Internal pipe diameter";
   parameter Real rugosrel=0.0007 "Pipe relative roughness";
@@ -162,7 +164,11 @@ initial equation
     else
       if option_temperature then
         for i in 2:N loop
-          h[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P0, T0[i-1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+          if fluid==8 then
+            h[i] = Medium_CoolProp.specificEnthalpy_pT(P0, T0[i-1]);
+          else
+            h[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P0, T0[i-1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+          end if;
         end for;
       else
         for i in 2:N loop
@@ -318,14 +324,25 @@ equation
     end if;
 
     /* Fluid thermodynamic properties */
-    ddph[i] = ThermoSysPro.Properties.Fluid.Density_derp_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    ddhp[i] = ThermoSysPro.Properties.Fluid.Density_derh_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    if fluid==8 then
+      ddph[i] = Medium_CoolProp.density_derp_h(Medium_CoolProp.setState_ph(P[i + 1], h[i + 1], 0));
+      ddhp[i] = Medium_CoolProp.density_derh_p(Medium_CoolProp.setState_ph(P[i + 1], h[i + 1], 0));
 
-    rho1[i] = ThermoSysPro.Properties.Fluid.Density_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    T1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    cp1[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    mu1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    k1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      rho1[i] = Medium_CoolProp.density_ph(P[i + 1], h[i + 1], 0);
+      T1[i] = Medium_CoolProp.temperature_ph(P[i + 1], h[i + 1], 0);
+      cp1[i] = Medium_CoolProp.specificHeatCapacityCp(Medium_CoolProp.setState_ph(P[i + 1], h[i + 1], 0));
+      mu1[i] = Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_ph(P[i + 1], h[i + 1], 0));
+      k1[i] = Medium_CoolProp.thermalConductivity(Medium_CoolProp.setState_ph(P[i + 1], h[i + 1], 0));
+    else
+      ddph[i] = ThermoSysPro.Properties.Fluid.Density_derp_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      ddhp[i] = ThermoSysPro.Properties.Fluid.Density_derh_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+
+      rho1[i] = ThermoSysPro.Properties.Fluid.Density_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      T1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      cp1[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      mu1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      k1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(P[i + 1], h[i + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    end if;
   end for;
 
   /* Momentum balance equations (hydraulic nodes) */
@@ -359,11 +376,19 @@ equation
     gamma[i] = if diffusion then 1/diff_res[i] else gamma0;
 
     /* Fluid thermodynamic properties */
-    rho2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((P[i] + P[i + 1])/2, hb[i], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    T2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((P[i] + P[i + 1])/2, hb[i], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    cp2[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph((P[i] + P[i + 1])/2, hb[i], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    mu2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph((P[i] + P[i + 1])/2, hb[i], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-    k2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph((P[i] + P[i + 1])/2, hb[i], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    if fluid==8 then
+      rho2[i] = Medium_CoolProp.density_ph((P[i] + P[i + 1])/2, hb[i], 0);
+      T2[i] = Medium_CoolProp.temperature_ph((P[i] + P[i + 1])/2, hb[i], 0);
+      cp2[i] = Medium_CoolProp.specificHeatCapacityCp(Medium_CoolProp.setState_ph((P[i] + P[i + 1])/2, hb[i], 0));
+      mu2[i] = Medium_CoolProp.dynamicViscosity(Medium_CoolProp.setState_ph((P[i] + P[i + 1])/2, hb[i], 0));
+      k2[i] = Medium_CoolProp.thermalConductivity(Medium_CoolProp.setState_ph((P[i] + P[i + 1])/2, hb[i], 0));
+    else
+      rho2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((P[i] + P[i + 1])/2, hb[i], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      T2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((P[i] + P[i + 1])/2, hb[i], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      cp2[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph((P[i] + P[i + 1])/2, hb[i], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      mu2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph((P[i] + P[i + 1])/2, hb[i], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+      k2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph((P[i] + P[i + 1])/2, hb[i], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    end if;
   end for;
 
   /* Fluid densities at the boundaries of the nodes */
@@ -371,8 +396,14 @@ equation
     rhoc[i] = rho1[i - 1];
   end for;
 
-  rhoc[1] = ThermoSysPro.Properties.Fluid.Density_Ph(P[1],h[1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
-  rhoc[N + 1] = ThermoSysPro.Properties.Fluid.Density_Ph((P[N + 1]), h[N + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+  if fluid==8 then
+    rhoc[1] = Medium_CoolProp.density_ph(P[1],h[1], 0);
+    rhoc[N + 1] = Medium_CoolProp.density_ph((P[N + 1]), h[N + 1], 0);
+  else
+    rhoc[1] = ThermoSysPro.Properties.Fluid.Density_Ph(P[1],h[1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    rhoc[N + 1] = ThermoSysPro.Properties.Fluid.Density_Ph((P[N + 1]), h[N + 1], fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+  end if;
+
 
   W1t = sum(dW1);
 

@@ -396,7 +396,7 @@ equation
   P = Patm + rho*g*z/2;
 
   if fluid==8 then
-    T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=mode);
+    T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=0);
   else
     T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
   end if;
@@ -405,7 +405,7 @@ equation
     rho = p_rho;
   else
     if fluid==8 then
-      rho = Medium_CoolProp.density_ph(p=P, h=h, phase=mode);
+      rho = Medium_CoolProp.density_ph(p=P, h=h, phase=0);
     else
       rho = ThermoSysPro.Properties.Fluid.Density_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
     end if;
@@ -413,8 +413,8 @@ equation
 
   if dynamic_mass_balance then
     if fluid==8 then
-      ddph = Medium_CoolProp.density_derp_h(Medium_CoolProp.setState_ph(p=P, h=h, phase=mode));
-      ddhp = Medium_CoolProp.density_derh_p(Medium_CoolProp.setState_ph(p=P, h=h, phase=mode));
+      ddph = Medium_CoolProp.density_derp_h(Medium_CoolProp.setState_ph(p=P, h=h, phase=0));
+      ddhp = Medium_CoolProp.density_derh_p(Medium_CoolProp.setState_ph(p=P, h=h, phase=0));
     else
       ddph = ThermoSysPro.Properties.Fluid.Density_derp_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
       ddhp = ThermoSysPro.Properties.Fluid.Density_derh_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);

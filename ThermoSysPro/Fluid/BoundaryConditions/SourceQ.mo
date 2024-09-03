@@ -111,14 +111,14 @@ equation
   if option_temperature then
     T = ISpecificEnthalpyOrTemperature.signal;
     if fluid==8 then
-      h = Medium_CoolProp.specificEnthalpy_pT(p=P, T=T, phase=mode);
+      h = Medium_CoolProp.specificEnthalpy_pT(p=P, T=T, phase=0);
       else
       h = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, T, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
     end if;
   else
     h = ISpecificEnthalpyOrTemperature.signal;
     if fluid==8 then
-      T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=mode);
+      T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=0);
     else
       T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
     end if;

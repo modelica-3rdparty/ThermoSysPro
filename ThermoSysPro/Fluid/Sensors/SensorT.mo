@@ -70,7 +70,7 @@ equation
   h = (C1.h + C2.h)/2;
 
   if fluid==8 then
-      T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=mode);
+      T = Medium_CoolProp.temperature_ph(p=P, h=h, phase=0);
     else
       T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
   end if;
