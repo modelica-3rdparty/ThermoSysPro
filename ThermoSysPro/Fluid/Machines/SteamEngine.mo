@@ -105,14 +105,17 @@ equation
     proe = proe_calc.pro;
     /* Fluid thermodynamic properties after the expansion */
     pros = pros_calc.pro;
-    /* Fluid thermodynamic properties after the isentropic expansion */
-    props = props_calc.pro;
   else
     /* Fluid thermodynamic properties before the expansion */
     proe = ThermoSysPro.Properties.Fluid.Ph(Pe, C1.h, mode_e,fluid);
     /* Fluid thermodynamic properties after the expansion */
     pros = ThermoSysPro.Properties.Fluid.Ph(Ps, C2.h, mode_s,fluid);
-    /* Fluid thermodynamic properties after the isentropic expansion */
+  end if;
+
+  /* Fluid thermodynamic properties after the isentropic expansion */
+  if fluid==8 then  //Had to be done in a different if-loop otherwise `PFPlusExt index Reduction Method Pantelides failed` from OpenModelica 1.19.2 or 1.23.1
+    props = props_calc.pro;
+  else
     props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, mode_s,fluid);
   end if;
 

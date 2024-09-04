@@ -90,14 +90,17 @@ equation
     proe = proe_calc.pro;
     /* Fluid thermodynamic properties after the compression */
     pros = pros_calc.pro;
-    /* Fluid thermodynamic properties after the identropic compression */
-    props = props_calc.pro;
   else
     /* Fluid thermodynamic properties before the compression */
     proe = ThermoSysPro.Properties.Fluid.Ph(Pe, C1.h, 0, fluid);
     /* Fluid thermodynamic properties after the compression */
     pros = ThermoSysPro.Properties.Fluid.Ph(Ps, C2.h, 0, fluid);
-    /* Fluid thermodynamic properties after the identropic compression */
+  end if;
+
+  /* Fluid thermodynamic properties after the identropic compression */
+  if fluid==8 then  //Had to be done in a different if-loop otherwise `PFPlusExt index Reduction Method Pantelides failed` from OpenModelica 1.19.2 or 1.23.1
+    props = props_calc.pro;
+  else
     props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, 0, fluid);
   end if;
 

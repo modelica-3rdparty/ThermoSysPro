@@ -87,7 +87,7 @@ protected
   Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia proe_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Pe, h = Ce.h);
   Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia pros1_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Ps, h = Hrs);
   Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia pros_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Ps, h = Cs.h);
-  Properties.ModelicaMedia.Functions.ThermoProperties_ps_ModelicaMedia props_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Ps, s= proe.s);
+ Properties.ModelicaMedia.Functions.ThermoProperties_ps_ModelicaMedia props_calc(redeclare package Medium_CoolProp = Medium_CoolProp, P = Ps, s= proe.s);
 
 equation
   /* Check that the fluid type is water/steam */
@@ -161,8 +161,6 @@ equation
     pros1 = pros1_calc.pro;
     /* Fluid thermodynamic properties at the outlet of the nozzle */
     pros = pros_calc.pro;
-    /* Fluid thermodynamic properties after the isentropic expansion */
-    props = props_calc.pro;
   else
     /* Fluid thermodynamic properties before the expansion */
     proe = ThermoSysPro.Properties.Fluid.Ph(Pe, Ce.h, mode_e, fluid);
@@ -170,7 +168,12 @@ equation
     pros1 = ThermoSysPro.Properties.Fluid.Ph(Ps, Hrs, mode_s, fluid);
    /* Fluid thermodynamic properties at the outlet of the nozzle */
     pros = ThermoSysPro.Properties.Fluid.Ph(Ps, Cs.h, mode_s, fluid);
-    /* Fluid thermodynamic properties after the isentropic expansion */
+  end if;
+
+  /* Fluid thermodynamic properties after the isentropic expansion */
+  if fluid==8 then  //Had to be done in a different if-loop otherwise `PFPlusExt index Reduction Method Pantelides failed` from OpenModelica 1.19.2 or 1.23.1
+    props = props_calc.pro;
+  else
     props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, mode_ps, fluid);
   end if;
 
