@@ -4,9 +4,6 @@ model StaticWallFlueGasesExchanger "Static wall - flue gases exchanger"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
-  replaceable package Medium_CoolProp = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium
-                                                                               "CoolProp Medium" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
-
   parameter Integer Ns=10 "Number of segments";
   parameter Integer NbTub=100 "Number of pipes";
   parameter Real DPc=0 "Pressure loss coefficient";
@@ -133,7 +130,6 @@ equation
 
   /* Check that the fluid type is flue gases */
   assert(ftype == FluidType.FlueGases, "StaticWallFlueGasesExchanger: the fluid type must be flue gases");
-//   assert(ftype == FluidType.FlueGases or ftype == FluidType.CoolPropMedium, "StaticWallFlueGasesExchanger: the fluid type must be flue gases");
 
   /* Wall boundary */
   CTh.W = -dW1;
@@ -271,12 +267,7 @@ equation
     J[i] = Je[i] + Js[i];
 
     /* Fluid thermodynamic properties */
-
-    if fluid==8 then
-      T1[i] = Medium_CoolProp.temperature_ph(p=P[i + 1], h=h[i + 1], phase=0);
-    else
-      T1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(P[i + 1], h[i + 1], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
-    end if;
+    T1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(P[i + 1], h[i + 1], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
   end for;
 
   /* Momentum balance equations (hydraulic nodes) */
@@ -292,20 +283,10 @@ equation
     if (p_rho > 0) then
       rho2[i] = p_rho;
     else
-
-      if fluid==8 then
-        rho2[i] =Medium_CoolProp.density_ph(p=(P[i] + P[i + 1])/2, h=hb[i], phase=0);
-      else
-        rho2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((P[i] + P[i + 1])/2, hb[i], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
-      end if;
+      rho2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((P[i] + P[i + 1])/2, hb[i], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
     end if;
 
-
-    if fluid==8 then
-      T2[i] = Medium_CoolProp.temperature_ph(p=(P[i] + P[i + 1])/2, h=hb[i], phase=0);
-    else
-      T2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((P[i] + P[i + 1])/2, hb[i], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
-    end if;
+    T2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((P[i] + P[i + 1])/2, hb[i], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
   end for;
 
   /* Total heat exchange coefficient ??? */

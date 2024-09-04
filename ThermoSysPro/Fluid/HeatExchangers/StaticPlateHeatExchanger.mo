@@ -4,6 +4,9 @@ model StaticPlateHeatExchanger "Static plate heat exchanger"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
+  replaceable package Medium_CoolProp_c = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium Hot" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+  replaceable package Medium_CoolProp_f = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium Cold" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+
   parameter Units.SI.ThermalConductivity lambdam=15.0
     "Metal thermal conductivity";
   parameter Units.SI.CoefficientOfHeatTransfer p_hc=6000
@@ -113,6 +116,14 @@ public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prof
     annotation (Placement(transformation(extent={{-100,-100},{-80,-80}},
           rotation=0)));
+protected
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia proc_calc(redeclare package Medium_CoolProp = Medium_CoolProp_c, P=Pmc, h=Hmc);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia proce_calc(redeclare package Medium_CoolProp = Medium_CoolProp_c, P=Ec.P,h=Ec.h);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia procs_calc(redeclare package Medium_CoolProp = Medium_CoolProp_c, P=Sc.P,h=Sc.h);
+
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia prof_calc(redeclare package Medium_CoolProp = Medium_CoolProp_f, P=Pmf, h=Hmf);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia profe_calc(redeclare package Medium_CoolProp = Medium_CoolProp_f, P=Ef.P,h=Ef.h);
+  Properties.ModelicaMedia.Functions.ThermoProperties_ph_ModelicaMedia profs_calc(redeclare package Medium_CoolProp = Medium_CoolProp_f, P=Sf.P,h=Sf.h);
 equation
 
   /* Mass flow rates */
@@ -245,8 +256,41 @@ equation
   Hmc = (Ec.h + Sc.h)/2;
   Hmf = (Ef.h + Sf.h)/2;
 
-  proc = ThermoSysPro.Properties.Fluid.Ph(Pmc, Hmc, mode_c, fluid_c);
-  prof = ThermoSysPro.Properties.Fluid.Ph(Pmf, Hmf, mode_f, fluid_f);
+  if fluid_c==8 then
+    proc = proc_calc.pro;
+    /* Calcul des températures en entrée et en sortie de l'échangeur */
+    proce = proce_calc.pro;
+    procs = procs_calc.pro;
+
+    muc=Medium_CoolProp_c.dynamicViscosity(Medium_CoolProp_c.setState_dT(rhoc, Tmc));
+    lambdac=Medium_CoolProp_c.thermalConductivity(Medium_CoolProp_c.setState_dT(rhoc, Tmc));
+  else
+    proc = ThermoSysPro.Properties.Fluid.Ph(Pmc, Hmc, mode_c, fluid_c);
+    /* Calcul des températures en entrée et en sortie de l'échangeur */
+    proce = ThermoSysPro.Properties.Fluid.Ph(Ec.P, Ec.h, mode_c, fluid_c);
+    procs = ThermoSysPro.Properties.Fluid.Ph(Sc.P, Sc.h, mode_c, fluid_f);
+
+    muc = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhoc, Tmc, fluid_c);
+    lambdac = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhoc, Tmc, Pmc, 0, fluid_c);
+  end if;
+
+  if fluid_f==8 then
+    prof = prof_calc.pro;
+    /* Calcul des températures en entrée et en sortie de l'échangeur */
+    profe = profe_calc.pro;
+    profs = profs_calc.pro;
+
+    muf=Medium_CoolProp_f.dynamicViscosity(Medium_CoolProp_f.setState_dT(rhof, Tmf));
+    lambdaf=Medium_CoolProp_f.thermalConductivity(Medium_CoolProp_f.setState_dT(rhof, Tmf));
+  else
+    prof = ThermoSysPro.Properties.Fluid.Ph(Pmf, Hmf, mode_f, fluid_f);
+    /* Calcul des températures en entrée et en sortie de l'échangeur */
+    profe = ThermoSysPro.Properties.Fluid.Ph(Ef.P, Ef.h, mode_f, fluid_c);
+    profs = ThermoSysPro.Properties.Fluid.Ph(Sf.P, Sf.h, mode_f, fluid_f);
+
+    muf = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhof, Tmf, fluid_f);
+    lambdaf = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhof, Tmf, Pmf, 0, fluid_f);
+  end if;
 
   Tmc = proc.T;
   Tmf = prof.T;
@@ -263,18 +307,6 @@ equation
     rhof = prof.d;
   end if;
 
-  muc = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhoc, Tmc, fluid_c);
-  muf = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhof, Tmf, fluid_f);
-
-  lambdac = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhoc, Tmc, Pmc, 0, fluid_c);
-  lambdaf = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhof, Tmf, Pmf, 0, fluid_f);
-
-  /* Calcul des températures en entrée et en sortie de l'échangeur */
-  proce = ThermoSysPro.Properties.Fluid.Ph(Ec.P, Ec.h, mode_c, fluid_c);
-  procs = ThermoSysPro.Properties.Fluid.Ph(Sc.P, Sc.h, mode_c, fluid_f);
-
-  profe = ThermoSysPro.Properties.Fluid.Ph(Ef.P, Ef.h, mode_f, fluid_c);
-  profs = ThermoSysPro.Properties.Fluid.Ph(Sf.P, Sf.h, mode_f, fluid_f);
 
   Tec = proce.T;
   Tsc = procs.T;

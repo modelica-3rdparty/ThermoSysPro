@@ -4,10 +4,8 @@ model StaticExchangerKS "Static heat exchanger with fixed K and S (Coefficient o
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
-  replaceable package Medium_CoolProp_c =
-      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium                 "CoolProp Medium Hot" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
-  replaceable package Medium_CoolProp_f =
-      ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium                 "CoolProp Medium Cold" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+  replaceable package Medium_CoolProp_c = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium Hot" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+  replaceable package Medium_CoolProp_f = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium Cold" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 
   parameter Units.SI.CoefficientOfHeatTransfer K=100
     "Global heat exchange coefficient";
