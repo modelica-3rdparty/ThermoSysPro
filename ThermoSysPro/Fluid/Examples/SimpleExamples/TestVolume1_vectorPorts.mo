@@ -32,7 +32,8 @@ model TestVolume1_vectorPorts
   Volumes.Volume volume(
     ftype=ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType.FlueGases,
                         dynamic_energy_balance=false, Xo2(start=0.22),
-    h(start=999999.9999999997),
+    h(start=1000000.0),
+    P(start=42426464.0),
     nInletPorts=2,
     nOutletPorts=2,
     Ce(each Q(start=5381683.17323685)))

@@ -2,12 +2,14 @@ within ThermoSysPro.Fluid.Examples.SimpleExamples;
 model TestVolumeA1
 
   ThermoSysPro.Fluid.Volumes.VolumeA volumeA(ftype=ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType.FlueGases,
-    Ce2(Q(start=5381683.17323685)),
-    Cs1(Q(start=5381683.173236847)),
-    Cs2(Q(start=5381683.173236847)),
+    Ce2(Q(start=5381683)),
+    Cs1(Q(start=5381683)),
+    Cs2(Q(start=5381683)),
     Xo2(start=0.22),
-    h(start=999999.9999999997),
-    dynamic_energy_balance=false)
+    h(start=1000000.0),
+    P(start=42426464.0),
+    dynamic_energy_balance=false,
+    Xh2o(start=0.05))
     annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss(rho(start=
          164.8075648419657))
@@ -37,6 +39,7 @@ model TestVolumeA1
     annotation (Placement(transformation(extent={{80,20},{100,40}})));
   ThermoSysPro.Fluid.BoundaryConditions.SinkP sinkP1(option_temperature=false)
     annotation (Placement(transformation(extent={{80,-40},{100,-20}})));
+
 equation
   connect(singularPressureLoss.C2, volumeA.Ce2)
     annotation (Line(points={{-40,30},{0,30},{0,10}}, color={0,0,0}));

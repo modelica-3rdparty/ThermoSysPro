@@ -5,7 +5,7 @@ model TestSimpleDynamicCondenser1_vectorPorts
           71.08245675235786),                                                                                                               p_rho(displayUnit = "kg/m3"), rho(displayUnit = "kg/m3"),
     a1(start=-88.67, fixed=false),
     C2(h(start=195297.69906611618), h_vol_1(start=195297.69906611618)),
-    Qv(start=0.009081311621074862),
+    Qv(start=0.008989887),
     h(start=193554.9971298399),
     C1(P(start=10000.0)))                                                                                                                                                                             annotation (
     Placement(visible = true, transformation(origin={-10,-60},    extent={{10,-10},
@@ -14,14 +14,19 @@ model TestSimpleDynamicCondenser1_vectorPorts
     xm(fixed=false, start=0.9856238368898451),
     proe(x(start=1, fixed=true)),
     Ce(h_vol_2(start=3128840.013040668), h(start=3128840.0130323363)),
-    pros(d(start=0.07018147245152216)))                                                                                                                                                                                                   annotation (
+    pros(d(start=0.07018147245152216)),
+    Hrs(start=2320349))                                                                                                                                                                                                   annotation (
     Placement(visible = true, transformation(origin={-10,60},    extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   ThermoSysPro.Fluid.HeatExchangers.SimpleDynamicCondenser Condenseur(A = 100, D = 0.018,
     dynamic_energy_balance=true,
     P(fixed=false, start=10000),
     P0(displayUnit="Pa") = 1000,                                                                                                                                V = 1000, continuous_flow_reversal = true, lambda = 0.01, ntubes = 28700, rhol(displayUnit = "kg/m3"), rhom(displayUnit = "kg/m3"), rhov(displayUnit = "kg/m3"),                       yNiveau(signal(fixed = false, start = 1.5)),
     steady_state=false,
-    proe(d(start=0.7468807684211932)))                                                                                                                                                                                          annotation (
+    proe(d(start=0.7468807684211932)),
+    Cl(h(start=29298.246)),
+    Cv(h(start=2320349.8)),
+    Pfond(start=1000.0),
+    Pm(start=100000.86))                                                                                                                                                                                          annotation (
     Placement(visible = true, transformation(origin={40.5,-1},    extent = {{-20.5, -16}, {20.5, 16}}, rotation = 0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkP puitsPCaloporteur(P0 = 1e5, T0 = 373.05, option_temperature = true) annotation (
     Placement(visible = true, transformation(origin={85,-1},    extent = {{-11, -12}, {11, 12}}, rotation = 0)));
@@ -34,8 +39,8 @@ model TestSimpleDynamicCondenser1_vectorPorts
         origin={-88,12})));
   Volumes.VolumeTh volumeTh(
     dynamic_energy_balance=false,
-    P(start=7000000),
-    h(start=2.e6),
+    P(start=700000),
+    h(start=3128840),
     nInletPorts=1,
     nOutletPorts=1) annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
