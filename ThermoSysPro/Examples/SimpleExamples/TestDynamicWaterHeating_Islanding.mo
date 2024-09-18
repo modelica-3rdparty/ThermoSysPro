@@ -3,8 +3,9 @@ model TestDynamicWaterHeating_Islanding
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP(
     option_temperature=2,
     mode=0,
-    P0=22.733e5,
-    h0=2650.6e3)
+    P0=2273300,
+    h0=2650.6e3,
+    use_IPressure=true)
             annotation (Placement(transformation(extent={{-192,110},{-150,150}},
           rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP Puit_condenseur1(
@@ -152,10 +153,12 @@ model TestDynamicWaterHeating_Islanding
                    annotation (Placement(transformation(extent={{-196,-88},{
             -176,-68}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP1(
-    P0=71.29e5,
+    P0=7129000,
     h0=772.09e3,
     T0=454.46,
-    option_temperature=1)
+    option_temperature=1,
+    use_IPressure=true,
+    use_ITemperature=true)
     annotation (Placement(transformation(extent={{-192,-16},{-150,-60}},
           rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.RefQ refQ(Q0=53)
@@ -214,9 +217,6 @@ equation
       points={{-115,44},{-100,44}},
       color={255,0,0},
       thickness=0.5));
-  connect(Pression_eauA.y, sourceP1.IPressure)
-                                              annotation (Line(points={{-170.9,
-          3},{-172,3},{-172,-10},{-196,-10},{-196,-38},{-181.5,-38}}));
   connect(sourceP1.C, singularPressureLossWaterIn.C1)
                                                 annotation (Line(
       points={{-150,-38},{-99,-38}},
@@ -224,9 +224,6 @@ equation
       thickness=0.5));
   connect(Debit_eauA.y,refQ. IMassFlow) annotation (Line(points={{-175,88},{
           -124,88},{-124,55},{-125,55}}));
-  connect(Pression_Turbine.y, sourceP.IPressure)
-                                             annotation (Line(points={{-173,164},
-          {-166,164},{-166,152},{-194,152},{-194,130},{-181.5,130}}));
   connect(singularPressureLossWaterOut.C1, WaterHeating.Ce2)
     annotation (Line(
       points={{-80,44},{-64,44},{-64,43.92},{-58,43.92}},
@@ -250,9 +247,6 @@ equation
       thickness=1));
   connect(singularPressureLossPurge.C1, WaterHeating.C2ex)
     annotation (Line(points={{54,-128},{54,-90},{52,-90}}));
-  connect(Temperature_eauA.y, sourceP1.ITemperature)
-                                                    annotation (Line(points={{
-          -175,-78},{-170,-78},{-170,-49},{-171,-49}}));
   connect(Pression_purge.y, Puit_condenseur1.IPressure)
     annotation (Line(points={{183,-168},{196,-168},{196,-182},{151,-182}}));
   connect(checkValve.C2, PressureLoss_Steam.C1)         annotation (Line(
@@ -265,6 +259,14 @@ equation
       thickness=1));
   connect(singularPressureLossPurge.C2, ControlValve_eau.C1) annotation (Line(
         points={{54,-148},{54,-182},{88,-182}}, color={0,0,255}));
+  connect(Pression_Turbine.y, sourceP.IPressure) annotation (Line(points={{-173,
+          164},{-164,164},{-164,146},{-194,146},{-194,130},{-181.5,130}}, color
+        ={0,0,255}));
+  connect(Pression_eauA.y, sourceP1.IPressure) annotation (Line(points={{-170.9,
+          3},{-156,3},{-156,-16},{-192,-16},{-192,-38},{-181.5,-38}}, color={0,
+          0,255}));
+  connect(Temperature_eauA.y, sourceP1.ITemperature) annotation (Line(points={{
+          -175,-78},{-171,-78},{-171,-49}}, color={0,0,255}));
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-200,
             -200},{200,200}}), graphics={
         Text(

@@ -31,7 +31,7 @@ model TestDynamicReliefValve
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP sinkP(mode=0)
                                    annotation (Placement(transformation(extent={{80,0},{
             100,20}},          rotation=0)));
-  WaterSteam.BoundaryConditions.SourceP sourceP
+  WaterSteam.BoundaryConditions.SourceP sourceP(use_IPressure=true)
     annotation (Placement(transformation(extent={{-80,-40},{-60,-20}})));
   InstrumentationAndControl.Blocks.Sources.Rampe ramp1(
     Duration=200,
@@ -56,9 +56,6 @@ equation
           -61,36}}, color={0,0,255}));
   connect(ramp2.y, add.u2) annotation (Line(points={{-79,10},{-70,10},{-70,24},{
           -61,24}}, color={0,0,255}));
-  connect(add.y, sourceP.IPressure) annotation (Line(points={{-39,30},{-20,30},{
-          -20,-10},{-90,-10},{-90,-30},{-75,-30}},
-                                                 color={0,0,255}));
   connect(pipe.C2, bend.C1)
     annotation (Line(points={{-20,-30},{0,-30}}, color={0,0,255}));
   connect(bend.C2,reliefValve. C1)
@@ -67,6 +64,8 @@ equation
     annotation (Line(points={{20,10},{40,10}}, color={0,0,255}));
   connect(diaphragm.C2,sinkP. C)
     annotation (Line(points={{60,10},{80,10}}, color={0,0,255}));
+  connect(add.y, sourceP.IPressure) annotation (Line(points={{-39,30},{-32,30},
+          {-32,-12},{-88,-12},{-88,-30},{-75,-30}}, color={0,0,255}));
   annotation (
     Diagram(coordinateSystem(
         preserveAspectRatio=false, initialScale=0.1)),

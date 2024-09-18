@@ -151,10 +151,11 @@ model TestDynamicWaterHeating_Qwater_negative
                    annotation (Placement(transformation(extent={{-196,-88},{
             -176,-68}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP1(
-    P0=71.29e5,
+    P0=7129000,
     h0=772.09e3,
     T0=454.46,
-    option_temperature=1)
+    option_temperature=1,
+    use_IPressure=true)
     annotation (Placement(transformation(extent={{-192,-16},{-150,-60}},
           rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.RefQ refQ(Q0=53)
@@ -212,9 +213,6 @@ equation
       points={{-115,44},{-100,44}},
       color={255,0,0},
       thickness=0.5));
-  connect(Pression_eauA.y, sourceP1.IPressure)
-                                              annotation (Line(points={{-170.9,
-          3},{-172,3},{-172,-10},{-196,-10},{-196,-38},{-181.5,-38}}));
   connect(sourceP1.C, singularPressureLossWaterIn.C1)
                                                 annotation (Line(
       points={{-150,-38},{-99,-38}},
@@ -257,6 +255,9 @@ equation
       thickness=1));
   connect(singularPressureLossPurge.C2, ControlValve_eau.C1) annotation (Line(
         points={{54,-148},{54,-182},{88,-182}}, color={0,0,255}));
+  connect(Pression_eauA.y, sourceP1.IPressure) annotation (Line(points={{-170.9,
+          3},{-156,3},{-156,-20},{-194,-20},{-194,-38},{-181.5,-38}}, color={0,
+          0,255}));
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-200,
             -200},{200,200}}), graphics={
         Text(

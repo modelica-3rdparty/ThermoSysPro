@@ -8,7 +8,8 @@ model TestDynamicWaterHeating
     option_temperature=2,
     mode=0,
     h0=2750.e3,
-    P0=40e5)
+    P0=4000000,
+    use_IPressure=true)
             annotation (Placement(transformation(extent={{-192,110},{-150,150}},
           rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP Puit_condenseur1(
@@ -144,9 +145,11 @@ model TestDynamicWaterHeating
             -80,34},{-100,54}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP1(
     option_temperature=1,
-    P0=220e5,
+    P0=22000000,
     h0=900e3,
-    T0=482.87)
+    T0=482.87,
+    use_IPressure=true,
+    use_ITemperature=true)
     annotation (Placement(transformation(extent={{-192,-16},{-150,-60}},
           rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.RefQ refQ(Q0=53, C1(h_vol(start=
@@ -245,16 +248,18 @@ equation
       thickness=1));
   connect(singularPressureLossPurge.C2, ControlValve_eau.C1) annotation (Line(
         points={{54,-148},{54,-182},{88,-182}}, color={0,0,255}));
-  connect(Pression_Turbine1.y, sourceP.IPressure) annotation (Line(points={{
-          -174,170},{-174,152},{-190,152},{-190,130},{-181.5,130}}));
-  connect(Pression_eauA2.y, sourceP1.IPressure) annotation (Line(points={{-174,
-          2},{-174,-10},{-194,-10},{-194,-38},{-181.5,-38}}));
-  connect(Temperature_eauA1.y, sourceP1.ITemperature)
-    annotation (Line(points={{-175,-74},{-171,-74},{-171,-49}}));
   connect(Debit_eauA.y, refQ.IMassFlow)
     annotation (Line(points={{-174,88},{-125,88},{-125,55}}));
   connect(Level.y, ControlValve_eau.Ouv)
     annotation (Line(points={{111.9,-141},{98,-141},{98,-165}}));
+  connect(Pression_eauA2.y, sourceP1.IPressure) annotation (Line(points={{-174,
+          2},{-164,2},{-164,-22},{-190,-22},{-190,-38},{-181.5,-38}}, color={0,
+          0,255}));
+  connect(Temperature_eauA1.y, sourceP1.ITemperature) annotation (Line(points={
+          {-175,-74},{-171,-74},{-171,-49}}, color={0,0,255}));
+  connect(Pression_Turbine1.y, sourceP.IPressure) annotation (Line(points={{
+          -174,170},{-164,170},{-164,148},{-192,148},{-192,130},{-181.5,130}},
+        color={0,0,255}));
   annotation (Diagram(coordinateSystem(extent={{-200,-200},{200,200}}),
                                graphics={
         Text(

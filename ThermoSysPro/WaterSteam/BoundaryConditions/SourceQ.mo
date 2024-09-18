@@ -1,9 +1,23 @@
 within ThermoSysPro.WaterSteam.BoundaryConditions;
 model SourceQ "Water/steam source with fixed mass flow rate"
   parameter Units.SI.MassFlowRate Q0=100
-    "Mass flow (active if IMassFlow connector is not connected)";
+    "Mass flow (active if IMassFlow connector is not connected)" annotation(Dialog(enable = not use_IMassFlow));
   parameter Units.SI.SpecificEnthalpy h0=100000
-    "Fluid specific enthalpy (active if IEnthalpy connector is not connected)";
+    "Fluid specific enthalpy (active if IEnthalpy connector is not connected)" annotation(Dialog(enable = not use_ISpecificEnthalpy));
+
+
+parameter Boolean use_IMassFlow = false "Get the enthalpy from the input connector"
+annotation(Evaluate=true, HideResult=true, choices(checkBox=true));
+parameter Boolean use_ISpecificEnthalpy = false "Get the temperature from the input connector"
+annotation(Evaluate=true, HideResult=true, choices(checkBox=true));
+
+protected
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal IMassFlow_internal
+  "Needed to connect to conditional connector";
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpy_internal
+  "Needed to connect to conditional connector";
+
+
 
 public
   Units.SI.AbsolutePressure P "Fluid pressure";
@@ -11,12 +25,12 @@ public
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
 
 public
-  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal IMassFlow
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal IMassFlow if use_IMassFlow
     annotation (Placement(transformation(
         origin={0,50},
         extent={{-10,-10},{10,10}},
         rotation=270)));
-  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpy
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpy if use_ISpecificEnthalpy
     annotation (Placement(transformation(
         origin={0,-50},
         extent={{10,-10},{-10,10}},
@@ -25,23 +39,34 @@ public
           extent={{90,-10},{110,10}}, rotation=0)));
 equation
 
+  connect(ISpecificEnthalpy, ISpecificEnthalpy_internal);
+  connect(IMassFlow, IMassFlow_internal);
+
+  if not use_ISpecificEnthalpy then
+        ISpecificEnthalpy_internal.signal = h0;
+  end if;
+
+  if not use_IMassFlow then
+        IMassFlow_internal.signal = Q0;
+  end if;
+
   C.P = P;
   C.Q = Q;
   C.h_vol = h;
 
-  /* Mass flow */
-  if (cardinality(IMassFlow) == 0) then
-    IMassFlow.signal = Q0;
-  end if;
+//   /* Mass flow */
+//   if (cardinality(IMassFlow) == 0) then
+//     IMassFlow.signal = Q0;
+//   end if;
 
-  Q = IMassFlow.signal;
+  Q = IMassFlow_internal.signal;
 
-  /* Specific enthalpy */
-  if (cardinality(ISpecificEnthalpy) == 0) then
-    ISpecificEnthalpy.signal = h0;
-  end if;
+//   /* Specific enthalpy */
+//   if (cardinality(ISpecificEnthalpy) == 0) then
+//     ISpecificEnthalpy.signal = h0;
+//   end if;
 
-  h = ISpecificEnthalpy.signal;
+  h = ISpecificEnthalpy_internal.signal;
 
   annotation (
     Diagram(coordinateSystem(

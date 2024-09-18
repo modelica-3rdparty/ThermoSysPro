@@ -40,6 +40,7 @@ model TestDynamicTwoPhaseFlowPipe
                             annotation (Placement(transformation(extent={{-40,-94},
             {40,-36}},     rotation=0)));
   WaterSteam.BoundaryConditions.SourceP sourceP1(
+    use_IPressure=true,
     C(Q(fixed=true, start=1)),
     option_temperature=2,
     mode=0,
@@ -92,8 +93,8 @@ equation
     annotation (Line(points={{0,-14.8},{0,-28},{0,-26}}, color={191,95,0}));
   connect(heatExchangerWall1.WT1, dynamicTwoPhaseFlowPipe1.CTh)
     annotation (Line(points={{0,-42},{0,-56.3}}, color={191,95,0}));
-  connect(rampe.y, sourceP1.IPressure)
-    annotation (Line(points={{-86.6,-44.5},{-92,-44.5},{-92,-64},{-85,-64}}));
+  connect(rampe.y, sourceP1.IPressure) annotation (Line(points={{-86.6,-44.5},{
+          -94,-44.5},{-94,-64},{-85,-64}}, color={0,0,255}));
   annotation (experiment(StopTime=1000), Icon(graphics={
         Rectangle(
           lineColor={200,200,200},
