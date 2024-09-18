@@ -98,7 +98,8 @@ model TestDynamicDrum3
     option_temperature=2)
            annotation (Placement(transformation(extent={{-196,70},{-176,90}},
           rotation=0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.SinkQ sinkQ(Q0=75)
+  ThermoSysPro.WaterSteam.BoundaryConditions.SinkQ sinkQ(Q0=75, use_IMassFlow=
+        true)
     annotation (Placement(transformation(extent={{126,70},{146,90}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Constante
     SteamMassFlowRate(k=Qin)
@@ -132,15 +133,14 @@ equation
   connect(ConsigneNiveauBallon1.y, SteamValve.Ouv)
     annotation (Line(points={{21,132},{50,132},{50,97}}, smooth=Smooth.None));
   connect(SteamMassFlowRate.y, sinkQ.IMassFlow)
-    annotation (Line(points={{121,132},{136,132},{136,85}}));
+    annotation (Line(points={{121,132},{136,132},{136,85}}, color={0,0,255}));
   annotation (experiment(StopTime=1000),
     Window(
       x=0.43,
       y=0,
       width=0.57,
       height=0.63),
-    Diagram(graphics,
-            coordinateSystem(
+    Diagram(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-200,-100},{140,200}},
         grid={2,2})),

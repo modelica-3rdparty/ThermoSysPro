@@ -96,7 +96,8 @@ model TestDynamicDrum_CC
     option_temperature=2,
     mode=0,
     h0=2.650e6,
-    P0=12700000)
+    P0=12700000,
+    use_IPressure=true)
     annotation (Placement(transformation(extent={{115,70},{135,90}}, rotation=0)));
   InstrumentationAndControl.Blocks.Sources.Constante SteamValve_O(k=0.5)
     annotation (Placement(transformation(extent={{20,102},{40,121}}, rotation=0)));
@@ -140,8 +141,6 @@ equation
     annotation (Line(points={{6,-36},{6,-68},{-66,-68},{-66,-36}}));
   connect(SteamValve_O.y, SteamValve.Ouv)
     annotation (Line(points={{41,111.5},{50,111.5},{50,97}}, color={0,0,255}));
-  connect(Steam_Pressure.y, sinkP.IPressure) annotation (Line(points={{121.2,
-          111},{130,111},{130,80}}, color={0,0,255}));
   connect(Level.y, regulation_Niveau.ConsigneNiveauEau) annotation (Line(
       points={{-40.95,111.5},{-44,111.5},{-44,111.2},{-55.3,111.2}},
       color={0,0,0},
@@ -152,14 +151,15 @@ equation
       pattern=LinePattern.Dash));
   connect(regulation_Niveau.SortieReelle1, FeedwaterValve.Ouv) annotation (Line(
         points={{-84.7,107.3},{-110,107.3},{-110,97}}, color={0,0,255}));
+  connect(Steam_Pressure.y, sinkP.IPressure) annotation (Line(points={{121.2,
+          111},{136,111},{136,80},{130,80}}, color={0,0,255}));
   annotation (experiment(StopTime=3000),
     Window(
       x=0.43,
       y=0,
       width=0.57,
       height=0.63),
-    Diagram(graphics,
-            coordinateSystem(
+    Diagram(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-200,-100},{140,200}},
         grid={2,2})),

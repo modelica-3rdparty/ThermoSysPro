@@ -15,7 +15,7 @@ model TestCentrifugalPump6
     annotation (Placement(transformation(extent={{-20,20},{0,40}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP(P0=300000)
     annotation (Placement(transformation(extent={{-60,20},{-40,40}}, rotation=0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.SinkP sinkP
+  ThermoSysPro.WaterSteam.BoundaryConditions.SinkP sinkP(use_IPressure=true)
     annotation (Placement(transformation(extent={{60,20},{80,40}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Rampe rampe2(
     Duration=100,
@@ -31,14 +31,14 @@ equation
     annotation (Line(points={{-39,10},{-30,10},{-30,-5.6}}));
   connect(sourceP.C, centrifugalPump.C1)
     annotation (Line(points={{-40,30},{-20,30}}, color={0,0,255}));
-  connect(rampe2.y,sinkP. IPressure)
-    annotation (Line(points={{21,70},{80,70},{80,30},{75,30}}));
   connect(lumpedStraightPipe.C2,sinkP. C)
     annotation (Line(points={{40,30},{60,30}}, color={0,0,255}));
   connect(synchronousMotor.C, centrifugalPump.M)
     annotation (Line(points={{-19.8,-10},{-10,-10},{-10,19}}));
   connect(centrifugalPump.C2, lumpedStraightPipe.C1)
     annotation (Line(points={{0,30},{20,30}}, color={0,0,255}));
+  connect(rampe2.y, sinkP.IPressure) annotation (Line(points={{21,70},{92,70},{
+          92,30},{75,30}}, color={0,0,255}));
   annotation (experiment(StopTime=1000),
     Diagram(graphics={
         Text(

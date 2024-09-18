@@ -1,7 +1,17 @@
 within ThermoSysPro.WaterSteam.BoundaryConditions;
 model Sink "Water/steam sink"
   parameter Units.SI.SpecificEnthalpy h0=100000
-    "Fluid specific enthalpy (active if IEnthalpy connector is not connected)";
+    "Fluid specific enthalpy (active if IEnthalpy connector is not connected)" annotation(Dialog(enable = not use_ISpecificEnthalpy));
+
+
+parameter Boolean use_ISpecificEnthalpy = false "Get the enthalpy from the input connector"
+annotation(Evaluate=true, HideResult=true, choices(checkBox=true));
+
+
+protected
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpy_internal
+  "Needed to connect to conditional connector";
+
 
 public
   Units.SI.AbsolutePressure P "Fluid pressure";
@@ -9,7 +19,7 @@ public
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
 
 public
-  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpy
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpy if use_ISpecificEnthalpy
     annotation (Placement(transformation(
         origin={0,-50},
         extent={{10,-10},{-10,10}},
@@ -19,16 +29,23 @@ public
            0)));
 equation
 
+  connect(ISpecificEnthalpy, ISpecificEnthalpy_internal);
+
+  if not use_ISpecificEnthalpy then
+        ISpecificEnthalpy_internal.signal = h0;
+  end if;
+
+
   C.P = P;
   C.Q = Q;
   C.h_vol = h;
 
-  /* Specific enthalpy */
-  if (cardinality(ISpecificEnthalpy) == 0) then
-    ISpecificEnthalpy.signal = h0;
-  end if;
+//   /* Specific enthalpy */
+//   if (cardinality(ISpecificEnthalpy) == 0) then
+//     ISpecificEnthalpy.signal = h0;
+//   end if;
 
-  h = ISpecificEnthalpy.signal;
+  h = ISpecificEnthalpy_internal.signal;
 
   annotation (
     Diagram(coordinateSystem(

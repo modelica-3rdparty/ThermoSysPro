@@ -13,7 +13,9 @@ model TestDynamicWaterHeating
             annotation (Placement(transformation(extent={{-192,110},{-150,150}},
           rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP Puit_condenseur1(
-      option_temperature=2, P0(fixed=true) = 10e5)
+      option_temperature=2,
+    P0(fixed=true) = 1000000,
+    use_IPressure=true)
              annotation (Placement(transformation(extent={{124,-202},{160,-162}},
           rotation=0)));
   ThermoSysPro.WaterSteam.PressureLosses.ControlValve ControlValve_eau(
@@ -236,8 +238,6 @@ equation
       thickness=1));
   connect(singularPressureLossPurge.C1, WaterHeating.C2ex)
     annotation (Line(points={{54,-128},{54,-90},{52,-90}}));
-  connect(Pression_purge.y, Puit_condenseur1.IPressure)
-    annotation (Line(points={{183,-168},{196,-168},{196,-182},{151,-182}}));
   connect(checkValve.C2, PressureLoss_Steam.C1)         annotation (Line(
       points={{-84,130},{-48,130}},
       color={127,0,0},
@@ -260,6 +260,8 @@ equation
   connect(Pression_Turbine1.y, sourceP.IPressure) annotation (Line(points={{
           -174,170},{-164,170},{-164,148},{-192,148},{-192,130},{-181.5,130}},
         color={0,0,255}));
+  connect(Pression_purge.y, Puit_condenseur1.IPressure) annotation (Line(points
+        ={{183,-168},{188,-168},{188,-182},{151,-182}}, color={0,0,255}));
   annotation (Diagram(coordinateSystem(extent={{-200,-200},{200,200}}),
                                graphics={
         Text(

@@ -1,7 +1,7 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestDynamicCheckValve
-  ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP1
-                                     annotation (Placement(transformation(
+  ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP1(use_IPressure=
+        true)                        annotation (Placement(transformation(
           extent={{-38,-10},{-18,10}},rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP puitsP1(
                                    P0=6e5) annotation (Placement(transformation(
@@ -18,11 +18,10 @@ equation
     annotation (Line(points={{-18,0},{2,0}},   color={0,0,255}));
   connect(checkValve.C2, puitsP1.C) annotation (Line(points={{22,0},{32,0},{42,
           0}},             color={0,0,255}));
-  connect(sourceP1.IPressure, pulse.y)
-    annotation (Line(points={{-33,0},{-57,0}},   color={28,108,200}));
+  connect(pulse.y, sourceP1.IPressure)
+    annotation (Line(points={{-57,0},{-33,0}}, color={0,0,255}));
   annotation (
-    Diagram(graphics,
-            coordinateSystem(
+    Diagram(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},
         grid={2,2})),

@@ -15,9 +15,10 @@ model TestCentrifugalPump12
     Qv(start=0.010949909796284268))
     annotation (Placement(transformation(extent={{20,20},{40,40}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourcePQ sourceP(
-                                                             P0=100000,
+    P0=100000,
     Q0=10,
-    h0=650e3)
+    h0=650e3,
+    use_IPressure=true)
     annotation (Placement(transformation(extent={{-20,20},{0,40}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.Sink sinkP
     annotation (Placement(transformation(extent={{60,20},{80,40}}, rotation=0)));
@@ -37,8 +38,8 @@ equation
   connect(sourceTorque.M, centrifugalPump.M)
     annotation (Line(points={{1,-10},{30,-10},{30,19}}));
   connect(rampe3.y, sourceP.IPressure)
-    annotation (Line(points={{-39,30},{-15,30}}));
-  annotation (experiment(StopTime=1000), Diagram(graphics),
+    annotation (Line(points={{-39,30},{-15,30}}, color={0,0,255}));
+  annotation (experiment(StopTime=1000),
     Icon(graphics={
         Rectangle(
           lineColor={200,200,200},

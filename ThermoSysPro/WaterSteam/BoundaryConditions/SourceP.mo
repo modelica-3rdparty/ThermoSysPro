@@ -23,7 +23,6 @@ parameter Boolean use_ITemperature = false "Get the temperature from the input c
 annotation(Evaluate=true, HideResult=true, choices(checkBox=true));
 
 
-
 protected
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal IPressure_internal
   "Needed to connect to conditional connector";
@@ -83,13 +82,13 @@ equation
 //   if (cardinality(IPressure) == 0) then
 //     IPressure.signal = P0;
 //   end if;
-//
+
    P = IPressure_internal.signal;
-//
+
 //   if (cardinality(ITemperature) == 0) then
 //       ITemperature.signal = T0;
 //   end if;
-//
+
 //   if (cardinality(ISpecificEnthalpy) == 0) then
 //       ISpecificEnthalpy.signal = h0;
 //   end if;

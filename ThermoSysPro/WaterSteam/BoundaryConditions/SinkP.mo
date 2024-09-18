@@ -1,14 +1,36 @@
 ﻿within ThermoSysPro.WaterSteam.BoundaryConditions;
 model SinkP "Water/steam sink with fixed pressure"
-  parameter Units.SI.AbsolutePressure P0=100000 "Sink pressure";
+  parameter Units.SI.AbsolutePressure P0=100000 "Sink pressure"
+                                                               annotation(Dialog(enable = not use_IPressure));
   parameter Units.SI.Temperature T0=290
-    "Sink temperature (active if option_temperature=1)";
+    "Sink temperature (active if option_temperature=1)"
+                                                       annotation(Dialog(enable = not use_ITemperature));
   parameter Units.SI.SpecificEnthalpy h0=100000
-    "Sink specific enthalpy (active if option_temperature=2)";
+    "Sink specific enthalpy (active if option_temperature=2)"
+                                                             annotation(Dialog(enable = not use_ISpecificEnthalpy));
+
   parameter Integer option_temperature=1
     "1:temperature fixed - 2:specific enthalpy fixed";
   parameter Integer mode=1
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
+
+
+parameter Boolean use_IPressure = false "Get the pressure from the input connector"
+annotation(Evaluate=true, HideResult=true, choices(checkBox=true));
+parameter Boolean use_ISpecificEnthalpy = false "Get the enthalpy from the input connector"
+annotation(Evaluate=true, HideResult=true, choices(checkBox=true));
+parameter Boolean use_ITemperature = false "Get the temperature from the input connector"
+annotation(Evaluate=true, HideResult=true, choices(checkBox=true));
+
+
+protected
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal IPressure_internal
+  "Needed to connect to conditional connector";
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpy_internal
+  "Needed to connect to conditional connector";
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ITemperature_internal
+  "Needed to connect to conditional connector";
+
 
 public
   Units.SI.AbsolutePressure P "Fluid pressure";
@@ -20,48 +42,66 @@ public
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
            0)));
 public
-  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal IPressure
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal IPressure  if use_IPressure
     annotation (Placement(transformation(
         origin={50,0},
         extent={{-10,-10},{10,10}},
         rotation=180)));
-  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpy
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpy if use_ISpecificEnthalpy
     annotation (Placement(transformation(
         origin={0,-50},
         extent={{10,-10},{-10,10}},
         rotation=270)));
   Connectors.FluidInlet C       annotation (Placement(transformation(extent={{
             -110,-10},{-90,10}}, rotation=0)));
-  InstrumentationAndControl.Connectors.InputReal ITemperature
+  InstrumentationAndControl.Connectors.InputReal ITemperature if use_ITemperature
     annotation (Placement(transformation(
         origin={0,50},
         extent={{-10,-10},{10,10}},
         rotation=270)));
 equation
 
+  connect(IPressure, IPressure_internal);
+  connect(ISpecificEnthalpy, ISpecificEnthalpy_internal);
+  connect(ITemperature, ITemperature_internal);
+
+  if not use_IPressure then
+        IPressure_internal.signal = P0;
+  end if;
+
+  if not use_ISpecificEnthalpy then
+        ISpecificEnthalpy_internal.signal = h0;
+  end if;
+
+  if not use_ITemperature then
+        ITemperature_internal.signal = T0;
+  end if;
+
   C.P = P;
   C.Q = Q;
   C.h_vol = h;
 
-  if (cardinality(IPressure) == 0) then
-    IPressure.signal = P0;
-  end if;
+//   if (cardinality(IPressure) == 0) then
+//     IPressure.signal = P0;
+//   end if;
 
-  P = IPressure.signal;
+  P = IPressure_internal.signal;
 
-  if (cardinality(ITemperature) == 0) then
-      ITemperature.signal = T0;
-  end if;
+//   if (cardinality(ITemperature) == 0) then
+//       ITemperature.signal = T0;
+//   end if;
 
-  if (cardinality(ISpecificEnthalpy) == 0) then
-      ISpecificEnthalpy.signal = h0;
-  end if;
+//   if (cardinality(ISpecificEnthalpy) == 0) then
+//       ISpecificEnthalpy.signal = h0;
+//   end if;
+
+
 
   if (option_temperature == 1) then
-    T = ITemperature.signal;
+    T = ITemperature_internal.signal;
     h = ThermoSysPro.Properties.WaterSteam.IF97.SpecificEnthalpy_PT(P, T, 0);
   elseif (option_temperature == 2) then
-    h = ISpecificEnthalpy.signal;
+    h = ISpecificEnthalpy_internal.signal;
     T = pro.T;
   else
     assert(false, "SinkPressureWaterSteam: incorrect option");

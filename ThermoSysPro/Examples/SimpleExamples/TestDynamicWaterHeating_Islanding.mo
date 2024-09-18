@@ -9,7 +9,9 @@ model TestDynamicWaterHeating_Islanding
             annotation (Placement(transformation(extent={{-192,110},{-150,150}},
           rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP Puit_condenseur1(
-      option_temperature=2, P0(fixed=true) = 10e5)
+      option_temperature=2,
+    P0(fixed=true) = 1000000,
+    use_IPressure=true)
              annotation (Placement(transformation(extent={{124,-202},{160,-162}},
           rotation=0)));
   ThermoSysPro.WaterSteam.PressureLosses.ControlValve ControlValve_eau(
@@ -247,8 +249,6 @@ equation
       thickness=1));
   connect(singularPressureLossPurge.C1, WaterHeating.C2ex)
     annotation (Line(points={{54,-128},{54,-90},{52,-90}}));
-  connect(Pression_purge.y, Puit_condenseur1.IPressure)
-    annotation (Line(points={{183,-168},{196,-168},{196,-182},{151,-182}}));
   connect(checkValve.C2, PressureLoss_Steam.C1)         annotation (Line(
       points={{-84,130},{-48,130}},
       color={127,0,0},
@@ -260,13 +260,15 @@ equation
   connect(singularPressureLossPurge.C2, ControlValve_eau.C1) annotation (Line(
         points={{54,-148},{54,-182},{88,-182}}, color={0,0,255}));
   connect(Pression_Turbine.y, sourceP.IPressure) annotation (Line(points={{-173,
-          164},{-164,164},{-164,146},{-194,146},{-194,130},{-181.5,130}}, color
-        ={0,0,255}));
+          164},{-164,164},{-164,146},{-194,146},{-194,130},{-181.5,130}}, color=
+         {0,0,255}));
   connect(Pression_eauA.y, sourceP1.IPressure) annotation (Line(points={{-170.9,
           3},{-156,3},{-156,-16},{-192,-16},{-192,-38},{-181.5,-38}}, color={0,
           0,255}));
   connect(Temperature_eauA.y, sourceP1.ITemperature) annotation (Line(points={{
           -175,-78},{-171,-78},{-171,-49}}, color={0,0,255}));
+  connect(Pression_purge.y, Puit_condenseur1.IPressure) annotation (Line(points
+        ={{183,-168},{188,-168},{188,-182},{151,-182}}, color={0,0,255}));
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-200,
             -200},{200,200}}), graphics={
         Text(

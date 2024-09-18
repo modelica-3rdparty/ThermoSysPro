@@ -24,8 +24,8 @@ model TestCheckValve
   ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe perteDP1
                                          annotation (Placement(transformation(
           extent={{60,20},{80,40}}, rotation=0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP1
-                                     annotation (Placement(transformation(
+  ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP1(use_IPressure=
+        true)                        annotation (Placement(transformation(
           extent={{-60,-80},{-40,-60}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP puitsP1(
                                    P0=6e5) annotation (Placement(transformation(
@@ -63,13 +63,13 @@ equation
     annotation (Line(points={{-40,-70},{-21,-70}}, color={0,0,255}));
   connect(checkValve3.C2, puitsP1.C)
     annotation (Line(points={{1,-70},{20,-70}}, color={0,0,255}));
-  connect(pulse.y, sourceP1.IPressure) annotation (Line(points={{-79,-70},{-55,
-          -70}}));
+  connect(pulse.y, sourceP1.IPressure)
+    annotation (Line(points={{-79,-70},{-55,-70}}, color={0,0,255}));
   annotation (experiment(StopTime=1000),
     Diagram(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},
-        grid={2,2}), graphics),
+        grid={2,2})),
     Window(
       x=0.28,
       y=0.03,

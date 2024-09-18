@@ -9,7 +9,7 @@ model TestCentrifugalPump10
     annotation (Placement(transformation(extent={{0,20},{20,40}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP(P0=300000)
     annotation (Placement(transformation(extent={{-60,20},{-40,40}}, rotation=0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.SinkP sinkP
+  ThermoSysPro.WaterSteam.BoundaryConditions.SinkP sinkP(use_IPressure=true)
     annotation (Placement(transformation(extent={{60,20},{80,40}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Rampe rampe2(
     Duration=100,
@@ -24,7 +24,7 @@ model TestCentrifugalPump10
                                                              P0=300000)
     annotation (Placement(transformation(extent={{-60,-60},{-40,-40}}, rotation=
            0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.SinkP sinkP1
+  ThermoSysPro.WaterSteam.BoundaryConditions.SinkP sinkP1(use_IPressure=true)
     annotation (Placement(transformation(extent={{60,-60},{80,-40}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Rampe rampe1(
     Duration=100,
@@ -35,17 +35,17 @@ model TestCentrifugalPump10
 equation
   connect(sourceP.C, centrifugalPump.C1)
     annotation (Line(points={{-40,30},{0,30}}, color={0,0,255}));
-  connect(rampe2.y, sinkP.IPressure)
-    annotation (Line(points={{21,70},{80,70},{80,30},{75,30}}));
   connect(centrifugalPump.C2, sinkP.C)
     annotation (Line(points={{20,30},{60,30}}, color={0,0,255}));
   connect(sourceP1.C, centrifugalPump1.C1)
     annotation (Line(points={{-40,-50},{0,-50}}, color={0,0,255}));
-  connect(rampe1.y, sinkP1.IPressure)
-    annotation (Line(points={{21,-10},{80,-10},{80,-50},{75,-50}}));
   connect(centrifugalPump1.C2, sinkP1.C)
     annotation (Line(points={{20,-50},{60,-50}}, color={0,0,255}));
-  annotation (experiment(StopTime=1000), Diagram(graphics),
+  connect(rampe2.y, sinkP.IPressure) annotation (Line(points={{21,70},{96,70},{
+          96,30},{75,30}}, color={0,0,255}));
+  connect(rampe1.y, sinkP1.IPressure) annotation (Line(points={{21,-10},{82,-10},
+          {82,-50},{75,-50}}, color={0,0,255}));
+  annotation (experiment(StopTime=1000),
     Icon(graphics={
         Rectangle(
           lineColor={200,200,200},

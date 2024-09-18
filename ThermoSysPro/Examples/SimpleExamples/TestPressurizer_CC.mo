@@ -69,7 +69,8 @@ model TestPressurizer_CC
     P(start=15500000, fixed=true),
     Tp(start=617.94155291055)) annotation (Placement(transformation(extent={{-92,
             -12},{32,118}}, rotation=0)));
-  WaterSteam.BoundaryConditions.SinkQ sinkQ1(            Q0=0, h0=1600000)
+  WaterSteam.BoundaryConditions.SinkQ sinkQ1(            Q0=0, h0=1600000,
+    use_IMassFlow=true)
            annotation (Placement(transformation(extent={{-30,-76},{-10,-56}},
           rotation=0)));
   ThermoSysPro.Thermal.BoundaryConditions.HeatSource SourceC1(
@@ -146,8 +147,7 @@ equation
       y=0,
       width=0.57,
       height=0.63),
-    Diagram(graphics,
-            coordinateSystem(
+    Diagram(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-200,-100},{140,200}},
         grid={2,2})),

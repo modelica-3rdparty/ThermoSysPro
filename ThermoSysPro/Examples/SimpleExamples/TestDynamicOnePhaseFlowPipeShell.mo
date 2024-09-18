@@ -17,6 +17,7 @@ model TestDynamicOnePhaseFlowPipeShell
     option_temperature=2,
     h0=600e3,
     P0=2000000,
+    use_IPressure=true,
     Q(start=500, fixed=true))
              annotation (Placement(transformation(extent={{-103,-15},{-75,15}},
           rotation=0)));
@@ -52,8 +53,8 @@ equation
     annotation (Line(points={{0,41.2},{0,10.8}}, color={191,95,0}));
   connect(heatSource.C, heatExchangerWall.WT2) annotation (Line(points={{0,
           76.22},{0,46.8}}, color={191,95,0}));
-  connect(rampe.y, sourceP.IPressure)
-    annotation (Line(points={{-79,42},{-70,42},{-70,24},{-98,24},{-98,0},{-96,0}}));
+  connect(rampe.y, sourceP.IPressure) annotation (Line(points={{-79,42},{-72,42},
+          {-72,16},{-98,16},{-98,0},{-96,0}}, color={0,0,255}));
   annotation (Icon(graphics={
         Rectangle(
           lineColor={200,200,200},

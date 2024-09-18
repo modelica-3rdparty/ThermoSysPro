@@ -101,7 +101,11 @@ model TestDynamicDrum1
     P0=13200000)
            annotation (Placement(transformation(extent={{-196,70},{-176,90}},
           rotation=0)));
-  WaterSteam.BoundaryConditions.SinkP sinkQ(             P0=12700000)
+  WaterSteam.BoundaryConditions.SinkP sinkQ(
+    P0=12700000,
+    use_IPressure=false,
+    use_ISpecificEnthalpy=false,
+    use_ITemperature=false)
     annotation (Placement(transformation(extent={{120,70},{140,90}}, rotation=0)));
 equation
   connect(Drum.Cv, SteamValve.C1)

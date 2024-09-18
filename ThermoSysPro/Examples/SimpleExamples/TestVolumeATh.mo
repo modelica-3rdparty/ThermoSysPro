@@ -20,7 +20,7 @@ model TestVolumeATh
           extent={{-89,-38},{-73,-22}}, rotation=0)));
   ThermoSysPro.WaterSteam.PressureLosses.ControlValve controlValve2
     annotation (Placement(transformation(extent={{28,2},{48,22}}, rotation=0)));
-  WaterSteam.BoundaryConditions.SourceQ sourceQ
+  WaterSteam.BoundaryConditions.SourceQ sourceQ(use_IMassFlow=true)
     annotation (Placement(transformation(extent={{-83,-6},{-59,18}}, rotation=0)));
   InstrumentationAndControl.Blocks.Sources.Constante Constant
                                      annotation (Placement(transformation(
@@ -53,8 +53,8 @@ equation
     annotation (Line(points={{-27,6},{-15,6}}, color={0,0,255}));
   connect(controlValve2.C2, sink.C)
     annotation (Line(points={{48,6},{64,6}}, color={0,0,255}));
-  connect(Table1DTemps.y, sourceQ.IMassFlow)
-    annotation (Line(points={{-72,26},{-71,26},{-71,12}}));
+  connect(Table1DTemps.y, sourceQ.IMassFlow) annotation (Line(points={{-72,26},
+          {-68,26},{-68,16},{-71,16},{-71,12}}, color={0,0,255}));
   annotation (experiment(StopTime=10), Icon(graphics={
         Rectangle(
           lineColor={200,200,200},

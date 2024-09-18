@@ -9,10 +9,13 @@ model TestCentrifugalPump11
     hn_nom_p=40,
     p_rho=500)
     annotation (Placement(transformation(extent={{-40,20},{-20,40}}, rotation=0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP(P0=10000000,
-      option_temperature=2)
+  ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP(
+    P0=10000000,
+      option_temperature=2,
+    use_ISpecificEnthalpy=true)
     annotation (Placement(transformation(extent={{-80,20},{-60,40}}, rotation=0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.SinkP sinkP(P0=15000000)
+  ThermoSysPro.WaterSteam.BoundaryConditions.SinkP sinkP(P0=15000000,
+      use_IPressure=true)
     annotation (Placement(transformation(extent={{40,20},{60,40}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Rampe rampe3(
     Duration=100,
@@ -33,15 +36,15 @@ model TestCentrifugalPump11
 equation
   connect(sourceP.C, centrifugalPump.C1)
     annotation (Line(points={{-60,30},{-40,30}}, color={0,0,255}));
-  connect(rampe1.y, sinkP.IPressure)
-    annotation (Line(points={{61,70},{80,70},{80,30},{55,30}}));
   connect(centrifugalPump.C2, dynamicOnePhaseFlowPipe.C1)
     annotation (Line(points={{-20,30},{0,30}}, color={0,0,255}));
   connect(dynamicOnePhaseFlowPipe.C2, sinkP.C)
     annotation (Line(points={{20,30},{40,30}}, color={0,0,255}));
   connect(rampe3.y, sourceP.ISpecificEnthalpy)
-    annotation (Line(points={{-79,10},{-70,10},{-70,25}}, smooth=Smooth.None));
-  annotation (experiment(StopTime=1000), Diagram(graphics),
+    annotation (Line(points={{-79,10},{-70,10},{-70,25}}, color={0,0,255}));
+  connect(rampe1.y, sinkP.IPressure) annotation (Line(points={{61,70},{68,70},{
+          68,30},{55,30}}, color={0,0,255}));
+  annotation (experiment(StopTime=1000),
     Icon(graphics={
         Rectangle(
           lineColor={200,200,200},
