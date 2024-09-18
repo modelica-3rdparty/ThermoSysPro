@@ -44,7 +44,8 @@ public
           649.404839172216,652.1510013554424}),
     L=1e4/11.46)
     annotation (Placement(transformation(extent={{-40,-36},{40,-2}}, rotation=0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.SourceQ sourceP(Q0=11, h0=1500e3)
+  ThermoSysPro.WaterSteam.BoundaryConditions.SourceQ sourceP(Q0=11, h0=1500e3,
+    use_IMassFlow=true)
                annotation (Placement(transformation(extent={{-101,-55},{-81,-35}},
           rotation=0)));
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicTwoPhaseFlowPipe
@@ -132,10 +133,10 @@ equation
         points={{36,-43.5},{47,-43.5},{47,-44},{52,-44}}, color={0,0,0}));
   connect(massFlowMultiplier2.Cs, sinkP.C)
     annotation (Line(points={{72,-44},{80,-44}}, color={0,0,0}));
-  connect(Q.y, sourceP.IMassFlow) annotation (Line(points={{-90,-17.2},{-91,
-          -17.2},{-91,-40}}, color={0,0,255}));
   connect(Angles.y, champThermosolaireLFR_N.SunG) annotation (Line(points={{
           -11.3,83.5},{27.2,83.5},{27.2,58.8}}, color={0,0,255}));
+  connect(Q.y, sourceP.IMassFlow) annotation (Line(points={{-90,-17.2},{-90,
+          -28.6},{-91,-28.6},{-91,-40}}, color={0,0,255}));
   annotation (
     Documentation(revisions="<html>
 <p><u><b>Author</b></u></p>

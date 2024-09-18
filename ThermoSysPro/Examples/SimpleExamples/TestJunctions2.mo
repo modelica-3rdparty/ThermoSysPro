@@ -11,7 +11,8 @@ model TestJunctions2
   ThermoSysPro.WaterSteam.PressureLosses.SingularPressureLoss
     singularPressureLoss2 annotation (Placement(transformation(extent={{-40,40},
             {-20,60}}, rotation=0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.Source sourceP
+  ThermoSysPro.WaterSteam.BoundaryConditions.Source sourceP(
+      use_ISpecificEnthalpy=false)
     annotation (Placement(transformation(extent={{-80,80},{-60,100}}, rotation=
             0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP1
