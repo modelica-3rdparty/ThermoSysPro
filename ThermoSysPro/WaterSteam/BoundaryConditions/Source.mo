@@ -1,5 +1,12 @@
 within ThermoSysPro.WaterSteam.BoundaryConditions;
 model Source "Water/steam source"
+
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group=
+          "Transported Substances"));
+
+
   parameter Units.SI.SpecificEnthalpy h0=100000
     "Fluid specific enthalpy (active if IEnthalpy connector is not connected)";
 
@@ -8,15 +15,20 @@ public
   Units.SI.MassFlowRate Q "Mass flow rate";
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
 
+parameter Real Cin[Species.Concentrations]=zeros(size(C.SubC,1)) "Concentration values for the substances to be transported"
+ annotation(Dialog(tab="Fluid", group="Transported Substances"));
+
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpy
     annotation (Placement(transformation(
         origin={0,-50},
         extent={{10,-10},{-10,10}},
         rotation=270)));
-  Connectors.FluidOutlet C                annotation (Placement(transformation(
+  Connectors.FluidOutlet C(redeclare package Species = Species)                annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
 equation
+
+  C.SubC = Cin;
 
   C.P = P;
   C.Q = Q;
