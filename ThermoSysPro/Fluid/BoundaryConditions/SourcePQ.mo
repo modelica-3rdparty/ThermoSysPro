@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.BoundaryConditions;
 model SourcePQ "MultiFluids source with fixed pressure and mass flow rate"
   extends
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 

@@ -1,5 +1,6 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefH "Fixed specific enthalpy reference"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   parameter Units.SI.SpecificEnthalpy h0=1.e5 "Fixed fluid specific enthalpy";
 
 public
