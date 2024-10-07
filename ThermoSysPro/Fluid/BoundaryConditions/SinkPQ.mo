@@ -1,5 +1,6 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model SinkPQ "MultiFluids sink with fixed pressure and mass flow rate"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
 

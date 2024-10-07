@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.BoundaryConditions;
 model PlugA "Plug"
   extends
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
 
   parameter Boolean continuous_flow_reversal=false

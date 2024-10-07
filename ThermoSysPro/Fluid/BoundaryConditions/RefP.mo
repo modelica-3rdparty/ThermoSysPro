@@ -1,5 +1,6 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefP "Fixed pressure reference"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   parameter Units.SI.AbsolutePressure P0=1.e5 "Fixed fluid pressure";
 
 public

@@ -1,5 +1,6 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefQ "Fixed mass flow reference"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   parameter Units.SI.MassFlowRate Q0=10 "Fixed fluid mass flow";
 
 public
