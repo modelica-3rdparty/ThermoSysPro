@@ -22,7 +22,7 @@ Partners or issue reporter may be invited to participate to this meeting.
 ### Repository structure
 The [`master`](https://gitlab.pam-retd.fr/thermosysproandco/ThermoSysPro/-/tree/master?ref_type=heads) branch contains only official releases. This is the *default* branch of the repository. A *tag* is associated to each release. No development is made directly in this branch (which is *protected*).
 
-The [`develop`](https://gitlab.pam-retd.fr/thermosysproandco/ThermoSysPro/-/tree/develop?ref_type=heads) branch is the receptacle of all developments. This branch is also *protected*, meaning that developments can only be done through  `feature` branches and *merge requests*; the `feature` branches originate in the `develop` branch and merge later on in it. The `develop` branch merges in the `master` to originate new official releases. 
+The [`develop`](https://gitlab.pam-retd.fr/thermosysproandco/ThermoSysPro/-/tree/develop?ref_type=heads) branch is the receptacle of all developments. This branch is also *protected*, meaning that developments can only be done through  `feature`/`fix`/... branches and associated *merge requests*; these branches originate from the `develop` branch and merge later into it. The `develop` branch merges into `master` to originate new official releases. 
 
 ```mermaid
 %%{init: {'gitGraph': {'showCommitLabel': false, 'mainBranchName':'master'}} }%%
@@ -56,25 +56,30 @@ merge develop type: HIGHLIGHT tag: "5.0"
 #### Notable exceptions
 Developments which are not related to the actual code (for example, files for CI/CD pipelines, readmes, minor documentation modification, graphics...) can be developed on `minor` branches that originate directly on `master` and are directly merged on it.
 
-Such developments does not originate a new official release (no tag). This allows to quickly make available useful slight modifications (which do not affect the behavior of the models).
+Such developments do not generate new official releases (no tag). This allows to make useful slight modifications (which do not affect the behavior of the models) quickly available.
 
-Another exception concerns **quick** bug correction. `hotFix` branches should originates in `develop`as common `feature` branches. However, their relative commit(s) should be cherry picked to `master`, giving place to a **patch version tag**. 
+Another exception concerns *quick* bug correction. `hotFix` branches should originates directly from `master` (instead of `develop`as common `feature` branches). Once merged back into `master`, they give place to a **patch version tag**. Then, `develop` has to be rebased on the new version of `master` with the following command:
+
+```
+git rebase master develop
+```
+This allows develop (and child-branches, once also rebased on `develop`) to inherit the bug correction. 
+
 
 ```mermaid
 %%{init: {'gitGraph': {'showCommitLabel': true, 'mainBranchName':'master'}} }%%
 gitGraph
-commit type: HIGHLIGHT tag: "4.1"
-branch develop order: 2
-branch feature_newCorrelation order: 3
-commit id:"  "
-checkout develop
-branch hotFix_typo order: 4
+commit id: "   " type: HIGHLIGHT tag: "4.1"
+branch hotFix_typo order: 1
 commit id: "Coef fix"
-checkout develop
-merge hotFix_typo
 checkout master
-cherry-pick id: "Coef fix" tag: "4.1.1"
-branch pipeline order: 1
+merge hotFix_typo type: HIGHLIGHT tag: "4.1.1"
+branch develop order: 3
+commit id:"    "
+branch feature_newCorrelation order: 4
+commit id:"  "
+checkout master
+branch pipeline order: 2
 commit id: "Pipeline test"
 commit id: "Pipeline final"
 checkout master
@@ -82,6 +87,20 @@ merge pipeline
 checkout feature_newCorrelation
 commit id:" "
 ```
+
+**Important Remarks**: 
+- The `rebase` command restructures the git history: it makes the `develop` commits appear as if they were realized after the last state of `master` (the merge of `hotFix_typo` in the example) even if that is not the case. This clears the history and makes future merges less susceptible to conflicts. 
+- It is **strongly recommended** to periodically rebase each development branch on the `develop` one, to reduce divergencies and conflicts later on; to be done by each developer. For example, looking at the 1st graph, `feature_newMedia` should be rebased on develop after the merge of `feature_newVolume`.
+
+#### Branch naming
+Development branches have to be named according to the following rule: `type/issue_description`, where:
+- `type` is one among:
+  - `feature`: development of new feature.
+  - `fix`: bug correction.
+  - `hotfix`: urgent bug correction, directly applied on `master`.
+  - `misc`: development non related with the Modelica code; it may directly be applied on `master`.
+- `issue` is the number of the issue the branch is devoted to.
+- `description` is a short description of the development, more "solution oriented" rather than "issue oriented" (multiple solutions can be developed in different branches for the same issue). The description can be in `CamelCase` or with words separated by `-` (no whitespace). 
 
 ### Workflow
 Here follows a synthetic view of the workflow for contribution:
@@ -91,7 +110,12 @@ Here follows a synthetic view of the workflow for contribution:
 
     If developments are required (the issue is not a question, not *refused*...): 
 
-1. Reporter/Developer: create a new `feature` branch from `develop`. *Hint: the branch can be created from the issue itself (to link the future developments to the issue)*.
+1. Reporter/Developer: create a new `feature` branch from `develop`. *Hint: the branch can be created from the issue itself (to link the future developments to the issue)*. 
+
+    It is recommended to directly create a Merge Request for that branch using the appropriate tag depending on the advances:
+    - `WIP`: Work In Progress.
+    - `reviewToMerge`: to be reviewed or ongoing review.
+    - `readyToMerge`: waiting the final approval from the DevCom. 
 1. Reporter/Developer: realize the necessary developments in as many *atomic* commits as needed. *Hint: cite the issue `#ID` in commit messages to link commits and issue*.
 1. Reporter/Developer: create a merge request. 
 
@@ -99,8 +123,6 @@ Here follows a synthetic view of the workflow for contribution:
 
 1. If necessary, comments are added to the merge requests and some additional developments/iterations are requested.
 1. DevCom action: The merge request is accepted and the `feature` branch is merged in the `develop` branch.
-
-
 
 
 ```mermaid
