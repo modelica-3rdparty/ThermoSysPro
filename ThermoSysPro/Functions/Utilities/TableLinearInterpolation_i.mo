@@ -58,10 +58,10 @@ algorithm
   annotation (
     smoothOrder=2,
     Icon(graphics),        Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2012</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
-<p><b>ThermoSysPro Version 3.0</b></p>
+<p><b>ThermoSysPro Version 4.1</b></p>
 </HTML>
 ",        revisions="<html>
 <p><u><b>Author</b></u></p>

@@ -55,8 +55,8 @@ equation
   connect(singularPressureLoss3.C2, sinkP1.C) annotation (Line(points={{60,-30},
           {70,-30},{70,-30},{80,-30}}, color={0,0,0}));
   annotation (Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 </html>"), Icon(graphics={
         Rectangle(
           lineColor={200,200,200},

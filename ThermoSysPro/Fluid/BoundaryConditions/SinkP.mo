@@ -130,8 +130,8 @@ equation
         Text(extent={{40,28},{58,8}}, textString="P"),
         Text(extent={{12,-42},{42,-62}}, textString="h / T")}),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 </html>",
    revisions="<html>
 <p><u><b>Authors</b></u></p>

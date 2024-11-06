@@ -32,7 +32,7 @@ equation
           fillColor={0,0,175},
           fillPattern=FillPattern.Solid)}),
     Documentation(info="<html>
-<p><b>Version 3.2</b></p>
+<p><b>Version 4.1</b></p>
 </html>
 "));
 end AdaptorModelicaTSP;

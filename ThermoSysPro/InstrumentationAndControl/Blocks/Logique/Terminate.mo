@@ -49,6 +49,6 @@ algorithm
       width=0.6,
       height=0.6),
     Documentation(info="<html>
-<p><b>Version 4.0</b> </p>
+<p><b>Version 4.1</b> </p>
 </html>"));
 end Terminate;

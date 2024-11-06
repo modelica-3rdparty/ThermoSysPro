@@ -117,6 +117,6 @@ equation
       height=0.6),
     Documentation(info="<html>
 <p><b>Adapted from the ModelicaAdditions.Blocks.Tables library</b> </p>
-<p><b>Version 3.1</h4>
+<p><b>Version 4.1</h4>
 </html>"));
 end Table1D;

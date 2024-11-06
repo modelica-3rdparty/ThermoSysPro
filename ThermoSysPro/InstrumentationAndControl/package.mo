@@ -134,6 +134,6 @@ annotation (
         color={0,0,255},
         smooth=Smooth.None)}),
   Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2012</b> </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </h4>
 </html>"));
 end InstrumentationAndControl;

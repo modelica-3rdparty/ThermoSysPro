@@ -129,7 +129,7 @@ annotation (
     library=1,
     autolayout=1),
   Documentation(info="<html>
-<p><b>ThermoSysPro Version 3.2 </h4>
+<p><b>ThermoSysPro Version 4.1 </h4>
 <p><span style=\"font-family: MS Shell Dlg 2;\">This library implements the thermodynamic properties for water and steam using simple polynomials.</span></h4>
 </html>", revisions="<html>
 <p><u><b>Authors</b></u></p>

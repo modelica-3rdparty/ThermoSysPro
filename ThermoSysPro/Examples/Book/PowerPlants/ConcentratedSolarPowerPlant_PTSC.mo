@@ -853,8 +853,8 @@ equation
 <li>Baligh El Hefni</li>
 </ul>
 </html>", info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019 </h4>
-<p><b>ThermoSysPro Version 3.2 </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024 </h4>
+<p><b>ThermoSysPro Version 4.1 </h4>
 <p>This is the dynamic model of a 1 MWe concentrated solar power plant with a parabolic trough collector. </p>
 <p>It is documented in a<a href=\"https://www.sciencedirect.com/science/article/pii/S1876610214005761\"> conference paper</a> and in Sect. 6.7 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>. </p>
 <p>The results reported in the ThermoSysPro book were computed using Dymola.</h4>

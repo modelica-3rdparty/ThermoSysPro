@@ -3,10 +3,10 @@ package UsersGuide "ThermoSysPro Licence and Users Guide"
 
   class ReleaseNotes "Release notes"
 
-  class Version_2_0 "Version 2.0"
+  class Version_2_0 "Version 4.1"
 
       annotation (Documentation(info="<html>
-<h3><font color=\"#008000\">Version 2.0 (January 24, 2011)</font></h3>
+<h3><font color=\"#008000\">Version 4.1 (January 24, 2011)</font></h3>
 <p> This is the first open source release of the library.
 </p>
 </html>
@@ -30,10 +30,10 @@ package UsersGuide "ThermoSysPro Licence and Users Guide"
             extent={{-12.5,-12.5},{12.5,12.5}})}));
   end Version_2_0;
 
-  class Version_3_0 "Version 3.0"
+  class Version_3_0 "Version 4.1"
 
       annotation (Documentation(info="<html>
-<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 3.0 (December 20, 2011)</span></b></p>
+<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 4.1 (December 20, 2011)</span></b></p>
 <p align=\"center\"><b><span style=\"font-size: 16pt;\">ThermoSysPro modifications from version 2.0</span></b> </p>
 <p>Analytic jacobian is added to the library.</p>
 <p>The examples package is added to the library.</p>
@@ -272,10 +272,10 @@ package UsersGuide "ThermoSysPro Licence and Users Guide"
             extent={{-12.5,-12.5},{12.5,12.5}})}));
   end Version_3_0;
 
-  class Version_3_1 "Version 3.1"
+  class Version_3_1 "Version 4.1"
 
       annotation (Documentation(info="<html>
-<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 3.1 (June 12, 2014)</span></b> </p>
+<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 4.1 (June 12, 2014)</span></b> </p>
 <p align=\"center\"><b><span style=\"font-size: 16pt;\">ThermoSysPro modifications from version 3.0</span></b> </p>
 <p>&nbsp; </p>
 <ul>
@@ -536,10 +536,10 @@ package UsersGuide "ThermoSysPro Licence and Users Guide"
             extent={{-12.5,-12.5},{12.5,12.5}})}));
   end Version_3_1;
 
-  class Version_3_2 "Version 3.2"
+  class Version_3_2 "Version 4.1"
 
       annotation (Documentation(info="<html>
-<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 3.2 (August 5, 2020)</span></b> </p>
+<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 4.1 (August 5, 2020)</span></b> </p>
 <p align=\"center\"><b><span style=\"font-size: 16pt;\">ThermoSysPro modifications from version 3.1</span></b></p>
 <p>&nbsp; </p>
 <ul>
@@ -829,6 +829,77 @@ package UsersGuide "ThermoSysPro Licence and Users Guide"
             fillPattern=FillPattern.Solid,
             extent={{-12.5,-12.5},{12.5,12.5}})}));
   end Version_4_0;
+
+    class Version_4_1 "Version 4.1"
+    
+        annotation (Documentation(info="<html>
+    <p><b><span style=\"font-size: 10pt; color: #008000;\">Version 4.1 (June 7, 2022)</span></b> </p>
+    <p align=\"center\"><b><span style=\"font-size: 16pt;\">ThermoSysPro modifications from version 3.2</span></b></p>
+    <p>&nbsp; </p>
+    <ul>
+    <li>New package ThermoSysPro.Fluid </li>
+    </ul>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Package utilizes new fluid connectors that can handle all fluids in package ThermoSysPro.Properties. </p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Package handles thermal diffusion as a new option. </p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Package replaces packages ThermoSysPro.Combustion, ThermoSysPro.FlueGases, ThermoSysPro.MultiFluids, ThermoSysPro.WaterSolution and ThermoSysPro.WaterSteam. </p>
+    <ul>
+    <li>Component ThermoSysPro.WaterSteam.HeatExchangers.DynamicWaterWaterExchanger </li>
+    </ul>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Equation&nbsp;DPc[i] = p_Kc*ThermoSysPro.Functions.ThermoSquare(Qc[i], 1.e-3)/rhoc[i]; &nbsp;is replaced by&nbsp; DPc[i] = p_Kc*Qc[i]^2/rhoc[i]; </p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Equation&nbsp;DPf[i] = p_Kf*ThermoSysPro.Functions.ThermoSquare(Qf[i], 1.e-3)/rhof[i]; &nbsp;is replaced by&nbsp; DPf[i] = p_Kf*Qf[i]^2/rhof[i]; </p>
+    <ul>
+    <li>Component ThermoSysPro.WaterSteam.HeatExchangers.StaticWaterWaterExchanger </li>
+    </ul>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Equation&nbsp;DPc = p_Kc*ThermoSysPro.Functions.ThermoSquare(Qc, 1.e-3)/rhoc; &nbsp;is replaced by&nbsp; DPc = p_Kc*Qc^2/rhoc; </p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Equation&nbsp;DPf = p_Kf*ThermoSysPro.Functions.ThermoSquare(Qf, 1.e-3)/rhof; &nbsp;is replaced by&nbsp; DPf = p_Kf*Qf^2/rhof; </p>
+    <ul>
+    <li>Component ThermoSysPro.Fluid.Machines.Generator_11 </li>
+    </ul>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; C</span></span><span style=\"font-family: Courier New;\">omponent is duplicated in package ThermoSysPro.ElectroMechanics.Machines for package Fluid </p>
+    <ul>
+    <li>Component ThermoSysPro.Thermal.HeatTransfer.HeatExchangerWall</li>
+    </ul>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">New option: dynamic_energy_balance </p>
+    <ul>
+    <li>Package ThermoSysPro.Units</li>
+    </ul>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">New package: SI that duplicates package Modelica.SIunits </p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">New package: nonSI </p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">New package: xSI </p>
+    <ul>
+    <li>All components in package ThermoSysPro</li>
+    </ul>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">ThermoSysPro.Units.xSI.DifferentialTemperature is replaced by ThermoSysPro.Units.SI.TemperatureDifference </p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">ThermoSysPro.Units.xSI.DifferentialPressure is replaced by ThermoSysPro.Units.SI.PressureDifference </p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">ThermoSysPro.Units.xSI.MassFraction is replaced by ThermoSysPro.Units.SI.MassFraction </p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">All references to Modelica.SIunits are replaced by references to ThermoSysPro.Units </p>
+    <ul>
+    <li>Component ThermoSysPro.Solar.Collectors.FresnelField </li>
+    </ul>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">New parameter: Lc</p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">New parameter: <code>trackingFactor</code></p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">New parameter: <code>thermalLossPhy</code></p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Equation <code>KL&nbsp;=<span style=\"color: #ff0000;\">&nbsp;cos</span>(pi*thetaL/180)*(1&nbsp;-&nbsp;h*<span style=\"color: #ff0000;\">tan</span>(pi*thetaL/180)/L); is replaced by KL&nbsp;=<span style=\"color: #ff0000;\">&nbsp;cos</span>(pi*thetaL/180)*(1&nbsp;-&nbsp;h*<span style=\"color: #ff0000;\">tan</span>(pi*thetaL/180)/Lc);</code></p>
+    <p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Equation <code>dQloss[i]&nbsp;=&nbsp;pi*D*L/Ns*(0.5*F12*Emi*5.67e-8*(T[i]^4&nbsp;-&nbsp;(0.0552*T0^(1.5))^4)&nbsp;+&nbsp;hc*(T[i]&nbsp;-&nbsp;T0)); is replaced by dQloss[i]&nbsp;=&nbsp;<span style=\"color: #0000ff;\">if&nbsp;</span>thermalLossPhy<span style=\"color: #0000ff;\">&nbsp;then&nbsp;</span>pi*D*L/Ns*(0.5*F12*Emi*5.67e-8*(T[i]^4&nbsp;-&nbsp;(0.0552*T0^(1.5))^4)&nbsp;+&nbsp;hc*(T[i]&nbsp;-&nbsp;T0))<span style=\"color: #0000ff;\">&nbsp;else&nbsp;</span>L/Ns*(A1*deltaT[i]&nbsp;+&nbsp;A2*deltaT[i]^2);</code></p>
+    </html>"), Icon(graphics={
+            Ellipse(
+              lineColor={75,138,73},
+              fillColor={75,138,73},
+              pattern=LinePattern.None,
+              fillPattern=FillPattern.Solid,
+              extent={{-100.0,-100.0},{100.0,100.0}}),
+            Polygon(origin={-4.167,-15.0},
+              fillColor={255,255,255},
+              pattern=LinePattern.None,
+              fillPattern=FillPattern.Solid,
+              points={{-15.833,20.0},{-15.833,30.0},{14.167,40.0},{24.167,20.0},{4.167,-30.0},{14.167,-30.0},{24.167,-30.0},{24.167,-40.0},{-5.833,-50.0},{-15.833,-30.0},{4.167,20.0},{-5.833,20.0}},
+              smooth=Smooth.Bezier),
+            Ellipse(origin={7.5,56.5},
+              fillColor={255,255,255},
+              pattern=LinePattern.None,
+              fillPattern=FillPattern.Solid,
+              extent={{-12.5,-12.5},{12.5,12.5}})}));
+    end Version_4_1;
     annotation (Documentation(info="<html>
 <h3><font color=\"#008000\" size=5>Release notes</font></h3>
 <p>

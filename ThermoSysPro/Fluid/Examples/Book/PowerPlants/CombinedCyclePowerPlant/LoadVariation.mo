@@ -1936,8 +1936,8 @@ equation
 <li>Baligh El Hefni</li>
 </ul>
 </html>", info="<html>
-<h4>Copyright &copy; EDF 2002 - 2021 </h4>
-<h4>ThermoSysPro Version 4.0 </h4>
+<h4>Copyright &copy; EDF 2002 - 2024 </h4>
+<h4>ThermoSysPro Version 4.1 </h4>
 <p>The results reported in the ThermoSysPro book were computed using Dymola. </p>
 </html>"),
     experiment(StopTime=2500),

@@ -29,10 +29,10 @@ package Common
         width=0.6,
         height=0.6),
       Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2010</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
-<p><b>ThermoSysPro Version 2.0</b></p>
+<p><b>ThermoSysPro Version 4.1</b></p>
 </HTML>
 "));
   end Duree;
@@ -61,10 +61,10 @@ package Common
           Line(points={{-100,0},{100,0}}, color={0,0,0}),
           Line(points={{0,50},{0,-100}}, color={0,0,0})}),
       Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2010</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
-<p><b>ThermoSysPro Version 2.0</b></p>
+<p><b>ThermoSysPro Version 4.1</b></p>
 </HTML>
 "));
   end DateEtHeure;
@@ -106,10 +106,10 @@ package Common
         width=0.6,
         height=0.6),
       Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2010</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
-<p><b>ThermoSysPro Version 2.0</b></p>
+<p><b>ThermoSysPro Version 4.1</b></p>
 </HTML>
 "));
   end CvtEntierVersDuree;
@@ -244,7 +244,7 @@ package Common
       library=1,
       autolayout=1),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2003</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
 <p><b>Version 1.0</b></p>

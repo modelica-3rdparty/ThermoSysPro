@@ -134,8 +134,8 @@ annotation (
         color={0,0,255},
         smooth=Smooth.None)}),
   Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019 </p>
-<p><b>ThermoSysPro Version 3.2 </p>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1 </p>
 <p>This package contains two models of the same combined cycle power plant are provided to simulate two different transients:</p>
 <ul>
 <li>CombinedCycle_Load_100_50, to simulate a load decrease from 100&percnt; to 50&percnt;</li>

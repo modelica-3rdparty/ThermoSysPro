@@ -33,10 +33,10 @@ annotation (
   Documentation(info="<html>
 <p><b>Version 1.2</b> </p>
 <p>Needs to be redone. Iterative functions don&apos;t work for Analytic Jacobian</p>
-<p><b>Copyright &copy; EDF 2002 - 2010</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
-<p><b>ThermoSysPro_AJ Version 2.0</b></p>
+<p><b>ThermoSysPro_AJ Version 4.1</b></p>
 </HTML>
 "));
 end Pressure_sat_hl_der;

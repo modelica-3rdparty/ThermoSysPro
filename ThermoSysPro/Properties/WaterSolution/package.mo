@@ -134,6 +134,6 @@ annotation (
     library=1,
     autolayout=1),
   Documentation(info="<html>
-<p><b>ThermoSysPro Version 3.2</b></h4>
+<p><b>ThermoSysPro Version 4.1</b></h4>
 </html>"));
 end WaterSolution;

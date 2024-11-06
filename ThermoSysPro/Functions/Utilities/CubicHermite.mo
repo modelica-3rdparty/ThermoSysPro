@@ -41,6 +41,6 @@ algorithm
 <li><i>May 2008</i> by <a href=\"mailto:Michael.Sielemann@dlr.de\">Michael Sielemann</a></li>
 </ul>
 </html>", info="<html>
-<p><b>ThermoSysPro Version 3.1</h4>
+<p><b>ThermoSysPro Version 4.1</h4>
 </html>"));
 end CubicHermite;

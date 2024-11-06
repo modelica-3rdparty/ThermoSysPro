@@ -121,8 +121,8 @@ annotation (Icon(graphics={
         points={{80,80},{100,100}},
         color={0,0,255},
         smooth=Smooth.None)}), Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021 </p>
-<p><b>ThermoSysPro Version 4.0 </p>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1 </p>
 <p>This package contains control blocks for the examples package.</h4>
 </html>"));
 end Control;

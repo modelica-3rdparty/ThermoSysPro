@@ -368,10 +368,10 @@ equation
         style(color=3, rgbcolor={0,0,255}),
         string="ReacB")),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2010</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
-<p><b>ThermoSysPro Version 2.0</b></p>
+<p><b>ThermoSysPro Version 4.1</b></p>
 </HTML>
 "));
 end ReactivityFeedbacks;

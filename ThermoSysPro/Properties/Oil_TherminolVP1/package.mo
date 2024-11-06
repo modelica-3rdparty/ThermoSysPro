@@ -6,7 +6,7 @@ annotation (Documentation(revisions="<html>
 <li>Baligh El Hefni</li>
 </ul>
 </html>", info="<html>
-<p><b>ThermoSysPro Version 3.2</h4>
+<p><b>ThermoSysPro Version 4.1</h4>
 </HTML>"), Icon(graphics={
       Text(
         extent={{-102,0},{24,-26}},

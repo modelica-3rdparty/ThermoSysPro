@@ -1,7 +1,7 @@
 within ThermoSysPro;
 package NuclearCore "Library to model a nuclear core"
 annotation (Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2012</h4>
+<p><b>Copyright &copy; EDF 2002 - 2024</h4>
 </html>"), Icon(graphics={
       Text(
         extent={{-102,0},{24,-26}},
