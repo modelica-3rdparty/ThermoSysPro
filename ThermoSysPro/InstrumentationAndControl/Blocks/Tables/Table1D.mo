@@ -117,6 +117,7 @@ equation
       height=0.6),
     Documentation(info="<html>
 <p><b>Adapted from the ModelicaAdditions.Blocks.Tables library</b> </p>
-<p><b>Version 4.1</h4>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
+<p><b>ThermoSysPro Version 4.1</b></p></h4>
 </html>"));
 end Table1D;

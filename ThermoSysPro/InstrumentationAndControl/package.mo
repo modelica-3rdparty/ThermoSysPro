@@ -134,6 +134,7 @@ annotation (
         color={0,0,255},
         smooth=Smooth.None)}),
   Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b> </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p> </h4>
 </html>"));
 end InstrumentationAndControl;

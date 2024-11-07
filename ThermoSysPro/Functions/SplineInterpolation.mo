@@ -92,7 +92,8 @@ algorithm
   annotation (
     smoothOrder=1,
      Icon(graphics),       Documentation(info="<html>
-<p><b>ThermoSysPro Version 4.1</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
+<p><b>ThermoSysPro Version 4.1</b></p>
 <p>Spline interpolation function. The resulting spline will be continuous and have a continuous first derivative.</p>
 <p><h4><font color=\"#008000\">Implementation</font></h4></p>
 <p>It uses a cardinal spline interpolation algorithm. Cardinal splines are a sub-set of cubic Hermite splines where each piece is a third-degree polynomial specified in Hermite form: i.e specified by its values and the first derivatives at the end points of the reference interval.</p>

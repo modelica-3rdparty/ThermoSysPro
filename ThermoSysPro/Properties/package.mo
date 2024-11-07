@@ -3,7 +3,10 @@ package Properties "Fluids properties library"
 
 
 
-annotation (Icon(graphics={
+annotation (Documentation(info="<html>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p> </h4>
+</html>"),Icon(graphics={
       Text(
         extent={{-102,0},{24,-26}},
         lineColor={242,148,0},

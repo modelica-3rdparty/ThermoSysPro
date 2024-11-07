@@ -4,7 +4,6 @@ package WaterSteam "1 - Water/steam properties library (IAPWS-IF97)"
 
   replaceable package IF97 =
       ThermoSysPro.Properties.WaterSteam.IF97_packages.IF97_wAJ;
-
 annotation (
   Icon(coordinateSystem(
       preserveAspectRatio=false,

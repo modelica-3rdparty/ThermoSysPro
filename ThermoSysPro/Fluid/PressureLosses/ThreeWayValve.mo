@@ -198,12 +198,5 @@ equation
       x=0.09,
       y=0.11,
       width=0.7,
-      height=0.66),
-    Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
-</HTML>
-<html>
-<p><b>Version 1.4</b></p>
-</HTML>
-"), Diagram(Text(extent=[34, -4; 68, -26], string="Valve 2")));
+      height=0.66));
 end ThreeWayValve;
