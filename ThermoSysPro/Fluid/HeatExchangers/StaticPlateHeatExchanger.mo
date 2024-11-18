@@ -4,8 +4,8 @@ model StaticPlateHeatExchanger "Static plate heat exchanger"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
-  replaceable package Medium_CoolProp_c = Modelica.Media.Interfaces.PartialTwoPhaseMedium "CoolProp Medium Hot" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
-  replaceable package Medium_CoolProp_f = Modelica.Media.Interfaces.PartialTwoPhaseMedium "CoolProp Medium Cold" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+  replaceable package Medium_CoolProp_c = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium Hot" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
+  replaceable package Medium_CoolProp_f = ThermoSysPro.Properties.ModelicaMedia.Media.ModelicaMedium "CoolProp Medium Cold" annotation(Evaluate=true, Dialog(tab="Fluid", group="CoolProp properties (enable if FluidType.CoolPropMedium)",enable=(ftype == FluidType.CoolPropMedium)));
 
   parameter Units.SI.ThermalConductivity lambdam=15.0
     "Metal thermal conductivity";
