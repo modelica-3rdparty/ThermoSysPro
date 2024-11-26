@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestDynamicExchangerWaterSteamFlueGases
-
   MultiFluids.HeatExchangers.DynamicExchangerWaterSteamFlueGases Echangeur(
     Ns=10,
     TwoPhaseFlowPipe(P(start={130e5,130e5,130e5,130e5,130e5,130e5,130e5,130e5,130e5,130e5,130e5,130e5}),h(start={15e5,15e5,15e5,15e5,15e5,15e5,15e5,15e5,15e5,15e5,15e5,15e5})),
@@ -19,7 +18,6 @@ model TestDynamicExchangerWaterSteamFlueGases
       K(fixed=false, start=40)))
                 annotation (Placement(transformation(extent={{-60,-58},{60,58}},
           rotation=0)));
-
   ThermoSysPro.FlueGases.BoundaryConditions.SourcePQ Source_Fumees(
     Xso2=0,
     P0=1.1e5,
@@ -84,7 +82,7 @@ equation
           fillPattern=FillPattern.Solid,
           points={{-58.0,46.0},{42.0,-14.0},{-58.0,-74.0},{-58.0,46.0}})}),
       Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019 </p>
-<p><b>ThermoSysPro Version 3.2 </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1 </h4>
 </html>"));
 end TestDynamicExchangerWaterSteamFlueGases;

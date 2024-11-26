@@ -1,6 +1,5 @@
 within ThermoSysPro.Functions;
 package Utilities
-
 annotation (Icon(graphics={
       Text(
         extent={{-102,0},{24,-26}},

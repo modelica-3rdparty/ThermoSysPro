@@ -121,8 +121,8 @@ annotation (Icon(graphics={
         points={{80,80},{100,100}},
         color={0,0,255},
         smooth=Smooth.None)}), Documentation(info="<html>
-<p>Copyright &copy; EDF 2002 - 2019 </p>
-<p>ThermoSysPro Version 3.2 </p>
+<p>Copyright &copy; EDF 2002 - 2024 </p>
+<p>ThermoSysPro Version 4.1 </p>
 <p>This package contains the simple examples for Chapter 14 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>.</h4>
 </html>"));
 end Volume;

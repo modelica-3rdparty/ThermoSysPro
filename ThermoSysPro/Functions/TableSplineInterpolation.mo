@@ -72,7 +72,8 @@ algorithm
   annotation (
     smoothOrder=2,
     Icon(graphics),        Documentation(info="<html>
-<p><b>ThermoSysPro Version 3.1</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
+<p><b>ThermoSysPro Version 4.1</b></p>
 <p>Computes 2-dimensional spline interpolation based on function SplineInterpolation. The resulting 2-dimensional spline will be continuous and have continuous first derivatives. </p>
 <p><h4><font color=\"#008000\">Implementation</font></h4></p>
 <p>It uses a cardinal spline interpolation algorithm. Cardinal splines are a sub-set of cubic Hermite splines where each piece is a third-degree polynomial specified in Hermite form: i.e specified by its values and the first derivatives at the end points of the reference interval.</p>

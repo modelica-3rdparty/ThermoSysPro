@@ -1,5 +1,6 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefQ "Fixed mass flow reference"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   parameter Units.SI.MassFlowRate Q0=10 "Fixed fluid mass flow";
 
 public
@@ -95,8 +96,8 @@ equation
       width=0.82,
       height=0.65),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 </html>",
    revisions="<html>
 <p><u><b>Authors</b></u></p>

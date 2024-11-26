@@ -6,7 +6,7 @@ package UsersGuide "ThermoSysPro Licence and Users Guide"
   class Version_2_0 "Version 2.0"
 
       annotation (Documentation(info="<html>
-<h3><font color=\"#008000\">Version 2.0 (January 24, 2011)</font></h3>
+<h3><font color=\"#008000\">Version 4.1 (January 24, 2011)</font></h3>
 <p> This is the first open source release of the library.
 </p>
 </html>
@@ -33,7 +33,7 @@ package UsersGuide "ThermoSysPro Licence and Users Guide"
   class Version_3_0 "Version 3.0"
 
       annotation (Documentation(info="<html>
-<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 3.0 (December 20, 2011)</span></b></p>
+<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 4.1 (December 20, 2011)</span></b></p>
 <p align=\"center\"><b><span style=\"font-size: 16pt;\">ThermoSysPro modifications from version 2.0</span></b> </p>
 <p>Analytic jacobian is added to the library.</p>
 <p>The examples package is added to the library.</p>
@@ -275,7 +275,7 @@ package UsersGuide "ThermoSysPro Licence and Users Guide"
   class Version_3_1 "Version 3.1"
 
       annotation (Documentation(info="<html>
-<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 3.1 (June 12, 2014)</span></b> </p>
+<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 4.1 (June 12, 2014)</span></b> </p>
 <p align=\"center\"><b><span style=\"font-size: 16pt;\">ThermoSysPro modifications from version 3.0</span></b> </p>
 <p>&nbsp; </p>
 <ul>
@@ -539,7 +539,7 @@ package UsersGuide "ThermoSysPro Licence and Users Guide"
   class Version_3_2 "Version 3.2"
 
       annotation (Documentation(info="<html>
-<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 3.2 (August 5, 2020)</span></b> </p>
+<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 4.1 (August 5, 2020)</span></b> </p>
 <p align=\"center\"><b><span style=\"font-size: 16pt;\">ThermoSysPro modifications from version 3.1</span></b></p>
 <p>&nbsp; </p>
 <ul>
@@ -829,6 +829,45 @@ package UsersGuide "ThermoSysPro Licence and Users Guide"
             fillPattern=FillPattern.Solid,
             extent={{-12.5,-12.5},{12.5,12.5}})}));
   end Version_4_0;
+
+    class Version_4_1 "Version 4.1"
+
+        annotation (Documentation(info="<html>
+<p><b><span style=\"font-size: 10pt; color: #008000;\">Version 4.1 (November 6, 2024)</span></b> </p>
+<p align=\"center\"><b><span style=\"font-size: 16pt;\">ThermoSysPro modifications from version 4.0</span></b> </p>
+<p>&nbsp; </p>
+<ul>
+<li>New features: </li>
+</ul>
+<p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Added a new sensor component <span style=\"font-family: monospace;\">ThermoSysPro/InstrumentationAndControl/Blocks/Sources/WirelessSensor </span><span style=\"font-family: Courier New;\">to show Real values which can then be connected to ThermoSysPro signal components <a href=\"https://gitlab.pam-retd.fr/thermosysproandco/ThermoSysPro/-/issues/77\">(featuring a color scale)</a>.</span></p>
+<p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Added the <span style=\"font-family: Monospace;\">NuclearCore</span><span style=\"font-family: Courier New;\"> package.</span></p>
+<p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o Added a new </span><span style=\"font-family: Monospace;\">I&amp;C</span><span style=\"font-family: Courier New;\"> component for Hysteresis effect : </span><span style=\"font-family: Monospace;\">ThermoSysPro/InstrumentationAndControl/Blocks/NonLineaire/Hysteresis.</span></p>
+<p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Added a pressure output signal in <span style=\"font-family: Monospace;\">ThermoSysPro/WaterSteam/Volumes/Pressurizer</span><span style=\"font-family: Courier New;\">.</span></p>
+<ul>
+<li>Fixes: </li>
+</ul>
+<p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp;&nbsp; </span></span><span style=\"font-family: Courier New;\">Modification of <span style=\"font-family: Monospace;\">ntubes</span><span style=\"font-family: Courier New;\"> from Integer to Real in </span><span style=\"font-family: Monospace;\">Fluid/PressureLosses/LumpedStraightPipe</span><span style=\"font-family: Courier New;\">, </span><span style=\"font-family: Monospace;\">WaterSteam/HeatExchangers/DynamicOnePhaseFlowPipe</span><span style=\"font-family: Courier New;\"> and </span><span style=\"font-family: Monospace;\">WaterSteam/PressureLosses/LumpedStraightPipe </span><span style=\"font-family: Courier New;\">to allow equivalent geometries</span><span style=\"font-family: Monospace;\">.</span></p>
+<p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o<span style=\"font-family: Times New Roman; font-size: 7pt;\">&nbsp; </span></span><span style=\"font-family: Courier New;\">Some <span style=\"font-family: Monospace;\"><a name=\"LC159\">X</a>h2o</span><span style=\"font-family: Courier New;\"> concentrations in some diphasic components in the Fluid package</span><span style=\"font-family: monospace;\"> </span><span style=\"font-family: Courier New;\">were set to 1 whereas it should have been 0.</span></p>
+<p style=\"margin-left: 60px;\"><span style=\"font-family: Courier New;\">o EndOfLines are now set to \\n and not to Windows&apos;EOLs \\n\\r, so that all OS can modify the library (.gitattributes added to the git library)</span></p>
+</html>"),     Icon(graphics={
+            Ellipse(
+              lineColor={75,138,73},
+              fillColor={75,138,73},
+              pattern=LinePattern.None,
+              fillPattern=FillPattern.Solid,
+              extent={{-100.0,-100.0},{100.0,100.0}}),
+            Polygon(origin={-4.167,-15.0},
+              fillColor={255,255,255},
+              pattern=LinePattern.None,
+              fillPattern=FillPattern.Solid,
+              points={{-15.833,20.0},{-15.833,30.0},{14.167,40.0},{24.167,20.0},{4.167,-30.0},{14.167,-30.0},{24.167,-30.0},{24.167,-40.0},{-5.833,-50.0},{-15.833,-30.0},{4.167,20.0},{-5.833,20.0}},
+              smooth=Smooth.Bezier),
+            Ellipse(origin={7.5,56.5},
+              fillColor={255,255,255},
+              pattern=LinePattern.None,
+              fillPattern=FillPattern.Solid,
+              extent={{-12.5,-12.5},{12.5,12.5}})}));
+    end Version_4_1;
     annotation (Documentation(info="<html>
 <h3><font color=\"#008000\" size=5>Release notes</font></h3>
 <p>
@@ -860,13 +899,12 @@ on the ThermoSysPro library.
     annotation (Documentation(info="<html>
 <h3><font color=\"#008000\" size=5>Contact
 </font></h3>
-<dl><dt>The development of the ThermoSysPro library is organized by<br/></dt>
-<dd>Daniel Bouskela<br/></dd>
+<dl><dt>The development of the ThermoSysPro library is organized by ThermoSysPro developers' team at<br/></dt>
 <dd>EDF/R&AMP;D</dd>
 <dd>6, quai Watier</dd>
 <dd>F-78401 Chatou Cedex</dd>
 <dd>France<br/></dd>
-<dd>email: <a href=\"mailto:daniel.bouskela@edf.fr\">daniel.bouskela@edf.fr</a></dd>
+<dd>email: <a href=\"mailto:contact-thermosyspro@edf.fr\">contact-thermosyspro@edf.fr</a></dd>
 </dl></html>"), Icon(graphics={
           Ellipse(
             lineColor={75,138,73},

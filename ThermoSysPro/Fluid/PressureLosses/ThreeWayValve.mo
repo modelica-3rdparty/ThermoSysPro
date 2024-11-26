@@ -39,7 +39,7 @@ model ThreeWayValve "Three way valve"
       tab="Fluid",
       group=
           "Initial composition values (active for flue gases only if dynamic_composition_balance=true)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xh2o0=0.05
+  parameter ThermoSysPro.Units.SI.MassFraction Xh2o0=if ftype == FluidType.FlueGases then 0.05 else 0
     "Initial H20 mass fraction" annotation (Evaluate=true, Dialog(
       enable=dynamic_composition_balance,
       tab="Fluid",
@@ -139,8 +139,8 @@ equation
     annotation (Line(points={{-60,0},{-80,0},{-80,-40},{-100,-40}}, color={0,0,
           255}));
   annotation(structurallyIncomplete, Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 <p>This component model is documented in Sect. 13.9 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>. </p>
 </html>",
    revisions="<html>
@@ -198,12 +198,5 @@ equation
       x=0.09,
       y=0.11,
       width=0.7,
-      height=0.66),
-    Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2003</b></p>
-</HTML>
-<html>
-<p><b>Version 1.4</b></p>
-</HTML>
-"), Diagram(Text(extent=[34, -4; 68, -26], string="Valve 2")));
+      height=0.66));
 end ThreeWayValve;

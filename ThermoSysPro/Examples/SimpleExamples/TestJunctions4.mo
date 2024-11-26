@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestJunctions4
-
   ThermoSysPro.WaterSteam.Junctions.DeheaterMixer2 deheaterMixer2_1(Tmax=308)
     annotation (Placement(transformation(extent={{-20,20},{0,40}}, rotation=0)));
   ThermoSysPro.WaterSteam.PressureLosses.SingularPressureLoss
@@ -53,7 +52,7 @@ equation
           fillPattern=FillPattern.Solid,
           points={{-58.0,46.0},{42.0,-14.0},{-58.0,-74.0},{-58.0,46.0}})}),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019 </p>
-<p><b>ThermoSysPro Version 3.2 </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1 </h4>
 </html>"));
 end TestJunctions4;

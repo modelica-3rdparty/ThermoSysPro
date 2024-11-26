@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestSensors
-
   ThermoSysPro.WaterSteam.Sensors.SensorH specificEnthalpySensor
     annotation (Placement(transformation(extent={{-60,8},{-40,28}}, rotation=0)));
   ThermoSysPro.WaterSteam.Sensors.SensorQ massFlowSensor
@@ -55,7 +54,7 @@ equation
           fillPattern=FillPattern.Solid,
           points={{-58.0,46.0},{42.0,-14.0},{-58.0,-74.0},{-58.0,46.0}})}),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019 </p>
-<p><b>ThermoSysPro Version 3.2 </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1 </h4>
 </html>"));
 end TestSensors;

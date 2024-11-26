@@ -1,10 +1,10 @@
 within ThermoSysPro.Fluid.Examples.CombinedCyclePowerPlant;
 model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 100% to 50%"
-  parameter Real CstHP(fixed=false,start=7872243.329137064)
+  parameter Real CstHP(fixed=false,start=8316103.829776841)
     "Stodola's ellipse coefficient HP";
-  parameter Real CstMP(fixed=false,start=250346.99234192327)
+  parameter Real CstMP(fixed=false,start=254110.8564593821)
     "Stodola's ellipse coefficient MP";
-  parameter Real CstBP(fixed=false,start=10510.769959447052)
+  parameter Real CstBP(fixed=false,start=10713.964292543395)
     "Stodola's ellipse coefficient BP";
   parameter ThermoSysPro.Units.xSI.Cv CvmaxValveAHP(fixed=false, start=135)
     "Maximum CV: alim. valve HP Drum  ";
@@ -65,23 +65,23 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
   ThermoSysPro.Fluid.Volumes.DynamicDrum BallonHP(
     L=16.27,
     Vertical=false,
-    hl(fixed=false, start=1459929.6557225615),
-    hv(fixed=false, start=2664756.9335524077),
+    hl(fixed=false, start=1490815.1478051024),
+    hv(fixed=false, start=2666681.973890458),
     Vv(fixed=false),
     R=1.05,
     xmv(fixed=false),
-    P(fixed=false, start=12726786.684064418),
+    P(fixed=false, start=12723768.606734423),
     zl(start=1.05, fixed=true),
     Mp=5000,
     Kpa=5,
     Kvl=1000,
-    Pfond(start=12733698.15963666),
-    Tp(start=589.4448369021196))
+    Pfond(start=12730534.85594967),
+    Tp(start=593.1308910047013))
                      annotation (Placement(transformation(extent={{38,10},{-2,
             50}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve vanne_alimentationHP(
       Cvmax=CvmaxValveAHP,
-    C1(P(start=13374652.64958711),
+    C1(P(start=13463260.282381449),
                             h_vol_2(start=1398250.7267619045)),
     h(start=1398000),
     Cv(start=178),
@@ -95,14 +95,14 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     C2(h_vol_1(start=2664756.9335524077)),
     h(start=2674000),
     Cv(start=23914.7),
-    Pm(start=12725274.444912266))   annotation (Placement(transformation(extent={{-22,46},{-42,66}},
+    Pm(start=12722334.038901985))   annotation (Placement(transformation(extent={{-22,46},{-42,66}},
           rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.PipePressureLoss GainChargeHP(
     z2=0,
     Q(start=150, fixed=true),
     z1=10.83,
     K=KgainChargeHP,
-    C2(P(start=12758125.131063813)),
+    C2(P(start=12755543.553810954)),
     h(start=1474422.14552527),
     Pm(start=12704000))
             annotation (Placement(transformation(
@@ -110,7 +110,7 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
         extent={{-10,-10},{10,10}},
         rotation=180)));
   ThermoSysPro.Fluid.Volumes.VolumeC VolumeEvapHP(V=5,
-    h(start=1459929.6557225615),
+    h(start=1490815.1478051024),
     P(start=12704000))                         annotation (Placement(transformation(
           extent={{8,-100},{-12,-80}}, rotation=0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicFlueGasesMultiFluidHeatExchanger
@@ -120,8 +120,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     L=20.7,
     ExchangerWall(e=0.0026, lambda=47,
       dW1(start={-5.74e7,-2.67e7,-1.24e7}),
-      Tp(start={607.9743232022095,605.444949344346,604.0557720629383}),
-      Tp1(start={606.517435991606,604.7669177434965,603.7415072757717})),
+      Tp(start={607.0686256839474,605.4340763016401,604.369250336098}),
+      Tp1(start={605.8809866549195,604.7482278053628,603.9735475960298})),
     Ns=3,
     ExchangerFlueGasesMetal(
       Dext=0.038,
@@ -137,7 +137,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={755.54833984375,674.4067359457392,636.0812177546504,
             618.193603515625}),
       T1(start={714.9775457406769,655.2439768501948,627.1374112677474}),
-      Tp(start={609.3279079642047,606.0749042484599,604.3477535039484})),
+      Tp(start={608.1720536506299,606.0712938344541,604.7368952679157}),
+      h(start={733599.3125,656358.4375,611752.6709052362,586017.25,579857.8125})),
     TwoPhaseFlowPipe(
       advection=false,
       rugosrel=5e-6,
@@ -147,12 +148,17 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       continuous_flow_reversal=true,
       inertia=true,
       dW1(start={5.74e7,2.67e7,1.24e7}),
-      h(start={1459929.625,1842858.7345266847,2021072.953461077,
-            2103674.4922587443,1459929.625}),
+      h(start={1490815.125,1802974.8785231041,1983243.6948464876,
+            2087250.43237827,1490815.125}),
       hb(start={1459929.875,1760591.32331318,1893494.15765019,1954976.19646134}),
-      P(start={12758125.0,12740268.20023451,12734647.766847359,
-            12730499.45519915,12726787.0}),
-      T0(start={290.0,290.0,290.0})))
+      P(start={12755544.0,12738060.440301126,12731944.445232479,
+            12727558.331339812,12723769.0}),
+      T0(start={290.0,290.0,290.0})),
+    Cfg1(
+      Xo2(start=0.1115701174007655),
+      h_vol_1(start=733599.3042437045),
+      h_vol_2(start=656358.4284245522)),
+    Cfg2(h_vol_1(start=586017.2197643318), h_vol_2(start=579857.8163754256)))
                           annotation (Placement(transformation(
         origin={-14,-50},
         extent={{-20,-20},{20,20}},
@@ -166,9 +172,9 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Ntubes=246,
     ExchangerWall(e=0.0026, lambda=47,
       dW1(start={-3.5e6,-2.63e6,-2e6}),
-      Tp(start={576.9773977809047,582.0830364334571,585.8301318496927}),
-      Tp1(start={576.3268547206692,581.5931147025063,585.4596791589167})),
-    Cws1(P(start=13301170.910895599),
+      Tp(start={586.8045312098105,592.233932288974,596.2487558411457}),
+      Tp1(start={586.1107280703657,591.70094527162,595.8370299676952})),
+    Cws1(P(start=13392085.206996098),
        h_vol_2(start=1291418.4097512758)),
     Cws2(h_vol_1(start=1398250.726761905)),
     ExchangerFlueGasesMetal(
@@ -185,7 +191,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={618.193603515625,613.1248964422501,609.3035158562986,
             606.41162109375}),
       T1(start={615.6592506115472,611.2142061492743,607.857569142044}),
-      Tp(start={577.5724142989593,582.5311413173429,586.1689648703535})),
+      Tp(start={587.4391153803123,592.7214266588746,596.6253392075643}),
+      h(start={586017.25,579857.8125,575126.0965916426,571470.875,568995.125})),
     TwoPhaseFlowPipe(
       advection=false,
       rugosrel=5e-6,
@@ -195,12 +202,13 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
                          false,
       inertia=true,
       dW1(start={3.5e6,2.63e6,2e6}),
-      h(start={1291418.375,1337416.303924748,1372057.1590979556,
-            1398250.726761905,1398250.75}),
+      h(start={1340827.875,1391283.256558695,1430043.6648856928,
+            1459985.6005320582,1490815.125}),
       hb(start={1291418.875,1336078.18827954,1370718.78680301,1396865.59043578}),
-      P(start={13301171.0,13320152.543490017,13338662.827011712,
-            13356802.623346366,13374653.0}),
-      T0(start={290.0,290.0,290.0})))
+      P(start={13392085.0,13410597.999476302,13428564.988335809,
+            13446090.481250245,13463260.0}),
+      T0(start={290.0,290.0,290.0})),
+    Cfg2(h_vol_1(start=571470.9016291047), h_vol_2(start=568995.1352316155)))
                           annotation (Placement(transformation(
         origin={86,-50},
         extent={{20,20},{-20,-20}},
@@ -214,10 +222,10 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Ntubes=246,
     ExchangerWall(e=0.0028, lambda=37.61,
     dW1(start={-9.8e6,-7.7e6,-5.9e6}),
-      Tp(start={641.773975889456,659.2620935819541,674.5601453613823}),
-      Tp1(start={639.7214032623475,657.645496743186,673.3086347868172})),
+      Tp(start={642.2528493064303,660.2252788975977,676.0185839771161}),
+      Tp1(start={640.2457872857126,658.6370135480385,674.7830152370668})),
     Cws1(h_vol_2(start=2664756.9335524077)),
-    Cws2(P(start=12720371.43140221),
+    Cws2(P(start=12717986.08142511),
       h_vol_1(start=2973076.465167672)),
     ExchangerFlueGasesMetal(
       Dext=0.038,
@@ -233,7 +241,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={788.2433471679688,774.636330839027,763.888258455914,
             755.54833984375}),
       T1(start={781.4398445109163,769.2622946474705,759.7183069957642}),
-      Tp(start={643.6693613731671,660.754890543465,675.715814566568})),
+      Tp(start={644.10620941112,661.6919140110865,677.1595321818904}),
+      h(start={771604.625,755814.75,743319.68570567,733599.3125,656358.4375})),
     TwoPhaseFlowPipe(
       advection=false,
       rugosrel=5e-6,
@@ -242,12 +251,13 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
                          false,
       inertia=true,
       dW1(start={9.8e6,7.7e6,5.9e6}),
-      h(start={2664757.0,2793366.8463525265,2894659.427023337,2973076.465167672,
-            2973076.5}),
+      h(start={2666682.0,2796026.041774324,2898380.976036657,2978006.560766205,
+            3093060.25}),
       hb(start={2664757.0,2808108.09290342,2916825.81170239,2998229.34382983}),
-      P(start={12723762.0,12723704.875007024,12723025.392511783,
-            12721873.859626876,12720371.0}),
-      T0(start={290.0,290.0,290.0})))
+      P(start={12720899.0,12720947.316355772,12720381.982283436,
+            12719355.693542536,12717986.0}),
+      T0(start={290.0,290.0,290.0})),
+    Cfg1(h_vol_1(start=771604.5980597589), h_vol_2(start=755814.7776905377)))
                           annotation (Placement(transformation(
         origin={-54,-50},
         extent={{-20,20},{20,-20}},
@@ -260,8 +270,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Ns=3,
     ExchangerWall(e=2.6e-3, lambda=47,
           dW1(start={-1.6e7,-5.6e6,-2.1e6}),
-      Tp(start={556.7923625573021,563.4515089057426,565.7949884705216}),
-      Tp1(start={556.3098450461794,563.2778280617686,565.7320909419939})),
+      Tp(start={561.796823652815,571.4588678419677,575.4628803966649}),
+      Tp1(start={561.3366476058077,571.262479097038,575.3781133321203})),
     L=20.726,
     ExchangerFlueGasesMetal(
       Dext=31.8e-3,
@@ -276,7 +286,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={602.6719360351563,579.980900946576,571.7829862725544,
             568.8102416992188}),
       T1(start={591.3264094805266,575.8819436095652,570.2965996068247}),
-      Tp(start={557.2336952021615,563.6103653709807,565.8525174347154})),
+      Tp(start={562.2177217699727,571.63849399485,575.5404122414816}),
+      h(start={566350.125,541838.1875,531377.2730086804,526862.0625,524994.875})),
     TwoPhaseFlowPipe(
       rugosrel=5e-6,
       z2=0,
@@ -284,12 +295,14 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       z1=10.767,
       inertia=true,
       dW1(start={1.6e7,5.6e6,2.1e6}),
-      h(start={986348.0625,1191052.0456419336,1264734.6677716642,
-            1291418.4097512758,1291418.375}),
+      h(start={1017356.625,1218148.8764511738,1303840.734184985,
+            1340827.8193574403,1391283.25}),
       hb(start={986348.9375,1189594.8774342,1263384.6284551,1290000.70037855}),
-      P(start={13219328.0,13241437.958285147,13261883.227869928,
-            13281654.651763307,13301171.0}),
-      T0(start={290.0,290.0,290.0})))
+      P(start={13311571.0,13333449.940013096,13353656.79078459,
+            13373055.807696301,13392085.0}),
+      T0(start={290.0,290.0,290.0})),
+    Cfg1(h_vol_1(start=566350.1392976114), h_vol_2(start=541838.2014676201)),
+    Cfg2(h_vol_1(start=526862.0336133951), h_vol_2(start=524994.8479453246)))
                   annotation (Placement(transformation(
         origin={206,-50},
         extent={{20,-20},{-20,20}},
@@ -301,8 +314,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Ns=3,
     ExchangerWall(e=2.6e-3, lambda=47,
               dW1(start={-5e6,-3e6,-2.e6}),
-      Tp(start={491.54343078281,498.9069980271022,503.5184174104173}),
-      Tp1(start={491.3392380231037,498.7785262547952,503.4374982277421})),
+      Tp(start={497.4826387258949,505.30719485126787,510.35203444054224}),
+      Tp1(start={497.280376159525,505.1760138457019,510.2668260105936})),
     L=20.767,
     Ntubes=1107,
     ExchangerFlueGasesMetal(
@@ -318,7 +331,9 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={531.16064453125,523.8360138077611,519.2214124321695,
             516.3124389648438}),
       T1(start={527.4983362936189,521.5287131199652,517.7669224567446}),
-      Tp(start={491.73019484551236,499.02450420201814,503.5924298060023})),
+      Tp(start={497.66763734525006,505.42717901517375,510.4299699783979}),
+      h(start={480418.125,472321.78125,467070.7664465268,463659.96875,
+            459024.375})),
     TwoPhaseFlowPipe(
       rugosrel=5e-6,
       z2=0,
@@ -326,12 +341,14 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       z1=10.767,
       inertia=true,
       dW1(start={5e6,3e6,2.e6}),
-      h(start={854493.25,919592.0464622772,960550.2028257779,986348.0919441726,
-            986348.0625}),
+      h(start={880080.3125,946402.3420877852,989416.7007043775,
+            1017356.6143159299,1017356.625}),
       hb(start={854494.5625,915007.018247822,957243.396653824,983786.364226731}),
-      P(start={13129347.0,13152374.515059257,13174952.371260952,
-            13197235.505730344,13219328.0}),
-      T0(start={290.0,290.0,290.0})))
+      P(start={13222388.0,13245245.535219172,13267635.410096379,
+            13289708.936642656,13311571.0}),
+      T0(start={290.0,290.0,290.0})),
+    Cfg1(h_vol_1(start=480418.1309072992), h_vol_2(start=472321.79192425753)),
+    Cfg2(h_vol_1(start=463659.97054164804), h_vol_2(start=459024.3888915999)))
                   annotation (Placement(transformation(
         origin={406,-50},
         extent={{-20,-20},{20,20}},
@@ -343,8 +360,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Ns=3,
     ExchangerWall(e=2.6e-3, lambda=47,
               dW1(start={-9.9999e6,-5e6,-2.4e6}),
-      Tp(start={460.16002911133717,469.99835357411166,474.7738719222592}),
-      Tp1(start={459.7281425156256,469.7896188414262,474.67326898241726})),
+      Tp(start={463.9321072661506,474.9929739228467,480.7691364010327}),
+      Tp1(start={463.5249231636951,474.78082392813104,480.65874049533926})),
     L=20.726,
     Ntubes=1107,
     Cws1(h_vol_2(start=618649.6677733721)),
@@ -361,21 +378,25 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={509.31475830078125,493.76452187742854,486.23046610566547,
             482.5950622558594}),
       T1(start={501.5396335543568,489.997493991547,484.4127676365523}),
-      Tp(start={460.5550523989298,470.18927193360446,474.8658879848841})),
+      Tp(start={464.30453652050693,475.18701603762264,480.87010955935017}),
+      h(start={454937.0,438670.0625,430194.70910967304,425784.40625,
+            406989.71875})),
     TwoPhaseFlowPipe(
       rugosrel=5e-6,
       z2=0,
       z1=10.767,
       inertia=true,
       dW1(start={9.9999e6,5e6,2.4e6}),
-      h(start={618649.6875,756067.8313424552,822483.2837402308,854493.240474255,
-            854493.25}),
+      h(start={571589.625,774526.0247459969,843952.8413327619,880080.2817637667,
+            880080.3125}),
       hb(start={618651.9375,752176.893518976,816707.727773953,847728.424287614}),
       advection=true,
       dynamic_mass_balance=true,
-      P(start={13034952.0,13059418.53296798,13083081.248541538,
-            13106320.315256517,13129347.0}),
-      T0(start={290.0,290.0,290.0})))
+      P(start={13128535.0,13152879.589094872,13176430.551414272,
+            13199531.42642672,13222388.0}),
+      T0(start={290.0,290.0,290.0})),
+    Cfg1(h_vol_1(start=454936.9990189345), h_vol_2(start=438670.0646527905)),
+    Cfg2(h_vol_1(start=425784.41179849324), h_vol_2(start=406989.7250411841)))
                   annotation (Placement(transformation(
         origin={526,-50},
         extent={{20,-20},{-20,20}},
@@ -389,9 +410,9 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Ntubes=246,
     ExchangerWall(e=3e-3, lambda=27,
           dW1(start={-8.8e6,-6.6e6,-4.9e6}),
-      Tp(start={718.0864855457228,738.9518857688491,755.2055454298172}),
-      Tp1(start={715.3026673550778,736.860075660393,753.6461561287115})),
-    Cws2(P(start=12711006.754972342),
+      Tp(start={718.9678163326367,740.0767692096435,756.604413623004}),
+      Tp1(start={716.2791829167277,738.0462739865401,755.0829558745072})),
+    Cws2(P(start=12709302.607974846),
       h_vol_1(start=3240813.8516343245)),
     ExchangerFlueGasesMetal(
       step_T=86.9e-3,
@@ -407,7 +428,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={850.646484375,838.5707346201303,829.4749488031354,
             822.6819458007813}),
       T1(start={844.6086089059804,834.0228417116329,826.0784372242802}),
-      Tp(start={720.6412271937046,740.871563720893,756.6366147445857})),
+      Tp(start={721.435205827699,741.940177792463,758.000672720138}),
+      h(start={844515.9375,830470.625,819863.3783947699,811915.375,793532.125})),
     TwoPhaseFlowPipe(
       rugosrel=5e-6,
       z2=0,
@@ -415,12 +437,14 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       z1=10.83,
       inertia=true,
       dW1(start={8.8e6,6.6e6,4.9e6}),
-      h(start={2973076.5,3088900.88921149,3175933.4050769014,3240813.8516343245,
-            3240813.75}),
+      h(start={2978006.5,3093060.285806892,3179950.539313758,3245057.7348208814,
+            3327367.0}),
       hb(start={2973076.25,3118965.9792171,3205920.08101435,3268474.17308722}),
-      P(start={12720371.0,12718678.034082344,12716464.21434507,
-            12713872.892207509,12711007.0}),
-      T0(start={290.0,290.0,290.0})))
+      P(start={12717986.0,12716434.741873961,12714386.551930543,
+            12711976.726767521,12709303.0}),
+      T0(start={290.0,290.0,290.0})),
+    Cfg1(h_vol_1(start=844515.913281604), h_vol_2(start=830470.6023452462)),
+    Cfg2(h_vol_1(start=811915.3453800348), h_vol_2(start=793532.1532110969)))
                   annotation (Placement(transformation(
         origin={-174,-50},
         extent={{-20,-20},{20,20}},
@@ -433,10 +457,10 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Ntubes=246,
     ExchangerWall(lambda=27, e=5e-3,
     dW1(start={-6.3e6,-4.7e6,-3.6e6}),
-      Tp(start={789.3906813408935,806.8419831862884,820.1561431707274}),
-      Tp1(start={785.7263795421367,804.0878954218736,818.093373707382})),
+      Tp(start={790.194354484117,807.7071433884553,821.1209947971915}),
+      Tp1(start={786.6677403770077,805.0457823271269,819.1194288821613})),
     Dint=28e-3,
-    Cws2(h_vol_1(start=3433271.775819776)),
+    Cws2(h_vol_1(start=3433271.775819776), h_vol_2(start=3436197.0248581353)),
     ExchangerFlueGasesMetal(
       step_T=86.9e-3,
       Fa=1,
@@ -451,7 +475,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={894.2188110351563,885.636025090525,879.1746662824661,
             874.3292236328125}),
       T1(start={889.9274067093704,882.4053456864956,876.7519418617093}),
-      Tp(start={792.5370292454647,809.2067770105702,821.927337447906})),
+      Tp(start={793.2224770352475,809.9923175531776,822.8396367298765}),
+      h(start={1667213.25,885985.75,878403.0483138687,872700.1875,859769.0})),
     TwoPhaseFlowPipe(
       rugosrel=5e-6,
       z2=0,
@@ -459,12 +484,14 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       z1=10.726,
       inertia=true,
       dW1(start={6.3e6,4.7e6,3.6e6}),
-      h(start={3240813.75,3323965.684475156,3386462.568744374,3433271.775819776,
-            3433271.75}),
+      h(start={3245057.75,3327366.927704592,3389481.600384113,
+            3436197.0248581353,3436197.0}),
       hb(start={3240813.5,3348361.34780186,3407279.82422176,3450835.48993987}),
-      P(start={12711007.0,12704270.150400551,12696927.059489354,
-            12689132.094962938,12681000.0}),
-      T0(start={290.0,290.0,290.0})))
+      P(start={12709303.0,12702950.046102656,12696025.294905605,
+            12688672.774977181,12681000.0}),
+      T0(start={290.0,290.0,290.0})),
+    Cfg1(h_vol_2(start=885985.7657894278)),
+    Cfg2(h_vol_1(start=872700.2111216835), h_vol_2(start=859769.0004719263)))
                   annotation (Placement(transformation(
         origin={-294,-50},
         extent={{20,-20},{-20,20}},
@@ -474,17 +501,17 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     L=16.27,
     Vertical=false,
     P0=27.29e5,
-    hl(fixed=false, start=980708.0463805634),
-    hv(fixed=false, start=2798574.7604119307),
+    hl(fixed=false, start=982393.5767040529),
+    hv(fixed=false, start=2799922.9214887),
     Vv(fixed=false),
     R=1.05,
-    P(fixed=false, start=2733824.789876998),
+    P(fixed=false, start=2735928.760015618),
     zl(start=1.05, fixed=true),
     Kpa=5,
     Mp=5000,
     Kvl=1000,
-    Pfond(start=2742370.2498246767),
-    Tp(start=497.3822823273814))
+    Pfond(start=2744469.1253284975),
+    Tp(start=497.67337438326825))
                      annotation (Placement(transformation(extent={{358,10},{320,
             50}}, rotation=0)));
    ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Constante
@@ -492,7 +519,7 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     annotation (Placement(transformation(extent={{304,70},{292,80}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve vanne_alimentationMP(
       Cvmax=CvmaxValveAMP,
-    C1(P(start=3216971.701899643),
+    C1(P(start=3167631.503685111),
     h_vol_2(start=944504.749093579)),
     h(start=944000),
     Cv(start=28),
@@ -503,7 +530,7 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     C2(h_vol_1(start=2798574.7604119307)),
     h(fixed=false, start=2798000),
     Cv(start=23914.7),
-    Pm(fixed=false, start=2732575.5179918623))   annotation (Placement(transformation(extent={{298,46},{278,66}},
+    Pm(fixed=false, start=2734363.102702573))    annotation (Placement(transformation(extent={{298,46},{278,66}},
           rotation=0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicFlueGasesMultiFluidHeatExchanger
     EvaporateurMP(
@@ -512,8 +539,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Ntubes=738,
     ExchangerWall(e=2.6e-3, lambda=47,
     dW1(start={-9.7e7,-7.6e6,-5.8e6}),
-      Tp(start={504.98976100715464,504.26964479130794,503.6922361659351}),
-      Tp1(start={504.4959569394237,503.8875506396794,503.39662949233303})),
+      Tp(start={505.16819175410103,504.47653316985316,503.9096834697299}),
+      Tp1(start={504.6351775530387,504.05161319744064,503.5710085659467})),
     Ns=3,
     TwoPhaseFlowPipe(
       advection=false,
@@ -523,13 +550,13 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       continuous_flow_reversal=true,
       inertia=true,
           dW1(start={9.7e7,7.6e6,5.8e6}),
-      P(start={2773367.25,2751227.106127094,2743473.7578241928,
-            2738204.9403230133,2733824.75}),
-      h(start={980708.0625,1045813.9695051656,1096191.4250344052,
-            1135165.8819583436,980708.0625}),
+      P(start={2774374.0,2752246.9598328522,2744979.3658251367,
+            2740042.865359723,2735928.75}),
+      h(start={982393.5625,1052669.185607329,1108693.0397347796,
+            1153345.8558491606,982393.5625}),
       hb(start={980708.125,1028103.09460604,1066178.43156513,1095633.31556464}),
       T0(start={290.0,290.0,290.0})),
-    Cws1(P(start=2773367.372876323)),
+    Cws1(P(start=2774374.0890979404)),
     ExchangerFlueGasesMetal(
       K(fixed=true, start=30.22),
       Dext=38e-3,
@@ -544,7 +571,10 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={565.2481689453125,550.9126306026692,539.787269523939,
             531.16064453125}),
       T1(start={558.0803978580261,545.349950063304,535.4739641517078}),
-      Tp(start={505.44855126670757,504.624646069051,503.9668824707551})))
+      Tp(start={505.6634119015416,504.8713236488558,504.224344196615}),
+      h(start={522718.59375,505329.59375,491467.03403307416,480418.125,
+            472321.78125})),
+    Cfg1(h_vol_1(start=522718.6023168775), h_vol_2(start=505329.58942935336)))
                           annotation (Placement(transformation(
         origin={306,-50},
         extent={{-20,-20},{20,20}},
@@ -562,20 +592,20 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
         extent={{-10,-10},{10,10}},
         rotation=180)));
   ThermoSysPro.Fluid.Volumes.VolumeC VolumeEvapMP(V=5,
-    h(start=980708.0463805634),
+    h(start=982393.5767040529),
     P(start=2734000))                         annotation (Placement(transformation(
           extent={{328,-100},{308,-80}}, rotation=0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicFlueGasesMultiFluidHeatExchanger
     EconomiseurMP(
     ExchangerWall(e=2.6e-3, lambda=47,
         dW1(start={-3e6,-1.4e6,-740379}),
-      Tp(start={469.31277462346344,487.36995421739016,497.00024549998545}),
-      Tp1(start={468.830886627779,487.11263557868836,496.8627293559427})),
+      Tp(start={472.3628584074194,491.3438906316966,502.0012847992062}),
+      Tp1(start={471.840700513395,491.0496555837365,501.83511098176496})),
     L=20.726,
     Ns=3,
     Dint=26.6e-3,
     Ntubes=246,
-    Cws1(h_vol_2(start=565106.2802015315)),
+    Cws1(h_vol_2(start=565106.2802015315), P(start=3075398.079286396)),
     Cws2(h_vol_1(start=944504.7490935794)),
     ExchangerFlueGasesMetal(
       step_L=111e-3,
@@ -591,7 +621,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={516.3124389648438,512.4675048876576,510.41305969109146,
             509.31475830078125}),
       T1(start={514.3899686844887,511.4402822893745,509.8639024611882}),
-      Tp(start={469.75353148474505,487.6053096442755,497.12602407127685})),
+      Tp(start={472.8404479644676,491.6130115007493,502.15327499369164}),
+      h(start={463659.96875,459024.375,456412.24684658495,454937.0,438670.0625})),
     TwoPhaseFlowPipe(
       advection=false,
       rugosrel=5e-6,
@@ -599,11 +630,11 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       z2=0,
       inertia=true,
       dW1(start={3e6,1.4e6,740379}),
-      h(start={565106.25,773641.4896138782,884995.1575722523,944504.7490935792,
-            944504.75}),
+      h(start={571589.625,787918.9315405625,901666.2028313989,965906.7425802368,
+            982393.5625}),
       hb(start={565108.5,727745.440528479,829820.124314816,892414.570867187}),
-      P(start={3124223.75,3148825.327098676,3172192.2961615147,
-            3194799.9976396263,3216971.75}),
+      P(start={3075398.0,3099880.3604684034,3123147.6507597235,
+            3145628.859295243,3167631.5}),
       T0(start={290.0,290.0,290.0})))
                           annotation (Placement(transformation(
         origin={466,-50},
@@ -615,8 +646,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     ExchangerWall(e=2.6e-3, lambda=47,
     dW1(start={-1.3e6,-0.80263e6,
                                 -501864}),
-      Tp(start={558.2379692767729,574.1762943611731,584.4002179866045}),
-      Tp1(start={557.8513010794924,573.9323757073441,584.2477131820202})),
+      Tp(start={562.8136365409941,580.9270260501409,592.9171328387902}),
+      Tp1(start={562.3574073875994,580.630547779683,592.7261966839885})),
     L=20.726,
     Ns=3,
     Dint=32.8e-3,
@@ -636,7 +667,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={606.41162109375,604.5654891969185,603.4004814494892,
             602.6719360351563}),
       T1(start={605.488555812354,603.9829853232038,603.0361997319833}),
-      Tp(start={558.5972202716488,574.4029176513201,584.54190924323})),
+      Tp(start={563.2375161835078,581.202482150127,593.0945304216444}),
+      h(start={571470.875,568995.125,567386.2706202245,566350.125,541838.1875})),
     TwoPhaseFlowPipe(
       advection=false,
       rugosrel=5e-6,
@@ -644,11 +676,11 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       z1=10.77,
       inertia=true,
       dW1(start={1.3e6,0.80263e6,501864}),
-      h(start={2798574.75,2900855.9998369273,2965377.215724287,
-            3005717.6950751985,3040562.75}),
+      h(start={2799923.0,2907731.6344967457,2977790.5961721865,
+            3022909.547827688,3044385.0}),
       hb(start={2798574.75,2904836.50693844,2969862.15109307,3009575.30461156}),
-      P(start={2731326.25,2730394.924575977,2729276.921848465,
-            2728029.2082540947,2726700.0}),
+      P(start={2732797.5,2731565.0172964707,2730091.858748362,
+            2728450.5104684294,2726700.0}),
       T0(start={290.0,290.0,290.0})))
                           annotation (Placement(transformation(
         origin={146,-50},
@@ -656,8 +688,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
         rotation=90)));
 
   ThermoSysPro.Fluid.Volumes.VolumeB MelangeurHPMP(
-    Ce1(h(start=3046256.0341363903)),
-    h(start=3040562.6721177064),
+    Ce1(h(start=3046256.0341363903), h_vol_1(start=3048424.856388378)),
+    h(start=3044384.9881097865),
     P(start=2726000))
     annotation (Placement(transformation(
         origin={148,-110},
@@ -671,11 +703,11 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Ntubes=369,
     ExchangerWall(e=2.6e-3, lambda=36.86,
     dW1(start={-1.15e7,-7.9e6,-5.5e6}),
-      Tp(start={689.1325590707521,714.3255084496102,731.974510062409}),
-      Tp1(start={687.8673243896432,713.4490802987744,731.369523912658})),
-    Cws1(P(start=2575582.5771302995),
+      Tp(start={688.4468686536222,714.033199611363,732.1920347309398}),
+      Tp1(start={687.218391177629,713.1710194015468,731.5888814252561})),
+    Cws1(P(start=2575212.183613983),
       h_vol_2(start=3040562.6721177064)),
-    Cws2(P(start=2558239.090625735),
+    Cws2(P(start=2558092.5174766793),
       h_vol_1(start=3321940.994604838)),
     ExchangerFlueGasesMetal(
       step_T=86.9e-3,
@@ -691,7 +723,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={822.6819458007813,806.8523532375756,795.852828640494,
             788.2433471679688}),
       T1(start={814.7671394415003,801.3525909390348,792.0480934116497}),
-      Tp(start={690.3215978858725,715.1491557188672,732.5430623045928})),
+      Tp(start={689.6013638823948,714.8434569893178,732.7588645078285}),
+      h(start={811915.375,793532.125,780630.3094320802,771604.625,755814.75})),
     TwoPhaseFlowPipe(
       advection=false,
       z2=0,
@@ -699,11 +732,11 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       rugosrel=1e-5,
       inertia=true,
       dW1(start={1.15e7,7.9e6,5.5e6}),
-      h(start={3040562.75,3170178.6567147295,3259963.658181113,
-            3321940.994604838,3321941.0}),
+      h(start={3044385.0,3171130.1833912637,3260083.5432993243,
+            3322312.4282463193,3411468.25}),
       hb(start={3040562.25,3176242.27636476,3267406.25678814,3329559.35651389}),
-      P(start={2575582.5,2571900.999964748,2567682.4202753096,
-            2563090.6820579167,2558239.0}),
+      P(start={2575212.25,2571568.1301815873,2567405.441864329,
+            2562877.7123048743,2558092.5}),
       T0(start={290.0,290.0,290.0})))
                           annotation (Placement(transformation(
         origin={-114,-50},
@@ -718,9 +751,9 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Dint=45.6e-3,
     ExchangerWall(e=2.6e-3, lambda=27,
     dW1(start={-8e6,-5.5e6,-3.8e6}),
-      Tp(start={786.239853752146,802.8777020553458,814.3692554800219}),
-      Tp1(start={785.1915402608809,802.1579544921993,813.8760433493436})),
-    Cws2(h_vol_1(start=3517975.7051807973)),
+      Tp(start={784.9199768014527,801.9559375893245,813.881408346332}),
+      Tp1(start={783.8988186940742,801.245223096765,813.3876096599773})),
+    Cws2(h_vol_1(start=3517975.7051807973), h_vol_2(start=3516632.5605054162)),
     ExchangerFlueGasesMetal(
       step_T=86.9e-3,
       Fa=1,
@@ -735,7 +768,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={874.3292236328125,863.3655435931397,855.822658205448,
             850.646484375}),
       T1(start={868.8473805170461,859.5941008992938,853.2345706986391}),
-      Tp(start={787.2330782757132,803.5596268196659,814.8365492691358})),
+      Tp(start={785.8874729590412,802.6293039717932,814.3492578675946}),
+      h(start={872700.1875,859769.0,850769.0241228014,844515.9375,830470.625})),
     TwoPhaseFlowPipe(
       advection=false,
       z2=0,
@@ -743,11 +777,11 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       rugosrel=1e-5,
       inertia=true,
       dW1(start={8e6,5.5e6,3.8e6}),
-      h(start={3321941.0,3412821.580454202,3475218.0684875553,
-            3517975.7051807973,3517975.75}),
+      h(start={3322312.5,3411468.261681972,3473519.713324085,3516632.5605054167,
+            3516632.5}),
       hb(start={3321940.75,3420707.89900972,3482716.02631475,3524890.37222916}),
-      P(start={2558239.0,2556052.5796892336,2553681.6710159215,
-            2551184.3906656993,2548600.0}),
+      P(start={2558092.5,2555937.2008945565,2553603.1383043886,
+            2551144.9258610248,2548600.0}),
       T0(start={290.0,290.0,290.0})))
                           annotation (Placement(transformation(
         origin={-234,-50},
@@ -759,16 +793,16 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     P0=5e5,
     Vv(fixed=false),
     L=8,
-    hl(fixed=false, start=550072.7232069891),
-    hv(fixed=false, start=2684673.580149807),
+    hl(fixed=false, start=571589.6558240334),
+    hv(fixed=false, start=2689372.23552223),
     R=2,
-    P(fixed=false, start=485579.1243268126),
+    P(fixed=false, start=555006.6148534557),
     zl(start=1.75, fixed=true),
     Kpa=5,
     Mp=5000,
     Kvl=1000,
-    Pfond(start=501612.0798822072),
-    Tp(start=406.2632923392337))
+    Pfond(start=570965.3592810449),
+    Tp(start=411.19945476835005))
                      annotation (Placement(transformation(extent={{618,10},{578,
             50}}, rotation=0)));
    ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Constante
@@ -776,7 +810,7 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     annotation (Placement(transformation(extent={{666,76},{654,86}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve vanne_vapeurBP(
     p_rho=3, Cvmax=CvmaxValveVBP,
-    C2(P(start=510622.8582477031),
+    C2(P(start=510158.3929231321),
     h_vol_1(start=2684673.580149807)),
     h(start=2685000),
     Cv(start=1),
@@ -787,21 +821,21 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     C1(h_vol_2(start=509236.1596958067)),
     h(fixed=false, start=509000),
     Cv(start=142.5),
-    Pm(fixed=false, start=957583.6711025466))   annotation (Placement(transformation(extent={{650,44},{630,64}},
+    Pm(fixed=false, start=1021309.6581195585))  annotation (Placement(transformation(extent={{650,44},{630,64}},
           rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.PipePressureLoss GainChargeBP(
     z2=0,
     z1=10.767,
     Q(start=50, fixed=false),
     K=32766,
-    rho(start=934.2358753989836),
+    rho(start=929.9117790585748),
     Pm(start=564000),
     h(start=549249.519022482))
             annotation (Placement(transformation(
         origin={610,-90},
         extent={{-10,-10},{10,10}},
         rotation=180)));
-  ThermoSysPro.Fluid.Volumes.VolumeC VolumeEvapBP(h(start=550072.7232069891),
+  ThermoSysPro.Fluid.Volumes.VolumeC VolumeEvapBP(h(start=571589.6558240334),
     V=5,
     P(start=564000))                         annotation (Placement(transformation(
           extent={{592,-100},{572,-80}}, rotation=0)));
@@ -810,8 +844,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Dint=32.8e-3,
     ExchangerWall(e=2.6e-3, lambda=47,
     dW1(start={-1.24e7,-8.5e6,-5.8e6}),
-      Tp(start={427.75117227047275,426.57196634952743,425.692416702357}),
-      Tp1(start={427.2791524733697,426.249857647769,425.4722112637204})),
+      Tp(start={432.59535605574797,431.6255977090002,430.8591280369125}),
+      Tp1(start={432.16242526836834,431.3108320909342,430.62996395048594})),
     L=20.726,
     Ntubes=984,
     Ns=3,
@@ -829,7 +863,9 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={482.5950622558594,464.01748118772224,451.30051770870455,
             442.58880615234375}),
       T1(start={473.3062751775807,457.6589994482134,446.94466391603106}),
-      Tp(start={428.18972290092955,426.87123552234135,425.89700819308825})),
+      Tp(start={432.9975893355074,431.918044468841,431.07204294951407}),
+      h(start={425784.40625,406989.71875,393324.9053433096,383376.28125,
+            345485.03125})),
     TwoPhaseFlowPipe(
       advection=false,
       rugosrel=5e-6,
@@ -838,14 +874,15 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       continuous_flow_reversal=true,
       inertia=true,
       dW1(start={1.24e7,8.5e6,5.8e6}),
-      h(start={550072.75,798514.7797723989,968052.8982857756,1083955.4353773424,
-            550072.75}),
+      h(start={571589.625,800925.2190091099,967665.3813576263,
+            1089060.0143937408,571589.625}),
       hb(start={550075.0,765243.011613326,912673.256542569,1013555.73710231}),
-      Q(start={50.00030606442327,50.00030606442327,50.00030606442327,
-            50.00030606442327}),
-      P(start={512574.0,487903.6002327947,486912.76813325885,486233.0185244784,
-            485579.125}),
-      T0(start={290.0,290.0,290.0})))
+      Q(start={49.68034838099436,49.68034838099436,49.68034838099436,
+            49.68034838099436}),
+      P(start={582186.75,557630.6861652867,556428.158876046,555687.7128874982,
+            555006.625}),
+      T0(start={290.0,290.0,290.0})),
+    Cfg2(h_vol_1(start=383376.2777938952), h_vol_2(start=345485.01719053386)))
                           annotation (Placement(transformation(
         origin={566,-50},
         extent={{-20,-20},{20,20}},
@@ -859,7 +896,7 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     C1(h_vol_2(start=550072.7232069891)),
     h(start=550000),
     Cv(start=308.931),
-    Pm(start=404001.70325999695))
+    Pm(start=473826.9860082782))
                  annotation (Placement(transformation(extent={{710,-14},{730,6}},
           rotation=0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicFlueGasesMultiFluidHeatExchanger
@@ -870,10 +907,10 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Ntubes=123,
     ExchangerWall(e=2.6e-3, lambda=47,
     dW1(start={-1.1e6,-782901,-559798}),
-      Tp(start={475.35471340675434,500.0471952971929,518.0415300925415}),
-      Tp1(start={475.07666786714793,499.8473601819379,517.8986430965637})),
+      Tp(start={483.5879234710947,510.03490701889103,529.1506909427684}),
+      Tp1(start={483.29897049125907,509.8288453180465,529.0044963209424})),
     Cws1(h_vol_2(start=2684673.580149807)),
-    Cws2(h_vol_1(start=2914519.282601244)),
+    Cws2(h_vol_1(start=2914519.282601244), h_vol_2(start=2935965.8606590154)),
     ExchangerFlueGasesMetal(
       step_T=86.9e-3,
       Fa=1,
@@ -888,7 +925,9 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={568.8102416992188,567.2151210721856,566.0683353396659,
             565.2481689453125}),
       T1(start={568.0126670066404,566.6417282059258,565.6582502265244}),
-      Tp(start={475.61601428945164,500.234995799533,518.1758120458845})),
+      Tp(start={483.8594749183778,510.2285591249387,529.2880813277524}),
+      h(start={526862.0625,524994.875,523663.2975499146,522718.59375,
+            505329.59375})),
     TwoPhaseFlowPipe(
       advection=false,
       z2=0,
@@ -896,18 +935,19 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       z1=10.767,
       inertia=true,
       dW1(start={1.1e6,782901,559798}),
-      h(start={2684673.5,2787622.843498506,2861613.8808508525,2914519.282601244,
-            2914519.25}),
+      h(start={2689372.25,2800496.5790294725,2879742.9368326054,
+            2935965.8606590154,2935965.75}),
       hb(start={2684673.5,2819292.38908571,2893584.12921908,2943776.05560762}),
-      P(start={510622.84375,508733.6061914782,506650.25202074344,
-            504336.5353393364,501850.0}),
+      P(start={510158.40625,508396.8288525169,506425.5320020969,
+            504223.40958995325,501850.0}),
       T0(start={290.0,290.0,290.0})))
                           annotation (Placement(transformation(
         origin={266,-50},
         extent={{20,-20},{-20,20}},
         rotation=90)));
 
-  ThermoSysPro.Fluid.BoundaryConditions.SinkP PuitsFumees(P0=1.013e5)
+  ThermoSysPro.Fluid.BoundaryConditions.SinkP PuitsFumees(P0=1.013e5, C(h_vol_1
+        (start=329093.3007791504)))
     annotation (Placement(transformation(
         origin={722,-50},
         extent={{10,-10},{-10,10}},
@@ -918,8 +958,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Dint=32.8e-3,
     ExchangerWall(e=2.6e-3, lambda=47,
     dW1(start={-2.45e7,-5.5e6,-1.17e6}),
-      Tp(start={400.3519750836609,396.09689492479714,395.2201421057111}),
-      Tp1(start={400.0855824116385,396.0373810697358,395.20741736846634})),
+      Tp(start={396.2481159869425,399.78388129181906,401.13111161783405}),
+      Tp1(start={395.99874013762894,399.70202906319594,401.105084136553})),
     Ntubes=3444,
     L=20.726,
     Cws1(h_vol_2(start=194584.50261459063)),
@@ -938,7 +978,9 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       T2(start={442.58880615234375,405.54898708865323,397.2418326138536,
             395.4642028808594}),
       T1(start={424.0688986060054,401.3954098512534,396.353024695102}),
-      Tp(start={400.59947884299936,396.1521888739459,395.23196457920767})),
+      Tp(start={396.4798095231228,399.8599296836186,401.15529358730896}),
+      h(start={383376.28125,345485.03125,333048.03047244134,329093.3125,
+            206282.203125})),
     TwoPhaseFlowPipe(
       advection=false,
       rugosrel=5e-6,
@@ -946,11 +988,11 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
       z2=10.767,
       inertia=true,
       dW1(start={2.45e7,5.5e6,1.17e6}),
-      h(start={194584.5,442113.0226180337,497412.50346040993,509236.1596958068,
-            509236.15625}),
+      h(start={194692.265625,428815.5293291671,505661.4245378703,
+            530096.9852149182,571589.625}),
       hb(start={194584.515625,462556.370989432,494648.45288738,501287.069880104}),
-      P(start={1540564.125,1504650.386070031,1479432.0451056722,
-            1454480.269096047,1429588.25}),
+      P(start={1588738.375,1562590.7775307859,1537310.419233922,
+            1512399.026918416,1487612.75}),
       T0(start={290.0,290.0,290.0})))
                           annotation (Placement(transformation(
         origin={680,-50},
@@ -966,8 +1008,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     eta_is_min=0.75,
     Cst(start=8182844.56002535)=
         CstHP,
-    pros(d(start=10.66426189633104)),
-    Hrs(start=3046256.0341363903),
+    pros(d(start=10.64336641432295)),
+    Hrs(start=3048424.856388379),
     Pe(fixed=true, start=12431000),
     Ps(fixed=false, start=2726700))
               annotation (Placement(transformation(extent={{-2,-250},{38,-210}},
@@ -981,14 +1023,14 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     eta_is_min=0.75,
     Cst(start=256335.364995961)=
         CstMP,
-    pros(d(start=1.8827680646065352)),
-    Hrs(start=3029781.976396904),
+    pros(d(start=1.884386603984167)),
+    Hrs(start=3028846.077881056),
     Pe(fixed=true, start=2548500),
     Ps(fixed=false, start=476800))
                 annotation (Placement(transformation(extent={{318,-250},{358,
             -210}}, rotation=0)));
   ThermoSysPro.Fluid.Volumes.VolumeC MelangeurPostTMP1(
-    h(start=3017480.4191624634),
+    h(start=3019203.192090637),
     P(start=476799.99999954),
     Ce1(h(start=3029780)))                 annotation (Placement(transformation(
         origin={418,-230},
@@ -1003,7 +1045,7 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     eta_is_min=0.75,
     Cst(start=11944.9445735985)=
         CstBP,
-    Cs(h(start=2401033.111118852)),
+    Cs(h(start=2401954.6559323)),
     Hrs(start=2401030),
     Pe(fixed=true, start=476799.99999954),
     Ps(start=10053))
@@ -1040,8 +1082,10 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Cse(h(start=128076)),
     P(fixed=false, start=6136),
     Pfond(start=10000.0),
-    Cl(h(start=191812.29519356362)),
-    proe(d(start=996.0186965963143)))
+    Cl(h(start=191812.29519356362),
+      Q(start=196.22097932320875),
+      h_vol_2(start=194692.2720118419)),
+    proe(d(start=996.0237398943773)))
     annotation (Placement(transformation(extent={{637,-384},{717,-304}},
           rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceQ SourceCaloporteur(
@@ -1053,26 +1097,26 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
   ThermoSysPro.Fluid.PressureLosses.PipePressureLoss perteChargeK1(    K=1e-4,
     h(start=2400000),
     C1(h_vol_2(start=2400000), h(start=2400000)),
-    Pm(start=10026.561030835077))
+    Pm(start=10026.029972250988))
     annotation (Placement(transformation(extent={{640,-240},{660,-220}},
           rotation=0)));
   ThermoSysPro.Fluid.Volumes.VolumeC VolumeCond1(
     Ce3(h(start=194584.50261452305)),
-    h(start=194584.50261459063),
+    h(start=194692.2720118418),
     P(start=1540500))
     annotation (Placement(transformation(
         origin={902,-318},
         extent={{10,-10},{-10,10}},
         rotation=270)));
   ThermoSysPro.Fluid.PressureLosses.PipePressureLoss perteChargeKCond1(K=1e-4,
-    rho(start=990.3586687482405),
+    rho(start=990.3728941875843),
     Pm(start=1540000))
     annotation (Placement(transformation(
         origin={902,-270},
         extent={{12,-12},{-12,12}},
         rotation=270)));
   ThermoSysPro.Fluid.Volumes.VolumeA VolumeAlimMPHP(
-    h(start=550072.7232069891),
+    h(start=571589.6558240333),
     P(start=322430))                         annotation (Placement(transformation(
           extent={{742,-20},{762,0}}, rotation=0)));
   ThermoSysPro.Fluid.Machines.StaticCentrifugalPump PompeAlimMP(
@@ -1082,8 +1126,8 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Q(fixed=false),
     C1(h_vol_2(start=550072.7232069891)),
     C2(h_vol_1(start=565106.2802015315)),
-    Qv(start=0.01332183238847357),
-    rho(start=933.5252816181976),
+    Qv(start=0.014981930996429617),
+    rho(start=929.199477777818),
     Pm(start=1725850))
             annotation (Placement(transformation(extent={{804,-20},{824,0}},
           rotation=0)));
@@ -1094,9 +1138,9 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     Q(fixed=false),
     C1(h_vol_2(start=550072.7232069891)),
     C2(h_vol_1(start=618649.6677733721)),
-    Qv(start=0.08171817156952406),
-    rho(start=931.4140647908531),
-    Pm(start=6774000))
+    Qv(start=0.079840086308535),
+    rho(start=926.8951785877663),
+    Pm(start=6851620.819939703))
              annotation (Placement(transformation(extent={{804,-60},{824,-40}},
           rotation=0)));
   ThermoSysPro.Fluid.Junctions.MassFlowMultiplier MoitieDebitBP(alpha=0.5,
@@ -1125,13 +1169,13 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
         extent={{10,-10},{-10,10}},
         rotation=180)));
   ThermoSysPro.Fluid.PressureLosses.PipePressureLoss perteChargeK3(K=1e-4,
-    Pm(start=322424.2818830876))
+    Pm(start=392647.35686859826))
     annotation (Placement(transformation(
         origin={780,-50},
         extent={{10,-10},{-10,10}},
         rotation=180)));
   ThermoSysPro.Fluid.PressureLosses.PipePressureLoss perteChargeK8(K=1e-4,
-    Pm(start=322424.28218490275))
+    Pm(start=392647.3571526791))
     annotation (Placement(transformation(
         origin={780,-10},
         extent={{10,-10},{-10,10}},
@@ -1142,22 +1186,22 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
   ThermoSysPro.Fluid.PressureLosses.PipePressureLoss perteChargeK(K=1e-4,
     C1(h_vol_2(start=191812.29519356362)),
     C2(h_vol_1(start=191812.29519356362)),
-    rho(start=989.8383588386498),
+    rho(start=989.7481065917054),
     Pm(start=6200))
     annotation (Placement(transformation(extent={{702,-446},{722,-426}},
           rotation=0)));
   ThermoSysPro.Fluid.Machines.StaticCentrifugalPump PompeAlimBP(
-    Qv(start=0.2002405532484127),
+    Qv(start=0.19818087844720814),
     a3=400,
     a1(fixed=true) = -6000,
     Q(start=194.502, fixed=false),
     C2(h_vol_1(start=194584.50261452305)),
-    Pm(start=783963.3809799375))
+    Pm(start=807872.6942171099))
             annotation (Placement(transformation(extent={{742,-446},{762,-426}},
           rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.PipePressureLoss perteChargeK2(
     K=1e-4,
-    rho(start=990.3586687495459),
+    rho(start=990.3728941888568),
     C1(h_vol_2(start=194584.50261452305),
                             h(start=194585)),
     Pm(start=1546000))
@@ -1167,7 +1211,7 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
         2000,
     h(start=194500),
     Cv(start=2000),
-    Pm(start=1549245.4644062065))
+    Pm(start=1597241.885640957))
                  annotation (Placement(transformation(extent={{802,-440},{822,
             -420}}, rotation=0)));
   ThermoSysPro.Fluid.Sensors.SensorQ CapteurDebitVapHP(C1(h_vol_2(start=2674000),
@@ -1303,31 +1347,31 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
   ThermoSysPro.Fluid.Volumes.VolumeC VolumeECO_HP1_2(
     V=1,
     h0=988332,
-    h(start=854493.2404741034),
+    h(start=880080.2817637667),
     dynamic_mass_balance=true,
     P0=7010000,
-    P(start=13129347.20636851))                        annotation (Placement(transformation(
+    P(start=13222388.265425779))                       annotation (Placement(transformation(
           extent={{456,-98},{436,-78}}, rotation=0)));
   ThermoSysPro.Fluid.Volumes.VolumeC VolumeECO_HP2_3(
     V=1,
     h0=983786,
-    h(start=986348.0919441726),
+    h(start=1017356.6143159299),
     dynamic_mass_balance=true,
     P0=7000000,
-    P(start=13219328.239579093))                        annotation (Placement(transformation(
+    P(start=13311571.308698103))                        annotation (Placement(transformation(
           extent={{252,-20},{232,0}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve Vanne_alimentationMPHP1(
     Cvmax=308.931,
     h(start=618600),
     Cv(start=308.931),
-    Pm(start=13130272.672059398))
+    Pm(start=13219564.708897255))
                  annotation (Placement(transformation(extent={{754,-98},{730,
             -122}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve Vanne_alimentationMPHP2(
     Cvmax=308.931,
     h(start=565000),
     Cv(start=308.931),
-    Pm(start=3126744.5275077047))
+    Pm(start=3078586.376751058))
                  annotation (Placement(transformation(extent={{804,-138},{780,
             -162}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Rampe arretPomesMp1(
@@ -1346,7 +1390,7 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
             908,-162}}, rotation=0)));
   ThermoSysPro.Fluid.Volumes.VolumeD VolumePreTHP(
     h0=3e6,
-    h(start=3433271.775819776),
+    h(start=3436197.0248581353),
     dynamic_mass_balance=true,
     P0=12700000,
     P(start=12700000))                annotation (Placement(transformation(
@@ -1355,7 +1399,7 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
         rotation=180)));
   ThermoSysPro.Fluid.Volumes.VolumeC MelangeurPreTMP(
     h0=3523910,
-    h(start=3517975.7051812997),
+    h(start=3516632.5605054167),
     dynamic_mass_balance=true,
     P0=2400000,
     P(start=2400000))                     annotation (Placement(transformation(
@@ -1420,23 +1464,28 @@ model CombinedCycle_Load_100_50 "CCPP model to simulate a load variation from 10
     TurbQred=0.0175634,
     Kcham=2.02088,
     chambreCombustionTAC(Pea(fixed=false, start=14.0e5),
-      Psf(start=1333898.05061735),
-      Tsf(start=1493.5527523474145)),
+      Psf(start=1334276.752202393),
+      Tsf(start=1494.4009297392777),
+      Hrfg(start=188188.8402613545),
+      Tea(start=681.5380510358129)),
     Wpth=1e6,
     Compresseur(
       is_eff(fixed=false, start=0.88),
       Xtau(fixed=false, start=1.00),
-      Ps(start=1419889.7074729432),
-      Ts(start=678.0795840911329),
-      Tis(start=630.7876402069812)),
+      Ps(start=1420538.874033405),
+      Ts(start=681.538051035813),
+      Tis(start=634.0826153738103),
+      Te(start=304.3515709150396)),
     TurbineAgaz(
       Ps(fixed=false),
       is_eff(fixed=false, start=0.87),
       Pe(fixed=false, start=1333900),
       Te(start=1493.59),
       Ts(fixed=false, start=893.16),
-      Tis(start=814.7448743706253)),
-    xAIR(rho_air(start=1.099457970518182)))
+      Tis(start=815.7265261633758)),
+    xAIR(rho_air(start=1.0865538789495581),
+      ppvap0(start=4235.17632590997),
+      rho_vap(start=0.030206053717024672)))
     annotation (Placement(transformation(extent={{-471,-115},{-341,13}},
           rotation=0)));
 
@@ -1819,7 +1868,7 @@ equation
           fillPattern=FillPattern.Solid,
           points={{-58.0,46.0},{42.0,-14.0},{-58.0,-74.0},{-58.0,46.0}})}),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021 </p>
-<p><b>ThermoSysPro Version 4.0 </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1 </h4>
 </html>"));
 end CombinedCycle_Load_100_50;

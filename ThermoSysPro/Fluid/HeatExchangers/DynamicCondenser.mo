@@ -121,7 +121,7 @@ equation
     C1.diff_on_1 = false;
     C1.ftype = ftype;
     C1.Xco2 = 0;
-    C1.Xh2o = 1;
+    C1.Xh2o = 0;
     C1.Xo2 = 0;
     C1.Xso2 = 0;
   end if;
@@ -134,7 +134,7 @@ equation
     C2vap.diff_on_1 = false;
     C2vap.ftype = ftype;
     C2vap.Xco2 = 0;
-    C2vap.Xh2o = 1;
+    C2vap.Xh2o = 0;
     C2vap.Xo2 = 0;
     C2vap.Xso2 = 0;
   end if;
@@ -321,8 +321,8 @@ equation
 </ul>
 </html>",
    info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 <p>This component model is documented in Sect. 9.5.4 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>. </p>
 </html>"));
 end DynamicCondenser;

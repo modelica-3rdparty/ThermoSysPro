@@ -139,7 +139,7 @@ equation
         Line(points={{-100,60},{-80,60}})}),
     Documentation(info="<html>
 <p><b>Adapted from the ModelicaAdditions.Blocks.Tables library</b> </p>
-<p><b>Version 3.1</h4>
+<p><b>Version 4.1</h4>
 </html>"),    Icon(
       Rectangle(extent=[-80,80; 80,-80],   style(fillPattern=0)),
       Line(points=[-54,40; -54,-40; 54,-40; 54,40; 28,40; 28,-40; -28,-40; -28,

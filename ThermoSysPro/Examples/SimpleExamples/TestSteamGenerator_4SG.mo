@@ -537,7 +537,6 @@ model TestSteamGenerator_4SG
         u(start=2583903.7193358056),
         x(start=0.9999999445568193))))
     annotation (Placement(transformation(extent={{-34,-32},{32,44}})));
-
 equation
   connect(sinkP1.C, singularPressureLoss1.C2)
     annotation (Line(points={{74,66},{52,66},{50,66}}));
@@ -575,7 +574,7 @@ equation
                                                                  Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019 </p>
-<p><b>ThermoSysPro Version 3.2 </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1 </h4>
 </html>"));
 end TestSteamGenerator_4SG;

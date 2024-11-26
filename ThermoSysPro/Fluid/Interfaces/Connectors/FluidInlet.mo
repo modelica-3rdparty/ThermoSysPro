@@ -13,7 +13,7 @@ connector FluidInlet "Fluid inlet connector"
     "Fluid type";
   ThermoSysPro.Units.SI.MassFraction Xco2(start=0.01)
     "CO2 mass fraction of the fluid crossing the boundary of the control volume";
-  ThermoSysPro.Units.SI.MassFraction Xh2o(start=0.05)
+  ThermoSysPro.Units.SI.MassFraction Xh2o
     "H2O mass fraction of the fluid crossing the boundary of the control volume";
   ThermoSysPro.Units.SI.MassFraction Xo2(start=0.2)
     "O2 mass fraction of the fluid crossing the boundary of the control volume";
@@ -42,8 +42,8 @@ connector FluidInlet "Fluid inlet connector"
       width=0.6,
       height=0.6),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 </html>",
  revisions="<html>
 <p><u><b>Author</b></u></p>

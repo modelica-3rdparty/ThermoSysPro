@@ -1815,8 +1815,8 @@ equation
 <li>Baligh El Hefni</li>
 </ul>
 </html>", info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019 </p>
-<p><b>ThermoSysPro Version 3.2</h4>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1</h4>
 <p>The results reported in the ThermoSysPro book were computed using Dymola.</h4>
 </html>"),
     Icon(graphics={

@@ -1894,8 +1894,8 @@ equation
       smooth=Smooth.None));
 annotation (
     Documentation(info="<html>
-<h4>Copyright &copy; EDF 2002 - 2021 </h4>
-<h4>ThermoSysPro Version 4.0 </h4>
+<h4>Copyright &copy; EDF 2002 - 2024 </h4>
+<h4>ThermoSysPro Version 4.1 </h4>
 <p>This is the dynamic model of a once-through supercritical coal-fired power plant. </p>
 <p>It is documented in Sect. 6.6 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>. </p>
 <p>The results reported in the ThermoSysPro book were computed using Dymola. </p>

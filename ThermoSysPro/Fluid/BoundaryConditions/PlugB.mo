@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.BoundaryConditions;
 model PlugB "Plug"
   extends
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeVariableInterface;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
 
   parameter Boolean diffusion=false "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
@@ -12,7 +13,7 @@ public
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
   FluidType ftype "Fluid type";
   Real Xco2(start=0.01) "CO2 mass fraction of the fluid crossing the boundary of the control volume";
-  Real Xh2o(start=0.05) "H2O mass fraction of the fluid crossing the boundary of the control volume";
+  Real Xh2o "H2O mass fraction of the fluid crossing the boundary of the control volume";
   Real Xo2(start=0.2) "O2 mass fraction of the fluid crossing the boundary of the control volume";
   Real Xso2(start=0) "SO2 mass fraction of the fluid crossing the boundary of the control volume";
 
@@ -64,8 +65,8 @@ equation
       width=0.81,
       height=0.71),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 </html>",
    revisions="<html>
 <p><u><b>Authors</b></u></p>

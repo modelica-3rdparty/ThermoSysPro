@@ -123,8 +123,8 @@ annotation (
         color={0,0,255},
         smooth=Smooth.None)}),
   Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2020</b> </p>
-<h4>ThermoSysPro version 4.0 </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<h4>ThermoSysPro version 4.1 </h4>
 </html>"),
-  version="4.0");
+  version="4.1");
 end ThermoSysPro;

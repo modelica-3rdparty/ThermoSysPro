@@ -101,3 +101,5 @@ TestVolumes1
 TestVolumes2
 TestVolumeATh
 TestVolume_SteamCavitiesPipeValve
+TestHysteresis
+TestWirelessSensor

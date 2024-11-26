@@ -91,8 +91,8 @@ equation
       width=0.82,
       height=0.65),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2012</b> </p>
-<p><b>ThermoSysPro Version 3.0</h4>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</h4>
 </html>",
    revisions="<html>
 <p><u><b>Authors</b></u></p>

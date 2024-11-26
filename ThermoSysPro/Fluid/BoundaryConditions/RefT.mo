@@ -1,5 +1,6 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefT "Fixed temperature reference"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
@@ -107,8 +108,8 @@ equation
       width=0.82,
       height=0.65),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 </html>",
    revisions="<html>
 <p><u><b>Authors</b></u></p>

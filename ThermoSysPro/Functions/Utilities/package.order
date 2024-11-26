@@ -1,3 +1,5 @@
 CubicHermite
 LinearInterpolation_i
 TableLinearInterpolation_i
+scalarToColor_validityRange
+RedGreen_colorMap

@@ -3,7 +3,7 @@ model DynamicOnePhaseFlowPipe "Dynamic one-phase flow pipe"
   parameter Units.SI.Length L=10. "Pipe length";
   parameter Units.SI.Diameter D=0.2 "Internal pipe diameter";
   parameter Real rugosrel=0.0007 "Pipe relative roughness";
-  parameter Integer ntubes=1 "Number of pipes in parallel";
+  parameter Real ntubes=1 "Number of pipes in parallel";
   parameter Units.SI.Position z1=0 "Pipe inlet altitude";
   parameter Units.SI.Position z2=0 "Pipe outlet altitude";
   parameter Real dpfCorr=1.00
@@ -323,8 +323,8 @@ equation
       width=0.68,
       height=0.94),
     Documentation(info="<html>
-<h4>Copyright &copy; EDF 2002 - 2019</h4>
-<p><b>ThermoSysPro Version 3.2</h4>
+<h4>Copyright &copy; EDF 2002 - 2024</h4>
+<p><b>ThermoSysPro Version 4.1</h4>
 </html>",
    revisions="<html>
 <p><u><b>Authors</b></u></p>

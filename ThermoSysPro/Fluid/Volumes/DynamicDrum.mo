@@ -199,7 +199,7 @@ equation
     Ce1.diff_on_1 = false;
     Ce1.ftype = ftype;
     Ce1.Xco2 = 0;
-    Ce1.Xh2o = 1;
+    Ce1.Xh2o = 0;
     Ce1.Xo2 = 0;
     Ce1.Xso2 = 0;
   end if;
@@ -212,7 +212,7 @@ equation
     Ce2.diff_on_1 = false;
     Ce2.ftype = ftype;
     Ce2.Xco2 = 0;
-    Ce2.Xh2o = 1;
+    Ce2.Xh2o = 0;
     Ce2.Xo2 = 0;
     Ce2.Xso2 = 0;
   end if;
@@ -225,7 +225,7 @@ equation
     Ce3.diff_on_1 = false;
     Ce3.ftype = ftype;
     Ce3.Xco2 = 0;
-    Ce3.Xh2o = 1;
+    Ce3.Xh2o = 0;
     Ce3.Xo2 = 0;
     Ce3.Xso2 = 0;
   end if;
@@ -238,7 +238,7 @@ equation
     Cm.diff_on_1 = false;
     Cm.ftype = ftype;
     Cm.Xco2 = 0;
-    Cm.Xh2o = 1;
+    Cm.Xh2o = 0;
     Cm.Xo2 = 0;
     Cm.Xso2 = 0;
   end if;
@@ -379,15 +379,15 @@ equation
   Cv.ftype = ftype;
 
   Cd.Xco2 = 0;
-  Cd.Xh2o = 1;
+  Cd.Xh2o = 0;
   Cd.Xo2  = 0;
   Cd.Xso2 = 0;
   Cs.Xco2 = 0;
-  Cs.Xh2o = 1;
+  Cs.Xh2o = 0;
   Cs.Xo2  = 0;
   Cs.Xso2 = 0;
   Cv.Xco2 = 0;
-  Cv.Xh2o = 1;
+  Cv.Xh2o = 0;
   Cv.Xo2  = 0;
   Cv.Xso2 = 0;
 
@@ -543,8 +543,8 @@ equation
       width=0.78,
       height=0.88),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 <p>This component model is documented in Sect. 14.2 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>. </p>
 </html>",
    revisions="<html>

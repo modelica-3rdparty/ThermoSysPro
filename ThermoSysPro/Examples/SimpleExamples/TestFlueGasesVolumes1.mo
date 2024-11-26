@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestFlueGasesVolumes1
-
   ThermoSysPro.FlueGases.PressureLosses.SingularPressureLoss
     singularPressureLossFlueGases1(Q(start=8311.592762050328), rho(start=
           1.5532126714414567))     annotation (Placement(transformation(extent=
@@ -131,7 +130,7 @@ equation
           fillPattern=FillPattern.Solid,
           points={{-58.0,46.0},{42.0,-14.0},{-58.0,-74.0},{-58.0,46.0}})}),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019 </p>
-<p><b>ThermoSysPro Version 3.2 </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1 </h4>
 </html>"));
 end TestFlueGasesVolumes1;

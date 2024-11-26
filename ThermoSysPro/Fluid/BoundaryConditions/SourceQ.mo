@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.BoundaryConditions;
 model SourceQ "Multi-fluid source with fixed mass flow rate"
   extends
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
@@ -21,22 +22,22 @@ model SourceQ "Multi-fluid source with fixed mass flow rate"
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
   parameter IF97Region region=IF97Region.All_regions "IF97 regions (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
-  parameter ThermoSysPro.Units.SI.MassFraction Xco2=0.01 "CO2 mass fraction"
+  parameter ThermoSysPro.Units.SI.MassFraction Xco2= 0.01 "CO2 mass fraction"
     annotation (Evaluate=true, Dialog(
       enable=(ftype == FluidType.FlueGases),
       tab="Fluid",
       group="Composition values (active for flue gases only)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xh2o=0.05 "H2O mass fraction"
+  parameter ThermoSysPro.Units.SI.MassFraction Xh2o=if ftype == FluidType.FlueGases then 0.05 else 0 "H2O mass fraction"
     annotation (Evaluate=true, Dialog(
       enable=(ftype == FluidType.FlueGases),
       tab="Fluid",
       group="Composition values (active for flue gases only)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xo2=0.22 "O2 mass fraction"
+  parameter ThermoSysPro.Units.SI.MassFraction Xo2= 0.22 "O2 mass fraction"
     annotation (Evaluate=true, Dialog(
       enable=(ftype == FluidType.FlueGases),
       tab="Fluid",
       group="Composition values (active for flue gases only)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xso2=0 "SO2 mass fraction"
+  parameter ThermoSysPro.Units.SI.MassFraction Xso2= 0 "SO2 mass fraction"
     annotation (Evaluate=true, Dialog(
       enable=(ftype == FluidType.FlueGases),
       tab="Fluid",
@@ -168,8 +169,8 @@ equation
       width=0.81,
       height=0.71),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 </html>",
    revisions="<html>
 <p><u><b>Authors</b></u></p>

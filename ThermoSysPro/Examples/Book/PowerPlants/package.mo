@@ -135,8 +135,8 @@ annotation (
         color={0,0,255},
         smooth=Smooth.None)}),
   Documentation(info="<html>
-<p>Copyright &copy; EDF 2002 - 2019 </p>
-<p>ThermoSysPro Version 3.2 </p>
+<p>Copyright &copy; EDF 2002 - 2024 </p>
+<p>ThermoSysPro Version 4.1 </p>
 <p>This package contains models of three different types of power plants:</p>
 <ul>
 <li>Combined cycle power plant</li>

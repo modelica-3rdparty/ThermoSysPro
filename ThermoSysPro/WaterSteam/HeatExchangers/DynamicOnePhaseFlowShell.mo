@@ -457,8 +457,8 @@ equation
       width=0.68,
       height=0.94),
     Documentation(info="<html>
-<h4>Copyright &copy; EDF 2002 - 2019</h4>
-<p><b>ThermoSysPro Version 3.2</h4>
+<h4>Copyright &copy; EDF 2002 - 2024</h4>
+<p><b>ThermoSysPro Version 4.1</h4>
 <p>This component model is documented in Sect. 9.4.3 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>. </h4>
 <p>Nota: component model name in title of Sect. 9.4.3.3 in book is incorrectly given as DynamicTwoPhaseFlowShell, instead of DynamicOnePhaseFlowShell</a>. </h4>
 </html>",

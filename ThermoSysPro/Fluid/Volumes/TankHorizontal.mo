@@ -53,7 +53,7 @@ model TankHorizontal "Open horizontal tank"
       tab="Fluid",
       group=
           "Initial composition values (active for flue gases only if dynamic_composition_balance=true)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xh2o0=0.05
+  parameter ThermoSysPro.Units.SI.MassFraction Xh2o0=if ftype == FluidType.FlueGases then 0.05 else 0
     "Initial H20 mass fraction" annotation (Evaluate=true, Dialog(
       enable=dynamic_composition_balance,
       tab="Fluid",
@@ -533,8 +533,8 @@ equation
       width=0.81,
       height=0.9),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 </html>",
    revisions="<html>
 <p><u><b>Author</b></u></p>

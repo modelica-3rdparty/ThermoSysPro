@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestStodolaTurbine3
-
   ThermoSysPro.WaterSteam.Machines.StodolaTurbine stodolaTurbine
     annotation (Placement(transformation(extent={{-60,60},{-40,80}}, rotation=0)));
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP puitsP(                 mode=0, P0=
@@ -71,7 +70,7 @@ equation
           fillPattern=FillPattern.Solid,
           points={{-58.0,46.0},{42.0,-14.0},{-58.0,-74.0},{-58.0,46.0}})}),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019 </p>
-<p><b>ThermoSysPro Version 3.2 </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1 </h4>
 </html>"));
 end TestStodolaTurbine3;

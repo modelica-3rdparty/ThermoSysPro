@@ -4,7 +4,6 @@ model TestDynamicWaterHeating
     "Maximum CV (active if mode_caract=0)";
   parameter Real LambdaPipe(fixed=false,start=0.003003)
     "Friction pressure loss coefficient (active if lambda_fixed=true)";
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP(
     option_temperature=2,
     mode=0,
@@ -26,7 +25,6 @@ model TestDynamicWaterHeating
     Cv(start=34.26, fixed=false))
                           annotation (Placement(transformation(extent={{88,-186},
             {108,-166}}, rotation=0)));
-
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicWaterHeating WaterHeating(
     ec=2e-3,
     Ns=10,
@@ -129,7 +127,6 @@ model TestDynamicWaterHeating
       inertia=true))
     annotation (Placement(transformation(extent={{-58,-90},{162,96}}, rotation=
             0)));
-
   ThermoSysPro.WaterSteam.BoundaryConditions.Sink Puit_condenseur2
              annotation (Placement(transformation(extent={{-150,22},{-192,66}},
           rotation=0)));
@@ -310,7 +307,7 @@ equation
           fillPattern=FillPattern.Solid,
           points={{-58.0,46.0},{42.0,-14.0},{-58.0,-74.0},{-58.0,46.0}})}),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019 </p>
-<p><b>ThermoSysPro Version 3.2 </h4>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1 </h4>
 </html>"));
 end TestDynamicWaterHeating;

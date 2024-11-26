@@ -158,7 +158,7 @@ equation
     Cas.diff_on_1 = false;
     Cas.ftype = ftype;
     Cas.Xco2 = 0;
-    Cas.Xh2o = 1;
+    Cas.Xh2o = 0;
     Cas.Xo2 = 0;
     Cas.Xso2 = 0;
   end if;
@@ -268,12 +268,12 @@ equation
   Cs.ftype = ftype;
 
   Cs.Xco2 = 0;
-  Cs.Xh2o = 1;
+  Cs.Xh2o = 0;
   Cs.Xo2  = 0;
   Cs.Xso2 = 0;
 
   Cex.Xco2 = 0;
-  Cex.Xh2o = 1;
+  Cex.Xh2o = 0;
   Cex.Xo2  = 0;
   Cex.Xso2 = 0;
 
@@ -418,8 +418,8 @@ equation
           thickness=1),
         Line(points={{80,60},{100,60},{100,90}}, color={255,255,255})}),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 <p>This component model is documented in Sect. 14.3 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>. </p>
 </html>",
    revisions="<html>

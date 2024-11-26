@@ -162,7 +162,7 @@ equation
     Cv.diff_on_1 = false;
     Cv.ftype = ftype;
     Cv.Xco2 = 0;
-    Cv.Xh2o = 1;
+    Cv.Xh2o = 0;
     Cv.Xo2 = 0;
     Cv.Xso2 = 0;
   end if;
@@ -175,7 +175,7 @@ equation
     Cee.diff_on_1 = false;
     Cee.ftype = ftype;
     Cee.Xco2 = 0;
-    Cee.Xh2o = 1;
+    Cee.Xh2o = 0;
     Cee.Xo2 = 0;
     Cee.Xso2 = 0;
   end if;
@@ -260,7 +260,7 @@ equation
   Cl.ftype = ftype;
 
   Cl.Xco2 = 0;
-  Cl.Xh2o = 1;
+  Cl.Xh2o = 0;
   Cl.Xo2  = 0;
   Cl.Xso2 = 0;
 
@@ -553,8 +553,8 @@ equation
       width=0.78,
       height=0.88),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 <p>This component model is documented in Sect. 9.5.3 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>. </p>
 </html>", revisions="<html>
 <p><u><b>Author</b></u></p>

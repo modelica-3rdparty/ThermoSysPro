@@ -6,7 +6,7 @@ model LumpedStraightPipe "Lumped straight pipe (circular duct)"
 
   parameter Units.SI.Length L=10. "Pipe length";
   parameter Units.SI.Diameter D=0.2 "Pipe internal hydraulic diameter";
-  parameter Integer ntubes=1 "Number of pipes in parallel";
+  parameter Real ntubes=1 "Number of pipes in parallel";
   parameter Real lambda=0.03
     "Friction pressure loss coefficient (active if lambda_fixed=true)";
   parameter Real rugosrel=0.0001
@@ -154,8 +154,8 @@ equation
       width=0.82,
       height=0.65),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 <p>This component model is documented in Sect. 13.5 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>. </p>
 </html>",
    revisions="<html>
