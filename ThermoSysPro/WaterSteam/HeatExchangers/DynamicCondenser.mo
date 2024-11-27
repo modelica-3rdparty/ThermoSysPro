@@ -92,8 +92,8 @@ equation
   end if;
 
   connect(DynamicCondenser.Cl, C2ex)
-                               annotation (Line(points={{7.10543e-015,-73.3333},
-          {7.10543e-015,-98},{0,-98},{0,-100}}, color={0,0,255}));
+                               annotation (Line(points={{7.10543e-15,-73.3333},
+          {7.10543e-15,-98},{0,-98},{0,-100}},  color={0,0,255}));
   connect(C1, DynamicCondenser.Ce)
     annotation (Line(points={{-97,81},{-80,81},{-80,54},{-78,54},{-78,52.6667},
           {-76.5714,52.6667}}));
