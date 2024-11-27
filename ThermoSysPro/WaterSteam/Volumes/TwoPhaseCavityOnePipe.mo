@@ -153,8 +153,8 @@ initial equation
   if steady_state then
     der(hl) = 0;
     der(hv) = 0;
-    Vl = Vf0*V;    // Without liquid level control
-    //der(Vl) = 0; // With liquid level control
+    //Vl = Vf0*V;    // Without liquid level control
+    der(Vl) = 0; // With liquid level control
     der(P) = 0;
     der(Tp) = 0;
   else
