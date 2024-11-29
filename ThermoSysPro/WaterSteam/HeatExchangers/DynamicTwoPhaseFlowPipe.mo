@@ -379,8 +379,10 @@ equation
 
     khi[i] = filo[i]*lambdal[i]*dx2/D;
 
-    lambdal[i] = if noEvent(Rel2[i] > 1) then 0.25*(Modelica.Math.log10(13/Rel2[i] + rugosrel/3.7/D))^(-2) else 0.01;
-    lambdav[i] = if noEvent(Rev2[i] > 1) then 0.25*(Modelica.Math.log10(13/Rev2[i] + rugosrel/3.7/D))^(-2) else 0.01;
+    //lambdal[i] = if noEvent(Rel2[i] > 1) then 0.25*(Modelica.Math.log10(13/Rel2[i] + rugosrel/3.7/D))^(-2) else 0.01;
+    //lambdav[i] = if noEvent(Rev2[i] > 1) then 0.25*(Modelica.Math.log10(13/Rev2[i] + rugosrel/3.7/D))^(-2) else 0.01;
+    lambdal[i] = if noEvent(Rel2[i] > 1000) then noEvent(max(64/Rel2[i], 0.25*(Modelica.Math.log10(13/Rel2[i] + rugosrel/3.7/D))^(-2))) else (if noEvent(Rel2[i] < 6.4) then 10 else 64/Rel2[i]);
+    lambdav[i] = if noEvent(Rev2[i] > 1000) then noEvent(max(64/Rev2[i], 0.25*(Modelica.Math.log10(13/Rev2[i] + rugosrel/3.7/D))^(-2))) else (if noEvent(Rev2[i] < 6.4) then 10 else 64/Rev2[i]);
 
     Rel2[i] = noEvent(abs(4*Q[i]/(pi*Di*mul2[i])));
     Rev2[i] = noEvent(abs(4*Q[i]/(pi*Di*muv2[i])));

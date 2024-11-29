@@ -255,7 +255,8 @@ equation
 
     khi[i] = lambda[i]*dx2/D;
 
-    lambda[i] = if noEvent(Re2[i] > 1) then 0.25*(Modelica.Math.log10(13/Re2[i] + rugosrel/3.7/D))^(-2) else 0.01;
+    //lambda[i] = if noEvent(Re2[i] > 1) then 0.25*(Modelica.Math.log10(13/Re2[i] + rugosrel/3.7/D))^(-2) else 0.01;
+    lambda[i] = if noEvent(Re2[i] > 1000) then noEvent(max(64/Re2[i], 0.25*(Modelica.Math.log10(13/Re2[i] + rugosrel/3.7/D))^(-2))) else (if noEvent(Re2[i] < 6.4) then 10 else 64/Re2[i]);
 
     Re2[i] = noEvent(abs(4*Q[i]/(pi*Di*mu2[i])));
 

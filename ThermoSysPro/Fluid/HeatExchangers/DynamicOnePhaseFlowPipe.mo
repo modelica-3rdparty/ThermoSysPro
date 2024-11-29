@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Fluid.HeatExchangers;
+within ThermoSysPro.Fluid.HeatExchangers;
 model DynamicOnePhaseFlowPipe "Dynamic one-phase flow pipe"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
@@ -351,7 +351,8 @@ equation
     dpf[i] = noEvent(dpfCorr*khi[i]*Q[i]*abs(Q[i])/(2*A^2*rho2[i]));
 
     khi[i] = lambda[i]*dx2/D;
-    lambda[i] = if noEvent(Re2[i] > 1) then 0.25*(Modelica.Math.log10(13/Re2[i] + rugosrel/3.7/D))^(-2) else 0.01;
+    //lambda[i] = if noEvent(Re2[i] > 1) then 0.25*(Modelica.Math.log10(13/Re2[i] + rugosrel/3.7/D))^(-2) else 0.01;
+    lambda[i] = if noEvent(Re2[i] > 1000) then noEvent(max(64/Re2[i], 0.25*(Modelica.Math.log10(13/Re2[i] + rugosrel/3.7/D))^(-2))) else (if noEvent(Re2[i] < 6.4) then 10 else 64/Re2[i]);
     Re2[i] = noEvent(abs(4*Q[i]/(pi*Di*mu2[i])));
 
     /* Diffusion resistance */
