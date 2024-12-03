@@ -25,7 +25,7 @@ translateModel("ThermoSysPro.Examples.SimpleExamples.TestBend");
 simulateModel(problem="ThermoSysPro.Examples.SimpleExamples.TestBend", startTime=0, stopTime=1, method="dassl", tolerance=1e-4);
 ```
 
-Example of .mos file for OpenModelica :
+Example of [.mos file for OpenModelica](https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/scripting_api.html) :
 ```modelica
 loadModel(Modelica,{"4.0"}); getErrorString();
 loadModel(ThermoSysPro,{"4.0"});getErrorString();
