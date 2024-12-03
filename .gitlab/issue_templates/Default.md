@@ -5,6 +5,12 @@
 ## Description
 Clearly and concisely describe the problem encountered.
 
+### Expected Behavior
+Describe what you expected to happen.
+
+### Actual Behavior
+Describe what actually happens.
+
 ## Environment
 - **Operating System**: (Linux/Windows)
 - **Modelica Environment Used (and corresponding version)**: (OpenModelica 1.23/Dymola 23x)
@@ -31,11 +37,6 @@ loadModel(Modelica,{"4.0"}); getErrorString();
 loadModel(ThermoSysPro,{"4.0"});getErrorString();
 simulate(ThermoSysPro.Examples.SimpleExamples.TestBend); getErrorString();
 ```
-## Expected Behavior
-Describe what you expected to happen.
-
-## Actual Behavior
-Describe what actually happens.
 
 ## Logs and Screenshots
 Add logs or screenshots if needed.
