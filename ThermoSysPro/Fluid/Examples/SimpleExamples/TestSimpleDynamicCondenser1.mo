@@ -70,8 +70,8 @@ equation
           extent={{-28,84},{10,72}},
           lineColor={28,108,200},
           textString="proe.x: fixed")}), Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2021</b> </p>
-<p><b>ThermoSysPro Version 4.0</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 </html>"),
     Icon(graphics={
         Rectangle(

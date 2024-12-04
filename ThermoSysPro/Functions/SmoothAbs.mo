@@ -9,7 +9,7 @@ algorithm
   y := SmoothSign(x, alpha)*x;
 
   annotation (smoothOrder=2, Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2012</b> </p>
-<p><b>ThermoSysPro Version 3.0</h4>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
+<p><b>ThermoSysPro Version 4.1</h4>
 </html>"));
 end SmoothAbs;

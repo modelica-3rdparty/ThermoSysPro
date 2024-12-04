@@ -86,8 +86,8 @@ equation
 <li>Baligh El Hefni </li>
 </ul>
 </html>", info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019 </p>
-<p><b>ThermoSysPro Version 3.2 </p>
+<p><b>Copyright &copy; EDF 2002 - 2024 </p>
+<p><b>ThermoSysPro Version 4.1 </p>
 <p>This model is documented in Sect. 15.4 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>.</h4>
 <p>The results reported in the ThermoSysPro book were computed using Dymola.</h4>
 </html>"), Icon(graphics={

@@ -31,10 +31,10 @@ package Connectors "Connectors"
             fillPattern=FillPattern.Sphere,
             fillColor={0,128,255})}),    Documentation(revisions="",
           info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2010</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
-<p><b>ThermoSysPro Version 2.0</h4>
+<p><b>ThermoSysPro Version 4.1</h4>
 </HTML>
 "));
   end FuelInlet;
@@ -69,10 +69,10 @@ package Connectors "Connectors"
             fillPattern=FillPattern.Sphere,
             fillColor={255,0,0})}),    Documentation(revisions="",
           info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2010</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
-<p><b>ThermoSysPro Version 2.0</h4>
+<p><b>ThermoSysPro Version 4.1</h4>
 </HTML>
 "));
   end FuelOutlet;
@@ -108,10 +108,10 @@ package Connectors "Connectors"
             fillPattern=FillPattern.Backward)}),
                               Documentation(revisions="",
           info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2010</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
-<p><b>ThermoSysPro Version 2.0</h4>
+<p><b>ThermoSysPro Version 4.1</h4>
 </HTML>
 "));
   end FuelInletI;
@@ -147,10 +147,10 @@ package Connectors "Connectors"
             fillPattern=FillPattern.Backward)}),
                               Documentation(revisions="",
           info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2010</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
-<p><b>ThermoSysPro Version 2.0</h4>
+<p><b>ThermoSysPro Version 4.1</h4>
 </HTML>
 "));
   end FuelOutletI;

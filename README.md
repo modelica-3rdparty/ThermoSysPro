@@ -2,22 +2,37 @@
 
 ## About ThermoSysPro
 
-[ThermoSysPro](https://thermosyspro.com) is a library providing model components for thermal hydraulics, instrumentation and control. It has been developed in the Modelica language from the [Modelica Association](https://www.modelica.org).
+[ThermoSysPro](https://thermosyspro.com) is a library providing model components for thermal hydraulics, instrumentation and control. It has been developed in the Modelica language from the [Modelica Association](https://www.modelica.org). The library is released under the open source [Modelica License 2](https://www.modelica.org/licenses/ModelicaLicense2).
 
-The library is released under the open source [Modelica License 2](https://www.modelica.org/licenses/ModelicaLicense2) and can be used for teaching, academic and industrial purposes.
+ThermoSysPro has been historically designed for the modeling and simulation of thermal power plants of all kinds (nuclear, fossil fuel fired, solar, biomass, combined heat and power…) but can also be used for energy systems at large such as heat networks or industrial processes. Developed for industrial applications, it can also be used for teaching and academic purposes.
 
-ThermoSysPro has been mainly designed for the modeling and simulation of thermal power plants of all kinds (nuclear, fossil fuel fired, solar, biomass, combined heat and power…), but can also be used for energy systems at large such as heat networks or industrial processes.
+## Current release and Compatibilities
 
-## Current release
+Current release of ThermoSysPro is ![GitLab Release](https://img.shields.io/gitlab/v/release/thermosysproandco%2FThermoSysPro?gitlab_url=https%3A%2F%2Fgitlab.pam-retd.fr). \
+It is developed on Dymola. OpenModelica can also be used as the simulation environment. 
 
-Current release of ThermoSysPro is v4.0.
+## Future releases
 
-## Compatibilities
-
-ThermoSysPro v4.0 is developed on Dymola using MSL 4.0.
+The development roadmap outlines the planned features and improvements for the ThermoSysPro library:
+- Addition of new fluids to the library through compatibility with Modelica media, expanding the domain of applications
+- Enhanced compatibility with OpenModelica for improved integration
+- Improved initialisation and overall performance of the current version
+- Implementation of cross-platform and version CI/CD pipelines
+- Inclusion of documentation directly within components
 
 ## Documentation, book and website
 
-The library documentation is available at [https://thermosyspro.gitlab.io/documentation](https://thermosyspro.gitlab.io/documentation).\
-The book [Modeling and Simulation of Thermal Power Plants with ThermoSysPro](https://www.springer.com/gp/book/9783030051044) describes in depth the physics at stake in the library.\
+The library documentation is available [online](https://thermosyspro.gitlab.io/documentation). It includes material from the book [Modeling and Simulation of Thermal Power Plants with ThermoSysPro](https://www.springer.com/gp/book/9783030051044), which provides an in-depth description of the physics involved in the library.\
 More information can be found on [ThermoSysPro website](https://thermosyspro.com).
+
+## How to contribute
+
+Contributions from the community are welcome! You can ask questions, report bugs or request a new feature by opening an issue (see our [Contribution Guidelines](https://gitlab.pam-retd.fr/thermosysproandco/ThermoSysPro/-/blob/master/ContributionsWorkflow.md?ref_type=heads#first-things-first-open-an-issue) if needed). 
+
+More in-depth contributions are also welcome. Please refer to [ThermoSysPro workflow](https://gitlab.pam-retd.fr/thermosysproandco/ThermoSysPro/-/blob/master/ContributionsWorkflow.md?ref_type=heads) for detailed procedures on how to contribute.
+
+## Citation and References
+
+To cite ThermoSysPro library, please use: _Baligh El Hefni, and Daniel Bouskela. Modeling and Simulation of Thermal Power Plants with ThermoSysPro. Springer, 2019_. [\[bib\]](https://thermosyspro.com/list_publications_bib.html#el2019modeling)
+
+To see other references using ThermoSysPro, please see [ThermoSysPro's references](https://thermosyspro.com/publications.html).

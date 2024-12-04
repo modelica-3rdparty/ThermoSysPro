@@ -3,7 +3,7 @@ package Collectors "Solar collectors"
 
 
 annotation (Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2012</b> </p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
 </html>"), Icon(graphics={
       Text(
         extent={{-102,0},{24,-26}},

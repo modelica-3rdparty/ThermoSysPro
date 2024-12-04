@@ -164,7 +164,7 @@ annotation (
     library=1,
     autolayout=1),
   Documentation(info="<html>
-<p><b>ThermoSysPro Version 3.2</b> </p>
+<p><b>ThermoSysPro Version 4.1</b> </p>
 <p>This library is an interface for the following fluid properties libraries:</p>
 <ol>
 <li>Water and steam (industrial IAPWS-IF97 standard)</li>

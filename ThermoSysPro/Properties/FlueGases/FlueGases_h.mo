@@ -47,10 +47,10 @@ algorithm
           textString=
                "function")}),
                            Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2010</b></p>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>
 <html>
-<p><b>ThermoSysPro Version 2.0</b></p>
+<p><b>ThermoSysPro Version 4.1</b></p>
 </HTML>
 "),           extent=[-80,60; -60,80],
     Placement(transformation(extent={{-80,60},{-60,80}}, rotation=0)));

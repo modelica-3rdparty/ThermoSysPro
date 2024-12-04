@@ -866,8 +866,8 @@ end if;
 </ul>
 </html>",
    info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2010</b></p>
-<p><b>ThermoSysPro Version 2.0</h4>
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
+<p><b>ThermoSysPro Version 4.1</h4>
 </HTML>
 "));
 end GridFurnace;

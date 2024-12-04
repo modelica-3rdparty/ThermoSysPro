@@ -219,8 +219,8 @@ equation
       width=0.8,
       height=0.77),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2019</h4>
-<p><b>ThermoSysPro Version 3.2</h4>
+<p><b>Copyright &copy; EDF 2002 - 2024</h4>
+<p><b>ThermoSysPro Version 4.1</h4>
 <p>This component model is documented in Sect. 13.13 of the <a href=\"https://www.springer.com/us/book/9783030051044\">ThermoSysPro book</a>. </h4>
 </html>",
    revisions="<html>
