@@ -1,6 +1,7 @@
 within ThermoSysPro.WaterSteam.HeatExchangers;
 model SteamGenerator_1SG_purges "Individual steam generator"
   parameter Real H0_Mix_AlimDomeGV=1194812.89980521;
+  parameter Integer ntubes=5342;
 
 public
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicOnePhaseFlowPipe UtubeHotLeg(
@@ -19,7 +20,8 @@ public
     inertia=false,
     dpfCorr=0.17,
     hcCorr=5,
-    ntubes=5340) annotation (Placement(transformation(
+    ntubes=ntubes)
+                 annotation (Placement(transformation(
         origin={-67,-41.5},
         extent={{30.5,-15},{-30.5,15}},
         rotation=270)));
@@ -29,8 +31,8 @@ public
     steady_state=true,
     L=10.848,
     D=0.01687,
-    P(start={15393431.1040249,15393244.2635501,15392971.9441869,
-          15392877.0660053,15392915.6467518,15393000.8344321,15393020}),
+    P(start={15393431.104025,15393244.26355,15392971.944187,15392877.066005,
+          15392915.646752,15393000.834432,15393020}),
     h(start={1326153.46646787,1310848.36111251,1299218.76228131,
           1290360.28876122,1283604.94388924,1280654.73156587,1280654.73156587}),
     Tp(start={584,580,575,571,568}),
@@ -39,7 +41,8 @@ public
     dpfCorr=0.17,
     hcCorr=5,
     z1=10.848,
-    ntubes=5340) annotation (Placement(transformation(
+    ntubes=ntubes)
+                 annotation (Placement(transformation(
         origin={67,-41.5},
         extent={{30.5,-14},{-30.5,14}},
         rotation=90)));
@@ -134,7 +137,8 @@ public
     rhow=8430,
     Tp(start={571,568,566,564,562}),
     Ns=5,
-    ntubes=5340) annotation (Placement(transformation(
+    ntubes=ntubes)
+                 annotation (Placement(transformation(
         origin={-44,-41},
         extent={{-33,-16},{33,16}},
         rotation=270)));
@@ -147,7 +151,8 @@ public
     rhow=8430,
     Tp(start={563,560,558,557,556}),
     Ns=5,
-    ntubes=5340) annotation (Placement(transformation(
+    ntubes=ntubes)
+                 annotation (Placement(transformation(
         origin={44,-41},
         extent={{-33,16},{33,-16}},
         rotation=270)));
@@ -168,7 +173,7 @@ public
     z2=10.848,
     hcCorr=5,
     dpfCorr=1,
-    ntubes=5340,
+    ntubes=ntubes,
     Q(start={8600/4,8600/4,8600/4,8600/4,8600/4,8600/4})) annotation (Placement(
         transformation(
         origin={-2.5,-41},
