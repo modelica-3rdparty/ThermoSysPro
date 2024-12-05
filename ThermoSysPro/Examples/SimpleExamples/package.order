@@ -105,3 +105,4 @@ TestHysteresis
 TestWirelessSensor
 TestSteamGenerator_1SG_withOpenPurge
 TestSteamGenerator_1SG_withClosedPurge
+TestSteamGenerator_1SG_withClosedPurge2
