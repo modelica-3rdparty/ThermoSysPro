@@ -104,3 +104,4 @@ TestVolume_SteamCavitiesPipeValve
 TestHysteresis
 TestWirelessSensor
 TestSteamGenerator_1SG_withOpenPurge
+TestSteamGenerator_1SG_withClosedPurge
