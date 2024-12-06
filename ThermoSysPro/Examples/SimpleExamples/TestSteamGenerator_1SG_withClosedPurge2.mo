@@ -85,8 +85,8 @@ equation
     annotation (Line(points={{64,36},{74,36}}, color={0,0,255}));
   connect(DP_GV_apg.C1, massFlowMultiplier2.Cs)
     annotation (Line(points={{28,-14},{20,-14}}, color={0,0,255}));
-  connect(massFlowMultiplier2.Ce, steamGenerator_1SG.fluidOutletI2) annotation
-    (Line(points={{0,-14},{-10.3467,-14},{-10.3467,-14.22}}, color={0,0,255}));
+  connect(massFlowMultiplier2.Ce, steamGenerator_1SG.fluidOutletI2) annotation (
+     Line(points={{0,-14},{-10.3467,-14},{-10.3467,-14.22}}, color={0,0,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false), graphics={Text(
           extent={{-184,104},{-100,-100}},
