@@ -6,6 +6,12 @@ model MassFlowMultiplier "Mass flow multipliier"
   parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
+
 public
   Units.SI.AbsolutePressure P(start=10e5) "Fluid pressure";
   Units.SI.SpecificEnthalpy h(start=10e5) "Fluid specific enthalpy";
@@ -13,16 +19,18 @@ public
   Units.SI.Density rho(start=998) "Fluid density";
 
 public
-  Connectors.FluidInlet Ce
+  Connectors.FluidInlet Ce(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
            0)));
-  Connectors.FluidOutlet Cs                annotation (Placement(transformation(
+  Connectors.FluidOutlet Cs(redeclare package Species = Species)                annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
     "Water-steam properties"
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
            0)));
 equation
+
+  Ce.SubC = Cs.SubC;
 
   /* Fluid pressure */
   P = Ce.P;
