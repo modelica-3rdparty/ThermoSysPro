@@ -45,7 +45,6 @@ model DynamicCondenser "Dynamic Cavity"
     annotation (                        Placement(transformation(extent={{-100,
             -100},{100,100}}, rotation=0)));
   DynamicOnePhaseFlowPipe pipe_3(
-    redeclare package Species = Species,
     option_temperature=2,
     advection=true,
     mode=0,
@@ -62,12 +61,10 @@ model DynamicCondenser "Dynamic Cavity"
                                                                     "Condensed water extraction outlet"
     annotation (Placement(transformation(extent={{-10,-110},{10,-90}}, rotation=
            0)));
-  Connectors.FluidInletI Ce1( redeclare package Species = Species)
-                                                                  "Cooling water inlet"
+  Connectors.FluidInletI Ce1                                      "Cooling water inlet"
     annotation (Placement(transformation(extent={{-110,-11},{-90,9}}, rotation=
             0)));
-  Connectors.FluidOutletI Ce2( redeclare package Species = Species)
-                                                                   "Cooling water outlet"
+  Connectors.FluidOutletI Ce2                                      "Cooling water outlet"
     annotation (Placement(transformation(extent={{89,-11},{109,9}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal sortieReelle
     annotation (Placement(transformation(extent={{98,-62},{118,-42}}, rotation=
