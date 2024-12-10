@@ -31,7 +31,7 @@ partial block MassBalance_Biphasic
       choix_resine=1,
       L=L) "Sink and Source of Species"
     annotation (
-  choicesAllMatching=true);
+  choicesAllMatching=true);        //A revoir --> Juliette : SubC = phasesSeparation.Cl
 
 
 

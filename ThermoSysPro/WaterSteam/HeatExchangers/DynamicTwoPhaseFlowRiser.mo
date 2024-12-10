@@ -227,14 +227,15 @@ public
     redeclare SinkAndSource SaS,
     each n_in=1,
     each n_out_mixed=1,
-    each V=A*L/(N),
+    each V=(A*L)/Ns,
     each dynamic_mass_balance=dynamic_mass_balance,
     Qin=transpose({Q[1:N - 1]}),
     Qout=transpose({Q[2:N]}),
     rho=rho1,
     rho_liquidPhase=rhol1,
     x=xv1,
-    T=pro1.T) annotation (Placement(transformation(extent={{38,70},{74,106}})));
+    T=pro1.T,
+    Vl=(rho1./rhol1).*(fill(1,size(xv1,1))-xv1).*((A*L)/Ns)) annotation (Placement(transformation(extent={{38,70},{74,106}})));
     //redeclare package SinkAndSource = SinkAndSource,
 
 initial equation

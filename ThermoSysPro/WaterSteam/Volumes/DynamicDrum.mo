@@ -163,7 +163,8 @@ public
     rho_liquidPhase=rhol,
     x=prom.x,
     T=prom.T,
-    L=L)
+    L=L,
+    Vl=Vl)
     annotation (Placement(transformation(extent={{-102,-18},{-72,12}})));
     //redeclare package SinkAndSource = SinkAndSource,
 

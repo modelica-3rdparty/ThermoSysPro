@@ -82,7 +82,8 @@ public
     Qin={C1.Q},
     Qout={C2.Q},
     rho=rho,
-    T=T)
+    T=T,
+    V=A*L)
     annotation (Placement(transformation(extent={{68,70},{88,90}})));
     //redeclare package SinkAndSource = SinkAndSource,
 
