@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestAirHumidity
-
   ThermoSysPro.FlueGases.BoundaryConditions.SourcePQ sourceFlueGasesPQ(P0=100000,
       T0=293) annotation (Placement(transformation(extent={{-80,0},{-60,20}},
           rotation=0)));

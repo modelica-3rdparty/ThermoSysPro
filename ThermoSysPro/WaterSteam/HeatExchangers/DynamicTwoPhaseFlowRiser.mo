@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.HeatExchangers;
+within ThermoSysPro.WaterSteam.HeatExchangers;
 model DynamicTwoPhaseFlowRiser "Riser: Dynamic two-phase flow pipe"
   parameter ThermoSysPro.Units.SI.Length L=10. "Pipe length";
   parameter ThermoSysPro.Units.SI.Diameter D=0.02 "Hydraulic diameter";

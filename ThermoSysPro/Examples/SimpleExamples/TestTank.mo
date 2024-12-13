@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestTank
-
   ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe PerteDP1
     annotation (Placement(transformation(extent={{30,-50},{50,-30}}, rotation=0)));
   ThermoSysPro.WaterSteam.PressureLosses.ControlValve VanneReglante1

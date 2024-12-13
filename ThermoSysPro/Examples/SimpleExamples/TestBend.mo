@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestBend
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP SourceP1
     annotation (Placement(transformation(extent={{-100,26},{-80,46}}, rotation=
             0)));

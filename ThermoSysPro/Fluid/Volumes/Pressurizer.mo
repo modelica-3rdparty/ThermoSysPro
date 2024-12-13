@@ -158,7 +158,7 @@ equation
     Cas.diff_on_1 = false;
     Cas.ftype = ftype;
     Cas.Xco2 = 0;
-    Cas.Xh2o = 1;
+    Cas.Xh2o = 0;
     Cas.Xo2 = 0;
     Cas.Xso2 = 0;
   end if;
@@ -268,12 +268,12 @@ equation
   Cs.ftype = ftype;
 
   Cs.Xco2 = 0;
-  Cs.Xh2o = 1;
+  Cs.Xh2o = 0;
   Cs.Xo2  = 0;
   Cs.Xso2 = 0;
 
   Cex.Xco2 = 0;
-  Cex.Xh2o = 1;
+  Cex.Xh2o = 0;
   Cex.Xo2  = 0;
   Cex.Xso2 = 0;
 

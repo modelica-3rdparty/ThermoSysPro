@@ -82,6 +82,8 @@ public
     annotation (Placement(transformation(extent={{80,-10},{100,10}}, rotation=0)));
   Connectors.FluidOutlet Cex "Water output"
     annotation (Placement(transformation(extent={{-8,-108},{8,-92}}, rotation=0)));
+  InstrumentationAndControl.Connectors.OutputReal Pressure "Measured pressure in the volume"
+    annotation (Placement(transformation(extent={{80,20},{100,40}})));
 initial equation
   if steady_state then
     der(P) = 0;
@@ -132,6 +134,7 @@ equation
   Cc.T = Tl;
 
   yLevel.signal = Yw;
+  Pressure.signal = P;
 
   /* Computation of the geometrical variables */
   Yw = 100*y;
@@ -251,15 +254,18 @@ equation
           fillPattern=FillPattern.Solid),
         Line(points={{-79,68},{80,68}}, color={255,255,255}),
         Text(
-          extent={{58,4},{58,-10}},
+          extent={{122,8},{122,-6}},
           lineColor={0,0,255},
-          textString=
-               "Niveau"),
+          textString="Level"),
         Line(
           points={{100,90},{100,60},{80,60},{80,60}},
           color={0,0,255},
           thickness=1),
-        Line(points={{80,60},{100,60},{100,90}}, color={255,255,255})}),
+        Line(points={{80,60},{100,60},{100,90}}, color={255,255,255}),
+        Text(
+          extent={{106,42},{148,20}},
+          textColor={0,0,255},
+          textString="Pressure")}),
     Documentation(info="<html>
 <p><b>Copyright &copy; EDF 2002 - 2019</b> </p>
 <p><b>ThermoSysPro Version 3.2</h4>

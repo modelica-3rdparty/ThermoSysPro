@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestDynamicWaterWaterExchanger
-
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicWaterWaterExchanger
     echangeurAPlaques1D(
     modec=1,

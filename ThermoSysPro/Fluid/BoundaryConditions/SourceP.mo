@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.BoundaryConditions;
 model SourceP "Multi-fluid source with fixed pressure"
   extends
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
@@ -25,7 +26,7 @@ model SourceP "Multi-fluid source with fixed pressure"
       enable=(ftype == FluidType.FlueGases),
       tab="Fluid",
       group="Composition values (active for flue gases only)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xh2o=0.05 "H2O mass fraction"
+  parameter ThermoSysPro.Units.SI.MassFraction Xh2o=if ftype == FluidType.FlueGases then 0.05 else 0 "H2O mass fraction"
     annotation (Evaluate=true, Dialog(
       enable=(ftype == FluidType.FlueGases),
       tab="Fluid",

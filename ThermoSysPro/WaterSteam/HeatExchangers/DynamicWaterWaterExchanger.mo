@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.HeatExchangers;
+within ThermoSysPro.WaterSteam.HeatExchangers;
 model DynamicWaterWaterExchanger "Dynamic plate heat exchanger"
   parameter ThermoSysPro.Units.SI.ThermalConductivity lambdam=15.0
     "Metal thermal conductivity";

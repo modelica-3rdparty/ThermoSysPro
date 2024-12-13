@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.PressureLosses;
+within ThermoSysPro.WaterSteam.PressureLosses;
 model PipePressureLoss "Pipe generic pressure loss"
 
     replaceable package Species =

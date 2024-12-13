@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.Volumes;
+within ThermoSysPro.WaterSteam.Volumes;
 model TwoPhaseCavity "TwoPhaseCavity for one shell pass "
   parameter Boolean Vertical=true
     "true: vertical cylinder - false: horizontal cylinder";

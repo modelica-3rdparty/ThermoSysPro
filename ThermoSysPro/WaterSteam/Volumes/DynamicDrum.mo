@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.Volumes;
+within ThermoSysPro.WaterSteam.Volumes;
 model DynamicDrum "Dynamic drum"
   parameter Boolean Vertical=true
     "true: vertical cylinder - false: horizontal cylinder";

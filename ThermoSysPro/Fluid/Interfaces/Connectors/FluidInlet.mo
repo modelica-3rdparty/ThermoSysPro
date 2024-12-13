@@ -13,7 +13,7 @@ connector FluidInlet "Fluid inlet connector"
     "Fluid type";
   ThermoSysPro.Units.SI.MassFraction Xco2(start=0.01)
     "CO2 mass fraction of the fluid crossing the boundary of the control volume";
-  ThermoSysPro.Units.SI.MassFraction Xh2o(start=0.05)
+  ThermoSysPro.Units.SI.MassFraction Xh2o
     "H2O mass fraction of the fluid crossing the boundary of the control volume";
   ThermoSysPro.Units.SI.MassFraction Xo2(start=0.2)
     "O2 mass fraction of the fluid crossing the boundary of the control volume";

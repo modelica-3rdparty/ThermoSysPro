@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestNTUWaterHeating0
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourcePQ Source_condenseur(
     P0=80.0e5,
     Q0=1780,
@@ -36,7 +35,6 @@ model TestNTUWaterHeating0
     singularPressureLoss5(K=1e-4)
                           annotation (Placement(transformation(extent={{34,-106},
             {54,-86}}, rotation=0)));
-
   ThermoSysPro.WaterSteam.HeatExchangers.NTUWaterHeating nTUWaterHeating(
     lambdaE=102.5,
     SCondDes=6314,

@@ -11,8 +11,9 @@ dsmodel.c
 *.mat
 dymosim
 dymosim.exe
-request.
-status.
+request*
+status*
 *.mof
+*.c
 buildlog.txt
-dsmodelext1.c
+

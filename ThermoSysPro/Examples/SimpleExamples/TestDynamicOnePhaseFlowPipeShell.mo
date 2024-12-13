@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestDynamicOnePhaseFlowPipeShell
-
   WaterSteam.HeatExchangers.DynamicOnePhaseFlowShell
     dynamicOnePhaseFlowPipeShell(
     Q(start={30,30,30,30,30,30,30,30,30,30,30}),

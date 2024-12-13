@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestCentrifugalPump6
-
   ThermoSysPro.ElectroMechanics.Machines.SynchronousMotor synchronousMotor(Im(start=
           1500))
     annotation (Placement(transformation(extent={{-40,-20},{-20,0}}, rotation=0)));

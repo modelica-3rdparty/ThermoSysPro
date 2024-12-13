@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestRefP
-
   ThermoSysPro.WaterSteam.BoundaryConditions.RefP refP
     annotation (Placement(transformation(extent={{-90,0},{-70,20}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Constante constante(

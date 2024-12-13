@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.HeatExchangers;
+within ThermoSysPro.WaterSteam.HeatExchangers;
 model SimpleDynamicCondenser
   parameter Units.SI.Volume V=1 "Cavity volume";
   parameter Units.SI.Area A=1 "Cavity cross-sectional area";

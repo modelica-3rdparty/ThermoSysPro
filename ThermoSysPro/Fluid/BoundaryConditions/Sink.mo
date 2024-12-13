@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.BoundaryConditions;
 model Sink "MultiFluids sink"
   extends
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeVariableInterface;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
 
@@ -33,7 +34,7 @@ public
   Integer fluid=Integer(ftype) "Fluid number";
   Real Xco2(start=0.01)
     "CO2 mass fraction of the fluid crossing the boundary of the control volume";
-  Real Xh2o(start=0.05)
+  Real Xh2o
     "H2O mass fraction of the fluid crossing the boundary of the control volume";
   Real Xo2(start=0.2)
     "O2 mass fraction of the fluid crossing the boundary of the control volume";

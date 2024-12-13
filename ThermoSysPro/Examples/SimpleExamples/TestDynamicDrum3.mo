@@ -5,7 +5,6 @@ model TestDynamicDrum3
     "Maximum CV (active if mode_caract=0)";
   parameter Real LambdaPipe(fixed=false,start=0.085)
     "Friction pressure loss coefficient (active if lambda_fixed=true)";
-
   ThermoSysPro.WaterSteam.Volumes.DynamicDrum Drum(
     Vv(start=39),
     Vertical=false,

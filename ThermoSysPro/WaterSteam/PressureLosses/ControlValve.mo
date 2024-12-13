@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.PressureLosses;
+within ThermoSysPro.WaterSteam.PressureLosses;
 model ControlValve "Control valve"
   parameter ThermoSysPro.Units.xSI.Cv Cvmax=8005.42
     "Maximum CV (active if mode_caract=0)";

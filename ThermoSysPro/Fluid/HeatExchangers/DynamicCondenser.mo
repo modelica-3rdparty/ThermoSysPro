@@ -121,7 +121,7 @@ equation
     C1.diff_on_1 = false;
     C1.ftype = ftype;
     C1.Xco2 = 0;
-    C1.Xh2o = 1;
+    C1.Xh2o = 0;
     C1.Xo2 = 0;
     C1.Xso2 = 0;
   end if;
@@ -134,7 +134,7 @@ equation
     C2vap.diff_on_1 = false;
     C2vap.ftype = ftype;
     C2vap.Xco2 = 0;
-    C2vap.Xh2o = 1;
+    C2vap.Xh2o = 0;
     C2vap.Xo2 = 0;
     C2vap.Xso2 = 0;
   end if;

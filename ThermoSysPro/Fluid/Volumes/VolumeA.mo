@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Fluid.Volumes;
+within ThermoSysPro.Fluid.Volumes;
 model VolumeA "Mixing volume with 2 inlets and 2 outlets"
   extends
     ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
@@ -43,7 +43,7 @@ model VolumeA "Mixing volume with 2 inlets and 2 outlets"
       tab="Fluid",
       group=
           "Initial composition values (active for flue gases only if dynamic_composition_balance=true)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xh2o0=0.05
+  parameter ThermoSysPro.Units.SI.MassFraction Xh2o0=if ftype == FluidType.FlueGases then 0.05 else 0
     "Initial H20 mass fraction" annotation (Evaluate=true, Dialog(
       enable=dynamic_composition_balance,
       tab="Fluid",

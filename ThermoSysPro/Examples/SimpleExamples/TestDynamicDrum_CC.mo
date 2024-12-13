@@ -6,7 +6,6 @@ model TestDynamicDrum_CC
     "Maximum CV (active if mode_caract=0)";
   parameter Real LambdaPipe(fixed=false,start=0.085)
     "Friction pressure loss coefficient (active if lambda_fixed=true)";
-
   WaterSteam.Volumes.DynamicDrum              Drum(
     Vv(start=39),
     Vertical=false,
@@ -147,7 +146,6 @@ equation
       points={{-40.95,111.5},{-44,111.5},{-44,111.2},{-55.3,111.2}},
       color={0,0,0},
       pattern=LinePattern.Dash));
-
   connect(Drum.yLevel, regulation_Niveau.MesureNiveauEau) annotation (Line(
       points={{4.1,49},{10,49},{10,130.7},{-55.3,130.7}},
       color={0,0,0},

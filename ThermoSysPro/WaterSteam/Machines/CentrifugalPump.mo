@@ -75,7 +75,6 @@ protected
   parameter Real rh_min=0.05 "Minimum efficiency";
   parameter Units.SI.MassFlowRate Qeps=1.e-3
     "Small mass flow for continuous flow reversal";
-  parameter Boolean dyn_mech_equation=((cardinality(M) <> 0) and dynamic_mech_equation);
 
 public
   Real w_a "Dimensionless angular velocity";
@@ -134,7 +133,7 @@ public
         extent={{-10,-10},{10,10}},
         rotation=90)));
 initial equation
-  if dyn_mech_equation then
+  if ((cardinality(M) <> 0) and dynamic_mech_equation) then
     der(w) = 0;
   end if;
 
@@ -258,7 +257,7 @@ equation
   Ec = 1/2*J*w^2;
 
   /* Rotating mass equation */
-  if dyn_mech_equation then
+  if ((cardinality(M) <> 0) and dynamic_mech_equation) then
     J*der(w) = Cm - Cr;
   else
     0 = Cm - Cr;

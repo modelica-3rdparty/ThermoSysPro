@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.Volumes;
+within ThermoSysPro.WaterSteam.Volumes;
 model VolumeI "Mixing volume with 4 inlets and 4 outlets"
   parameter Units.SI.Volume V=1 "Volume";
   parameter Units.SI.AbsolutePressure P0=1e5

@@ -1,7 +1,6 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestCentrifugalPump7
   import ThermoSysPro;
-
   ThermoSysPro.InstrumentationAndControl.Blocks.Logique.Pulse Pulse1(
                                           width=200, period=400)
     annotation (Placement(transformation(extent={{-60,-60},{-40,-40}}, rotation=

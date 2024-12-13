@@ -1,0 +1,29 @@
+# This is the GitLab CI/CD configuration file to test ThermoSysPro on an internal VM (PAM).
+# This script works once it is mirrored on the internal (pleiade) gitlab, so that it can
+# exchange with the internal VM. 
+# 
+# The objectives of this pipeline are:
+# - Test ThermoSysPro examples on Dymola (done)
+# - Test extra models (additional gitlab project)
+# - Test ThermoSysPro on other tools (OpenModelica)
+# - Evaluate changes on some realistic studies (calibration, optimisation, 
+# uncertainties propagations...)
+# - Publish ThermoSysPro on GitHub:
+#   - Remove confidential modules (based on a "database" file)
+#   - Publish the public version on GitHub
+#
+# A pipeline is composed of independent jobs that run scripts, grouped into stages.
+# Stages run in sequential order, but jobs within stages run in parallel.
+# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
+#
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+#  - test
+#  - deploy
+
+build-job:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - python --version
+    - echo "Still have to fetch test script and potentially others projets (e.g. additional examples)"

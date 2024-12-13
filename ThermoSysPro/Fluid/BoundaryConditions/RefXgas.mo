@@ -1,5 +1,6 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefXgas "Fixed gas composition"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   parameter Real Xco2=0.05 "CO2 mass fraction at the outlet";
   parameter Real Xh2o=0.01 "H2O mass fraction at the outlet";

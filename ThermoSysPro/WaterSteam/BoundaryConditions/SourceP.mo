@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.BoundaryConditions;
+within ThermoSysPro.WaterSteam.BoundaryConditions;
 model SourceP "Water/steam source with fixed pressure"
   parameter Units.SI.AbsolutePressure P0=300000 "Source pressure";
   parameter Units.SI.Temperature T0=290

@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestDynamicWaterHeating_Qwater_zero
-
   ThermoSysPro.WaterSteam.BoundaryConditions.SourceP sourceP(
     option_temperature=2,
     mode=0,
@@ -20,7 +19,6 @@ model TestDynamicWaterHeating_Qwater_zero
     C1(h_vol(start=800e3), h(start=800e3)))
                           annotation (Placement(transformation(extent={{88,-186},
             {108,-166}}, rotation=0)));
-
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicWaterHeating WaterHeating(
     volumeD1(h(start=953939), P(start=6848000)),
     volumeD(
@@ -132,7 +130,6 @@ model TestDynamicWaterHeating_Qwater_zero
             516.4,517,517.4,518,518.4,519,519.4})))
     annotation (Placement(transformation(extent={{-58,-90},{162,96}}, rotation=
             0)));
-
   ThermoSysPro.WaterSteam.BoundaryConditions.Sink Puit_condenseur2(h0=940.000e3)
              annotation (Placement(transformation(extent={{-150,22},{-192,66}},
           rotation=0)));

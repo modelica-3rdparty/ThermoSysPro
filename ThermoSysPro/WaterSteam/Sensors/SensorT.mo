@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.Sensors;
+within ThermoSysPro.WaterSteam.Sensors;
 model SensorT "Temperature sensor"
   parameter Boolean continuous_flow_reversal=false
     "true : continuous flow reversal - false : discontinuous flow reversal";

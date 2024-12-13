@@ -1,6 +1,5 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestFlueGasesVolumes1
-
   ThermoSysPro.FlueGases.PressureLosses.SingularPressureLoss
     singularPressureLossFlueGases1(Q(start=8311.592762050328), rho(start=
           1.5532126714414567))     annotation (Placement(transformation(extent=
