@@ -77,18 +77,18 @@ equation
     annotation (Line(points={{-14,72},{-24,72},{-24,41.84}}, color={0,0,255}));
   connect(DP_GV_apg.C1, massFlowMultiplier2.Cs)
     annotation (Line(points={{26,-24},{18,-24}}, color={0,0,255}));
-  connect(massFlowMultiplier2.Ce, steamGenerator_1SG.fluidOutletI2) annotation
-    (Line(points={{-2,-24},{-10,-24},{-10,3.12},{-16.8933,3.12}}, color={0,0,
+  connect(massFlowMultiplier2.Ce, steamGenerator_1SG.fluidOutletI2) annotation (
+     Line(points={{-2,-24},{-10,-24},{-10,3.12},{-16.8933,3.12}}, color={0,0,
           255}));
-  connect(VV_GV.C2, steamGenerator_1SG.fluidInlet) annotation (Line(points={{6,
-          36},{-4.49333,36},{-4.49333,35.92},{-14.9867,35.92}}, color={0,0,255}));
+  connect(VV_GV.C2, steamGenerator_1SG.fluidInlet) annotation (Line(points={{6,36},{
+          -4.49333,36},{-4.49333,35.92},{-14.9867,35.92}},      color={0,0,255}));
   connect(VV_GV.C1, massFlowMultiplier1.Cs)
     annotation (Line(points={{28,36},{42,36}}, color={0,0,255}));
   connect(massFlowMultiplier1.Ce, sourceGV.C)
     annotation (Line(points={{62,36},{74,36}}, color={0,0,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false), graphics={Text(
-          extent={{-182,104},{-98,-100}},
+          extent={{-242,-26},{-158,-230}},
           lineColor={28,108,200},
           textString="// Iteration variables values:
 DP_GV.Pm                                		=		7091364.5;
