@@ -18,3 +18,5 @@ StaticWaterWaterExchangerDTorWorEff
 SteamGenerator_1SG
 SteamGenerator_4SG
 SteamGenerator_1SG_purges
+SimpleDynamicCondenser_CVI
+DynamicCondenser_CVI
