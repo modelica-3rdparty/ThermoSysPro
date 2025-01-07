@@ -1,7 +1,10 @@
 ﻿within ThermoSysPro.WaterSteam.Volumes;
 model TwoPhaseCavityOnePipe_CVI "TwoPhaseCavity for one shell pass"
 
-  parameter Real Coxy = 4 "concentration en oxygène dans les condensats en µg/L";
+  // This cavity is able to model the air partial pressure if the explicited commands are uncommented
+
+  // To uncomment for air partial pressure modelling
+  // parameter Real Coxy = 4 "concentration en oxygène dans les condensats en µg/L";
 
   parameter Boolean Vertical=true
     "true: vertical cylinder - false: horizontal cylinder";
@@ -60,12 +63,13 @@ protected
     "Gravity constant";
   constant Real pi=Modelica.Constants.pi;
 
-public
-  ThermoSysPro.Units.SI.Pressure Pvide
-    "Total pressure in the cavity (including partialpressure of air)";
-  ThermoSysPro.Units.SI.Pressure Pair "Partial pressure of air";
-  Real Koxy "coefficient de solubilité massique de l'oxygène";
+//To uncomment for air partial pressure modelling
+//  ThermoSysPro.Units.SI.Pressure Pvide
+    //"Total pressure in the cavity (including partialpressure of air)";
+  // ThermoSysPro.Units.SI.Pressure Pair "Partial pressure of air";
+//  Real Koxy "coefficient de solubilité massique de l'oxygène";
 
+public
   ThermoSysPro.Units.SI.Pressure P(start=10000) "Fluid average pressure";
   ThermoSysPro.Units.SI.Pressure Pfond(start=11000)
     "Fluid pressure at the bottom of the cavity";
@@ -165,9 +169,9 @@ public
     "Water level"                        annotation (Placement(transformation(
           extent={{88,-107},{108,-87}}, rotation=0)));
 
-public
-  Real AmmoniacLoss "pourcentage de perte en ammoniac";
+//  Real AmmoniacLoss "pourcentage de perte en ammoniac";
 
+public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prod
     annotation (Placement(transformation(extent={{-250,-16},{-210,24}},
           rotation=0)));
@@ -210,17 +214,20 @@ initial equation
     hl = lsat.h;
     hv = vsat.h;
     Vl = Vf0*V;
-    Pvide = P0;
+    //Pvide = P0;
+    P = P0;
     Tp = 320;
   end if;
 
 equation
 
-  Pvide = Pair + P;
-  Pair = (Coxy*Pvide)/(Koxy*0.209);
-  Koxy = (468.41*Pvide)/(31.64+Tv-273.15)*Pvide/101325;
+  //To uncomment for air partial pressure modelling
+//  Pvide = P;
+//  Pvide = Pair + P;
+//  Pair = (Coxy*Pvide)/(Koxy*0.209);
+//  Koxy = (468.41*Pvide)/(31.64+Tv-273.15)*Pvide/101325;
 
-  AmmoniacLoss = 100*(Ce.SubC[3]*Ce.Q + CvGCT.SubC[3]*CvGCT.Q + CvBP.SubC[3]*CvBP.Q - Cl.SubC[3]*Cl.Q)/(Ce.SubC[3]*Ce.Q + CvGCT.SubC[3]*CvGCT.Q + CvBP.SubC[3]*CvBP.Q);
+//  AmmoniacLoss = 100*(Ce.SubC[3]*Ce.Q + CvGCT.SubC[3]*CvGCT.Q + CvBP.SubC[3]*CvBP.Q - Cl.SubC[3]*Cl.Q)/(Ce.SubC[3]*Ce.Q + CvGCT.SubC[3]*CvGCT.Q + CvBP.SubC[3]*CvBP.Q);
 
   sub_massBalance.mix_in.SubC = {Ce.SubC,CvGCT.SubC,CvBP.SubC};
   sub_massBalance.mix_out.SubC = {Cl.SubC};
@@ -264,9 +271,13 @@ equation
 
   /* Model boundaries */
   Cl.P = Pfond;
-  CvBP.P = Pvide;
-  CvGCT.P = Pvide;
-  Ce.P = Pvide;
+  //To uncomment for air partial pressure modelling
+//  CvBP.P = Pvide;
+//  CvGCT.P = Pvide;
+//  Ce.P = Pvide;
+  CvBP.P = P;
+  CvGCT.P = P;
+  Ce.P = P;
 
   /* Liquid volume */
   if Vertical then
@@ -332,12 +343,18 @@ equation
   0 = noEvent( hvIn*(max(CvBP.Q, 1e-10) + max(CvGCT.Q,1e-10)) - max(CvBP.Q,1e-10)*CvBP.h - max(CvGCT.Q,1e-10)*CvGCT.h);
 
   /* Fluid thermodynamic properties*/
-  proe = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(Pvide, Ce.h, 0);
-  prol = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph((Pvide + Pfond)/2, hl, 0);
-  provIn = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(Pvide, hvIn, 0);
-  prov = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(Pvide, hv, 0);
+  proe = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(P, Ce.h, 0);
+  prol = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph((P + Pfond)/2, hl, 0);
+  provIn = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(P, hvIn, 0);
+  prov = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(P, hv, 0);
   prod = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(Pfond, Cl.h, 0);
-  (lsat,vsat) = ThermoSysPro.Properties.WaterSteam.IF97.Water_sat_P(Pvide);
+  (lsat,vsat) = ThermoSysPro.Properties.WaterSteam.IF97.Water_sat_P(P);
+  //To uncomment for air partial pressure modelling -- and comment the corresponding ones just above
+//  prol = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph((Pvide + Pfond)/2, hl, 0);
+//  provIn = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(Pvide, hvIn, 0);
+//  prov = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(Pvide, hv, 0);
+//  prod = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(Pfond, Cl.h, 0);
+//  (lsat,vsat) = ThermoSysPro.Properties.WaterSteam.IF97.Water_sat_P(Pvide);
 
   Tl = prol.T;
   rhol = prol.d;

@@ -37,7 +37,8 @@ constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation 
       ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
-  ThermoSysPro.WaterSteam.Volumes.TwoPhaseCavityOnePipe_CVI DynamicCondenser(
+  ThermoSysPro.WaterSteam.Volumes.TwoPhaseCavityOnePipe_CVI_SANSPRESSION
+    DynamicCondenser(
     redeclare package Species = Species,
     redeclare model SinkAndSource = SinkAndSource,
     Vf0=Vf0,
@@ -53,7 +54,6 @@ constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation 
     Vertical=true) annotation (Placement(transformation(extent={{-98,-88},{80,
             96}}, rotation=0)));
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicOnePhaseFlowPipe pipe_3(
-    redeclare package Species = Species,
     option_temperature=2,
     advection=true,
     mode=0,
@@ -61,7 +61,7 @@ constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation 
     D=Dc,
     L=L2,
     ntubes=ntubest,
-    Ns=Ns) annotation (Placement(transformation(extent={{-58,-20},{54,18}},
+    Ns=Ns) annotation (Placement(transformation(extent={{-58,-22},{54,16}},
           rotation=0)));
   ThermoSysPro.WaterSteam.Connectors.FluidInletI C1vap(redeclare package
       Species = Species) "Vapor inlet" annotation (Placement(transformation(
@@ -69,11 +69,11 @@ constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation 
   ThermoSysPro.WaterSteam.Connectors.FluidOutletI C2ex(redeclare package
       Species = Species) "Condensed water extraction outlet" annotation (
       Placement(transformation(extent={{-10,-110},{10,-90}}, rotation=0)));
-  ThermoSysPro.WaterSteam.Connectors.FluidInletI Ce1(redeclare package Species
-      = Species) "Cooling water inlet" annotation (Placement(transformation(
+  ThermoSysPro.WaterSteam.Connectors.FluidInletI Ce1
+                 "Cooling water inlet" annotation (Placement(transformation(
           extent={{-116,-11},{-96,9}}, rotation=0)));
-  ThermoSysPro.WaterSteam.Connectors.FluidOutletI Ce2(redeclare package Species
-      = Species) "Cooling water outlet" annotation (Placement(transformation(
+  ThermoSysPro.WaterSteam.Connectors.FluidOutletI Ce2
+                 "Cooling water outlet" annotation (Placement(transformation(
           extent={{95,-11},{115,9}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal sortieReelle
     annotation (Placement(transformation(extent={{96,-64},{116,-44}}, rotation=
@@ -129,7 +129,7 @@ equation
                                       annotation (Line(points={{-32.1021,
           38.3467},{-8,38.3467},{-8,114},{86,114},{86,22.4},{-2,22.4}},
                                        color={191,95,0}));
-  connect(Wall_3.WT1, pipe_3.CTh) annotation (Line(points={{-2,13.6},{-2,4.7}},
+  connect(Wall_3.WT1, pipe_3.CTh) annotation (Line(points={{-2,13.6},{-2,2.7}},
                                                     color={191,95,0}));
   connect(DynamicCondenser.CvBP, C1vap)
     annotation (Line(points={{-32.1021,71.4667},{0,71.4667},{0,100}}));
@@ -137,11 +137,12 @@ equation
     annotation (Line(points={{-53,100},{-53,-92},{-122,-92},{-122,116},{
           -60.1277,116},{-60.1277,71.4667}}));
   connect(pipe_3.C2, Ce2) annotation (Line(
-      points={{54,-1},{105,-1}},
+      points={{54,-3},{80,-3},{80,-1},{105,-1}},
       color={0,0,255},
       thickness=0.5));
   connect(pipe_3.C1, Ce1)
-    annotation (Line(points={{-58,-1},{-106,-1}}, thickness=0.5));
+    annotation (Line(points={{-58,-3},{-82,-3},{-82,-1},{-106,-1}},
+                                                  thickness=0.5));
   connect(iNH3_CVI_Cond, DynamicCondenser.iNH3_CVI) annotation (Line(points={{110,90},
           {88,90},{88,44},{108,44},{108,7.06667},{33.7957,7.06667}},
                                                                    color={0,0,255}));
