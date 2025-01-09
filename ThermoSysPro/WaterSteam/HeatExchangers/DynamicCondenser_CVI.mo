@@ -37,7 +37,7 @@ constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation 
       ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
       choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
 
-  ThermoSysPro.WaterSteam.Volumes.TwoPhaseCavityOnePipe_CVI_SANSPRESSION
+  ThermoSysPro.WaterSteam.Volumes.TwoPhaseCavityOnePipe_CVI
     DynamicCondenser(
     redeclare package Species = Species,
     redeclare model SinkAndSource = SinkAndSource,
@@ -51,8 +51,8 @@ constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation 
     Dext=Dc + 2*ec,
     R=Rv,
     L=Lv,
-    Vertical=true) annotation (Placement(transformation(extent={{-98,-88},{80,
-            96}}, rotation=0)));
+    Vertical=true) annotation (Placement(transformation(extent={{-98,-86},{80,
+            98}}, rotation=0)));
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicOnePhaseFlowPipe pipe_3(
     option_temperature=2,
     advection=true,
@@ -79,8 +79,8 @@ constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation 
     annotation (Placement(transformation(extent={{96,-64},{116,-44}}, rotation=
             0)));
 
-  ThermoSysPro.WaterSteam.Connectors.FluidInletI C1(redeclare package Species
-      = Species) "Extra water inlet" annotation (Placement(transformation(
+  ThermoSysPro.WaterSteam.Connectors.FluidInletI C1(redeclare package Species =
+        Species) "Extra water inlet" annotation (Placement(transformation(
           extent={{-107,71},{-87,91}}, rotation=0)));
   ThermoSysPro.Thermal.HeatTransfer.HeatExchangerWall Wall_3(
     D=Dc,
@@ -119,23 +119,23 @@ equation
   end if;
 
   connect(DynamicCondenser.Cl, C2ex)
-                               annotation (Line(points={{-31.7234,-63.4667},{0,
-          -63.4667},{0,-100}},                  color={0,0,255}));
+                               annotation (Line(points={{-31.7234,-61.4667},{0,
+          -61.4667},{0,-100}},                  color={0,0,255}));
   connect(C1, DynamicCondenser.Ce)
-    annotation (Line(points={{-97,81},{-97,52.4533},{-82.4723,52.4533}}));
+    annotation (Line(points={{-97,81},{-97,54.4533},{-82.4723,54.4533}}));
   connect(DynamicCondenser.yLevel, sortieReelle)
-    annotation (Line(points={{33.7957,-24.8267},{106,-24.8267},{106,-54}}));
+    annotation (Line(points={{33.7957,-22.8267},{106,-22.8267},{106,-54}}));
   connect(DynamicCondenser.Cth3, Wall_3.WT2)
                                       annotation (Line(points={{-32.1021,
-          38.3467},{-8,38.3467},{-8,114},{86,114},{86,22.4},{-2,22.4}},
+          40.3467},{-8,40.3467},{-8,114},{86,114},{86,22.4},{-2,22.4}},
                                        color={191,95,0}));
   connect(Wall_3.WT1, pipe_3.CTh) annotation (Line(points={{-2,13.6},{-2,2.7}},
                                                     color={191,95,0}));
   connect(DynamicCondenser.CvBP, C1vap)
-    annotation (Line(points={{-32.1021,71.4667},{0,71.4667},{0,100}}));
+    annotation (Line(points={{-32.1021,73.4667},{0,73.4667},{0,100}}));
   connect(C2vap, DynamicCondenser.CvGCT)
     annotation (Line(points={{-53,100},{-53,-92},{-122,-92},{-122,116},{
-          -60.1277,116},{-60.1277,71.4667}}));
+          -60.1277,116},{-60.1277,73.4667}}));
   connect(pipe_3.C2, Ce2) annotation (Line(
       points={{54,-3},{80,-3},{80,-1},{105,-1}},
       color={0,0,255},
@@ -144,7 +144,7 @@ equation
     annotation (Line(points={{-58,-3},{-82,-3},{-82,-1},{-106,-1}},
                                                   thickness=0.5));
   connect(iNH3_CVI_Cond, DynamicCondenser.iNH3_CVI) annotation (Line(points={{110,90},
-          {88,90},{88,44},{108,44},{108,7.06667},{33.7957,7.06667}},
+          {88,90},{88,44},{108,44},{108,9.06667},{33.7957,9.06667}},
                                                                    color={0,0,255}));
   annotation (Diagram(coordinateSystem(
         preserveAspectRatio=false,
