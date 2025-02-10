@@ -56,7 +56,7 @@ equation
 
   if (option_temperature == 1) then
     T = ITemperature.signal;
-    h = ThermoSysPro.Properties.WaterSteam.IF97.SpecificEnthalpy_PT(P, T, 0);
+    h = ThermoSysPro.Properties.WaterSteam.IF97.SpecificEnthalpy_PT(P, T, mode);
   elseif (option_temperature == 2) then
     h = ISpecificEnthalpy.signal;
     T = pro.T;
