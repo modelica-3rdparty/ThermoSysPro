@@ -55,6 +55,8 @@ public
   FluidType ftype_f "Fluid type for the cold fluid";
   Integer fluid_f=Integer(ftype_f) "Fluid number for the cold fluid";
 
+  Units.SI.TemperatureDifference DTln "Log Mean Temperature Difference";
+
   Interfaces.Connectors.FluidOutlet Sc annotation (Placement(transformation(
           extent={{90,-40},{110,-20}}, rotation=0), iconTransformation(extent={
             {90,-40},{110,-20}})));
@@ -142,12 +144,12 @@ equation
      assert(false, "StaticExchangerFlueGasesWaterSteam: incorrect exchanger configuration");
   end if;
 
-  DT2 = if (exchanger_conf == 1) then DT1*Modelica.Math.exp(-Kcor*K*S*(1/(Qc*Cpc) - 1/(Qf*Cpf)))
-                                 else DT1*Modelica.Math.exp(-Kcor*K*S*(1/(Qc*Cpc) + 1/(Qf*Cpf)));
-
   /* Power exchanged */
   W = Qc*(Ec.h-Sc.h);
   W = Qf*(Sf.h - Ef.h);
+  W = DTln*Kcor*K*S;
+  //DTln=homotopy(actual=(DT1-DT2)/Modelica.Math.log(DT1/DT2),simplified=(DT1+DT2)/2);
+  DTln=(DT1-DT2)/Modelica.Math.log(abs(DT1/DT2));
 
   /* Fluid specific enthalpy at the inlet */
   Tef = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ef.P, Ef.h, fluid_f, 0, Ef.Xco2, Ef.Xh2o, Ef.Xo2, Ef.Xso2);

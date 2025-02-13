@@ -6,7 +6,7 @@ ThermoSysPro modifs.doc
 ThermoSysPro modifs_3.2.doc
 dsfinal.txt
 dsin.txt
-dslog.txt
+dslog*
 dsmodel.c
 *.mat
 dymosim
@@ -15,5 +15,10 @@ request*
 status*
 *.mof
 *.c
+*.fmu
 buildlog.txt
-
+.FMUOutput
+_wslbuild*
+call_wsl*
+wslenv.sh
+wslpath.bat
