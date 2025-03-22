@@ -14,6 +14,22 @@ model VolumeATh "Mixing volume with 2 inlets and 2 outlets and thermal input"
   parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
+
+      replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+// replaceable package SinkAndSource =
+//   ThermoSysPro.ConvectedQuantities.Sink_and_Source.None annotation (
+//   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+replaceable model SinkAndSource =
+      ThermoSysPro.ConvectedQuantities.Components.SaSnone
+constrainedby ThermoSysPro.ConvectedQuantities.Components.partialSaS annotation (
+   choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
+
 public
   Units.SI.Temperature T "Fluid temperature";
   Units.SI.AbsolutePressure P(start=1.e5) "Fluid pressure";
@@ -24,21 +40,33 @@ public
   ThermoSysPro.Thermal.Connectors.ThermalPort Cth
                                      annotation (Placement(transformation(
           extent={{-10,-10},{10,10}}, rotation=0)));
-  Connectors.FluidInlet Ce1
+  Connectors.FluidInlet Ce1( redeclare package Species = Species)
                            annotation (Placement(transformation(extent={{-110,
             -10},{-90,10}}, rotation=0)));
-  Connectors.FluidInlet Ce2
+  Connectors.FluidInlet Ce2( redeclare package Species = Species)
                            annotation (Placement(transformation(extent={{-10,90},
             {10,110}}, rotation=0)));
-  Connectors.FluidOutlet Cs1
+  Connectors.FluidOutlet Cs1( redeclare package Species = Species)
                            annotation (Placement(transformation(extent={{90,-10},
             {110,10}}, rotation=0)));
-  Connectors.FluidOutlet Cs2
+  Connectors.FluidOutlet Cs2( redeclare package Species = Species)
                            annotation (Placement(transformation(extent={{-10,
             -108},{10,-88}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
            0)));
+  ConvectedQuantities.Components.MassBalance              sub_massBalance(
+    redeclare package Species = Species,
+    redeclare SinkAndSource SaS,
+    n_in=2,
+    n_out=2,
+    dynamic_mass_balance=dynamic_mass_balance,
+    V=V,
+    Qin={Ce1.Q,Ce2.Q},
+    Qout={Cs1.Q,Cs2.Q},
+    rho=rho,
+    T=T)
+    annotation (Placement(transformation(extent={{-106,36},{-66,76}})));
 initial equation
   if steady_state then
     if dynamic_mass_balance then
@@ -57,17 +85,22 @@ initial equation
 equation
   assert(V > 0, "Volume non-positive");
 
+  sub_massBalance.mix_in.SubC = {Ce1.SubC,Ce2.SubC};
+  sub_massBalance.mix_out.SubC = {Cs1.SubC,Cs2.SubC};
+
   /* Unconnected connectors */
   if (cardinality(Ce1) == 0) then
     Ce1.Q = 0;
     Ce1.h = 1.e5;
     Ce1.b = true;
+    Ce1.SubC = fill(0,size(Ce1.SubC,1));
   end if;
 
   if (cardinality(Ce2) == 0) then
     Ce2.Q = 0;
     Ce2.h = 1.e5;
     Ce2.b = true;
+    Ce2.SubC = fill(0,size(Ce1.SubC,1));
   end if;
 
   if (cardinality(Cs1) == 0) then
