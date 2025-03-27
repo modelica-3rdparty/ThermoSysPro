@@ -1,5 +1,10 @@
 within ThermoSysPro.WaterSteam.HeatExchangers;
 model NTUWaterHeating "NTU water heater"
+
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None      annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
   parameter Real lambdaE=0 "Pressure loss coefficient on the water side";
   parameter Units.SI.Area SCondDes=3000
     "Exchange surface for the condensation and deheating";
@@ -62,19 +67,19 @@ public
     "Drain outlet fluid properties (4C)"
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
            0)));
-  Connectors.FluidInlet Ee(h_vol(start=200e3)) "Water inlet"
+  Connectors.FluidInlet Ee(redeclare package Species = Species, h_vol(start=200e3)) "Water inlet"
                           annotation (Placement(transformation(extent={{-92,-10},
             {-112,10}}, rotation=0)));
-  Connectors.FluidOutlet Se "Water outlet"
+  Connectors.FluidOutlet Se(redeclare package Species = Species) "Water outlet"
                           annotation (Placement(transformation(extent={{110,-10},
             {90,10}}, rotation=0)));
   Connectors.FluidInlet Ep(h_vol(start=200e3)) "Drain inlet"
                           annotation (Placement(transformation(extent={{-50,24},
             {-70,44}}, rotation=0)));
-  Connectors.FluidOutlet Sp "Drain outlet"
+  Connectors.FluidOutlet Sp(redeclare package Species = Species) "Drain outlet"
                           annotation (Placement(transformation(extent={{-50,-43},
             {-70,-23}}, rotation=0)));
-  Connectors.FluidInlet Ev(h_vol(start=200e3)) "Vapor inlet"
+  Connectors.FluidInlet Ev(redeclare package Species = Species, h_vol(start=200e3)) "Vapor inlet"
                           annotation (Placement(transformation(extent={{70,22},
             {50,42}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proevC
@@ -125,6 +130,9 @@ public
     "Flash fluid properties (near 4C)"
     annotation (Placement(transformation(extent={{80,80},{100,100}}, rotation=0)));
 equation
+
+  Ev.SubC = Sp.SubC;
+  Ee.SubC = Se.SubC;
 
   /* Unconnected connectors */
   if cardinality(Ep) == 0 then

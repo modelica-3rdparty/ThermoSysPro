@@ -1,7 +1,13 @@
 within ThermoSysPro.WaterSteam.Volumes;
 model Degasifier "Degasifier"
 
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
   ThermoSysPro.WaterSteam.Volumes.DegasifierVolume dega1(
+    redeclare package Species = Species,
     P0=0.11283e7,
     P(start=0.11283e7),
     steady_state=true,
@@ -9,17 +15,20 @@ model Degasifier "Degasifier"
     Cs(h_vol(start=700e3)))
                     annotation (Placement(transformation(extent={{-20,20},{20,
             60}}, rotation=0)));
-  ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DPEau(     D=1,
+  ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DPEau(
+    redeclare package Species = Species,
+    D=1,
     continuous_flow_reversal=true,
     Q(start=1000),
     Pm(start=1e6),
     lambda=0.01,
     L=1)
     annotation (Placement(transformation(extent={{-60,60},{-40,80}}, rotation=0)));
-  Connectors.FluidInletI sourceEau
+  Connectors.FluidInletI sourceEau(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-110,70},{-90,90}}, rotation=
             0)));
   ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DPvapeur(
+    redeclare package Species = Species,
     D=1,
     continuous_flow_reversal=true,
     Q(start=127.81, fixed=false),
@@ -28,10 +37,11 @@ model Degasifier "Degasifier"
     lambda=0.01,
     L=1)
     annotation (Placement(transformation(extent={{-60,20},{-40,40}}, rotation=0)));
-  Connectors.FluidInletI sourceVapeur
+  Connectors.FluidInletI sourceVapeur(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{-110,30},{-90,50}}, rotation=
             0)));
   ThermoSysPro.WaterSteam.Volumes.DynamicDrum ballon(
+    redeclare package Species = Species,
     Vertical=false,
     R=4.234,
     L=33,
@@ -43,7 +53,9 @@ model Degasifier "Degasifier"
     P(start=0.101283e7),
     zl(start=8))    annotation (Placement(transformation(extent={{-30,-80},{30,
             -20}}, rotation=0)));
-  ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe TubeVap(L=0.1,
+  ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe TubeVap(
+    redeclare package Species = Species,
+    L=0.1,
     D=1,
     continuous_flow_reversal=true,
     Q(fixed=false, start=0),
@@ -52,9 +64,10 @@ model Degasifier "Degasifier"
         origin={30,2},
         extent={{-10,-10},{10,10}},
         rotation=90)));
-  Connectors.FluidOutletI puitsEauFond   annotation (Placement(transformation(
+  Connectors.FluidOutletI puitsEauFond(redeclare package Species = Species)   annotation (Placement(transformation(
           extent={{-90,-90},{-110,-70}}, rotation=0)));
   ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DPvapeur1(
+    redeclare package Species = Species,
     D=1,
     continuous_flow_reversal=true,
     Q(start=1200),
@@ -64,19 +77,23 @@ model Degasifier "Degasifier"
     L=1)
     annotation (Placement(transformation(extent={{-60,-80},{-80,-60}}, rotation=
            0)));
-  Connectors.FluidInletI sourceEauFond
+  Connectors.FluidInletI sourceEauFond(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{90,-90},{110,-70}}, rotation=
             0)));
-  Connectors.FluidInletI sourceSup
+  Connectors.FluidInletI sourceSup(redeclare package Species = Species)
     annotation (Placement(transformation(extent={{90,70},{110,90}}, rotation=0)));
-  ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DPEau1(    D=1,
+  ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DPEau1(
+    redeclare package Species = Species,
+    D=1,
     continuous_flow_reversal=true,
     Pm(start=1e6),
     lambda=0.01,
     L=1,
     Q(start=1))
     annotation (Placement(transformation(extent={{60,60},{40,80}}, rotation=0)));
-  ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DPEau2(    D=1,
+  ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DPEau2(
+    redeclare package Species = Species,
+    D=1,
     continuous_flow_reversal=true,
     Pm(start=1e6),
     lambda=0.01,
