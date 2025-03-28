@@ -1,5 +1,11 @@
 ﻿within ThermoSysPro.WaterSteam.Volumes;
 model DegasifierVolume "Degasifier volume"
+
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None   annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
+
   parameter Units.SI.Volume V=160 "Degazifier volume";
   parameter Units.SI.Volume Vmax=10
     "Maximum volume of the liquid in the basins";
@@ -31,24 +37,36 @@ public
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
            0)));
 public
-  Connectors.FluidInlet Ce1
+  Connectors.FluidInlet Ce1(redeclare package Species = Species)
                            annotation (Placement(transformation(extent={{-110,
             -10},{-90,10}}, rotation=0)));
-  Connectors.FluidInlet Ce2
+  Connectors.FluidInlet Ce2(redeclare package Species = Species)
                            annotation (Placement(transformation(extent={{-50,50},
             {-30,70}}, rotation=0)));
-  Connectors.FluidOutlet Cs
+  Connectors.FluidOutlet Cs(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{-50,-70},
             {-30,-50}}, rotation=0)));
-  Connectors.FluidInlet Ce3
+  Connectors.FluidInlet Ce3(redeclare package Species = Species)
                            annotation (Placement(transformation(extent={{30,50},
             {50,70}}, rotation=0)));
   ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat
     annotation (Placement(transformation(extent={{-60,80},{-40,100}}, rotation=
             0)));
-  Connectors.FluidInlet Ce4
+  Connectors.FluidInlet Ce4(redeclare package Species = Species)
                            annotation (Placement(transformation(extent={{30,-68},
             {50,-48}}, rotation=0)));
+  ThermoSysPro.ConvectedQuantities.Components.MassBalance sub_massBalance(redeclare
+      package
+      Species =                                                                          Species,
+   n_in=4, n_out=1,
+   V=V,
+   Qin = {Ce1.Q,Ce2.Q,Ce3.Q,Ce4.Q},
+   Qout = {Cs.Q},
+   rho = rho,
+   T=pro.T)
+    annotation (Placement(transformation(extent={{-104,40},{-64,80}})));
+
+
 initial equation
   if steady_state then
     der(P) = 0;
@@ -59,6 +77,10 @@ initial equation
   end if;
 
 equation
+
+  sub_massBalance.mix_in.SubC = {Ce1.SubC,Ce2.SubC,Ce3.SubC,Ce4.SubC};
+  sub_massBalance.mix_out.SubC = {Cs.SubC};
+
   assert(V > 0, "Volume non strictement positif");
 
   /* Unconnected connectors */
