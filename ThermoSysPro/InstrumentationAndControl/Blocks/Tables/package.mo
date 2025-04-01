@@ -2,11 +2,6 @@ within ThermoSysPro.InstrumentationAndControl.Blocks;
 package Tables
   extends ThermoSysPro.Properties.Common.ThermoSysProIcon;
 
-  extends ThermoSysPro.Properties.Common.ThermoSysProIcon;
-
-
-
-
 annotation (
   Window(
     x=0.05,
