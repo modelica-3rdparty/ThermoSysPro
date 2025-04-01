@@ -1,8 +1,8 @@
 within ThermoSysPro.Properties.WaterSteam;
 package IF97_Utilities
-  extends ThermoSysPro.Properties.Common.ThermoSysProIcon;
-
   "Low level and utility computation for high accuracy water properties according to the IAPWS/IF97 standard"
+  
+  extends ThermoSysPro.Properties.Common.ThermoSysProIcon;
 
   replaceable record iter =
       ThermoSysPro.Properties.WaterSteam.BaseIF97.IterationData;
