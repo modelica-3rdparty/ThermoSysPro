@@ -27,7 +27,7 @@ More information can be found on [ThermoSysPro website](https://thermosyspro.com
 
 ## How to contribute
 
-Contributions from the community are welcome! You can ask questions, report bugs or request a new feature by opening an issue (see our [Contribution Guidelines](https://gitlab.pam-retd.fr/thermosysproandco/ThermoSysPro/-/blob/master/ContributionsWorkflow.md?ref_type=heads#first-things-first-open-an-issue) if needed). 
+Contributions from the community are welcome! You can ask questions, report bugs or request a new feature by opening an issue [here](https://gitlab.pam-retd.fr/thermosysproandco/ThermoSysPro/-/issues/new) [preferred option] or on [GitHub](https://github.com/ThermoSysPro/ThermoSysPro/issues/new) (see our [Contribution Guidelines](https://gitlab.pam-retd.fr/thermosysproandco/ThermoSysPro/-/blob/master/ContributionsWorkflow.md?ref_type=heads#first-things-first-open-an-issue) if needed). 
 
 More in-depth contributions are also welcome. Please refer to [ThermoSysPro workflow](https://gitlab.pam-retd.fr/thermosysproandco/ThermoSysPro/-/blob/master/ContributionsWorkflow.md?ref_type=heads) for detailed procedures on how to contribute.
 
