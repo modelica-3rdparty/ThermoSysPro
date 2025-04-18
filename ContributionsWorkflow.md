@@ -5,7 +5,6 @@ To report a bug, request a new feature, propose a development or for any questio
 
 If you do not have an account on our GitLab platform you can:
 - [Preferred option] [Mail us](mailto:contact-thermosyspro@edf.fr) to have your account created.
-- [Not working yet] Use the *Service Desk* [mail] to open an issue by mail and be notified on updates.
 - [Valid alternative] Open a issue on the [GitHub repository](https://github.com/ThermoSysPro/ThermoSysPro/issues).
 - [Last resort] [Mail us](mailto:contact-thermosyspro@edf.fr) your issue so that we can open it on GitLab on your behalf. 
 
