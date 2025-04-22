@@ -1,7 +1,6 @@
-﻿within ThermoSysPro.NuclearCore;
-model ReactivityFeedbacks "This module calculates the neutronic feedback reactions due to the control rods, the Doppler effect, the moderator, 
-  the boron and the xenon for a punctual neutronic flux. The emergency shutdown (SCRAM) of the reactor is not considered 
-  in this module."
+within ThermoSysPro.NuclearCore;
+model ReactivityFeedbacks "This module calculates the neutronic feedback due to the control rods, the Doppler effect, the moderator, 
+  the boron and the xenon for a punctual neutronic flux."
 
   parameter Real alfa_dop=-2 "Doppler coefficient (pcm/K)";
   parameter ThermoSysPro.Units.SI.Temperature t0_doppler=944
