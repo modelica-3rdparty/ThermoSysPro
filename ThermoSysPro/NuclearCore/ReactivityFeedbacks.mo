@@ -1,38 +1,34 @@
 within ThermoSysPro.NuclearCore;
-model ReactivityFeedbacks "This module calculates the neutronic feedback due to the control rods, the Doppler effect, the moderator, 
-  the boron and the xenon for a punctual neutronic flux."
+model ReactivityFeedbacks "This module calculates the neutronic feedback due to control rods, Doppler effect, moderator temperature, 
+  boron and xenon concentration"
 
-  parameter Real alfa_dop=-2 "Doppler coefficient (pcm/K)";
-  parameter ThermoSysPro.Units.SI.Temperature t0_doppler=944
-    "Doppler Temperature associated (K)";
-  parameter Real L=200 "Length of the control rods (cm)";
+  parameter Real alfa_dop=-3 "Doppler coefficient (pcm/K)" annotation(Dialog(group="Reactivity Coefficients"));
+  parameter Real L=200 "Length of the control rods (cm)" annotation(Dialog(group="Control Rods Parameters"));
 //  parameter Real step_size= L/25;
   // parameter Real Reac_worth_G=1250;
  //  parameter Real Reac_worth_R=30;
  // Ediffg0 = Reac_worth_G/L (pcm/cm);
  // Ediffr0 = Reac_worth_R/L (pcm/cm);
- // parameter Integer g_rods_number = 10 "Total number of control rods assemblies of the group G";
- // parameter Integer r_rods_number = 20 "Total number of control rods assemblies of the group R";
- parameter Boolean steady_state = true;
+  parameter Boolean steady_state = true annotation(Dialog(group="Reference State"),choices(checkBox=true));
 
-  parameter Real PosR0=0 "Control rods initial position is assumed to be 0, the control
-  rods are completely extracted from the core";
+  parameter Real PosR0=0 "Control rods initial position (0 -> completely extracted from the core)" annotation(Dialog(group="Control Rods Parameters"));
+  parameter Real PosG0=0 "Control rods initial position (0 -> completely extracted from the core)" annotation(Dialog(group="Control Rods Parameters"));
 
-  parameter Real alfa_mod = -60 "Moderator Coefficient (pcm/K)";
-  parameter ThermoSysPro.Units.SI.Temperature Tref_core = 585.45;
-  parameter Real kxe=-1;
-  parameter Real Cxenon0=0 "Xenon reference concentration (ppm)";
+  parameter Real alfa_mod = -30 "Moderator Coefficient (pcm/K)" annotation(Dialog(group="Reactivity Coefficients"));
+  parameter ThermoSysPro.Units.SI.Temperature Tref_mod = 585.45 "Moderator Reference Temperature" annotation(Dialog(group="Reference State"));
+  parameter Real kxe=-3.e-20 "Xenon Coefficient" annotation(Dialog(group="Reactivity Coefficients"));
+  parameter Real kB = -10 "Soluble Poison (Boron) Coefficient (pcm/ppm)" annotation(Dialog(group="Reactivity Coefficients"));
   parameter ThermoSysPro.Units.SI.Temperature Tref_fuel(start=973.15, fixed=false)
-    "fuel effective reference temperature (K)";
+    "fuel effective reference temperature (K)" annotation(Dialog(group="Reference State"));
 
   parameter Real XPosgYEdiffg[27, 2]=[25*8, -62.5; 24*8, -62.5; 23*8, -62.5; 22*8, -62.5; 21*8, -62.5; 20*8, -62.5; 19*8, -62.5;
    18*8, -62.5; 17*8, -62.5; 16*8, -62.5; 15*8, -62.5; 14*8, -62.5; 13*8, -62.5; 12*8, -62.5; 11*8, -62.5; 10*8, -62.5;
    9*8, -62.5; 8*8, -62.5; 7*8, -62.5; 6*8, -62.5; 5*8, -62.5; 4*8, -62.5; 3*8, -62.5; 2*8, -62.5; 8, -62.5; 0, -62.5; 0, 0]
-    "XPosgYEdiffg (input = first column, output = second column)";
+    "XPosgYEdiffg (input = first column, output = second column)" annotation(Dialog(group="Control Rods Parameters"));
   parameter Real XPosrYEdiffr[27, 2]=[25*8, -3; 24*8, -3; 23*8, -3; 22*8, -3; 21*8, -3; 20*8, -3; 19*8, -3;
    18*8, -3; 17*8, -3; 16*8, -3; 15*8, -3; 14*8, -3; 13*8, -3; 12*8, -3; 11*8, -3; 10*8, -3;
    9*8, -3; 8*8, -3; 7*8, -3; 6*8, -3; 5*8, -3; 4*8, -3; 3*8, -3; 2*8, -3; 8, -3; 0, -3; 0, 0]
-    "XPosrYEdiffr (input = first column, output = second column)";
+    "XPosrYEdiffr (input = first column, output = second column)" annotation(Dialog(group="Control Rods Parameters"));
 
 protected
   parameter Real XPosg[1, :]=transpose(matrix(XPosgYEdiffg[:, 1]))
@@ -47,15 +43,19 @@ protected
   parameter Integer nr[1, 1]=[size(XPosr, 2)] "Size of the table";
 
 public
-  Real PosR(start=0, fixed=true) "Position of group R (cm)";
+  parameter Real ReacFuel(start=1000,fixed=false) "Reference Reactivity of Fuel" annotation(Dialog(group="Reference State"));
+  Real PosR "Position of group R (cm)";
   Real VelR "Velocity of group R (cm/min)";
   Real PosG "Position of the grey group (cm)";
+  Real VelG "Velocity of the grey group (cm/min)";
   Real T_fuel "Fuel effective temperature (K)";
   Real T_CoreAv "Average temperature of the moderator in the core (K)";
   Real Cbore "Concentration of the boron";
   Real Cxenon "Concentration of the xénon";
 
   Real Reac "Total reactivity (pcm)";
+
+  Real ReacP "Reactivity given by soluble poison, i.e. Boron (pcm)";
   Real ReacB "Reactivity given by the control bars (pcm)";
  Real ReacBG
     "Reactivity given by the control bars of group G (pcm)";
@@ -91,20 +91,23 @@ public
     annotation (extent=[-120, -110; -100, -90], Placement(transformation(extent=
            {{-120,-110},{-100,-90}}, rotation=0)));
 initial equation
-  ReacBG = 0;
-  ReacBR = Ediffr*(PosR - PosR0);
+  ReacBR = Ediffr*(PosR);
+  ReacBG = Ediffg*(PosG);
+  PosR = PosR0;
+  PosG = PosG0;
+
   Tref_fuel=T_fuel;
 
  if steady_state then
-   Reac=0;
-   //Tref_fuel=T_fuel;
+    Reac=0;
  end if;
 
 equation
   Reac = SortieReac.signal;
   der(PosR) = VelR/60;
+  der(PosG) = VelG/60;
   VelR = EntreeVelR.signal;
-  PosG = EntreePosG.signal;
+  VelG = EntreePosG.signal;
   T_fuel = EntreeT_fuel.signal;
   T_CoreAv = EntreeT_CoreAv.signal;
   Cbore = EntreeCbore.signal;
@@ -119,17 +122,20 @@ equation
   Ediffr = ThermoSysPro.Functions.LinearInterpolation(XPosrYEdiffr[:, 1], XPosrYEdiffr[:, 2], PosR);
   der(ReacBR) = Ediffr*der(PosR);
 
+  /* Reactivity given by the soluble poison (boron) */
+  ReacP = kB * Cbore;
+
+  /* Reactivity given by the Doppler effect */
   ReacD = alfa_dop*(T_fuel-Tref_fuel);
 
   /* Reactivity given by the moderator effect */
-
-  ReacM = alfa_mod*(T_CoreAv-Tref_core);
+  ReacM = alfa_mod*(T_CoreAv-Tref_mod);
 
   /* Reactivity given by the Xenon*/
-  ReacX = kxe*(Cxenon - Cxenon0);
+  ReacX = kxe*Cxenon;
 
   /* Total reactivity*/
-  Reac = ReacB + ReacD + ReacM + ReacX;
+  Reac = ReacFuel + ReacB + ReacD + ReacM + ReacX + ReacP;
 
   annotation (Icon(
       graphics={
