@@ -3,12 +3,7 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback due to 
   boron and xenon concentration"
 
   parameter Real alfa_dop=-3 "Doppler coefficient (pcm/K)" annotation(Dialog(group="Reactivity Coefficients"));
-  parameter Real L=200 "Length of the control rods (cm)" annotation(Dialog(group="Control Rods Parameters"));
-//  parameter Real step_size= L/25;
-  // parameter Real Reac_worth_G=1250;
- //  parameter Real Reac_worth_R=30;
- // Ediffg0 = Reac_worth_G/L (pcm/cm);
- // Ediffr0 = Reac_worth_R/L (pcm/cm);
+
   parameter Boolean steady_state = true annotation(Dialog(group="Reference State"),choices(checkBox=true));
 
   parameter Real PosR0=0 "Control rods initial position (0 -> completely extracted from the core)" annotation(Dialog(group="Control Rods Parameters"));
@@ -21,14 +16,47 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback due to 
   parameter ThermoSysPro.Units.SI.Temperature Tref_fuel(start=973.15, fixed=false)
     "fuel effective reference temperature (K)" annotation(Dialog(group="Reference State"));
 
-  parameter Real XPosgYEdiffg[27, 2]=[25*8, -62.5; 24*8, -62.5; 23*8, -62.5; 22*8, -62.5; 21*8, -62.5; 20*8, -62.5; 19*8, -62.5;
-   18*8, -62.5; 17*8, -62.5; 16*8, -62.5; 15*8, -62.5; 14*8, -62.5; 13*8, -62.5; 12*8, -62.5; 11*8, -62.5; 10*8, -62.5;
-   9*8, -62.5; 8*8, -62.5; 7*8, -62.5; 6*8, -62.5; 5*8, -62.5; 4*8, -62.5; 3*8, -62.5; 2*8, -62.5; 8, -62.5; 0, -62.5; 0, 0]
-    "XPosgYEdiffg (input = first column, output = second column)" annotation(Dialog(group="Control Rods Parameters"));
-  parameter Real XPosrYEdiffr[27, 2]=[25*8, -3; 24*8, -3; 23*8, -3; 22*8, -3; 21*8, -3; 20*8, -3; 19*8, -3;
-   18*8, -3; 17*8, -3; 16*8, -3; 15*8, -3; 14*8, -3; 13*8, -3; 12*8, -3; 11*8, -3; 10*8, -3;
-   9*8, -3; 8*8, -3; 7*8, -3; 6*8, -3; 5*8, -3; 4*8, -3; 3*8, -3; 2*8, -3; 8, -3; 0, -3; 0, 0]
-    "XPosrYEdiffr (input = first column, output = second column)" annotation(Dialog(group="Control Rods Parameters"));
+  parameter Boolean constant_rodWorth = true "Whether to use constant rod worths or tables" annotation(Dialog(group="Control Rods Parameters"),choices(checkBox=true));
+  parameter Real rodWorth_R = -10 "Rod worht for R (pcm/step)" annotation(Dialog(enable=constant_rodWorth, group="Control Rods Parameters"));
+  parameter Real rodWorth_G = -4 "Rod worht for R (pcm/step)" annotation(Dialog(enable=constant_rodWorth, group="Control Rods Parameters"));
+
+  parameter Integer rod_nodes = 10 "Number of entries in the rod worth tables" annotation(Dialog(group="Control Rods Parameters",enable=not
+                                                                                                                                           (constant_rodWorth)));
+  parameter Real rod_stroke = 100 "Rod Stroke in the core (in steps, cm...)" annotation(Dialog(group="Control Rods Parameters",enable=not
+                                                                                                                                         (constant_rodWorth)));
+
+  parameter Real XPosgYEdiffg[rod_nodes+3, 2]=
+    [-1, 0;
+      0, 0;
+      rod_stroke/rod_nodes, 5;
+      rod_stroke/rod_nodes*2, 9;
+      rod_stroke/rod_nodes*3, 12;
+      rod_stroke/rod_nodes*4, 14;
+      rod_stroke/rod_nodes*5, 15;
+      rod_stroke/rod_nodes*6, 14;
+      rod_stroke/rod_nodes*7, 12;
+      rod_stroke/rod_nodes*8, 9;
+      rod_stroke/rod_nodes*9, 5;
+      rod_stroke, 0;
+      rod_stroke+1, 0]
+    "XPosgYEdiffg (input = first column, output = second column)" annotation(Dialog(enable=not
+                                                                                              (constant_rodWorth),group="Control Rods Parameters"));
+  parameter Real XPosrYEdiffr[rod_nodes+3, 2]=
+    [-1, 0;
+      0, 0;
+      rod_stroke/rod_nodes, 3;
+      rod_stroke/rod_nodes*2, 6;
+      rod_stroke/rod_nodes*3, 8;
+      rod_stroke/rod_nodes*4, 9;
+      rod_stroke/rod_nodes*5, 9.5;
+      rod_stroke/rod_nodes*6, 9;
+      rod_stroke/rod_nodes*7, 8;
+      rod_stroke/rod_nodes*8, 6;
+      rod_stroke/rod_nodes*9, 3;
+      rod_stroke, 0;
+      rod_stroke+1, 0]
+    "XPosrYEdiffr (input = first column, output = second column)" annotation(Dialog(enable=not
+                                                                                              (constant_rodWorth),group="Control Rods Parameters"));
 
 protected
   parameter Real XPosg[1, :]=transpose(matrix(XPosgYEdiffg[:, 1]))
@@ -116,10 +144,10 @@ equation
   /* Total reactivity given by the control bars */
   ReacB = ReacBR + ReacBG;
 
-  Ediffg = ThermoSysPro.Functions.LinearInterpolation(XPosgYEdiffg[:, 1], XPosgYEdiffg[:, 2], PosG);
+  Ediffg = if constant_rodWorth then rodWorth_G else ThermoSysPro.Functions.LinearInterpolation(XPosgYEdiffg[:, 1], XPosgYEdiffg[:, 2], PosG);
   der(ReacBG) = Ediffg*der(PosG);
 
-  Ediffr = ThermoSysPro.Functions.LinearInterpolation(XPosrYEdiffr[:, 1], XPosrYEdiffr[:, 2], PosR);
+  Ediffr = if constant_rodWorth then rodWorth_R else ThermoSysPro.Functions.LinearInterpolation(XPosrYEdiffr[:, 1], XPosrYEdiffr[:, 2], PosR);
   der(ReacBR) = Ediffr*der(PosR);
 
   /* Reactivity given by the soluble poison (boron) */
