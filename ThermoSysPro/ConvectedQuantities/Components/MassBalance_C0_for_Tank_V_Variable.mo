@@ -1,5 +1,5 @@
 within ThermoSysPro.ConvectedQuantities.Components;
-block MassBalance_for_Tank_V_variable
+block MassBalance_C0_for_Tank_V_Variable
   "Mass Balance block for transported substances"
 
   import      ThermoSysPro.Units.SI;
@@ -83,11 +83,22 @@ block MassBalance_for_Tank_V_variable
 //     choix_resine=1)
 //     annotation (Placement(transformation(extent={{60,-100},{100,-60}})));
 
+  parameter Boolean steady_state=true;
+  parameter Real C0[Species.Concentrations]=zeros(size(InternalConcentrations,1));
+
 initial equation
 
-   if dynamic_mass_balance == true then
-    der(InternalConcentrations) = zeros(size(InternalConcentrations,1));
-   end if;
+  if steady_state then
+    if dynamic_mass_balance then
+      der(InternalConcentrations) = zeros(size(InternalConcentrations,1));
+    end if;
+  else
+    InternalConcentrations = C0;
+  end if;
+
+//    if dynamic_mass_balance == true then
+//     der(InternalConcentrations) = zeros(size(InternalConcentrations,1));
+//    end if;
 
 equation
 
@@ -172,4 +183,4 @@ equation
 <li>Daniel Bouskela </li>
 </ul>
 </html>"));
-end MassBalance_for_Tank_V_variable;
+end MassBalance_C0_for_Tank_V_Variable;

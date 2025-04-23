@@ -88,18 +88,18 @@ public
           extent={{-110,-70},{-90,-50}}, rotation=0)));
   Connectors.FluidOutlet Cs1(  redeclare package Species = Species)       annotation (Placement(transformation(
           extent={{92,50},{112,70}}, rotation=0)));
-  ConvectedQuantities.Components.MassBalance_for_Tank_V_variable
-                                             sub_massBalance(
+  ConvectedQuantities.Components.MassBalance_C0_for_Tank_V_Variable
+    sub_massBalance(
   redeclare package Species = Species,
   redeclare SinkAndSource SaS,
    n_in=2, n_out=2,
    dynamic_mass_balance=dynamic_mass_balance,
+   V=A*z,
    Qin = {Ce1.Q,Ce2.Q},
    Qout = {Cs1.Q,Cs2.Q},
    rho = rho,
-   V=A*z,
    T=T)
-    annotation (Placement(transformation(extent={{-62,46},{-42,66}})));
+    annotation (Placement(transformation(extent={{-36,48},{-16,68}})));
 initial equation
   if steady_state then
     der(h) = 0;

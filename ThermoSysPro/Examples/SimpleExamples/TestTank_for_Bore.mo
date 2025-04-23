@@ -10,7 +10,8 @@ model TestTank_for_Bore
   ThermoSysPro.WaterSteam.BoundaryConditions.SinkP PuitsP1
                                           annotation (Placement(transformation(
           extent={{70,-50},{90,-30}}, rotation=0)));
-  WaterSteam.Volumes.Tank_for_Bore     Tank1(z(fixed=false, start=5))
+  WaterSteam.Volumes.Tank_for_Bore     Tank1(z(fixed=false, start=5),
+      sub_massBalance)
     annotation (Placement(transformation(extent={{-10,-10},{10,10}},
                                                                   rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Rampe Rampe1
