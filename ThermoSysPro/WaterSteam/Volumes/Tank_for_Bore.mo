@@ -5,11 +5,11 @@ model Tank_for_Bore "Open tank"
   parameter Units.SI.Area A=1 "Tank cross sectional area";
   parameter Units.SI.Position ze1=40 "Altitude of inlet 1";
   parameter Units.SI.Position ze2=de2/2 "Altitude of inlet 2";
-  parameter Units.SI.Position zs1=40 "Altitude of outlet 1";
+  //parameter Units.SI.Position zs1=40 "Altitude of outlet 1";
   parameter Units.SI.Position zs2=ds2/2 "Altitude of outlet 2";
   parameter Units.SI.Diameter de1=0.20 "Diameter of inlet 1";
   parameter Units.SI.Diameter de2=0.20 "Diameter of inlet 2";
-  parameter Units.SI.Diameter ds1=0.20 "Diameter of outlet 1";
+  //parameter Units.SI.Diameter ds1=0.20 "Diameter of outlet 1";
   parameter Units.SI.Diameter ds2=0.20 "Diameter of outlet 2";
   parameter Units.SI.Position z0=30
     "Initial fluid level (active if steady_state=false)";
@@ -19,8 +19,8 @@ model Tank_for_Bore "Open tank"
     "Pressure loss coefficient for inlet e1";
   parameter Real ke2=1
     "Pressure loss coefficient for inlet e2";
-  parameter Real ks1=1
-    "Pressure loss coefficient for outlet s1";
+ // parameter Real ks1=1
+   // "Pressure loss coefficient for outlet s1";
   parameter Real ks2=1
     "Pressure loss coefficient for outlet s2";
   parameter Boolean dynamic_mass_balance=false
@@ -59,15 +59,15 @@ public
   Units.SI.Power BH "Right hand side of the energy balance equation";
   ThermoSysPro.Units.SI.PressureDifference deltaP_e1 "Presure loss for e1";
   ThermoSysPro.Units.SI.PressureDifference deltaP_e2 "Presure loss for e2";
-  ThermoSysPro.Units.SI.PressureDifference deltaP_s1 "Presure loss for s1";
+  //ThermoSysPro.Units.SI.PressureDifference deltaP_s1 "Presure loss for s1";
   ThermoSysPro.Units.SI.PressureDifference deltaP_s2 "Presure loss for s2";
   Real omega_e1;
   Real omega_e2;
-  Real omega_s1;
+  //Real omega_s1;
   Real omega_s2;
   Units.SI.Angle theta_e1;
   Units.SI.Angle theta_e2;
-  Units.SI.Angle theta_s1;
+  //Units.SI.Angle theta_s1;
   Units.SI.Angle theta_s2;
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
     "Water properties"
@@ -86,17 +86,15 @@ public
           extent={{-10,-10},{10,10}}, rotation=0)));
   Connectors.FluidInlet Ce2(  redeclare package Species = Species)        annotation (Placement(transformation(
           extent={{-110,-70},{-90,-50}}, rotation=0)));
-  Connectors.FluidOutlet Cs1(  redeclare package Species = Species)       annotation (Placement(transformation(
-          extent={{92,50},{112,70}}, rotation=0)));
   ConvectedQuantities.Components.MassBalance_C0_for_Tank_V_Variable
     sub_massBalance(
   redeclare package Species = Species,
   redeclare SinkAndSource SaS,
-   n_in=2, n_out=2,
+   n_in=2, n_out=1,
    dynamic_mass_balance=dynamic_mass_balance,
    V=A*z,
    Qin = {Ce1.Q,Ce2.Q},
-   Qout = {Cs1.Q,Cs2.Q},
+   Qout = {Cs2.Q},
    rho = rho,
    T=T)
     annotation (Placement(transformation(extent={{-36,48},{-16,68}})));
@@ -116,7 +114,7 @@ initial equation
 equation
 
   sub_massBalance.mix_in.SubC = {Ce1.SubC,Ce2.SubC};
-  sub_massBalance.mix_out.SubC = {Cs1.SubC,Cs2.SubC};
+  sub_massBalance.mix_out.SubC = {Cs2.SubC};
 
   if (cardinality(Ce1) == 0) then
     Ce1.Q = 0;
@@ -132,11 +130,11 @@ equation
     Ce2.SubC = fill(0,size(Ce2.SubC,1));
   end if;
 
-  if (cardinality(Cs1) == 0) then
-    Cs1.Q = 0;
-    Cs1.h = 1.e5;
-    Cs1.a = true;
-  end if;
+ // if (cardinality(Cs1) == 0) then
+   // Cs1.Q = 0;
+   // Cs1.h = 1.e5;
+   // Cs1.a = true;
+ // end if;
 
   if (cardinality(Cs2) == 0) then
     Cs2.Q = 0;
@@ -145,7 +143,7 @@ equation
   end if;
 
   /* Mass balance equation */
-  BQ = Ce1.Q + Ce2.Q - Cs1.Q - Cs2.Q;
+  BQ = Ce1.Q + Ce2.Q - Cs2.Q;
   if dynamic_mass_balance then
     A*(pro.ddph*der(P) + pro.ddhp*der(h))*z + A*rho*der(z) = BQ;
   else
@@ -161,9 +159,9 @@ equation
              else if (z < ze2 - de2/2) then -pi/2
              else asin((z - ze2)/de2/2);
 
-  theta_s1 = if (z > zs1 + ds1/2) then pi/2
-             else if (z < zs1 - ds1/2) then -pi/2
-             else asin((z - zs1)/ds1/2);
+ // theta_s1 = if (z > zs1 + ds1/2) then pi/2
+            // else if (z < zs1 - ds1/2) then -pi/2
+            // else asin((z - zs1)/ds1/2);
 
   theta_s2 = if (z > zs2 + ds2/2) then pi/2
              else if (z < zs2 - ds2/2) then -pi/2
@@ -171,21 +169,21 @@ equation
 
   omega_e1 = if (Ce1.Q >= 0) then 1 else (pi + 2*theta_e1 + sin(2*theta_e1))/2/pi;
   omega_e2 = if (Ce2.Q >= 0) then 1 else (pi + 2*theta_e2 + sin(2*theta_e2))/2/pi;
-  omega_s1 = if (Cs1.Q <= 0) then 1 else (pi + 2*theta_s1 + sin(2*theta_s1))/2/pi;
+ // omega_s1 = if (Cs1.Q <= 0) then 1 else (pi + 2*theta_s1 + sin(2*theta_s1))/2/pi;
   omega_s2 = if (Cs2.Q <= 0) then 1 else (pi + 2*theta_s2 + sin(2*theta_s2))/2/pi;
 
   deltaP_e1 = Ce1.P - (Patm + rho*g*max(z - ze1, 0));
   deltaP_e2 = Ce2.P - (Patm + rho*g*max(z - ze2, 0));
-  deltaP_s1 = Patm + rho*g*max(z - zs1, 0) - Cs1.P;
+  //deltaP_s1 = Patm + rho*g*max(z - zs1, 0) - Cs1.P;
   deltaP_s2 = Patm + rho*g*max(z - zs2, 0) - Cs2.P;
 
   deltaP_e1*omega_e1^2 = ke1*ThermoSysPro.Functions.ThermoSquare(Ce1.Q, eps)/2/rho;
   deltaP_e2*omega_e2^2 = ke2*ThermoSysPro.Functions.ThermoSquare(Ce2.Q, eps)/2/rho;
-  deltaP_s1*omega_s1^2 = ks1*ThermoSysPro.Functions.ThermoSquare(Cs1.Q, eps)/2/rho;
+ // deltaP_s1*omega_s1^2 = ks1*ThermoSysPro.Functions.ThermoSquare(Cs1.Q, eps)/2/rho;
   deltaP_s2*omega_s2^2 = ks2*ThermoSysPro.Functions.ThermoSquare(Cs2.Q, eps)/2/rho;
 
   /* Energy balance equation */
-  BH = Ce1.Q*(Ce1.h - h) + Ce2.Q*(Ce2.h - h) - Cs1.Q*(Cs1.h - h) - Cs2.Q*(Cs2.h - h) + Cth.W;
+  BH = Ce1.Q*(Ce1.h - h) + Ce2.Q*(Ce2.h - h) - Cs2.Q*(Cs2.h - h) + Cth.W;
   if (z > zmin) then
     A*rho*z*der(h) = BH;
   else
@@ -194,7 +192,7 @@ equation
 
   Ce1.h_vol = h;
   Ce2.h_vol = h;
-  Cs1.h_vol = h;
+ // Cs1.h_vol = h;
   Cs2.h_vol = h;
 
   Cth.T = T;

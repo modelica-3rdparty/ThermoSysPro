@@ -1,42 +1,46 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestTank_for_Bore
-  ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe PerteDP1
+  ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe PerteDP1(redeclare
+      package Species =
+        ThermoSysPro.ConvectedQuantities.Substances.HomogeneousSubstance)
     annotation (Placement(transformation(extent={{30,-50},{50,-30}}, rotation=0)));
-  ThermoSysPro.WaterSteam.PressureLosses.ControlValve VanneReglante1
+  ThermoSysPro.WaterSteam.PressureLosses.ControlValve VanneReglante1(redeclare
+      package Species =
+        ThermoSysPro.ConvectedQuantities.Substances.HomogeneousSubstance)
     annotation (Placement(transformation(extent={{-50,2},{-30,22}},  rotation=0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.SourceP SourceP1
+  ThermoSysPro.WaterSteam.BoundaryConditions.SourceP SourceP1(Cin={10},
+      redeclare package Species =
+        ThermoSysPro.ConvectedQuantities.Substances.HomogeneousSubstance)
                                             annotation (Placement(
         transformation(extent={{-90,-4},{-70,16}}, rotation=0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.SinkP PuitsP1
+  ThermoSysPro.WaterSteam.BoundaryConditions.SinkP PuitsP1(redeclare package
+      Species =
+        ThermoSysPro.ConvectedQuantities.Substances.HomogeneousSubstance)
                                           annotation (Placement(transformation(
           extent={{70,-50},{90,-30}}, rotation=0)));
-  WaterSteam.Volumes.Tank_for_Bore     Tank1(z(fixed=false, start=5),
-      sub_massBalance)
-    annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+  WaterSteam.Volumes.Tank_for_Bore     Tank1(
+    dynamic_mass_balance=true,
+    redeclare package Species =
+        ThermoSysPro.ConvectedQuantities.Substances.HomogeneousSubstance,
+                                             z(fixed=false, start=5),
+    sub_massBalance(steady_state=false, C0={1}))
+    annotation (Placement(transformation(extent={{-8,-10},{12,10}},
                                                                   rotation=0)));
-  ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Rampe Rampe1
+  ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Rampe Rampe1(
+      Initialvalue=1)
     annotation (Placement(transformation(extent={{-90,30},{-70,50}},  rotation=
             0)));
-  ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe PerteDP2
-    annotation (Placement(transformation(extent={{30,-4},{50,16}},   rotation=0)));
-  ThermoSysPro.WaterSteam.BoundaryConditions.SinkP PuitsP2
-                                          annotation (Placement(transformation(
-          extent={{70,-4},{90,16}},   rotation=0)));
 equation
   connect(PerteDP1.C2, PuitsP1.C)
     annotation (Line(points={{50,-40},{70,-40}}, color={0,0,255}));
   connect(SourceP1.C, VanneReglante1.C1)
     annotation (Line(points={{-70,6},{-50,6}},   color={0,0,255}));
-  connect(Tank1.Cs2, PerteDP1.C1)  annotation (Line(points={{10,-6},{20,-6},{20,
+  connect(Tank1.Cs2, PerteDP1.C1)  annotation (Line(points={{12,-6},{20,-6},{20,
           -40},{30,-40}}, color={0,0,255}));
   connect(Rampe1.y, VanneReglante1.Ouv)
     annotation (Line(points={{-69,40},{-40,40},{-40,23}}));
-  connect(VanneReglante1.C2, Tank1.Ce1) annotation (Line(points={{-30,6},{-20,6},
-          {-10,6}},               color={0,0,255}));
-  connect(Tank1.Cs1, PerteDP2.C1)
-    annotation (Line(points={{10.2,6},{20,6},{30,6}},   color={0,0,255}));
-  connect(PerteDP2.C2, PuitsP2.C)
-    annotation (Line(points={{50,6},{50,6},{70,6}},    color={0,0,255}));
+  connect(VanneReglante1.C2, Tank1.Ce1) annotation (Line(points={{-30,6},{-8,6}},
+                                  color={0,0,255}));
   annotation (experiment(StopTime=20),
     Icon(graphics={
         Rectangle(
