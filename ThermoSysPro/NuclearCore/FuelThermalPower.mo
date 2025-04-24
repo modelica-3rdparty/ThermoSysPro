@@ -1,31 +1,43 @@
-﻿within ThermoSysPro.NuclearCore;
-model FuelThermalPower "Grid model that describes the dynamic of the conduction of heat generated 
+within ThermoSysPro.NuclearCore;
+model FuelThermalPower "Meshed model that describes the dynamic of the conduction of heat generated 
   by fission in a fuel rod."
+
+  FuelProperties fuel[N,3](
+    T=T,
+    each porosity=fuel_porosity,
+    each MOX=isMOX,
+    each pu_mFraction=pu_mFraction,
+    each oxy_on_metal=oxy_on_metal) "Fuel Properties";
+
+  parameter Real fuel_porosity=0.05 "Fuel porosity" annotation(Dialog(group="Fuel Properties"));
+  parameter Real oxy_on_metal=2 "Oxyde on Metal Ratio" annotation(Dialog(group="Fuel Properties"));
+  parameter Boolean isMOX=false "Whether fuel is MOX or not" annotation(Dialog(group="Fuel Properties"));
+  parameter Real pu_mFraction=0 "PuO2 Mass Fraction" annotation(Dialog(group="Fuel Properties",enable=isMOX));
 
   parameter Integer Nrods=50952 "Number of fuel rods of UO2";
   parameter ThermoSysPro.Units.SI.Length Rp=0.004095 "Radius of the fuel pellet";
   parameter ThermoSysPro.Units.SI.Length Rclad=0.00418 "Internal radius of the cladding";
-  parameter Integer N=6 "Number of zones";
+  parameter Integer N=6 "Number of axial zones";
   parameter ThermoSysPro.Units.SI.Length Length=2 "Active lenght of the fuel rods";
-  parameter ThermoSysPro.Units.SI.Length L[N]={Length/N,Length/N,Length/N,Length/N,Length/N,
-      Length/N} "Lenght of the zones (insert a table of size N)";
+  parameter ThermoSysPro.Units.SI.Length L[N]=fill(Length/N,N) "Lenght of the zones (insert a table of size N)";
   parameter Real xWt[N]={0.0679,0.1829,0.2492,0.2492,0.1829,0.0679}
     "Fraction of the total thermal power produced in the zone i of the fuel";
-  parameter Boolean steady_state=false;
+  parameter Boolean steady_state=true;
   parameter ThermoSysPro.Units.SI.Temperature Tstart=973.15;
 
-protected
   parameter ThermoSysPro.Units.SI.Density rho=10950
     "Density of the UO2 fuel";
-  parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer  heat_coeff_clad=10000
+  parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer  heat_coeff_gap=10000
     "Heat Tranfer Coefficient between the fuel rods and the internal wall of the cladding";
-  parameter ThermoSysPro.Units.SI.Mass dM[N]=Nrods*rho*pi*Rp*Rclad*L
+protected
+  parameter ThermoSysPro.Units.SI.Mass dM[N]=Nrods*rho*pi*Rp*Rp*L
     "Mass of fuel in the zone i";
   parameter ThermoSysPro.Units.SI.Area dSgi[N]=Nrods*2*pi*Rclad*L
     "Internal surface of the cladding in zone i";
   constant Real pi=Modelica.Constants.pi "Pi";
  // parameter ThermoSysPro.Units.SI.Temperature Tstart(start=973.15, fixed=true);
   //ThermoSysPro.Units.SI.Temperature Tm[N, 2](start=fill(Tstart, N, 2))
+public
  ThermoSysPro.Units.SI.Temperature Tm[N, 2]
     "Average T between 1 and 2, and between 2 and 3";
   ThermoSysPro.Units.SI.SpecificHeatCapacity cp[N, 3] "Specific heat of UO2";
@@ -33,7 +45,7 @@ protected
   Real Coef "Intermediate coefficient";
 
   // ThermoSysPro.Units.SI.Temperature T[N, 3](start=fill(Tstart, N, 3))
-public
+
    ThermoSysPro.Units.SI.Temperature T[N, 3]
     "Temperature of the fuel";
   /* Temperature of the fuel in each axial zone i *:
@@ -76,7 +88,7 @@ initial equation
   else
     for i in 1:N loop
       for j in 1:3 loop
-        T[i, j] = 973.15;
+        T[i, j] = Tstart;
       end for;
     end for;
   end if;
@@ -101,7 +113,7 @@ equation
        - 4*W[i]/dM[i];
 
     //***Thermal exchange between the fuel rod and the cladding***
-    W[i] = heat_coeff_clad*dSgi[i]*(T[i, 3] - Tg[i]);
+    W[i] = heat_coeff_gap*dSgi[i]*(T[i, 3] - Tg[i]);
 
     // Calculation of the thermal conductivity of the UO2
     for j in 1:2 loop
@@ -123,6 +135,11 @@ equation
   // Calculation of the global effective temperature
   Teffg = 0.023*Teff[1] + 0.167*Teff[2] + 0.31*Teff[3] + 0.31*Teff[4] + 0.167*
     Teff[5] + 0.023*Teff[6];
+
+  //Cp=194.4+0.2638T-1.809e-4*T^2+4.748e-8*T^3 COMETHE (CYRANO3 V2.7.1) R.L. GIBBY, L. LEIBOVITZ, J.K. KERRISH and D.G. CLIFTON Analytical Expressions for Enthalpy and heat Capacity for Uranium-Plutonium Oxide Journal of Nuclear Marterials 50 (1974) pages 155-161.
+  //k=
+  //Radial power distribution
+  //rho
 
   annotation (Diagram(
       coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}),
