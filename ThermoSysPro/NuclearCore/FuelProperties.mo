@@ -1,17 +1,17 @@
 within ThermoSysPro.NuclearCore;
 block FuelProperties
-  input Modelica.Units.SI.Temperature T "Fuel Temperature";
+  input ThermoSysPro.Units.SI.Temperature T "Fuel Temperature";
   parameter Real porosity=0.05 "Fuel porosity";
   parameter Boolean MOX=false "Whether fuel is MOX or not";
   parameter Real pu_mFraction=0.085 "PuO2 Mass Fraction";
   parameter Real oxy_on_metal=2 "Oxyde on Metal Ratio";
 
-  output Modelica.Units.SI.SpecificHeatCapacity cp "Fuel Specific Heat Capacity";
-  output Modelica.Units.SI.ThermalConductivity k "Fuel Thermal Conductivity";
+  output ThermoSysPro.Units.SI.SpecificHeatCapacity cp "Fuel Specific Heat Capacity";
+  output ThermoSysPro.Units.SI.ThermalConductivity k "Fuel Thermal Conductivity";
 
 protected
-  Modelica.Units.SI.SpecificHeatCapacity uo2_cp "Intermediary cp (UO2)";
-  Modelica.Units.SI.SpecificHeatCapacity puo2_cp "Intermediary cp (PuO2)";
+  ThermoSysPro.Units.SI.SpecificHeatCapacity uo2_cp "Intermediary cp (UO2)";
+  ThermoSysPro.Units.SI.SpecificHeatCapacity puo2_cp "Intermediary cp (PuO2)";
   Real T_C "Fuel Temperature in °C";
   Real p_coef "Porosity Coefficient";
 equation
@@ -23,12 +23,12 @@ equation
   //Matpro correlations
   if MOX then
     p_coef = 1.43;
-    k = (max(33.0/(375+T_C),0.0171)+1.540e-4*exp(1.710e-3*T_C)) * (1-p_coef*porosity)/(1-p_coef*0.04)*(1-porosity)/0.96;
+    k = 100 * (max(33.0/(375+T_C),0.0171)+1.540e-4*exp(1.710e-3*T_C)) * (1-p_coef*porosity)/(1-p_coef*0.04)*(1-porosity)/0.96;
     puo2_cp = 347.4*571.000^2*exp(571.000/T)/(T^2*(exp(571.000/T)-1)^2)+3.95e-2*T+oxy_on_metal/2*3.86e7*1.967e5/(8.3143*T^2)*exp(-1.967e5/(8.3143*T));
     cp = puo2_cp*pu_mFraction + uo2_cp*(1-pu_mFraction);
   else
     p_coef = 2.58 - 0.58e-3*T_C;
-    k = (max(40.4/(464+T_C),0.0191)+1.216e-4*exp(1.867e-3*T_C)) * (1-p_coef*porosity)/(1-p_coef*0.05);
+    k = 100 * (max(40.4/(464+T_C),0.0191)+1.216e-4*exp(1.867e-3*T_C)) * (1-p_coef*porosity)/(1-p_coef*0.05);
     cp = uo2_cp;
     puo2_cp = 375; //Not used
   end if;

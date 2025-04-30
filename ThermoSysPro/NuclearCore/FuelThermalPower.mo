@@ -2,7 +2,7 @@ within ThermoSysPro.NuclearCore;
 model FuelThermalPower "Meshed model that describes the dynamic of the conduction of heat generated 
   by fission in a fuel rod."
 
-  FuelProperties fuel[N,3](
+  FuelProperties fuel[Nz,3](
     T=T,
     each porosity=fuel_porosity,
     each MOX=isMOX,
@@ -11,61 +11,63 @@ model FuelThermalPower "Meshed model that describes the dynamic of the conductio
 
   parameter Real fuel_porosity=0.05 "Fuel porosity" annotation(Dialog(group="Fuel Properties"));
   parameter Real oxy_on_metal=2 "Oxyde on Metal Ratio" annotation(Dialog(group="Fuel Properties"));
+  parameter ThermoSysPro.Units.SI.Density rho_uo2=10950 "Density of UO2" annotation(Dialog(group="Fuel Properties"));
   parameter Boolean isMOX=false "Whether fuel is MOX or not" annotation(Dialog(group="Fuel Properties"));
   parameter Real pu_mFraction=0 "PuO2 Mass Fraction" annotation(Dialog(group="Fuel Properties",enable=isMOX));
+  parameter ThermoSysPro.Units.SI.Density rho_puo2=11500 "Density of PuO2" annotation(Dialog(group="Fuel Properties",enable=isMOX));
+  parameter ThermoSysPro.Units.SI.Density rho=(1-fuel_porosity)*1/(pu_mFraction/rho_puo2+(1-pu_mFraction)/rho_uo2) "Density of MOX" annotation(Dialog(group="Fuel Properties",enable=false));
 
-  parameter Integer Nrods=50952 "Number of fuel rods of UO2";
-  parameter ThermoSysPro.Units.SI.Length Rp=0.004095 "Radius of the fuel pellet";
-  parameter ThermoSysPro.Units.SI.Length Rclad=0.00418 "Internal radius of the cladding";
-  parameter Integer N=6 "Number of axial zones";
-  parameter ThermoSysPro.Units.SI.Length Length=2 "Active lenght of the fuel rods";
-  parameter ThermoSysPro.Units.SI.Length L[N]=fill(Length/N,N) "Lenght of the zones (insert a table of size N)";
-  parameter Real xWt[N]={0.0679,0.1829,0.2492,0.2492,0.1829,0.0679}
+  parameter Integer Nrods=50952 "Number of fuel rods of UO2" annotation(Dialog(group="Geometry"));
+  parameter ThermoSysPro.Units.SI.Length Rp=0.004095 "Radius of the fuel pellet" annotation(Dialog(group="Geometry"));
+  parameter ThermoSysPro.Units.SI.Length Rclad=0.00418 "Internal radius of the cladding" annotation(Dialog(group="Geometry"));
+  parameter Integer Nz=6 "Number of axial zones" annotation(Dialog(group="Geometry"));
+  parameter Integer Nr=5 "Number of radial zones" annotation(Dialog(group="Geometry"));
+  parameter ThermoSysPro.Units.SI.Length Length=4.270 "Active lenght of the fuel rods" annotation(Dialog(group="Geometry"));
+
+  parameter Real xWt[Nz]={0.0679,0.1829,0.2492,0.2492,0.1829,0.0679}
     "Fraction of the total thermal power produced in the zone i of the fuel";
   parameter Boolean steady_state=true;
   parameter ThermoSysPro.Units.SI.Temperature Tstart=973.15;
 
-  parameter ThermoSysPro.Units.SI.Density rho=10950
-    "Density of the UO2 fuel";
   parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer  heat_coeff_gap=10000
     "Heat Tranfer Coefficient between the fuel rods and the internal wall of the cladding";
 protected
-  parameter ThermoSysPro.Units.SI.Mass dM[N]=Nrods*rho*pi*Rp*Rp*L
-    "Mass of fuel in the zone i";
-  parameter ThermoSysPro.Units.SI.Area dSgi[N]=Nrods*2*pi*Rclad*L
-    "Internal surface of the cladding in zone i";
+  parameter ThermoSysPro.Units.SI.Length Lseg=Length/Nz "Lenght of the axial zones";
+  parameter ThermoSysPro.Units.SI.Mass Mnode=Nrods*rho*pi*Rp*Rp*Lseg
+    "Mass of fuel in each volume";
+  parameter ThermoSysPro.Units.SI.Area Sseg_cladi=Nrods*2*pi*Rclad*Lseg
+    "Internal surface of the cladding in each segment";
   constant Real pi=Modelica.Constants.pi "Pi";
- // parameter ThermoSysPro.Units.SI.Temperature Tstart(start=973.15, fixed=true);
-  //ThermoSysPro.Units.SI.Temperature Tm[N, 2](start=fill(Tstart, N, 2))
+
 public
- ThermoSysPro.Units.SI.Temperature Tm[N, 2]
+ ThermoSysPro.Units.SI.Temperature Tm[Nz, 2]
     "Average T between 1 and 2, and between 2 and 3";
-  ThermoSysPro.Units.SI.SpecificHeatCapacity cp[N, 3] "Specific heat of UO2";
-  ThermoSysPro.Units.SI.ThermalConductivity k[N, 2]  "Thermal conductivity of UO2";
+  ThermoSysPro.Units.SI.SpecificHeatCapacity cp[Nz, 3] "Specific heat of UO2";
+  ThermoSysPro.Units.SI.ThermalConductivity k[Nz, 2]  "Thermal conductivity of UO2";
   Real Coef "Intermediate coefficient";
 
   // ThermoSysPro.Units.SI.Temperature T[N, 3](start=fill(Tstart, N, 3))
 
-   ThermoSysPro.Units.SI.Temperature T[N, 3]
+   ThermoSysPro.Units.SI.Temperature T[Nz, 3]
     "Temperature of the fuel";
   /* Temperature of the fuel in each axial zone i *:
   T[i,1] : temperature at the centre of the pellet
        T[i,2] : temperature qt R/(2^0.5)
        T[i,3] : temperature at the external surface of the pellet
    Rq : R/(2^0.5) définit deux zones isovolumes ? */
-   ThermoSysPro.Units.SI.Temperature Teff[N](start=fill(Tstart, N))
+   ThermoSysPro.Units.SI.Temperature Teff[Nz](start=fill(Tstart, Nz))
     "Effective temperature of the UO2 per zone, used for the calculation of the Doppler effect";
    ThermoSysPro.Units.SI.Temperature Teffg(start=Tstart)
     "Effective global temperature of the UO2, used for the calculation of the Doppler effect";
-   ThermoSysPro.Units.SI.Temperature Tg[N](start=fill(Tstart, N))
+   ThermoSysPro.Units.SI.Temperature Tg[Nz](start=fill(Tstart, Nz))
     "Internal T of the cladding";
 
-  ThermoSysPro.Units.SI.Power W[N]
+  ThermoSysPro.Units.SI.Power W[Nz]
     "Power transmitted from the UO2 to the cladding in zone i";
   ThermoSysPro.Units.SI.Power Wt
     "Total thermal power produced by the UO2 fuel";
 
-  ThermoSysPro.Thermal.Connectors.ThermalPort C_WTgaine[N]
+  ThermoSysPro.Thermal.Connectors.ThermalPort C_WTgaine[Nz]
     annotation (extent=[100, -10; 120, 12], Placement(transformation(extent={{
             100,-10},{120,12}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal EntreePt
@@ -80,13 +82,13 @@ public
 
 initial equation
   if steady_state then
-    for i in 1:N loop
+    for i in 1:Nz loop
       for j in 1:3 loop
         der(T[i, j]) = 0;
       end for;
     end for;
   else
-    for i in 1:N loop
+    for i in 1:Nz loop
       for j in 1:3 loop
         T[i, j] = Tstart;
       end for;
@@ -101,19 +103,19 @@ equation
 
   Coef = 4/(Rp*Rp*rho);
 
-  for i in 1:N loop
+  for i in 1:Nz loop
 
     //*** Energy balance in the fuel rods ***
-    cp[i, 1]*der(T[i, 1]) = xWt[i]*Wt/dM[i] + 2*Coef*k[i, 1]*(T[i, 2] - T[i, 1]);
+    cp[i, 1]*der(T[i, 1]) = xWt[i]*Wt/Mnode + 2*Coef*k[i, 1]*(T[i, 2] - T[i, 1]);
 
-    cp[i, 2]*der(T[i, 2]) = xWt[i]*Wt/dM[i] + Coef*(-k[i, 1]*(T[i, 2] - T[i, 1])
+    cp[i, 2]*der(T[i, 2]) = xWt[i]*Wt/Mnode + Coef*(-k[i, 1]*(T[i, 2] - T[i, 1])
        + 3*k[i, 2]*(T[i, 3] - T[i, 2]));
 
-    cp[i, 3]*der(T[i, 3]) = xWt[i]*Wt/dM[i] - 6*Coef*k[i, 2]*(T[i, 3] - T[i, 2])
-       - 4*W[i]/dM[i];
+    cp[i, 3]*der(T[i, 3]) = xWt[i]*Wt/Mnode - 6*Coef*k[i, 2]*(T[i, 3] - T[i, 2])
+       - 4*W[i]/Mnode;
 
     //***Thermal exchange between the fuel rod and the cladding***
-    W[i] = heat_coeff_gap*dSgi[i]*(T[i, 3] - Tg[i]);
+    W[i] = heat_coeff_gap*Sseg_cladi*(T[i, 3] - Tg[i]);
 
     // Calculation of the thermal conductivity of the UO2
     for j in 1:2 loop
