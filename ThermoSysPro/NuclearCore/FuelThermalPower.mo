@@ -26,13 +26,14 @@ model FuelThermalPower "Meshed model that describes the dynamic of the conductio
   parameter ThermoSysPro.Units.SI.Radius rsi[Nr]={sqrt(i*Rp^2/Nr) for i in 1:Nr} "Radii of volume skins (constant volume)" annotation(Dialog(group="Geometry",enable=false));
   parameter ThermoSysPro.Units.SI.Radius rvi[Nr]={sqrt((i-0.5)*Rp^2/Nr) for i in 1:Nr} "Radii of volume centers (constant volume)" annotation(Dialog(group="Geometry",enable=false));
 
-  parameter Real zWt[Nz]={0.0679,0.1829,0.2492,0.2492,0.1829,0.0679}
+  parameter Real zWt[Nz]={sin((i-0.5)*Lseg*pi/Length)/Length for i in 1:Nz}
     "Axial distribution of the thermal power produced in the zone i of the fuel";
-  parameter Boolean steady_state=true;
+  parameter Boolean steady_state=true annotation(choices(checkBox=true));
   parameter ThermoSysPro.Units.SI.Temperature Tstart=973.15;
 
   parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer  heat_coeff_gap=10000
     "Heat Tranfer Coefficient between the fuel rods and the internal wall of the cladding";
+
 protected
   parameter Real zWt_norm[Nz]=zWt / sum(zWt) "Normalized axial distribution of the thermal power produced in the zone i of the fuel";
   parameter ThermoSysPro.Units.SI.Length Lseg=Length/Nz "Lenght of the axial zones";
@@ -44,8 +45,10 @@ protected
 
 public
 
-   ThermoSysPro.Units.SI.Temperature T[Nz, Nr]
-    "Temperature of the fuel";
+   ThermoSysPro.Units.SI.Temperature T[Nz, Nr] "Temperature of the fuel";
+   ThermoSysPro.Units.SI.Temperature Tcenter[Nz] "Temperature at the center of the fuel";
+   ThermoSysPro.Units.SI.Temperature Tout[Nz] "Temperature of surface of the fuel";
+
     ThermoSysPro.Units.SI.Temperature Teff[Nz](start=fill(Tstart, Nz))
     "Effective temperature of the UO2 per zone, used for the calculation of the Doppler effect";
    ThermoSysPro.Units.SI.Temperature Teffg(start=Tstart)
@@ -58,22 +61,22 @@ public
     "Total thermal power produced by the UO2 fuel";
   ThermoSysPro.Units.SI.Power Wcond[Nz,Nr+1]
     "Thermal power exchanger between nodes by conduction";
+  ThermoSysPro.Units.SI.LinearPowerDensity linW[Nz]=zWt_norm*Wt/Nrods "Linear Power Density";
 
-
-  ThermoSysPro.Thermal.Connectors.ThermalPort C_clad[Nz] annotation (extent=[100,
-        -10; 120,12], Placement(transformation(extent={{100,-10},{120,12}},
-          rotation=0)));
+  ThermoSysPro.Thermal.Connectors.ThermalPort C_clad[Nz] annotation (Placement(transformation(extent={{100,-12},{120,10}},
+          rotation=0), iconTransformation(extent={{100,-12},{120,10}})));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal Wt_fuel
-    annotation (extent=[-120,-10; -100,10], Placement(transformation(extent={{-120,
-            -10},{-100,10}}, rotation=0)));
+    annotation (Placement(transformation(extent={{-120,
+            -10},{-100,10}}, rotation=0), iconTransformation(extent={{-120,-10},
+            {-100,10}})));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Teff_fuel
-    annotation (
-    extent=[-10,100; 10,120],
-    rotation=90,
-    Placement(transformation(
+    annotation (Placement(transformation(
         origin={0,110},
         extent={{-10,-10},{10,10}},
-        rotation=90)));
+        rotation=90), iconTransformation(
+        extent={{-10,-10},{10,10}},
+        rotation=90,
+        origin={0,110})));
 
 initial equation
   if steady_state then
@@ -97,53 +100,33 @@ equation
   Teffg =Teff_fuel.signal;
 
   Wcond[:,1] = zeros(Nz);  //Null thermal conduction power in the center
-  Wcond[:,end] = heat_coeff_gap*Sseg_cladi*(T[:,end] - Tg); //Convection power to the clad
+  Wcond[:,end] = heat_coeff_gap*Sseg_cladi*(Tout - Tg); //Convection power to the clad
+
+
+  // Extrapolation of limit point (change in conductivities could be taken into account)
+  Tcenter = T[:,1]*1.5 - T[:,2]*0.5;
+  Tout = T[:,end]*1.5 - T[:,Nr-1]*0.5;
 
   for i in 1:Nz loop //Iterate on axial nodes
     for j in 1:Nr loop //Iterate on radial nodes
 
       //*** Energy balance in the fuel rods ***
-      Mnode*fuel[i, Nr].cp*der(T[i, j]) = zWt_norm[i]*Wt/Nr + Wcond[i,j]-Wcond[i,j+1];
+      Mnode*fuel[i, j].cp*der(T[i, j]) = zWt_norm[i]*Wt/Nr + Wcond[i,j]-Wcond[i,j+1];
 
       if j<Nr then
-        Wcond[i,j+1] = fuel[i,j].k * (T[i,j]-T[i,j+1])/(rvi[j+1]-rvi[j]) * rsi[j]*pi*2*Lseg*Nrods;
+        Wcond[i,j+1] = (fuel[i,j].k+fuel[i,j].k)/2 * (T[i,j]-T[i,j+1])/(rvi[j+1]-rvi[j]) * rsi[j]*pi*2*Lseg*Nrods;
       end if;
 
     end for;
-
-    // Calculation of the effective temperature in the zones (Rowlands correlation)
-    Teff[i] = 0.444*T[i, 1] + 0.556*T[i, Nr];
-
   end for;
 
+  // Calculation of the effective temperature in the zones (Rowlands correlation)
+  Teff = 0.444*Tcenter + 0.556*Tout;
   // Mean effective temperature, weighted by thermal power
   Teffg = zWt_norm * Teff;
 
   annotation (Diagram(
       coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}),
-      Rectangle(extent=[-100, 100; 100, -100], style(
-          color=3,
-          rgbcolor={0,0,255},
-          gradient=1,
-          fillColor=45,
-          rgbfillColor={255,128,0})),
-      Text(
-        extent=[-72, 96; 80, -96],
-        style(
-          color=3,
-          rgbcolor={0,0,255},
-          gradient=1,
-          fillColor=45,
-          rgbfillColor={255,128,0}),
-        string="Uranium"),
-      Text(
-        extent=[-114, 28; -114, 12],
-        style(color=3, rgbcolor={0,0,255}),
-        string="Puo2"),
-      Text(
-        extent=[2, 94; 2, 78],
-        style(color=3, rgbcolor={0,0,255}),
-        string="T_fuel"),
       graphics={
         Rectangle(
           extent={{-100,100},{100,-100}},
@@ -173,20 +156,7 @@ equation
           extent={{-74,102},{82,-84}},
           textColor={0,0,0},
           textString=
-               "%name")},        Rectangle(extent=[-100, 100; 100, -100], style(
-          color=3,
-          rgbcolor={0,0,255},
-          gradient=1,
-          fillColor=45,
-          rgbfillColor={255,128,0})), Text(
-        extent=[-74, 102; 82, -84],
-        style(
-          color=3,
-          rgbcolor={0,0,255},
-          gradient=1,
-          fillColor=45,
-          rgbfillColor={255,128,0}),
-        string="%name")),
+        "%name")}),
     Documentation(info="<html>
 <p><b>Copyright &copy; EDF 2002 - 2024</b></p>
 </HTML>

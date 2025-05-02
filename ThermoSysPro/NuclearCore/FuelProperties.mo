@@ -16,7 +16,7 @@ protected
   Real p_coef "Porosity Coefficient";
 equation
 
-  T_C = T + 273.15;
+  T_C = T - 273.15;
 
   uo2_cp = 296.7*535.285^2*exp(535.285/T)/(T^2*(exp(535.285/T)-1)^2)+2.43e-2*T+oxy_on_metal/2*8.745e7*1.577e5/(8.3143*T^2)*exp(-1.577e5/(8.3143*T));
 
