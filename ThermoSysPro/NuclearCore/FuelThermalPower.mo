@@ -2,7 +2,7 @@ within ThermoSysPro.NuclearCore;
 model FuelThermalPower "Meshed model that describes the dynamic of the conduction of heat generated 
   by fission in a fuel rod."
 
-  FuelProperties fuel[Nz,3](
+  FuelProperties fuel[Nz,Nr](
     T=T,
     each porosity=fuel_porosity,
     each MOX=isMOX,
@@ -18,63 +18,58 @@ model FuelThermalPower "Meshed model that describes the dynamic of the conductio
   parameter ThermoSysPro.Units.SI.Density rho=(1-fuel_porosity)*1/(pu_mFraction/rho_puo2+(1-pu_mFraction)/rho_uo2) "Density of MOX" annotation(Dialog(group="Fuel Properties",enable=false));
 
   parameter Integer Nrods=50952 "Number of fuel rods of UO2" annotation(Dialog(group="Geometry"));
-  parameter ThermoSysPro.Units.SI.Length Rp=0.004095 "Radius of the fuel pellet" annotation(Dialog(group="Geometry"));
-  parameter ThermoSysPro.Units.SI.Length Rclad=0.00418 "Internal radius of the cladding" annotation(Dialog(group="Geometry"));
+  parameter ThermoSysPro.Units.SI.Radius Rp=0.004095 "Radius of the fuel pellet" annotation(Dialog(group="Geometry"));
+  parameter ThermoSysPro.Units.SI.Radius Rclad=0.00418 "Internal radius of the cladding" annotation(Dialog(group="Geometry"));
   parameter Integer Nz=6 "Number of axial zones" annotation(Dialog(group="Geometry"));
   parameter Integer Nr=5 "Number of radial zones" annotation(Dialog(group="Geometry"));
   parameter ThermoSysPro.Units.SI.Length Length=4.270 "Active lenght of the fuel rods" annotation(Dialog(group="Geometry"));
+  parameter ThermoSysPro.Units.SI.Radius rsi[Nr]={sqrt(i*Rp^2/Nr) for i in 1:Nr} "Radii of volume skins (constant volume)" annotation(Dialog(group="Geometry",enable=false));
+  parameter ThermoSysPro.Units.SI.Radius rvi[Nr]={sqrt((i-0.5)*Rp^2/Nr) for i in 1:Nr} "Radii of volume centers (constant volume)" annotation(Dialog(group="Geometry",enable=false));
 
-  parameter Real xWt[Nz]={0.0679,0.1829,0.2492,0.2492,0.1829,0.0679}
-    "Fraction of the total thermal power produced in the zone i of the fuel";
+  parameter Real zWt[Nz]={0.0679,0.1829,0.2492,0.2492,0.1829,0.0679}
+    "Axial distribution of the thermal power produced in the zone i of the fuel";
   parameter Boolean steady_state=true;
   parameter ThermoSysPro.Units.SI.Temperature Tstart=973.15;
 
   parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer  heat_coeff_gap=10000
     "Heat Tranfer Coefficient between the fuel rods and the internal wall of the cladding";
 protected
+  parameter Real zWt_norm[Nz]=zWt / sum(zWt) "Normalized axial distribution of the thermal power produced in the zone i of the fuel";
   parameter ThermoSysPro.Units.SI.Length Lseg=Length/Nz "Lenght of the axial zones";
-  parameter ThermoSysPro.Units.SI.Mass Mnode=Nrods*rho*pi*Rp*Rp*Lseg
-    "Mass of fuel in each volume";
+  parameter ThermoSysPro.Units.SI.Volume Mnode=Nrods*rho*pi*Rp*Rp*Lseg/Nr
+    "Mass of fuel in each node";
   parameter ThermoSysPro.Units.SI.Area Sseg_cladi=Nrods*2*pi*Rclad*Lseg
     "Internal surface of the cladding in each segment";
   constant Real pi=Modelica.Constants.pi "Pi";
 
 public
- ThermoSysPro.Units.SI.Temperature Tm[Nz, 2]
-    "Average T between 1 and 2, and between 2 and 3";
-  ThermoSysPro.Units.SI.SpecificHeatCapacity cp[Nz, 3] "Specific heat of UO2";
-  ThermoSysPro.Units.SI.ThermalConductivity k[Nz, 2]  "Thermal conductivity of UO2";
-  Real Coef "Intermediate coefficient";
 
-  // ThermoSysPro.Units.SI.Temperature T[N, 3](start=fill(Tstart, N, 3))
-
-   ThermoSysPro.Units.SI.Temperature T[Nz, 3]
+   ThermoSysPro.Units.SI.Temperature T[Nz, Nr]
     "Temperature of the fuel";
-  /* Temperature of the fuel in each axial zone i *:
-  T[i,1] : temperature at the centre of the pellet
-       T[i,2] : temperature qt R/(2^0.5)
-       T[i,3] : temperature at the external surface of the pellet
-   Rq : R/(2^0.5) définit deux zones isovolumes ? */
-   ThermoSysPro.Units.SI.Temperature Teff[Nz](start=fill(Tstart, Nz))
+    ThermoSysPro.Units.SI.Temperature Teff[Nz](start=fill(Tstart, Nz))
     "Effective temperature of the UO2 per zone, used for the calculation of the Doppler effect";
    ThermoSysPro.Units.SI.Temperature Teffg(start=Tstart)
     "Effective global temperature of the UO2, used for the calculation of the Doppler effect";
    ThermoSysPro.Units.SI.Temperature Tg[Nz](start=fill(Tstart, Nz))
     "Internal T of the cladding";
 
-  ThermoSysPro.Units.SI.Power W[Nz]
-    "Power transmitted from the UO2 to the cladding in zone i";
+   //ThermoSysPro.Units.SI.Power W[Nz,Nr] "Power transmitted from the UO2 to the cladding in zone i";
   ThermoSysPro.Units.SI.Power Wt
     "Total thermal power produced by the UO2 fuel";
+  ThermoSysPro.Units.SI.Power Wcond[Nz,Nr+1]
+    "Thermal power exchanger between nodes by conduction";
 
-  ThermoSysPro.Thermal.Connectors.ThermalPort C_WTgaine[Nz]
-    annotation (extent=[100, -10; 120, 12], Placement(transformation(extent={{
-            100,-10},{120,12}}, rotation=0)));
-  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal EntreePt
-    annotation (extent=[-120, -10; -100, 10], Placement(transformation(extent={
-            {-120,-10},{-100,10}}, rotation=0)));
-  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal SortieT_fuel
-    annotation (extent=[-10, 100; 10, 120], rotation=90,
+
+  ThermoSysPro.Thermal.Connectors.ThermalPort C_clad[Nz] annotation (extent=[100,
+        -10; 120,12], Placement(transformation(extent={{100,-10},{120,12}},
+          rotation=0)));
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal Wt_fuel
+    annotation (extent=[-120,-10; -100,10], Placement(transformation(extent={{-120,
+            -10},{-100,10}}, rotation=0)));
+  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Teff_fuel
+    annotation (
+    extent=[-10,100; 10,120],
+    rotation=90,
     Placement(transformation(
         origin={0,110},
         extent={{-10,-10},{10,10}},
@@ -83,65 +78,46 @@ public
 initial equation
   if steady_state then
     for i in 1:Nz loop
-      for j in 1:3 loop
+      for j in 1:Nr loop
         der(T[i, j]) = 0;
       end for;
     end for;
   else
     for i in 1:Nz loop
-      for j in 1:3 loop
+      for j in 1:Nr loop
         T[i, j] = Tstart;
       end for;
     end for;
   end if;
 
 equation
-  -W = C_WTgaine.W;
-  Tg = C_WTgaine.T;
-  Wt = EntreePt.signal;
-  Teffg = SortieT_fuel.signal;
+  -Wcond[:,end] =C_clad.W;
+  Tg =C_clad.T;
+  Wt =Wt_fuel.signal;
+  Teffg =Teff_fuel.signal;
 
-  Coef = 4/(Rp*Rp*rho);
+  Wcond[:,1] = zeros(Nz);  //Null thermal conduction power in the center
+  Wcond[:,end] = heat_coeff_gap*Sseg_cladi*(T[:,end] - Tg); //Convection power to the clad
 
-  for i in 1:Nz loop
+  for i in 1:Nz loop //Iterate on axial nodes
+    for j in 1:Nr loop //Iterate on radial nodes
 
-    //*** Energy balance in the fuel rods ***
-    cp[i, 1]*der(T[i, 1]) = xWt[i]*Wt/Mnode + 2*Coef*k[i, 1]*(T[i, 2] - T[i, 1]);
+      //*** Energy balance in the fuel rods ***
+      Mnode*fuel[i, Nr].cp*der(T[i, j]) = zWt_norm[i]*Wt/Nr + Wcond[i,j]-Wcond[i,j+1];
 
-    cp[i, 2]*der(T[i, 2]) = xWt[i]*Wt/Mnode + Coef*(-k[i, 1]*(T[i, 2] - T[i, 1])
-       + 3*k[i, 2]*(T[i, 3] - T[i, 2]));
+      if j<Nr then
+        Wcond[i,j+1] = fuel[i,j].k * (T[i,j]-T[i,j+1])/(rvi[j+1]-rvi[j]) * rsi[j]*pi*2*Lseg*Nrods;
+      end if;
 
-    cp[i, 3]*der(T[i, 3]) = xWt[i]*Wt/Mnode - 6*Coef*k[i, 2]*(T[i, 3] - T[i, 2])
-       - 4*W[i]/Mnode;
-
-    //***Thermal exchange between the fuel rod and the cladding***
-    W[i] = heat_coeff_gap*Sseg_cladi*(T[i, 3] - Tg[i]);
-
-    // Calculation of the thermal conductivity of the UO2
-    for j in 1:2 loop
-      Tm[i, j] = 0.5*(T[i, j] + T[i, j + 1]);
-      k[i, j] = 1/(0.0322 + 0.0002497*Tm[i, j]) + 0.641576e-10*Tm[i, j]*Tm[i, j]
-        *Tm[i, j];
-    end for;
-
-    // Calculation of the specific heat of the UO2
-    for j in 1:3 loop
-      cp[i, j] = 4186.8/270*(18.45 + 0.002431*T[i, j] - 2.272e5/(T[i, j]*T[i, j]));
     end for;
 
     // Calculation of the effective temperature in the zones (Rowlands correlation)
-    Teff[i] = 0.444*T[i, 1] + 0.556*T[i, 3];
+    Teff[i] = 0.444*T[i, 1] + 0.556*T[i, Nr];
 
   end for;
 
-  // Calculation of the global effective temperature
-  Teffg = 0.023*Teff[1] + 0.167*Teff[2] + 0.31*Teff[3] + 0.31*Teff[4] + 0.167*
-    Teff[5] + 0.023*Teff[6];
-
-  //Cp=194.4+0.2638T-1.809e-4*T^2+4.748e-8*T^3 COMETHE (CYRANO3 V2.7.1) R.L. GIBBY, L. LEIBOVITZ, J.K. KERRISH and D.G. CLIFTON Analytical Expressions for Enthalpy and heat Capacity for Uranium-Plutonium Oxide Journal of Nuclear Marterials 50 (1974) pages 155-161.
-  //k=
-  //Radial power distribution
-  //rho
+  // Mean effective temperature, weighted by thermal power
+  Teffg = zWt_norm * Teff;
 
   annotation (Diagram(
       coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}),
