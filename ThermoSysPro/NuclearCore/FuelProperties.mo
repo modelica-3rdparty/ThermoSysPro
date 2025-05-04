@@ -33,7 +33,84 @@ equation
     puo2_cp = 375; //Not used
   end if;
 
-  annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
+  annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
+        Line(
+          points={{-82,42},{-26,-56},{82,-22}},
+          color={0,0,0},
+          smooth=Smooth.Bezier,
+          thickness=1),
+        Ellipse(
+          extent={{-76,14},{-66,4}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{-82,52},{-72,42}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{-62,-12},{-52,-22}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{-18,-54},{-8,-64}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{0,-24},{10,-34}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{38,-38},{48,-48}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{52,-12},{62,-22}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{88,-24},{98,-34}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{-42,-12},{-32,-22}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Line(
+          points={{-100,100},{-100,-100},{100,-100}},
+          color={0,0,0},
+          thickness=1),
+        Polygon(
+          points={{78,-92},{100,-100},{78,-108},{78,-92}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{-11,8},{11,0},{-11,-8},{-11,8}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid,
+          origin={-99,90},
+          rotation=90)}),                                        Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     Documentation(info="# Property Model for Nuclear Fuel Material
 Correlations are taken from:
