@@ -940,6 +940,8 @@ which is only valid in the rotor-fixed coordinate system.
     operator record ComplexPower =
       Complex(redeclare ActivePower re,
                redeclare ReactivePower im) "Complex electrical power";
+    type LinearPowerDensity
+               = Real (final quantity="LinearPowerDensity", final unit="W/m");
     annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
               -100},{100,100}}), graphics={
           Line(
