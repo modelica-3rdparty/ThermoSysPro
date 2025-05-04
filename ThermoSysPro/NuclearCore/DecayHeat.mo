@@ -1,27 +1,27 @@
 within ThermoSysPro.NuclearCore;
-model ResidualPower "Calculation of the residual power given by the decay of the fission
-  products in the core of the nuclear reactor; maximum 6 groups of radio-isotopes are considered."
+model DecayHeat "Calculation of the decay heat given by the decay of the fission
+  products in the core of the nuclear reactor"
 
   parameter Real Kris[:]={0.0251,0.01654,0.02586}
     "Fraction of the power associated to group i";
   parameter Real Tris[:]={15,137,2910}
     "Time constant associated to group i (s)";
-  parameter Boolean steady_state=false;
+  parameter Boolean steady_state=true "Initialize the decay heat at equilibrium" annotation(choices(checkBox=true));
 
 protected
   parameter Integer N=size(Kris, 1) "Number of groups of radio-isotopes";
 
 public
   ThermoSysPro.Units.SI.Power Pneut(start=3560e6) "Total neutronic power (W)";
-  ThermoSysPro.Units.SI.Power PresTot "Total residual power (W)";
+  ThermoSysPro.Units.SI.Power PresTot "Total decay heat (W)";
   ThermoSysPro.Units.SI.Power Pres[N](start={89.35e6,58.88e6,92.05e6})
     "Residual power associated to the groups of radio-isotopes (W)";
-  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal EntreePneut
-    annotation (extent=[-120, -10; -100, 10], Placement(transformation(extent={
-            {-120,-10},{-100,10}}, rotation=0)));
-  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal SortiePresTot
-    annotation (extent=[100, -10; 120, 10], Placement(transformation(extent={{
-            100,-10},{120,10}}, rotation=0)));
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal Pneutrons
+    annotation (extent=[-120,-10; -100,10], Placement(transformation(extent={{-120,
+            -10},{-100,10}}, rotation=0)));
+  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal DecayHeat
+    annotation (extent=[100,-10; 120,10], Placement(transformation(extent={{100,
+            -10},{120,10}}, rotation=0)));
 initial equation
 
   if steady_state then
@@ -38,8 +38,8 @@ initial equation
   end if;
 
 equation
-  Pneut = EntreePneut.signal;
-  PresTot = SortiePresTot.signal;
+  Pneut =Pneutrons.signal;
+  PresTot =DecayHeat.signal;
 
   PresTot = sum(Pres);
 
@@ -143,9 +143,9 @@ equation
           fillPattern=FillPattern.VerticalCylinder,
           fillColor={255,128,0}),
         Text(
-          extent={{-76,74},{80,-74}},
+          extent={{-78,74},{78,-74}},
           textColor={0,0,0},
-          textString="Residual Power"),
+          textString="Decay Heat"),
         Text(
           extent={{116,24},{116,12}},
           textColor={0,0,0},
@@ -208,4 +208,4 @@ equation
 <p><b>ThermoSysPro Version 4.1</b></p>
 </HTML>
 "));
-end ResidualPower;
+end DecayHeat;
