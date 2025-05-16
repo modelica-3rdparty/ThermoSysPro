@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.Fluid;
+within ThermoSysPro.Properties.Fluid;
 function Temperature_Ph
   "Temperature computation for all fluids (inputs: P, h, fluid)"
 

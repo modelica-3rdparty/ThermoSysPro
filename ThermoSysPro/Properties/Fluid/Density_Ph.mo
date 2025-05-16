@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.Fluid;
+within ThermoSysPro.Properties.Fluid;
 function Density_Ph "Density computation for all fluids (inputs: P, h, fluid)"
 
   input Units.SI.AbsolutePressure P "Pressure (Pa)";

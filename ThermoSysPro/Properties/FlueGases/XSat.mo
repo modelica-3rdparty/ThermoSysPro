@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.FlueGases;
+within ThermoSysPro.Properties.FlueGases;
 function XSat
 //---------------------------------------------------------------------------
 // Fonction  de l'humidité absolue a saturation xs(T)

@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.WaterSteam;
+within ThermoSysPro.Properties.WaterSteam;
 package IF97_packages
 
   package IF97_wAJ
@@ -2975,7 +2975,7 @@ package IF97_packages
         end if;
         Util.Streams.print("end IF97_spline;",fileName);
         status := true;
-        annotation ();
+        annotation();
       end dumpOneSpline;
 
       package Modelica_Interpolation

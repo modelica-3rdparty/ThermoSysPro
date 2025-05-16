@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.Fluid;
+within ThermoSysPro.Properties.Fluid;
 function ThermalConductivity_Ph
   "Thermal Conductivity computation for all fluids (inputs: P, h, fluid)"
 

@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.MoltenSalt;
+within ThermoSysPro.Properties.MoltenSalt;
 function ThermoPropertiesFunction_T_2 "ThermoPropertiesFunction of Solt: KNO3-NaNO3
 "
   input Units.SI.Temperature T

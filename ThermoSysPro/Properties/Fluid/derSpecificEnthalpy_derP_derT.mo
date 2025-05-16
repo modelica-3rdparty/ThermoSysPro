@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.Fluid;
+within ThermoSysPro.Properties.Fluid;
 function derSpecificEnthalpy_derP_derT
   "der(Specific enthalpy) computation for all fluids (inputs: P, h, der(P), der(T), fluid)"
 

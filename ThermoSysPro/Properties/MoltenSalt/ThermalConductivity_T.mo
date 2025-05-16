@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.MoltenSalt;
+within ThermoSysPro.Properties.MoltenSalt;
 function ThermalConductivity_T
   "Thermal Conductivity computation for Salt (input T)"
 

@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.Fluid;
+within ThermoSysPro.Properties.Fluid;
 function derDensity_derP_derh
   "der(Density) computation for all fluids (inputs: P, h, der(P), der(h), fluid)"
 

@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.Fluid;
+within ThermoSysPro.Properties.Fluid;
 function SpecificInternalEnergy_Ph_DO_NOT_USE
   "Specific Internal Energy computation for all fluids (inputs: P, h, fluid). DO NOT USE (does not work with use-case 'DistributedVolumePartialModel'. Use u = h - P/rho instead)"
 

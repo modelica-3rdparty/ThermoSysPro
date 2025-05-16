@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.WaterSteam;
+within ThermoSysPro.Properties.WaterSteam;
 package BaseIF97
   "Modelica Physical Property Model: the new industrial formulation IAPWS-IF97"
 

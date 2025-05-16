@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.Fluid;
+within ThermoSysPro.Properties.Fluid;
 function Density_derh_Ph
   "Density derivative w.r.t enthalpy computation for all fluids (inputs: P, h, fluid)"
 

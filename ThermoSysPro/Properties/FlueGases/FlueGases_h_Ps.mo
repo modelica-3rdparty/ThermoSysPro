@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.FlueGases;
+within ThermoSysPro.Properties.FlueGases;
 function FlueGases_h_Ps "Specific enthalpy"
   //extends ThermoSysPro.Properties.FlueGases.unSafeForJacobian;
 

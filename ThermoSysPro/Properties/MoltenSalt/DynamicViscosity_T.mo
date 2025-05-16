@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.MoltenSalt;
+within ThermoSysPro.Properties.MoltenSalt;
 function DynamicViscosity_T "Dynamic Viscosity computation for Salt (input T)"
 
   input Units.SI.Temperature T "Temperature (K)";

@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.Fluid;
+within ThermoSysPro.Properties.Fluid;
 function Reynolds_PhvD
   "Reynolds number computation for all fluids (inputs: P, h, fluid, v, D)"
 

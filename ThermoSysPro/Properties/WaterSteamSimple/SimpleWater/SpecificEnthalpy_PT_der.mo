@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.WaterSteamSimple.SimpleWater;
+within ThermoSysPro.Properties.WaterSteamSimple.SimpleWater;
 function SpecificEnthalpy_PT_der
   input Units.SI.AbsolutePressure p "pressure";
   input Units.SI.Temperature T "Temperature";

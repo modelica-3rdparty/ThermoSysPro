@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.WaterSteamSimple.SimpleWater;
+within ThermoSysPro.Properties.WaterSteamSimple.SimpleWater;
 function Water_Ph_der "Derivative function of Water_Ph"
   input Units.SI.AbsolutePressure p "Pressure";
   input Units.SI.SpecificEnthalpy h "Specific enthalpy";

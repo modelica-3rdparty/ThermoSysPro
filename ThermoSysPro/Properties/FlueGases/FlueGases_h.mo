@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.FlueGases;
+within ThermoSysPro.Properties.FlueGases;
 function FlueGases_h "Specific enthalpy"
   input Units.SI.AbsolutePressure PMF "Flue gases average pressure";
   input Units.SI.Temperature TMF "Flue gases average temperature";

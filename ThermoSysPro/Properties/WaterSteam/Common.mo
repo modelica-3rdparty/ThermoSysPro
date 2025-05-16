@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.WaterSteam;
+within ThermoSysPro.Properties.WaterSteam;
 package Common
   import      ThermoSysPro.Units.SI;
 

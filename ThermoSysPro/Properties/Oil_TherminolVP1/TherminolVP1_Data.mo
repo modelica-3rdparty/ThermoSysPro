@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.Oil_TherminolVP1;
+within ThermoSysPro.Properties.Oil_TherminolVP1;
 record TherminolVP1_Data "Data for Oil from STEPHANIE Library"
 
 // STEPHANIE TherminolVP1

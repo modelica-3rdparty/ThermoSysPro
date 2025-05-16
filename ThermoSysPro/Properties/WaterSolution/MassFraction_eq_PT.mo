@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.WaterSolution;
+within ThermoSysPro.Properties.WaterSolution;
 function MassFraction_eq_PT
   "Equilibrium mass fraction of the H2O/LiBr solution as a function of T et Xh2o"
   input Units.SI.AbsolutePressure P "Pressure";

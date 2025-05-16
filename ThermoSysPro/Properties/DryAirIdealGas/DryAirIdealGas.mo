@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.DryAirIdealGas;
+within ThermoSysPro.Properties.DryAirIdealGas;
 record DryAirIdealGas "Data for Dry Air Ideal Gas from STEPHANIE Library"
   // STEPHANIE Dry Air Ideal Gas
   // "Air Data Package - valid temperature ranges 200K - 1000K and 1000K - 6000K. Source: NASA/TP-2002-211556 Coefficients for Calculating Thermodynamic Properties"

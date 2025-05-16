@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.Fluid;
+within ThermoSysPro.Properties.Fluid;
 function Prandtl_Ph
   "Prandtl number computation for all fluids (inputs: P, h, fluid)"
 

@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.WaterSolution;
+within ThermoSysPro.Properties.WaterSolution;
 function Pressure_eq_TX
   "Equilibrium pressure of the H2O/LiBr solution as a funciton of T and Xh2o"
   input Units.SI.Temperature T "Temperature";

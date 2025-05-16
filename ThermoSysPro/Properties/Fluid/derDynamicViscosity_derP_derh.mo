@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Properties.Fluid;
+within ThermoSysPro.Properties.Fluid;
 function derDynamicViscosity_derP_derh
   "Dynamic Viscosity computation for all fluids (inputs: P, h, fluid)"
 
