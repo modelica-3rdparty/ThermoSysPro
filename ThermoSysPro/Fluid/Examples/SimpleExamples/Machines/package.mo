@@ -1,5 +1,6 @@
-within ThermoSysPro.Fluid.Examples;
-package SimpleExamples
+within ThermoSysPro.Fluid.Examples.SimpleExamples;
+package Machines
+
   annotation (Icon(graphics={
       Text(
         extent={{-102,0},{24,-26}},
@@ -112,4 +113,4 @@ package SimpleExamples
         points={{80,80},{100,100}},
         color={0,0,255},
         smooth=Smooth.None)}));
-end SimpleExamples;
+end Machines;

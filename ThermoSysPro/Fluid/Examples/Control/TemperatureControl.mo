@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Fluid.Examples.Control;
+within ThermoSysPro.Fluid.Examples.Control;
 model TemperatureControl "Temperature_Control"
   parameter Real k=1 "Gain";
   parameter Real Ti=1 "Time constant (s)";

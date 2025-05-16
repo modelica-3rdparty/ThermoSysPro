@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.Fluid.Examples.Book.PowerPlants;
+within ThermoSysPro.Fluid.Examples.Book.PowerPlants;
 model ConcentratedSolarPowerPlant_PTSC "Model of a concentrated solar power plant with PTSC"
 
 parameter Real L1 = 500 "Longueur de la première chaine de capteurs";
