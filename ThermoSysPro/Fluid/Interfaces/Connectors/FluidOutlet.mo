@@ -1,7 +1,7 @@
 within ThermoSysPro.Fluid.Interfaces.Connectors;
 connector FluidOutlet "Fluid outlet connector"
   replaceable package Medium =
-      ThermoSysPro.Properties.Media.WaterSteam constrainedby Modelica.Media.Interfaces.PartialMedium
+      ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium
     "Medium model" annotation (choicesAllMatching=true, Dialog(group="Medium"));
   Units.SI.Pressure P(start=1.e5) "Fluid pressure in the control volume";
   Units.SI.MassFlowRate Q(start=500)
@@ -13,7 +13,7 @@ connector FluidOutlet "Fluid outlet connector"
   Units.SI.SpecificEnthalpy h_vol_2(start=1.e5)
     "Fluid specific enthalpy in the control volume 2";
   Medium.ExtraProperty SubC[Medium.nC]
-    "Properties c_i/m of the fluid crossing the boundary of the control volume";
+    "Substances concentration (ppm) of the fluid crossing the boundary of the control volume";
   Medium.MassFraction Xi[Medium.nXi]
     "Independent mixture mass fractions m_i/m of the fluid crossing the boundary of the control volume";
   output Real diff_res_1(start=1e4)
