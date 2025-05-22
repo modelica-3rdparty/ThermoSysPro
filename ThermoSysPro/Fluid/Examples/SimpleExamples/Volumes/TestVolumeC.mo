@@ -1,4 +1,4 @@
-within ThermoSysPro.Fluid.Examples.SimpleExamples.PressureLosses;
+within ThermoSysPro.Fluid.Examples.SimpleExamples.Volumes;
 model TestVolumeC
   extends ThermoSysPro.UsersGuide.Icons.Example;
 
