@@ -2,7 +2,7 @@ within ThermoSysPro.Properties.Media;
 package FlueGases "Flue gases library inherited from Modelica.Media"
   import Modelica.Media.Interfaces.Choices.ReferenceEnthalpy;
 
-  extends PartialSubCMedium(nSubC=nC);
+  extends PartialSubCMedium(nSubC=nC,isCompressible=true);
   extends Modelica.Media.IdealGases.Common.MixtureGasNasa(
     mediumName="MediaMonomeld",
     data={Modelica.Media.IdealGases.Common.SingleGasesData.N2,Modelica.Media.IdealGases.Common.SingleGasesData.O2,

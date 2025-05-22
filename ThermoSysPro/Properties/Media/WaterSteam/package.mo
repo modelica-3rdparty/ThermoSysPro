@@ -2,6 +2,7 @@ within ThermoSysPro.Properties.Media;
 package WaterSteam "1 - Water/steam properties library (IAPWS-IF97)"
 
   extends PartialTwoPhaseThermoSysProMedium(
+    isCompressible=true,
     mediumName="WaterIF97",
     substanceNames={"water"},
     singleState=false,
