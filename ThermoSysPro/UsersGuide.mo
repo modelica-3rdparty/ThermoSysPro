@@ -1268,6 +1268,30 @@ action. This section shall survive the termination of this License.</p>
             extent={{-12.5,-12.5},{12.5,12.5}})}));
 
   end ThermoSysProDocumentation;
+
+  package Icons
+
+    partial model Example
+      annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
+            Rectangle(
+              lineColor={200,200,200},
+              fillColor={248,248,248},
+              fillPattern=FillPattern.HorizontalCylinder,
+              extent={{-100,-100},{100,100}},
+              radius=25.0),
+            Rectangle(
+              lineColor={128,128,128},
+              extent={{-100,-100},{100,100}},
+              radius=25.0),
+            Polygon(
+              origin={8,14},
+              lineColor={78,138,73},
+              fillColor={78,138,73},
+              pattern=LinePattern.None,
+              fillPattern=FillPattern.Solid,
+              points={{-58.0,46.0},{42.0,-14.0},{-58.0,-74.0},{-58.0,46.0}})}), Diagram(coordinateSystem(preserveAspectRatio=false)));
+    end Example;
+  end Icons;
   annotation (DocumentationClass=true, Documentation(info="<html>
 <p><b><span style=\"font-size: 12pt; color: #008000;\">Users Guide of the ThermoSysPro Library</span></b></p>
 <p>ThermoSysPro is a library for the modelling and simulation of power plants and energy systems. It is developed with the Modelica language from the <a href=\"http://www.Modelica.org\">Modelica Association</a>. It provides components in various disciplines related to the modelling of power plants and energy systems. </p>
