@@ -2,7 +2,7 @@ within ThermoSysPro.Fluid.Interfaces.Connectors;
 connector FluidOutlet "Fluid outlet connector"
   replaceable package Medium =
       ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium
-    "Medium model" annotation (choicesAllMatching=true, Dialog(group="Medium"));
+    "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid",group="Medium"));
   Units.SI.Pressure P(start=1.e5) "Fluid pressure in the control volume";
   Units.SI.MassFlowRate Q(start=500)
     "Mass flow rate of the fluid crossing the boundary of the control volume";
