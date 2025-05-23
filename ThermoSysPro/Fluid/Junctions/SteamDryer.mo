@@ -5,8 +5,8 @@ model SteamDryer "Steam dryer"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
-  replaceable function SaS = ThermoSysPro.Properties.Media.PartialSubCMedium.noSaS(SubC = Cev.SubC) annotation (choicesAllMatching=true,Dialog(tab="Fluid", group="Medium"));
-  replaceable function PhasesSeparationFunction = ThermoSysPro.Properties.Media.PartialSubCMedium.HomogeneousPhasesSeparation(SubC = Cev.SubC) annotation (choicesAllMatching=true,Dialog(tab="Fluid", group="Medium"));
+  replaceable function SaS = Medium.noSaS(SubC = Cev.SubC) annotation (choicesAllMatching=true,Dialog(tab="Fluid", group="Medium"));
+  replaceable function PhasesSeparationFunction = Medium.HomogeneousPhasesSeparation(SubC = Cev.SubC) annotation (choicesAllMatching=true,Dialog(tab="Fluid", group="Medium"));
   parameter Real eta=1 "Steam dryer efficiency (0 <= eta <= 1)";
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
