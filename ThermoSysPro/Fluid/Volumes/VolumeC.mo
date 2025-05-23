@@ -52,9 +52,9 @@ public
   Units.SI.DerDensityByEnthalpy ddhp
     "density derivative wrt specific enthalpy at constant pressure";
   Units.SI.MassFlowRate BX[Medium.nXi] "Right hand side of the X balance equation";
-  Medium.ExtraProperty X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Boundary trace substances";
+  Medium.ExtraProperty X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Fluid mass fraction";
   Medium.ExtraProperty BSubC[Medium.nC](quantity=Medium.extraPropertiesNames) "Right hand side of the trace balance equation";
-  Medium.ExtraProperty SubC[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default) "Boundary trace substances";
+  Medium.ExtraProperty SubC[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default) "Fluid trace substances";
   Medium.ExtraProperty SubCSaS[Medium.nC](quantity=Medium.extraPropertiesNames) "Trace modification in the trace balance equation";
   Medium.ThermodynamicState state;
   Units.SI.Power Je1 "Thermal power diffusion from inlet e1";
