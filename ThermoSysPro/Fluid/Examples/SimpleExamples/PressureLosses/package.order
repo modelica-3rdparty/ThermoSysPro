@@ -1,3 +1,6 @@
 TestPipePressureLoss
 TestPipePressureLoss_FlueGases
 TestPipePressureLoss_Traces
+TestSingularPressureLoss
+TestSingularPressureLoss_Traces
+TestSingularPressureLoss_Traces_FlueGases
