@@ -126,5 +126,5 @@ annotation (
 <p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
 <h4>ThermoSysPro version 4.1 </h4>
 </html>"),
-  version="4.1");
+  version="5.0");
 end ThermoSysPro;
