@@ -1,10 +1,7 @@
-within ;
-package ThermoSysPro
+within ThermoSysPro.Fluid.Examples.SimpleExamples;
+package Media
 
-
-
-annotation (
-  Icon(graphics={
+  annotation (Icon(graphics={
       Text(
         extent={{-102,0},{24,-26}},
         lineColor={242,148,0},
@@ -16,21 +13,17 @@ annotation (
         textString=
                "SysPro"),
       Polygon(
-        points={{-62,2},{-58,4},{-48,8},{-32,12},{-16,14},{6,14},{26,12},{42,8},
-            {52,2},{42,6},{28,10},{6,12},{-12,12},{-16,12},{-34,10},{-50,6},{
-            -62,2}},
+        points={{-62,2},{-58,4},{-48,8},{-32,12},{-16,14},{6,14},{26,12},{42,8},{52,2},{42,6},{28,10},{6,12},{-12,12},{-16,12},{-34,10},{-50,6},{-62,2}},
         lineColor={46,170,220},
         fillColor={46,170,220},
         fillPattern=FillPattern.Solid),
       Polygon(
-        points={{-44,38},{-24,38},{-26,30},{-26,22},{-24,14},{-24,12},{-46,8},{
-            -42,22},{-42,30},{-44,38}},
+        points={{-44,38},{-24,38},{-26,30},{-26,22},{-24,14},{-24,12},{-46,8},{-42,22},{-42,30},{-44,38}},
         lineColor={46,170,220},
         fillColor={46,170,220},
         fillPattern=FillPattern.Solid),
       Polygon(
-        points={{-26,20},{-20,20},{-20,22},{-14,22},{-14,20},{-12,20},{-12,12},
-            {-26,12},{-28,12},{-26,20}},
+        points={{-26,20},{-20,20},{-20,22},{-14,22},{-14,20},{-12,20},{-12,12},{-26,12},{-28,12},{-26,20}},
         lineColor={46,170,220},
         fillColor={46,170,220},
         fillPattern=FillPattern.Solid),
@@ -90,9 +83,7 @@ annotation (
         fillColor={46,170,220},
         fillPattern=FillPattern.Solid),
       Polygon(
-        points={{-62,2},{-58,4},{-48,8},{-36,10},{-18,12},{6,12},{26,10},{42,6},
-            {52,0},{42,4},{28,8},{6,10},{-12,10},{-18,10},{-38,8},{-50,6},{-62,
-            2}},
+        points={{-62,2},{-58,4},{-48,8},{-36,10},{-18,12},{6,12},{26,10},{42,6},{52,0},{42,4},{28,8},{6,10},{-12,10},{-18,10},{-38,8},{-50,6},{-62,2}},
         lineColor={242,148,0},
         fillColor={242,148,0},
         fillPattern=FillPattern.Solid),
@@ -121,10 +112,5 @@ annotation (
       Line(
         points={{80,80},{100,100}},
         color={0,0,255},
-        smooth=Smooth.None)}),
-  Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
-<h4>ThermoSysPro version 4.1 </h4>
-</html>"),
-  version="5.0");
-end ThermoSysPro;
+        smooth=Smooth.None)}));
+end Media;

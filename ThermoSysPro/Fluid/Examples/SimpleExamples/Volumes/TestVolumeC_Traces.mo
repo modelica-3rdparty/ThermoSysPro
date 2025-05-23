@@ -6,7 +6,7 @@ model TestVolumeC_Traces
   ThermoSysPro.Fluid.BoundaryConditions.Sink sink(redeclare replaceable package Medium = Medium) annotation (Placement(transformation(extent={{30,-10},{50,10}})));
   ThermoSysPro.Fluid.BoundaryConditions.SourcePQ sourcePQ(redeclare replaceable package Medium = Medium, SubC0={0.2})
                                                                                                          annotation (Placement(transformation(extent={{-50,-10},{-30,10}})));
-  ThermoSysPro.Fluid.Volumes.VolumeC volumeC(redeclare replaceable package Medium = Medium) annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
+  ThermoSysPro.Fluid.Volumes.VolumeC volumeC(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
   ThermoSysPro.Fluid.BoundaryConditions.SourceQ sourceQ(redeclare replaceable package Medium = Medium, SubC0={0.1})
                                                                                                        annotation (Placement(transformation(extent={{-50,20},{-30,40}})));
 equation

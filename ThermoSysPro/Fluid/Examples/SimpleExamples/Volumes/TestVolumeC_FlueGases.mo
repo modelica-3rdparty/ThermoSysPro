@@ -12,7 +12,7 @@ model TestVolumeC_FlueGases
     P0=4500000,
     T0=573.15,
     option_temperature=true) annotation (Placement(transformation(extent={{-50,-10},{-30,10}})));
-  ThermoSysPro.Fluid.Volumes.VolumeC volumeC(redeclare replaceable package Medium = Medium, h(start=2.83057e6)) annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
+  ThermoSysPro.Fluid.Volumes.VolumeC volumeC(redeclare package Medium = Medium, h(start=2.83057e6)) annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
   ThermoSysPro.Fluid.BoundaryConditions.SourceQ sourceQ(
     redeclare replaceable package Medium = Medium,
     T0=573.15,
