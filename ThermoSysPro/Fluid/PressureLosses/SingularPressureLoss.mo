@@ -1,6 +1,6 @@
 within ThermoSysPro.Fluid.PressureLosses;
 model SingularPressureLoss "Singular pressure loss"
-
+extends ThermoSysPro.Fluid.Interfaces.IconColors;
  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Real K=1.e-4 "Pressure loss coefficient";
