@@ -101,6 +101,7 @@ equation
   Ce.Xi = Cs.Xi;
   X = Ce.Xi;
 
+  Ce.SubC = Cs.SubC;
 
   Q = Ce.Q;
   Pe = Ce.P;
