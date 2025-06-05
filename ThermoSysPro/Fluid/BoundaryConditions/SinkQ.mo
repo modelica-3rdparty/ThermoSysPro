@@ -16,18 +16,16 @@ model SinkQ "Multi-fluids sink with fixed mass flow rate"
     "true:temperature fixed - false:specific enthalpy fixed";
   parameter Boolean diffusion=false
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter Medium.ExtraProperty SubC0[Medium.nC](quantity=Medium.extraPropertiesNames) = fill(0,Medium.nC) "Source trace substances" annotation (Evaluate=true, Dialog(
-      tab="Fluid",
-      group="Medium"));
-  parameter Medium.ExtraProperty X0[Medium.nX]= Medium.X_default "Source mass fraction" annotation (Dialog(
-      tab="Fluid",
-      group="Medium"));
+
 
 public
   Units.SI.MassFlowRate Q "Fluid mass flow rate";
   Units.SI.AbsolutePressure P "Fluid pressure";
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
   Units.SI.Temperature T "Fluid temperature";
+  Medium.ExtraProperty SubC[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default) "Trace substances";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fraction of the fluid crossing the boundary of the control volume";
+
 
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal IMassFlow "Fixed mass flow rate" annotation (Placement(transformation(
@@ -49,9 +47,10 @@ equation
   C.diff_res_2 = 0;
   C.diff_on_2 = diffusion;
 
-  C.SubC=SubC0;
+  X = C.Xi;
+  SubC = C.SubC;
 
-  C.Xi = X0[1:Medium.nXi];
+
 
   /* Mass flow */
   if (cardinality(IMassFlow) == 0) then
@@ -71,10 +70,10 @@ equation
 
   if option_temperature then
     T = ISpecificEnthalpyOrTemperature.signal;
-    h = Medium.specificEnthalpy_pTX(p=P, T=T, X=X0);
+    h = Medium.specificEnthalpy_pTX(p=P, T=T, X=X);
   else
     h = ISpecificEnthalpyOrTemperature.signal;
-    T = Medium.temperature_phX(p=P, h=h, X=X0);
+    T = Medium.temperature_phX(p=P, h=h, X=X);
   end if;
 
   annotation (
