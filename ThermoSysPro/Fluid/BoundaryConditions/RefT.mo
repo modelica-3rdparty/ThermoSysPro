@@ -1,28 +1,24 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefT "Fixed temperature reference"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+ replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+
 
   parameter Units.SI.Temperature T0=290 "Fixed fluid temperature";
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-
-protected
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 public
   Units.SI.MassFlowRate Q "Fluid mass flow rate";
   Units.SI.AbsolutePressure P "Fluid pressure";
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1 annotation (Placement(
+
+
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
-  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ITemperature
-    annotation (Placement(transformation(
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ITemperature annotation (Placement(transformation(
         origin={0,110},
         extent={{-10,-10},{10,10}},
         rotation=270)));
@@ -45,21 +41,19 @@ equation
   C2.diff_res_1 = C1.diff_res_1;
   C1.diff_res_2 = C2.diff_res_2;
 
-  C1.ftype = C2.ftype;
+  C1.Xi = C2.Xi;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  X = C1.Xi;
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   P = C1.P;
   h = C1.h;
 
-  ftype = C1.ftype;
 
   /* Computation of the fluid specific enthalpy */
-  h = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, ITemperature.signal, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+  h = Medium.specificEnthalpy_pTX(p=P, T=ITemperature.signal, X=X);
 
   annotation (
     Diagram(coordinateSystem(
