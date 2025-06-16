@@ -17,8 +17,7 @@ replaceable package Medium = Properties.Media.WaterSteam;
     h0=3e6,
     option_temperature=false)
     annotation (Placement(transformation(extent={{-50,-10},{-30,10}})));
-  ThermoSysPro.Fluid.BoundaryConditions.Sink sink(redeclare replaceable package
-                                                                                Medium = Medium)
+  ThermoSysPro.Fluid.BoundaryConditions.Sink sink(redeclare replaceable package Medium = Medium)
     annotation (Placement(transformation(extent={{26,-10},{46,10}})));
 equation
   connect(sourcePQ.C, stodolaTurbine.Ce)

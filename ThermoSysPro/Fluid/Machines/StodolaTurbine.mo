@@ -1,7 +1,7 @@
 within ThermoSysPro.Fluid.Machines;
 model StodolaTurbine "Multistage turbine group using Stodola's ellipse"
 extends ThermoSysPro.Fluid.Interfaces.IconColors;
- replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+ replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
@@ -25,15 +25,15 @@ extends ThermoSysPro.Fluid.Interfaces.IconColors;
     "Constant coefficient of the isentropic efficiency characteristics eta_is=f(Q/Qmax)";
   parameter Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
-  parameter IF97Region region_e=IF97Region.All_regions "IF97 region before expansion (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_s=IF97Region.All_regions "IF97 region after expansion (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_ps=IF97Region.All_regions "IF97 region after isentropic expansion (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
+  parameter IF97Region region_e=IF97Region.All_regions "IF97 region before expansion (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
+  parameter IF97Region region_s=IF97Region.All_regions "IF97 region after expansion (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
+  parameter IF97Region region_ps=IF97Region.All_regions "IF97 region after isentropic expansion (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
 
 
 protected
-  parameter Integer mode_e=Integer(region_e) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_s=Integer(region_s) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_ps=Integer(region_ps) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
+  Integer phase_e=if Integer(region_e) == 0 then 0 else if Integer(region_e)==4 then 2 else 1;
+  Integer phase_s=if Integer(region_s) == 0 then 0 else if Integer(region_s)==4 then 2 else 1;
+  Integer phase_ps=if Integer(region_ps) == 0 then 0 else if Integer(region_ps)==4 then 2 else 1;
   parameter Units.SI.AbsolutePressure pcrit=ThermoSysPro.Properties.WaterSteam.BaseIF97.data.PCRIT
     "Critical pressure";
   parameter Units.SI.Temperature Tcrit=ThermoSysPro.Properties.WaterSteam.BaseIF97.data.TCRIT
@@ -138,21 +138,21 @@ equation
   MechPower.signal = W;
 
   /* Fluid thermodynamic properties before the expansion */
-  state_e=Medium.setState_phX(p=Pe, h=Ce.h, X=Ce.Xi, region=mode_e);
+  state_e=Medium.setState_phX(p=Pe, h=Ce.h, phase=phase_e);
 
   Te = state_e.T;
 
   /* Fluid thermodynamic properties after the expansion */
-  state_s1 = Medium.setState_phX(p=Ps, h=Hrs, X=Cs.Xi, region=mode_s); //  X=Cs.Xi ????????????????? Hrs.Xi ??
+  state_s1 = Medium.setState_phX(p=Ps, h=Hrs, phase=phase_s);
 
   /* Fluid thermodynamic properties at the outlet of the nozzle */
-  state_s = Medium.setState_phX(p=Ps, h=Cs.h, X=Cs.Xi, region=mode_s);
+  state_s = Medium.setState_phX(p=Ps, h=Cs.h, phase=phase_s);
 
   Ts = state_s.T;
   rhos = state_s.d;
 
   /* Fluid thermodynamic properties after the isentropic expansion */
-  state_ps = Medium.setState_psX(p=Ps, s=Medium.specificEntropy(state_e), X=Cs.Xi, region=mode_ps); // X=Cs.Xi ?????????????????????
+  state_ps = Medium.setState_ps(p=Ps, s=Medium.specificEntropy(state_e), phase=phase_ps);
   His = state_ps.h;
 
   annotation (
