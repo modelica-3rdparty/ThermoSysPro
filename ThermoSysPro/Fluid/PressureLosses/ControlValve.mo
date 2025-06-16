@@ -1,7 +1,7 @@
-﻿within ThermoSysPro.Fluid.PressureLosses;
+within ThermoSysPro.Fluid.PressureLosses;
 model ControlValve "Control valve"
 extends ThermoSysPro.Fluid.Interfaces.IconColors;
- replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+ replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
   parameter ThermoSysPro.Units.xSI.Cv Cvmax=8005.42
