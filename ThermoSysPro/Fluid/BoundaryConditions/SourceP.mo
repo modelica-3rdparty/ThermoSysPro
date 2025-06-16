@@ -1,10 +1,9 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model SourceP "Multi-fluid source with fixed pressure"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
+
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.AbsolutePressure P0=300000 "Source pressure";
   parameter Units.SI.Temperature T0=290
@@ -19,32 +18,13 @@ model SourceP "Multi-fluid source with fixed pressure"
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
-  parameter ThermoSysPro.Units.SI.MassFraction Xco2=0.01 "CO2 mass fraction"
-    annotation (Evaluate=true, Dialog(
-      enable=(ftype == FluidType.FlueGases),
+  parameter Medium.ExtraProperty SubC0[Medium.nC](quantity=Medium.extraPropertiesNames) = fill(0,Medium.nC) "Source trace substances" annotation (Evaluate=true, Dialog(
       tab="Fluid",
-      group="Composition values (active for flue gases only)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xh2o=if ftype == FluidType.FlueGases then 0.05 else 0 "H2O mass fraction"
-    annotation (Evaluate=true, Dialog(
-      enable=(ftype == FluidType.FlueGases),
+      group="Medium"));
+  parameter Medium.ExtraProperty X0[Medium.nX]= Medium.X_default "Source mass fraction" annotation (Dialog(
       tab="Fluid",
-      group="Composition values (active for flue gases only)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xo2=0.22 "O2 mass fraction"
-    annotation (Evaluate=true, Dialog(
-      enable=(ftype == FluidType.FlueGases),
-      tab="Fluid",
-      group="Composition values (active for flue gases only)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xso2=0 "SO2 mass fraction"
-    annotation (Evaluate=true, Dialog(
-      enable=(ftype == FluidType.FlueGases),
-      tab="Fluid",
-      group="Composition values (active for flue gases only)"));
-
-protected
-  parameter Boolean flue_gases=(ftype == FluidType.FlueGases) "Flue gases";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
+      group="Medium"));
 
 public
   Units.SI.MassFlowRate Q "Fluid mass flow rate";
@@ -53,12 +33,12 @@ public
   Units.SI.Temperature T(start=300) "Fluid temperature";
 
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal IPressure
-    "Fixed pressure"
-    annotation (Placement(transformation(extent={{-60,-10},{-40,10}}, rotation=
-            0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C annotation (Placement(
-        transformation(extent={{90,-10},{110,10}}, rotation=0)));
-  InstrumentationAndControl.Connectors.InputReal              ISpecificEnthalpyOrTemperature
+    "Fixed pressure" annotation (Placement(transformation(extent={{-60,-10},{-40,
+            10}}, rotation=0)));
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C(redeclare package
+      Medium = Medium) annotation (Placement(transformation(extent={{90,-10},{110,
+            10}}, rotation=0)));
+  InstrumentationAndControl.Connectors.InputReal ISpecificEnthalpyOrTemperature
     "Fixed specific enthalpy or temperature according to option_temperature"
     annotation (Placement(transformation(
         origin={0,-50},
@@ -73,19 +53,10 @@ equation
   C.diff_res_1 = 0;
   C.diff_on_1 = diffusion;
 
-  C.ftype = ftype;
+  C.SubC=SubC0;
 
-  if flue_gases then
-    C.Xco2 = Xco2;
-    C.Xh2o = Xh2o;
-    C.Xo2 = Xo2;
-    C.Xso2 = Xso2;
-  else
-    C.Xco2 = 0;
-    C.Xh2o = 0;
-    C.Xo2 = 0;
-    C.Xso2 = 0;
-  end if;
+  C.Xi = X0[1:Medium.nXi];
+
 
   if (cardinality(IPressure) == 0) then
     IPressure.signal = P0;
@@ -104,10 +75,10 @@ equation
 
   if option_temperature then
     T = ISpecificEnthalpyOrTemperature.signal;
-    h = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(P, T, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    h = Medium.specificEnthalpy_pTX(p=P, T=T, X=X0);
   else
     h = ISpecificEnthalpyOrTemperature.signal;
-    T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+    T = Medium.temperature_phX(p=P, h=h, X=X0);
   end if;
 
   /* Flow reversal */
