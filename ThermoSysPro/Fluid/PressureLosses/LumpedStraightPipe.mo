@@ -1,7 +1,10 @@
 within ThermoSysPro.Fluid.PressureLosses;
 model LumpedStraightPipe "Lumped straight pipe (circular duct)"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+
+
+
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
   parameter Units.SI.Length L=10. "Pipe length";
@@ -19,7 +22,7 @@ model LumpedStraightPipe "Lumped straight pipe (circular duct)"
     "true: momentum balance equation with inertia - false: without inertia";
   parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
+  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
 
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
@@ -47,13 +50,15 @@ public
   Units.SI.SpecificHeatCapacity cp(start=4200) "Fluid specific heat capacity";
   Units.SI.ThermalConductivity k(start=0.05) "Fluid thermal conductivity";
   Units.SI.MassFlowRate gamma_diff(start=1.e-4) "Diffusion conductance";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
+
+
 
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1 annotation (Placement(
+  Medium.ThermodynamicState state;
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
 initial equation
   if inertia then
@@ -74,18 +79,15 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + 1/gamma_diff;
   C1.diff_res_2 = C2.diff_res_2 + 1/gamma_diff;
 
-  C1.ftype = C2.ftype;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  C1.Xi = C2.Xi;
+  C1.SubC = C2.SubC;
+  X = C1.Xi;
 
   Q = C1.Q;
   h = C1.h;
   deltaP = C1.P - C2.P;
 
-  ftype = C1.ftype;
 
   /* Diffusion resistance */
   gamma_diff = A*k/cp/L;
@@ -118,16 +120,19 @@ equation
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
+  state=Medium.setState_phX(p=Pm, h=h, X=X, region=mode);
+
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+    rho = state.d;
   end if;
 
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
-  mu = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
-  k =  ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o,C1.Xo2, C1.Xso2);
-  cp = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+
+  T = state.T;
+  mu = Medium.dynamicViscosity(state);
+  k = Medium.thermalConductivity(state);
+  cp = Medium.specificHeatCapacityCp(state);
 
   annotation (
     Diagram(coordinateSystem(
