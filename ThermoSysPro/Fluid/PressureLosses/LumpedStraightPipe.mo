@@ -114,6 +114,8 @@ equation
 
   state=Medium.setState_phX(p=Pm, h=h, X=X);
 
+  state=Medium.setState_phX(p=Pm, h=h, X=X, region=mode);
+
   if (p_rho > 0) then
     rho = p_rho;
   else
