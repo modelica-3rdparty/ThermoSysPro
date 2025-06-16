@@ -10,7 +10,6 @@ public
   Units.SI.MassFlowRate Q "Fluid mass flow rate";
   Units.SI.AbsolutePressure P "Fluid pressure";
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
-  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
@@ -41,8 +40,6 @@ equation
   C1.diff_res_2 = C2.diff_res_2;
 
   C1.Xi = C2.Xi;
-
-  X = C1.Xi;
 
   C1.SubC = C2.SubC;
 
