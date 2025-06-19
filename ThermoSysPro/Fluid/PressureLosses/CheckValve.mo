@@ -1,7 +1,6 @@
-within ThermoSysPro.Fluid.PressureLosses;
+within ;
 model CheckValve "Check valve"
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter ThermoSysPro.Units.SI.PressureDifference dPOuvert=10
     "Pressure difference when the valve opens";
@@ -9,34 +8,34 @@ model CheckValve "Check valve"
     "Pressure difference when the valve closes";
   parameter ThermoSysPro.Units.xSI.PressureLossCoefficient k=1000
     "Pressure loss coefficient";
-  parameter Units.SI.MassFlowRate Qmin=1.e-6
+  parameter ThermoSysPro.Units.SI.MassFlowRate Qmin=1.e-6
     "Mass flow when the valve is closed";
-  parameter Units.SI.MassFlowRate gamma_diff=1e-4
+  parameter ThermoSysPro.Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
-  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
+  parameter ThermoSysPro.Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Real eps=1.e-3 "Small number for pressure loss equation";
 
 public
   Boolean ouvert(start=true, fixed=true) "Valve state";
   discrete Boolean touvert(start=false, fixed=true);
   discrete Boolean tferme(start=false, fixed=true);
-  Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
+  ThermoSysPro.Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
   ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
-  Units.SI.Density rho(start=998) "Fluid density";
-  Units.SI.Temperature T(start=290) "Fluid temperature";
-  Units.SI.AbsolutePressure Pm(start=1.e5) "Fluid average pressure";
-  Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
+  ThermoSysPro.Units.SI.Density rho(start=998) "Fluid density";
+  ThermoSysPro.Units.SI.Temperature T(start=290) "Fluid temperature";
+  ThermoSysPro.Units.SI.AbsolutePressure Pm(start=1.e5)
+    "Fluid average pressure";
+  ThermoSysPro.Units.SI.SpecificEnthalpy h(start=100000)
+    "Fluid specific enthalpy";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1 annotation (Placement(
+
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-120,-10},{-100,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{100,-10},{120,10}}, rotation=0)));
 equation
 
@@ -52,18 +51,16 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
   C1.diff_res_2 = C2.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
-  C1.ftype = C2.ftype;
+  C1.Xi = C2.Xi;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  X = C1.Xi;
+
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   h = C1.h;
   deltaP = C1.P - C2.P;
-
-  ftype = C1.ftype;
 
   /* Pressure loss */
   if ouvert then
@@ -82,12 +79,12 @@ equation
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+  T = Medium.temperature_phX(p=Pm, h=h, X=X);
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+    rho = Medium.density_phX(p=Pm, h=h, X=X);
   end if;
   annotation (
     Diagram(coordinateSystem(
@@ -136,5 +133,6 @@ equation
 <li>Daniel Bouskela </li>
 </ul>
 </html>"),
-    DymolaStoredErrors);
+    DymolaStoredErrors,
+    uses(ThermoSysPro(version="5.0")));
 end CheckValve;

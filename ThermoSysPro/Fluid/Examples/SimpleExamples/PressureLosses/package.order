@@ -7,3 +7,6 @@ TestSingularPressureLoss_Traces_FlueGases
 TestControlValve
 TestControlValve_Traces
 TestControlValve_Traces_FlueGases
+TestCheckValve_FlueGases
+TestCheckValve_Traces
+TestCheckValve
