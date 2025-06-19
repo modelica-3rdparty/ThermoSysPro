@@ -1,39 +1,36 @@
-﻿within ThermoSysPro.Fluid.PressureLosses;
+﻿within ;
 model Diaphragm "Diaphragm"
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Real Ouv=0.5 "Diaphragm aperture";
-  parameter Units.SI.Diameter D=0.2 "Diaphragm diameter";
-  parameter Units.SI.MassFlowRate gamma_diff=1e-4
+  parameter ThermoSysPro.Units.SI.Diameter D=0.2 "Diaphragm diameter";
+  parameter ThermoSysPro.Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
-  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
+  parameter ThermoSysPro.Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
   constant Real pi=Modelica.Constants.pi "pi";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Real eps=1.e-3 "Small number for pressure loss equation";
 
 public
   Real khi "Hydraulic pressure loss coefficient";
   ThermoSysPro.Units.SI.PressureDifference deltaP "Pressure loss";
-  Units.SI.MassFlowRate Q "Mass flow rate";
-  Units.SI.ReynoldsNumber Re "Reynolds number";
-  Units.SI.ReynoldsNumber Relim "Limit Reynolds number";
-  Units.SI.Density rho "Fluid density";
-  Units.SI.DynamicViscosity mu "Fluid dynamic viscosity";
-  Units.SI.Temperature T "Fluid temperature";
-  Units.SI.AbsolutePressure Pm "Fluid average pressure";
-  Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
+  ThermoSysPro.Units.SI.MassFlowRate Q "Mass flow rate";
+  ThermoSysPro.Units.SI.ReynoldsNumber Re "Reynolds number";
+  ThermoSysPro.Units.SI.ReynoldsNumber Relim "Limit Reynolds number";
+  ThermoSysPro.Units.SI.Density rho "Fluid density";
+  ThermoSysPro.Units.SI.DynamicViscosity mu "Fluid dynamic viscosity";
+  ThermoSysPro.Units.SI.Temperature T "Fluid temperature";
+  ThermoSysPro.Units.SI.AbsolutePressure Pm "Fluid average pressure";
+  ThermoSysPro.Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
+  Medium.ThermodynamicState state;
 
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
 equation
 
@@ -49,18 +46,16 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
   C1.diff_res_2 = C2.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
-  C1.ftype = C2.ftype;
+  C1.Xi = C2.Xi;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  X = C1.Xi;
+
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   h = C1.h;
   C1.P - C2.P = deltaP;
-
-  ftype = C1.ftype;
 
   /* Pressure loss */
   deltaP = 8*khi*ThermoSysPro.Functions.ThermoSquare(Q, eps)/(pi^2*D^4*rho);
@@ -77,15 +72,16 @@ equation
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+  T = Medium.temperature_phX(p=Pm, h=h, X=X);
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+    rho = Medium.density_phX(p=Pm, h=h, X=X);
   end if;
 
-  mu = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+  state=Medium.setState_phX(p=Pm, h=h, X=X);
+  mu = Medium.dynamicViscosity(state);
   annotation (
     Diagram(coordinateSystem(
         preserveAspectRatio=false,
@@ -142,5 +138,6 @@ equation
 <ul>
 <li>Daniel Bouskela </li>
 </ul>
-</html>"));
+</html>"),
+    uses(ThermoSysPro(version="5.0"), Modelica(version="4.0.0")));
 end Diaphragm;
