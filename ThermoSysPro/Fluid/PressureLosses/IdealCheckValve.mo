@@ -1,27 +1,28 @@
-within ThermoSysPro.Fluid.PressureLosses;
+within ;
 model IdealCheckValve "Ideal check valve"
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter ThermoSysPro.Units.SI.PressureDifference dPOuvert=0.01
     "Pressure difference when the valve opens";
-  parameter Units.SI.MassFlowRate Qmin=1.e-6
+  parameter ThermoSysPro.Units.SI.MassFlowRate Qmin=1.e-6
     "Mass flow trhough the valve when the valve is closed";
-  parameter Units.SI.MassFlowRate gamma_diff=1e-4
+  parameter ThermoSysPro.Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
 
 public
   Boolean ouvert(start=true, fixed=true) "Valve state";
   discrete Boolean touvert(start=false, fixed=true);
   discrete Boolean tferme(start=false, fixed=true);
-  Units.SI.MassFlowRate Q "Mass flow rate";
-  Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
+  ThermoSysPro.Units.SI.MassFlowRate Q "Mass flow rate";
+  ThermoSysPro.Units.SI.SpecificEnthalpy h(start=100000)
+    "Fluid specific enthalpy";
   ThermoSysPro.Units.SI.PressureDifference deltaP
     "Pressure difference between the inlet and the outlet";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
 equation
 
@@ -37,12 +38,12 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
   C1.diff_res_2 = C2.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
-  C1.ftype = C2.ftype;
+  C1.Xi = C2.Xi;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  X = C1.Xi;
+
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   h = C1.h;
@@ -112,5 +113,6 @@ equation
 <li>Daniel Bouskela</li>
 <li>Baligh El Hefni </li>
 </ul>
-</html>"));
+</html>"),
+    uses(ThermoSysPro(version="5.0")));
 end IdealCheckValve;
