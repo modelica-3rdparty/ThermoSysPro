@@ -138,6 +138,5 @@ equation
 <ul>
 <li>Daniel Bouskela </li>
 </ul>
-</html>"),
-    uses(ThermoSysPro(version="5.0"), Modelica(version="4.0.0")));
+</html>"));
 end Diaphragm;
