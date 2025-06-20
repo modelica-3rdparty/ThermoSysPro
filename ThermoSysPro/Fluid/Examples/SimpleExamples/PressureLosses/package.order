@@ -22,3 +22,6 @@ TestBend_Traces
 TestSwitchValve
 TestSwitchValve_FlueGases
 TestSwitchValve_Traces
+TestIdealSwitchValve
+TestIdealSwitchValve_FlueGases
+TestIdealSwitchValve_Traces
