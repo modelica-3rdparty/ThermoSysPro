@@ -3,7 +3,7 @@ model SinkPQ "MultiFluids sink with fixed pressure and mass flow rate"
 
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium  "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid",
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium  "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid",
         group="Medium"));
   parameter Units.SI.AbsolutePressure P0=100000  "Fluid pressure (active if IPressure connector is not connected)";
   parameter Units.SI.MassFlowRate Q0=100  "Mass flow (active if IMassFlow connector is not connected)";
