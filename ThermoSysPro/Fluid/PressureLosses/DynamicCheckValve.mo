@@ -1,56 +1,56 @@
-within ;
+within ThermoSysPro.Fluid.PressureLosses;
 model DynamicCheckValve "Dynamic check valve"
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax=8005.42 "Maximum CV";
+  parameter Units.xSI.Cv Cvmax=8005.42 "Maximum CV";
   parameter Real caract[:, 2]=[0, 0; 1, Cvmax]
     "Position vs. Cv characteristics (active if mode_caract=1)";
-  parameter ThermoSysPro.Units.SI.MomentOfInertia J=1 "Flap moment of inertia";
+  parameter Units.SI.MomentOfInertia J=1 "Flap moment of inertia";
   parameter Real Kf1=0 "Flap friction law coefficient #1";
   parameter Real Kf2=100 "Flap friction law coefficient #2";
   parameter Real n=5 "Flap friction law exponent";
-  parameter ThermoSysPro.Units.SI.Mass m=1 "Flap mass";
-  parameter ThermoSysPro.Units.SI.Area A=1 "Flap hydraulic area";
+  parameter Units.SI.Mass m=1 "Flap mass";
+  parameter Units.SI.Area A=1 "Flap hydraulic area";
   parameter Integer mode_caract=0 "0:linear characteristics - 1:characteristics is given by caract[]" annotation(Evaluate=true);
   parameter Integer option_interpolation=1 "1: linear interpolation - 2: spline interpolation (active if mode_caract=1)" annotation(Evaluate=true, Dialog(enable=(mode_caract == 1)));
   parameter Boolean mech_steady_state=true "true: start from mechanical steady state - false: start from 0";
   parameter Real Ouv0=0 "Initial valve position, between 0 and 1. 0:valve closed - 1: valve open (active if mech_steady_state=false)" annotation(Evaluate=true, Dialog(enable=not mech_steady_state));
-  parameter ThermoSysPro.Units.SI.MassFlowRate gamma_diff=1e-4
+  parameter Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
-  parameter ThermoSysPro.Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
+  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
 
 protected
   constant Real pi=Modelica.Constants.pi "pi";
-  parameter ThermoSysPro.Units.SI.Acceleration g=Modelica.Constants.g_n
+  parameter Units.SI.Acceleration g=Modelica.Constants.g_n
     "Gravity constant";
   parameter Real eps=1.e-3 "Small number for pressure loss equation";
-  parameter ThermoSysPro.Units.SI.Radius r=sqrt(A/pi) "Flap radius";
-  parameter ThermoSysPro.Units.SI.Angle theta_min=0
+  parameter Units.SI.Radius r=sqrt(A/pi) "Flap radius";
+  parameter Units.SI.Angle theta_min=0
     "Minimum flap aperture angle";
-  parameter ThermoSysPro.Units.SI.Angle theta_max=pi/2
+  parameter Units.SI.Angle theta_max=pi/2
     "Maximum flap aperture angle";
-  parameter ThermoSysPro.Units.SI.Angle theta_m=(theta_min + theta_max)/2;
+  parameter Units.SI.Angle theta_m=(theta_min + theta_max)/2;
 
 public
   Boolean libre(start=true)
     "Indicator whether the flap is free to move in both directions";
-  ThermoSysPro.Units.SI.Torque Cp "Gravity torque";
-  ThermoSysPro.Units.SI.Torque Cf "Friction torque";
-  ThermoSysPro.Units.SI.Torque Ch "Hydraulic torque";
-  ThermoSysPro.Units.SI.Torque Ct "Total torque";
-  ThermoSysPro.Units.SI.Angle theta(start=theta_m) "Flap aperture angle";
-  ThermoSysPro.Units.SI.AngularVelocity omega "Flap angular speed";
-  ThermoSysPro.Units.SI.AngularAcceleration a "Flap angular acceleration";
+  Units.SI.Torque Cp "Gravity torque";
+  Units.SI.Torque Cf "Friction torque";
+  Units.SI.Torque Ch "Hydraulic torque";
+  Units.SI.Torque Ct "Total torque";
+  Units.SI.Angle theta(start=theta_m) "Flap aperture angle";
+  Units.SI.AngularVelocity omega "Flap angular speed";
+  Units.SI.AngularAcceleration a "Flap angular acceleration";
   Real Ouv "Valve position";
-  ThermoSysPro.Units.xSI.Cv Cv(start=Cvmax) "Cv";
-  ThermoSysPro.Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
-  ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
-  ThermoSysPro.Units.SI.Density rho(start=998) "Fluid density";
-  ThermoSysPro.Units.SI.Temperature T(start=290) "Fluid temperature";
-  ThermoSysPro.Units.SI.AbsolutePressure Pm(start=1.e5)
+  Units.xSI.Cv Cv(start=Cvmax) "Cv";
+  Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
+  Units.SI.PressureDifference deltaP "Singular pressure loss";
+  Units.SI.Density rho(start=998) "Fluid density";
+  Units.SI.Temperature T(start=290) "Fluid temperature";
+  Units.SI.AbsolutePressure Pm(start=1.e5)
     "Fluid average pressrue";
-  ThermoSysPro.Units.SI.SpecificEnthalpy h(start=100000)
+  Units.SI.SpecificEnthalpy h(start=100000)
     "Fluid specific enthalpy";
   Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
@@ -86,7 +86,6 @@ equation
   C1.Xi = C2.Xi;
 
   X = C1.Xi;
-
 
   C1.SubC = C2.SubC;
 
@@ -198,6 +197,5 @@ equation
 <ul>
 <li>Daniel Bouskela </li>
 </ul>
-</html>"),
-    uses(ThermoSysPro(version="5.0"), Modelica(version="4.0.0")));
+</html>"));
 end DynamicCheckValve;
