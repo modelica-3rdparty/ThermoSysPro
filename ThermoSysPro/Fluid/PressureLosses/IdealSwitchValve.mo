@@ -1,7 +1,8 @@
 within ThermoSysPro.Fluid.PressureLosses;
 model IdealSwitchValve "Ideal switch valve"
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.MassFlowRate Qmin=1.e-6
     "Mass flow when the valve is closed";
@@ -10,20 +11,22 @@ model IdealSwitchValve "Ideal switch valve"
 
 public
   Units.SI.MassFlowRate Q "Mass flow rate";
-  Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
-  ThermoSysPro.Units.SI.PressureDifference deltaP
+  Units.SI.SpecificEnthalpy h(start=100000)
+    "Fluid specific enthalpy";
+  Units.SI.PressureDifference deltaP
     "Pressure difference between the inlet and the outlet";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.InputLogical Ouv
     annotation (Placement(transformation(
         origin={0,70},
         extent={{-10,-10},{10,10}},
         rotation=270)));
-  Interfaces.Connectors.FluidInlet C1 annotation (Placement(transformation(
-          extent={{-110,-70},{-90,-50}}, rotation=0), iconTransformation(extent=
-           {{-110,-70},{-90,-50}})));
-  Interfaces.Connectors.FluidOutlet C2 annotation (Placement(transformation(
-          extent={{90,-70},{110,-50}}, rotation=0)));
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
+        transformation(extent={{-110,-70},{-90,-50}}, rotation=0),
+        iconTransformation(extent={{-110,-70},{-90,-50}})));
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
+        transformation(extent={{90,-70},{110,-50}}, rotation=0)));
 equation
 
   C1.Q = C2.Q;
@@ -38,12 +41,11 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
   C1.diff_res_2 = C2.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
-  C1.ftype = C2.ftype;
+  C1.Xi = C2.Xi;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  X = C1.Xi;
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   h = C1.h;

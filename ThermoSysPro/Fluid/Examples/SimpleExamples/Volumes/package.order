@@ -4,6 +4,12 @@ TestVolumeC_Traces
 TestVolumeA
 TestVolumeA_FlueGases
 TestVolumeA_Traces
+TestVolumeD
+TestVolumeD_FlueGases
+TestVolumeD_Traces
+TestVolumeB
+TestVolumeB_FlueGases
+TestVolumeB_Traces
 TestVolumeI
 TestVolumeI_FlueGases
 TestVolumeI_Traces
