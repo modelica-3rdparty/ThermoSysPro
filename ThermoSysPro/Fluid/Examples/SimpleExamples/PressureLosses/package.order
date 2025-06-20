@@ -19,3 +19,6 @@ TestDiaphragm_Traces
 TestBend
 TestBend_FlueGases
 TestBend_Traces
+TestSwitchValve
+TestSwitchValve_FlueGases
+TestSwitchValve_Traces
