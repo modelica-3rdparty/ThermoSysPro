@@ -1,12 +1,12 @@
-﻿within ;
+within ThermoSysPro.Fluid.PressureLosses;
 model Diaphragm "Diaphragm"
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Real Ouv=0.5 "Diaphragm aperture";
-  parameter ThermoSysPro.Units.SI.Diameter D=0.2 "Diaphragm diameter";
-  parameter ThermoSysPro.Units.SI.MassFlowRate gamma_diff=1e-4
+  parameter Units.SI.Diameter D=0.2 "Diaphragm diameter";
+  parameter Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
-  parameter ThermoSysPro.Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
+  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
 
 protected
@@ -15,15 +15,15 @@ protected
 
 public
   Real khi "Hydraulic pressure loss coefficient";
-  ThermoSysPro.Units.SI.PressureDifference deltaP "Pressure loss";
-  ThermoSysPro.Units.SI.MassFlowRate Q "Mass flow rate";
-  ThermoSysPro.Units.SI.ReynoldsNumber Re "Reynolds number";
-  ThermoSysPro.Units.SI.ReynoldsNumber Relim "Limit Reynolds number";
-  ThermoSysPro.Units.SI.Density rho "Fluid density";
-  ThermoSysPro.Units.SI.DynamicViscosity mu "Fluid dynamic viscosity";
-  ThermoSysPro.Units.SI.Temperature T "Fluid temperature";
-  ThermoSysPro.Units.SI.AbsolutePressure Pm "Fluid average pressure";
-  ThermoSysPro.Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
+  Units.SI.PressureDifference deltaP "Pressure loss";
+  Units.SI.MassFlowRate Q "Mass flow rate";
+  Units.SI.ReynoldsNumber Re "Reynolds number";
+  Units.SI.ReynoldsNumber Relim "Limit Reynolds number";
+  Units.SI.Density rho "Fluid density";
+  Units.SI.DynamicViscosity mu "Fluid dynamic viscosity";
+  Units.SI.Temperature T "Fluid temperature";
+  Units.SI.AbsolutePressure Pm "Fluid average pressure";
+  Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
   Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
   Medium.ThermodynamicState state;
 
@@ -72,12 +72,12 @@ equation
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
-  T = Medium.temperature_phX(p=Pm, h=h, X=X);
+  T = Medium.temperature(state);
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = Medium.density_phX(p=Pm, h=h, X=X);
+    rho = Medium.density(state);
   end if;
 
   state=Medium.setState_phX(p=Pm, h=h, X=X);
