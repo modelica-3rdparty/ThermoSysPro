@@ -29,7 +29,7 @@ model VolumeI "Mixing volume with 4 inlets and 4 outlets"
   parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
   parameter Boolean dynamic_composition_balance=false
-    "<html>true: dynamic fluid composition balance equation <br>false: static fluid composition balance equation (active for flue gases)</html>" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.FlueGases), tab="Fluid", group="Fluid properties"));
+    "<html>true: dynamic fluid composition balance equation <br>false: static fluid composition balance equation (active for flue gases)</html>" annotation(Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
   parameter Medium.ExtraProperty X0[Medium.nX]=Medium.X_default "Initial composition values" annotation (Evaluate=true, Dialog(
       enable=dynamic_composition_balance,
       tab="Fluid",
