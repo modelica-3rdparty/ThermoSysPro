@@ -1,18 +1,18 @@
-within ;
+within ThermoSysPro.Fluid.PressureLosses;
 model CheckValve "Check valve"
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
-  parameter ThermoSysPro.Units.SI.PressureDifference dPOuvert=10
+  parameter Units.SI.PressureDifference dPOuvert=10
     "Pressure difference when the valve opens";
-  parameter ThermoSysPro.Units.SI.PressureDifference dPFerme=0
+  parameter Units.SI.PressureDifference dPFerme=0
     "Pressure difference when the valve closes";
-  parameter ThermoSysPro.Units.xSI.PressureLossCoefficient k=1000
+  parameter Units.xSI.PressureLossCoefficient k=1000
     "Pressure loss coefficient";
-  parameter ThermoSysPro.Units.SI.MassFlowRate Qmin=1.e-6
+  parameter Units.SI.MassFlowRate Qmin=1.e-6
     "Mass flow when the valve is closed";
-  parameter ThermoSysPro.Units.SI.MassFlowRate gamma_diff=1e-4
+  parameter Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
-  parameter ThermoSysPro.Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
+  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
 
 protected
@@ -22,13 +22,13 @@ public
   Boolean ouvert(start=true, fixed=true) "Valve state";
   discrete Boolean touvert(start=false, fixed=true);
   discrete Boolean tferme(start=false, fixed=true);
-  ThermoSysPro.Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
-  ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
-  ThermoSysPro.Units.SI.Density rho(start=998) "Fluid density";
-  ThermoSysPro.Units.SI.Temperature T(start=290) "Fluid temperature";
-  ThermoSysPro.Units.SI.AbsolutePressure Pm(start=1.e5)
+  Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
+  Units.SI.PressureDifference deltaP "Singular pressure loss";
+  Units.SI.Density rho(start=998) "Fluid density";
+  Units.SI.Temperature T(start=290) "Fluid temperature";
+  Units.SI.AbsolutePressure Pm(start=1.e5)
     "Fluid average pressure";
-  ThermoSysPro.Units.SI.SpecificEnthalpy h(start=100000)
+  Units.SI.SpecificEnthalpy h(start=100000)
     "Fluid specific enthalpy";
   Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
@@ -133,6 +133,5 @@ equation
 <li>Daniel Bouskela </li>
 </ul>
 </html>"),
-    DymolaStoredErrors,
-    uses(ThermoSysPro(version="5.0")));
+    DymolaStoredErrors);
 end CheckValve;

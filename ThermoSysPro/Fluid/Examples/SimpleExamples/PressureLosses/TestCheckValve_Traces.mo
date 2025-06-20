@@ -1,4 +1,4 @@
-within ;
+within ThermoSysPro.Fluid.Examples.SimpleExamples.PressureLosses;
 model TestCheckValve_Traces
   extends ThermoSysPro.UsersGuide.Icons.Example;
 
@@ -6,7 +6,7 @@ model TestCheckValve_Traces
       extraPropertiesNames={"Trace1"},
       C_nominal={0.1},
       C_default={0.2});
-  CheckValve                                             checkValve(
+  ThermoSysPro.Fluid.PressureLosses.CheckValve           checkValve(
                                                               redeclare
       replaceable package Medium =
                Medium)
@@ -25,6 +25,5 @@ equation
   connect(checkValve.C1, sourcePQ.C)
     annotation (Line(points={{-11,0},{-30,0}}, color={0,0,0}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
-        coordinateSystem(preserveAspectRatio=false)),
-    uses(ThermoSysPro(version="5.0")));
+        coordinateSystem(preserveAspectRatio=false)));
 end TestCheckValve_Traces;
