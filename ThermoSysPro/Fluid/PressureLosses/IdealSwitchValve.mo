@@ -1,17 +1,19 @@
-within ;
+within ThermoSysPro.Fluid.PressureLosses;
 model IdealSwitchValve "Ideal switch valve"
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
-  parameter ThermoSysPro.Units.SI.MassFlowRate Qmin=1.e-6
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+
+  parameter Units.SI.MassFlowRate Qmin=1.e-6
     "Mass flow when the valve is closed";
-  parameter ThermoSysPro.Units.SI.MassFlowRate gamma_diff=1e-4
+  parameter Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
 
 public
-  ThermoSysPro.Units.SI.MassFlowRate Q "Mass flow rate";
-  ThermoSysPro.Units.SI.SpecificEnthalpy h(start=100000)
+  Units.SI.MassFlowRate Q "Mass flow rate";
+  Units.SI.SpecificEnthalpy h(start=100000)
     "Fluid specific enthalpy";
-  ThermoSysPro.Units.SI.PressureDifference deltaP
+  Units.SI.PressureDifference deltaP
     "Pressure difference between the inlet and the outlet";
   Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 public
@@ -42,7 +44,6 @@ equation
   C1.Xi = C2.Xi;
 
   X = C1.Xi;
-
 
   C1.SubC = C2.SubC;
 
@@ -113,6 +114,5 @@ equation
 <ul>
 <li>Daniel Bouskela </li>
 </ul>
-</html>"),
-    uses(ThermoSysPro(version="5.0")));
+</html>"));
 end IdealSwitchValve;
