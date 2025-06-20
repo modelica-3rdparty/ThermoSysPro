@@ -1,15 +1,17 @@
-﻿within ThermoSysPro.Fluid.PressureLosses;
+within ThermoSysPro.Fluid.PressureLosses;
 model DynamicReliefValve "Dynamic relief valve"
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
-  parameter Units.SI.AbsolutePressure Popen=3e5 "Pressure that opens the valve";
+  parameter Units.SI.AbsolutePressure Popen=3e5
+    "Pressure that opens the valve";
   parameter Units.SI.AbsolutePressure Pout=1e5
     "Pressure at the valve outlet (for sizing)";
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax=8005.42 "Maximum Cv";
+  parameter Units.xSI.Cv Cvmax=8005.42 "Maximum Cv";
   parameter Real caract[:, 2]=[0, 0; 1, Cvmax] "Position vs. Cv characteristics (active if mode_caract=1)";
-  parameter Units.SI.Area A1=0.1 "Hydraulic area upstream the clapper";
-  parameter Units.SI.Area A2=0.125 "Hydraulic area downstream the clapper";
+  parameter Units.SI.Area A1=0.1
+    "Hydraulic area upstream the clapper";
+  parameter Units.SI.Area A2=0.125
+    "Hydraulic area downstream the clapper";
   parameter Units.SI.Area clapper_area[:,2]=[0,A1; 0.01,A2; 1,A2]
     "Clapper area as a function of the clapper elevation";
   parameter Real D=1 "Damping";
@@ -29,18 +31,15 @@ model DynamicReliefValve "Dynamic relief valve"
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
   parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
-  constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
+  constant Units.SI.Acceleration g=Modelica.Constants.g_n
+    "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
   constant Units.SI.Density rho60F=998.98 "Water density at 60°F";
   constant Real K=1.733e12 "Valve constant";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Real eps=1.e-0 "Small number for pressure loss equation";
   parameter Units.SI.Length z_min=0 "Minimum clapper elevation";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
 
 public
   Boolean clapper_is_free(start=true) "true if clapper is free to move in both directions, false otherwise";
@@ -56,22 +55,25 @@ public
   Real Ouv "Valve position";
   Units.SI.Area A "Hydraulic area upstream the clapper";
   Units.SI.Force Fr_min "Spring force when valve is closed";
-  ThermoSysPro.Units.xSI.Cv Cv "Cv";
+  Units.xSI.Cv Cv "Cv";
   Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
-  ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
+  Units.SI.PressureDifference deltaP "Singular pressure loss";
   Units.SI.Density rho(start=998) "Fluid density";
   Units.SI.Temperature T(start=290) "Fluid temperature";
-  Units.SI.AbsolutePressure Pm(start=1.e5) "Fluid average pressure";
-  Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
+  Units.SI.AbsolutePressure Pm(start=1.e5)
+    "Fluid average pressure";
+  Units.SI.SpecificEnthalpy h(start=100000)
+    "Fluid specific enthalpy";
   Units.SI.AbsolutePressure Pdyn "Dynamic pressure on the clapper";
   Units.SI.Velocity vh "Fluid velocity through the valve";
   Units.SI.Energy Wdyn "Dissipated fluid kinetic energy";
   Real Re=rho*(vh - v)*sqrt(4*A/pi)/ThermoSysPro.Properties.WaterSteam.IF97.DynamicViscosity_rhoT(rho, T) "Clapper Reynolds";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-10,-108},{10,-88}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0),
         iconTransformation(extent={{90,-10},{110,10}})));
 initial equation
@@ -98,18 +100,17 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
   C1.diff_res_2 = C2.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
-  C1.ftype = C2.ftype;
+  C1.Xi = C2.Xi;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  X = C1.Xi;
+
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   h = C1.h;
   deltaP = C1.P - C2.P;
 
-  ftype = C1.ftype;
 
   /* Hydraulic area upstream the clapper. It varies as a function of the valve elevation
   between A1 (valve closed) and A2 (valve open) with a hysteresis */
@@ -174,12 +175,12 @@ equation
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+  T = Medium.temperature_phX(p=Pm, h=h, X=X);
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+    rho = Medium.density_phX(p=Pm, h=h, X=X);
   end if;
   annotation (
     Icon(coordinateSystem(
