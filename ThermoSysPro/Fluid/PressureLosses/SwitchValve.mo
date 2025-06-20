@@ -1,27 +1,29 @@
-within ;
+within ThermoSysPro.Fluid.PressureLosses;
 model SwitchValve "Switch valve"
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
-  parameter ThermoSysPro.Units.xSI.PressureLossCoefficient k=1000
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+
+  parameter Units.xSI.PressureLossCoefficient k=1000
     "Pressure loss coefficient";
-  parameter ThermoSysPro.Units.SI.MassFlowRate Qmin=1.e-6
+  parameter Units.SI.MassFlowRate Qmin=1.e-6
     "Mass flow when the valve is closed";
-  parameter ThermoSysPro.Units.SI.MassFlowRate gamma_diff=1e-4
+  parameter Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
-  parameter ThermoSysPro.Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
+  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
 
 protected
   parameter Real eps=1.e-3 "Small number for pressure loss equation";
 
 public
-  ThermoSysPro.Units.SI.MassFlowRate Q(start=100) "Mass flow rate";
-  ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
-  ThermoSysPro.Units.SI.Density rho(start=998) "Fluid density";
-  ThermoSysPro.Units.SI.Temperature T(start=290) "Fluid temperature";
-  ThermoSysPro.Units.SI.AbsolutePressure Pm(start=1.e5)
+  Units.SI.MassFlowRate Q(start=100) "Mass flow rate";
+  Units.SI.PressureDifference deltaP "Singular pressure loss";
+  Units.SI.Density rho(start=998) "Fluid density";
+  Units.SI.Temperature T(start=290) "Fluid temperature";
+  Units.SI.AbsolutePressure Pm(start=1.e5)
     "Fluid average pressure";
-  ThermoSysPro.Units.SI.SpecificEnthalpy h(start=100000)
+  Units.SI.SpecificEnthalpy h(start=100000)
     "Fluid specific enthalpy";
   Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
@@ -134,6 +136,5 @@ equation
 <ul>
 <li>Daniel Bouskela </li>
 </ul>
-</html>"),
-    uses(ThermoSysPro(version="5.0")));
+</html>"));
 end SwitchValve;
