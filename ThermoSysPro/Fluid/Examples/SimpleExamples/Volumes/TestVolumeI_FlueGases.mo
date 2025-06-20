@@ -1,4 +1,4 @@
-within ;
+within ThermoSysPro.Fluid.Examples.SimpleExamples.Volumes;
 model TestVolumeI_FlueGases
   extends ThermoSysPro.UsersGuide.Icons.Example;
 
@@ -13,7 +13,7 @@ model TestVolumeI_FlueGases
     P0=4500000,
     T0=573.15,
     option_temperature=true)                                                                             annotation (Placement(transformation(extent={{-50,-10},{-30,10}})));
-  VolumeI                            volumeI(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
+  ThermoSysPro.Fluid.Volumes.VolumeI volumeI(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
   ThermoSysPro.Fluid.BoundaryConditions.SourceQ sourceQ(redeclare replaceable
       package Medium =                                                                         Medium,
     T0=573.15,
@@ -21,20 +21,12 @@ model TestVolumeI_FlueGases
             {10,10}},
         rotation=0,
         origin={-40,20})));
-  SinkQ                                      sinkQ(
-    redeclare replaceable package Medium = Medium,
-    T0=573.15,
-    option_temperature=true)                                                                     annotation (Placement(transformation(extent={{22,18},
-            {42,38}})));
 equation
   connect(sourcePQ.C, volumeI.Ce2)
     annotation (Line(points={{-30,0},{-10,0}}, color={0,0,0}));
   connect(sourceQ.C, volumeI.Ce1)
     annotation (Line(points={{-30,20},{-10,20},{-10,8}}, color={0,0,0}));
-  connect(sinkQ.C, volumeI.Cs1)
-    annotation (Line(points={{22,28},{10,28},{10,8}}, color={0,0,0}));
   connect(volumeI.Cs3, sink.C)
     annotation (Line(points={{10,-8},{26,-8}}, color={0,0,0}));
-  annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(coordinateSystem(preserveAspectRatio=false)),
-    uses(ThermoSysPro(version="5.0")));
+  annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(coordinateSystem(preserveAspectRatio=false)));
 end TestVolumeI_FlueGases;
