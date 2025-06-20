@@ -5,17 +5,17 @@ model Bend "Bend"
 
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
-  parameter ThermoSysPro.Units.SI.Diameter D=0.2 "Pipe diameter";
-  parameter ThermoSysPro.Units.SI.Radius R0=0.2 "Pipe radius";
-  parameter ThermoSysPro.Units.nonSI.Angle_deg delta=90 "Pipe angle";
+  parameter Units.SI.Diameter D=0.2 "Pipe diameter";
+  parameter Units.SI.Radius R0=0.2 "Pipe radius";
+  parameter Units.nonSI.Angle_deg delta=90 "Pipe angle";
   parameter Real rugosrel=0 "Pipe roughness";
   parameter Boolean K_A1_Tabule=true
     "true: A1 is computed using linear interpolation - false: A1 is computed using correlation formula";
   parameter Boolean K_B1_Tabule=true
     "true: B1 is computed using linear interpolation - false: B1 is computed using correlation formula";
-  parameter ThermoSysPro.Units.SI.MassFlowRate gamma_diff=1e-4
+  parameter Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
-  parameter ThermoSysPro.Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
+  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
 
 protected
@@ -27,19 +27,19 @@ public
   Real khim "Singular pressure loss coefficient";
   Real khif "Friction pressure loss coefficient";
   Real kdelta "Roughness factor for the singular pressure loss";
-  ThermoSysPro.Units.SI.PressureDifference deltaP "Presure loss";
-  ThermoSysPro.Units.SI.MassFlowRate Q "Mass flow rate";
-  ThermoSysPro.Units.SI.ReynoldsNumber Re "Reynolds number";
-  ThermoSysPro.Units.SI.ReynoldsNumber Relim "Limit Reynolds number";
+  Units.SI.PressureDifference deltaP "Presure loss";
+  Units.SI.MassFlowRate Q "Mass flow rate";
+  Units.SI.ReynoldsNumber Re "Reynolds number";
+  Units.SI.ReynoldsNumber Relim "Limit Reynolds number";
   Real yA1 "Output of table A1";
   Real yB1 "Output of table B1";
   Real yC1 "Output of table C1";
   Real lambda "Friction pressure loss coefficient";
-  ThermoSysPro.Units.SI.Density rho "Fluid density";
-  ThermoSysPro.Units.SI.DynamicViscosity mu "Fluid dynamic viscosity";
-  ThermoSysPro.Units.SI.Temperature T "Fluid temperature";
-  ThermoSysPro.Units.SI.AbsolutePressure Pm "Fluid average pressure";
-  ThermoSysPro.Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
+  Units.SI.Density rho "Fluid density";
+  Units.SI.DynamicViscosity mu "Fluid dynamic viscosity";
+  Units.SI.Temperature T "Fluid temperature";
+  Units.SI.AbsolutePressure Pm "Fluid average pressure";
+  Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
   Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
   Medium.ThermodynamicState state;
 
