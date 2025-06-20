@@ -1,5 +1,7 @@
 within ThermoSysPro.Fluid.PressureLosses;
 model CheckValve "Check valve"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.PressureDifference dPOuvert=10
@@ -32,7 +34,6 @@ public
     "Fluid specific enthalpy";
   Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
-
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-120,-10},{-100,10}}, rotation=0)));
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
@@ -54,7 +55,6 @@ equation
   C1.Xi = C2.Xi;
 
   X = C1.Xi;
-
 
   C1.SubC = C2.SubC;
 
@@ -132,6 +132,5 @@ equation
 <ul>
 <li>Daniel Bouskela </li>
 </ul>
-</html>"),
-    DymolaStoredErrors);
+</html>"));
 end CheckValve;
