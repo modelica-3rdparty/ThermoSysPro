@@ -1,13 +1,13 @@
-within ;
+within ThermoSysPro.Fluid.Machines;
 model StaticCentrifugalPump "Static centrifugal pump"
- replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby
-    ThermoSysPro.Properties.Media.PartialThermoSysProMedium                                                                                  "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby
+    ThermoSysPro.Properties.Media.PartialSubCMedium                                                                                  "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
-  parameter ThermoSysPro.Units.nonSI.AngularVelocity_rpm VRot=1400
+  parameter Units.nonSI.AngularVelocity_rpm VRot=1400
     "Fixed rotational speed (active if fixed_rot_or_power=1 and rpm_or_mpower connector not connected)";
-  parameter ThermoSysPro.Units.SI.Power MPower=0.1e6
+  parameter Units.SI.Power MPower=0.1e6
     "Fixed mechanical power (active if fixed_rot_or_power=2 and rpm_or_mpower connector not connected)";
-  parameter ThermoSysPro.Units.nonSI.AngularVelocity_rpm VRotn=1400
+  parameter Units.nonSI.AngularVelocity_rpm VRotn=1400
     "Nominal rotational speed";
   parameter Real rm=0.85
     "Product of the pump mechanical and electrical efficiencies";
@@ -15,9 +15,9 @@ model StaticCentrifugalPump "Static centrifugal pump"
     "1: fixed rotational speed - 2: fixed mechanical power";
   parameter Boolean adiabatic_compression=false
     "true: compression at constant enthalpy - false: compression with varying enthalpy";
-  parameter ThermoSysPro.Units.SI.MassFlowRate gamma_diff=1e-4
+  parameter Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
-  parameter ThermoSysPro.Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
+  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
 
   parameter Real a1=-88.67
@@ -35,28 +35,28 @@ model StaticCentrifugalPump "Static centrifugal pump"
     "Constant coef. of the pump efficiency characteristics rh = f(vol_flow) (s.u.)";
 
 protected
-  constant ThermoSysPro.Units.SI.Acceleration g=Modelica.Constants.g_n
+  constant Units.SI.Acceleration g=Modelica.Constants.g_n
     "Gravity constant";
   parameter Real eps=1.e-6 "Small number";
   parameter Real rhmin=0.20 "Minimum efficiency to avoid zero crossings";
 
 public
   Real rh "Hydraulic efficiency";
-  ThermoSysPro.Units.SI.Height hn(start=10) "Pump head";
+  Units.SI.Height hn(start=10) "Pump head";
   Real R(start=VRot/VRotn) "Reduced rotational speed";
-  ThermoSysPro.Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
-  ThermoSysPro.Units.SI.VolumeFlowRate Qv(start=0.5) "Volume flow rate";
-  ThermoSysPro.Units.SI.Power Wh "Hydraulic power";
-  ThermoSysPro.Units.SI.Power Wm "Mechanical power";
-  ThermoSysPro.Units.nonSI.AngularVelocity_rpm Vr "Rotational speed";
-  ThermoSysPro.Units.SI.Density rho(start=998) "Fluid density";
-  ThermoSysPro.Units.SI.PressureDifference deltaP
+  Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
+  Units.SI.VolumeFlowRate Qv(start=0.5) "Volume flow rate";
+  Units.SI.Power Wh "Hydraulic power";
+  Units.SI.Power Wm "Mechanical power";
+  Units.nonSI.AngularVelocity_rpm Vr "Rotational speed";
+  Units.SI.Density rho(start=998) "Fluid density";
+  Units.SI.PressureDifference deltaP
     "Pressure variation between the outlet and the inlet";
-  ThermoSysPro.Units.SI.SpecificEnthalpy deltaH
+  Units.SI.SpecificEnthalpy deltaH
     "Specific enthalpy variation between the outlet and the inlet";
-  ThermoSysPro.Units.SI.AbsolutePressure Pm(start=1.e5)
+  Units.SI.AbsolutePressure Pm(start=1.e5)
     "Fluid average pressure";
-  ThermoSysPro.Units.SI.SpecificEnthalpy h(start=100000)
+  Units.SI.SpecificEnthalpy h(start=100000)
     "Fluid average specific enthalpy";
   Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
@@ -186,6 +186,5 @@ equation
 <li>Baligh El Hefni </li>
 </ul>
 </html>"),
-    DymolaStoredErrors,
-    uses(ThermoSysPro(version="5.0"), Modelica(version="4.0.0")));
+    DymolaStoredErrors);
 end StaticCentrifugalPump;
