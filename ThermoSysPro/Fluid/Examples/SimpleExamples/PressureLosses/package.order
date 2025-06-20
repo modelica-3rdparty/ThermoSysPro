@@ -28,3 +28,6 @@ TestIdealSwitchValve_Traces
 TestDynamicCheckValve
 TestDynamicCheckValve_FlueGases
 TestDynamicCheckValve_Traces
+TestCheckValve
+TestCheckValve_FlueGases
+TestCheckValve_Traces
