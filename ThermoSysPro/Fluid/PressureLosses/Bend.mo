@@ -1,6 +1,9 @@
-﻿within ;
+within ThermoSysPro.Fluid.PressureLosses;
 model Bend "Bend"
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter ThermoSysPro.Units.SI.Diameter D=0.2 "Pipe diameter";
   parameter ThermoSysPro.Units.SI.Radius R0=0.2 "Pipe radius";
@@ -130,12 +133,12 @@ equation
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
-  T = Medium.temperature_phX(p=Pm, h=h, X=X);
+  T = Medium.temperature(state);
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = Medium.density_phX(p=Pm, h=h, X=X);
+    rho = Medium.density(state);
   end if;
 
   state=Medium.setState_phX(p=Pm, h=h, X=X);
@@ -222,6 +225,5 @@ equation
 <li>Daniel Bouskela</li>
 <li>Baligh El Hefni </li>
 </ul>
-</html>"),
-    uses(ThermoSysPro(version="5.0"), Modelica(version="4.0.0")));
+</html>"));
 end Bend;
