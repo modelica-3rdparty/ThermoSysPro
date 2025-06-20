@@ -1,7 +1,8 @@
 within ThermoSysPro.Fluid.Machines;
 model StaticCentrifugalPump "Static centrifugal pump"
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby
-    ThermoSysPro.Properties.Media.PartialSubCMedium                                                                                  "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.nonSI.AngularVelocity_rpm VRot=1400
     "Fixed rotational speed (active if fixed_rot_or_power=1 and rpm_or_mpower connector not connected)";
@@ -185,6 +186,5 @@ equation
 <li>Daniel Bouskela</li>
 <li>Baligh El Hefni </li>
 </ul>
-</html>"),
-    DymolaStoredErrors);
+</html>"));
 end StaticCentrifugalPump;
