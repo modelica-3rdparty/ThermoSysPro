@@ -35,8 +35,6 @@ model VolumeI "Mixing volume with 4 inlets and 4 outlets"
       tab="Fluid",
       group="Medium"));
 
-
-
 protected
   constant Boolean isCompressible = Medium.isCompressible;
   parameter Units.SI.MassFlowRate gamma0=1.e-4
@@ -71,22 +69,14 @@ public
   Units.SI.Power Js3 "Thermal power diffusion from outlet s3";
   Units.SI.Power Js4 "Thermal power diffusion from outlet s4";
   Units.SI.Power J "Total thermal power diffusion";
-  Units.SI.MassFlowRate gamma_e1
-    "Diffusion conductance for inlet e1";
-  Units.SI.MassFlowRate gamma_e2
-    "Diffusion conductance for inlet e2";
-  Units.SI.MassFlowRate gamma_e3
-    "Diffusion conductance for inlet e3";
-  Units.SI.MassFlowRate gamma_e4
-    "Diffusion conductance for inlet e4";
-  Units.SI.MassFlowRate gamma_s1
-    "Diffusion conductance for outlet s1";
-  Units.SI.MassFlowRate gamma_s2
-    "Diffusion conductance for outlet s2";
-  Units.SI.MassFlowRate gamma_s3
-    "Diffusion conductance for outlet s3";
-  Units.SI.MassFlowRate gamma_s4
-    "Diffusion conductance for outlet s4";
+  Units.SI.MassFlowRate gamma_e1 "Diffusion conductance for inlet e1";
+  Units.SI.MassFlowRate gamma_e2 "Diffusion conductance for inlet e2";
+  Units.SI.MassFlowRate gamma_e3 "Diffusion conductance for inlet e3";
+  Units.SI.MassFlowRate gamma_e4 "Diffusion conductance for inlet e4";
+  Units.SI.MassFlowRate gamma_s1 "Diffusion conductance for outlet s1";
+  Units.SI.MassFlowRate gamma_s2 "Diffusion conductance for outlet s2";
+  Units.SI.MassFlowRate gamma_s3 "Diffusion conductance for outlet s3";
+  Units.SI.MassFlowRate gamma_s4 "Diffusion conductance for outlet s4";
   Real re1 "Value of r(Q/gamma) for inlet e1";
   Real re2 "Value of r(Q/gamma) for inlet e2";
   Real re3 "Value of r(Q/gamma) for inlet e3";
