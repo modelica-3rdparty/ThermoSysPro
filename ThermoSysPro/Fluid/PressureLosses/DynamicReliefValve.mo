@@ -1,22 +1,22 @@
-﻿within ;
+within ThermoSysPro.Fluid.PressureLosses;
 model DynamicReliefValve "Dynamic relief valve"
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
-  parameter ThermoSysPro.Units.SI.AbsolutePressure Popen=3e5
+  parameter Units.SI.AbsolutePressure Popen=3e5
     "Pressure that opens the valve";
-  parameter ThermoSysPro.Units.SI.AbsolutePressure Pout=1e5
+  parameter Units.SI.AbsolutePressure Pout=1e5
     "Pressure at the valve outlet (for sizing)";
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax=8005.42 "Maximum Cv";
+  parameter Units.xSI.Cv Cvmax=8005.42 "Maximum Cv";
   parameter Real caract[:, 2]=[0, 0; 1, Cvmax] "Position vs. Cv characteristics (active if mode_caract=1)";
-  parameter ThermoSysPro.Units.SI.Area A1=0.1
+  parameter Units.SI.Area A1=0.1
     "Hydraulic area upstream the clapper";
-  parameter ThermoSysPro.Units.SI.Area A2=0.125
+  parameter Units.SI.Area A2=0.125
     "Hydraulic area downstream the clapper";
-  parameter ThermoSysPro.Units.SI.Area clapper_area[:,2]=[0,A1; 0.01,A2; 1,A2]
+  parameter Units.SI.Area clapper_area[:,2]=[0,A1; 0.01,A2; 1,A2]
     "Clapper area as a function of the clapper elevation";
   parameter Real D=1 "Damping";
-  parameter ThermoSysPro.Units.SI.Mass m=1 "Valve mass";
-  parameter ThermoSysPro.Units.SI.Length z_max=0.1 "Maximum clapper elevation";
+  parameter Units.SI.Mass m=1 "Valve mass";
+  parameter Units.SI.Length z_max=0.1 "Maximum clapper elevation";
   parameter Real Ke=62500 "Valve spring stiffness";
   parameter Real Cd=0 "Drag coefficient of the clapper";
   parameter Integer mode_caract=0
@@ -24,49 +24,49 @@ model DynamicReliefValve "Dynamic relief valve"
   parameter Integer option_interpolation=1
     "1: linear interpolation - 2: spline interpolation (active if mode_caract=1)" annotation(Evaluate=true, Dialog(enable=(mode_caract == 1)));
   parameter Boolean mech_steady_state=true "true: start from mechanical steady state - false: start from 0" annotation(Evaluate=true);
-  parameter ThermoSysPro.Units.SI.Length z0=0
+  parameter Units.SI.Length z0=0
     "Initial clapper elevation, between 0 and z_max. 0:valve closed - z_max: valve fully open (active if mech_steady_state=false)"
     annotation (Evaluate=true, Dialog(enable=not mech_steady_state));
-  parameter ThermoSysPro.Units.SI.MassFlowRate gamma_diff=1e-4
+  parameter Units.SI.MassFlowRate gamma_diff=1e-4
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
-  parameter ThermoSysPro.Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
+  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
 
 protected
-  constant ThermoSysPro.Units.SI.Acceleration g=Modelica.Constants.g_n
+  constant Units.SI.Acceleration g=Modelica.Constants.g_n
     "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
-  constant ThermoSysPro.Units.SI.Density rho60F=998.98 "Water density at 60°F";
+  constant Units.SI.Density rho60F=998.98 "Water density at 60°F";
   constant Real K=1.733e12 "Valve constant";
   parameter Real eps=1.e-0 "Small number for pressure loss equation";
-  parameter ThermoSysPro.Units.SI.Length z_min=0 "Minimum clapper elevation";
+  parameter Units.SI.Length z_min=0 "Minimum clapper elevation";
 
 public
   Boolean clapper_is_free(start=true) "true if clapper is free to move in both directions, false otherwise";
-  ThermoSysPro.Units.SI.Force Fp "Gravity force";
-  ThermoSysPro.Units.SI.Force Fr "Spring force";
-  ThermoSysPro.Units.SI.Force Fd "Damping force";
-  ThermoSysPro.Units.SI.Force Fh "Hydraulic force";
-  ThermoSysPro.Units.SI.Force Fdyn "Dynamic pressure force";
-  ThermoSysPro.Units.SI.Force Ft "Total force";
-  ThermoSysPro.Units.SI.Length z(start=z_min) "Clapper elevation";
-  ThermoSysPro.Units.SI.Velocity v=der(z) "Clapper velocity";
-  ThermoSysPro.Units.SI.Acceleration a=der(v) "Clapper acceleration";
+  Units.SI.Force Fp "Gravity force";
+  Units.SI.Force Fr "Spring force";
+  Units.SI.Force Fd "Damping force";
+  Units.SI.Force Fh "Hydraulic force";
+  Units.SI.Force Fdyn "Dynamic pressure force";
+  Units.SI.Force Ft "Total force";
+  Units.SI.Length z(start=z_min) "Clapper elevation";
+  Units.SI.Velocity v=der(z) "Clapper velocity";
+  Units.SI.Acceleration a=der(v) "Clapper acceleration";
   Real Ouv "Valve position";
-  ThermoSysPro.Units.SI.Area A "Hydraulic area upstream the clapper";
-  ThermoSysPro.Units.SI.Force Fr_min "Spring force when valve is closed";
-  ThermoSysPro.Units.xSI.Cv Cv "Cv";
-  ThermoSysPro.Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
-  ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
-  ThermoSysPro.Units.SI.Density rho(start=998) "Fluid density";
-  ThermoSysPro.Units.SI.Temperature T(start=290) "Fluid temperature";
-  ThermoSysPro.Units.SI.AbsolutePressure Pm(start=1.e5)
+  Units.SI.Area A "Hydraulic area upstream the clapper";
+  Units.SI.Force Fr_min "Spring force when valve is closed";
+  Units.xSI.Cv Cv "Cv";
+  Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
+  Units.SI.PressureDifference deltaP "Singular pressure loss";
+  Units.SI.Density rho(start=998) "Fluid density";
+  Units.SI.Temperature T(start=290) "Fluid temperature";
+  Units.SI.AbsolutePressure Pm(start=1.e5)
     "Fluid average pressure";
-  ThermoSysPro.Units.SI.SpecificEnthalpy h(start=100000)
+  Units.SI.SpecificEnthalpy h(start=100000)
     "Fluid specific enthalpy";
-  ThermoSysPro.Units.SI.AbsolutePressure Pdyn "Dynamic pressure on the clapper";
-  ThermoSysPro.Units.SI.Velocity vh "Fluid velocity through the valve";
-  ThermoSysPro.Units.SI.Energy Wdyn "Dissipated fluid kinetic energy";
+  Units.SI.AbsolutePressure Pdyn "Dynamic pressure on the clapper";
+  Units.SI.Velocity vh "Fluid velocity through the valve";
+  Units.SI.Energy Wdyn "Dissipated fluid kinetic energy";
   Real Re=rho*(vh - v)*sqrt(4*A/pi)/ThermoSysPro.Properties.WaterSteam.IF97.DynamicViscosity_rhoT(rho, T) "Clapper Reynolds";
   Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
@@ -234,6 +234,5 @@ equation
 <ul>
 <li>Daniel Bouskela </li>
 </ul>
-</html>"),
-    uses(ThermoSysPro(version="5.0"), Modelica(version="4.0.0")));
+</html>"));
 end DynamicReliefValve;
