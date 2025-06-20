@@ -1,25 +1,25 @@
-within ;
+within ThermoSysPro.Fluid.Volumes;
 model VolumeD "Mixing volume with 1 inlet and 3 outlets"
 
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   replaceable function SaS = Medium.noSaS(SubC=SubC) annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Boolean dynamic_energy_balance=true
     "true: dynamic energy balance equation - false: static energy balance equation";
-  parameter ThermoSysPro.Units.SI.Volume V=1
+  parameter Units.SI.Volume V=1
     "Volume (active if dynamic_energy_balance=true)"
     annotation (Evaluate=true, Dialog(enable=dynamic_energy_balance));
   parameter Boolean dynamic_mass_balance=false
     "true: dynamic mass balance equation - false: static mass balance equation (active if the fluid is compressible and if dynamic_energy_balance=true)" annotation(Evaluate=true, Dialog(enable=isCompressible and dynamic_energy_balance));
   parameter Boolean steady_state=true
     "true: start from steady state - false: start from (P0, h0) (active if dynamic_energy_balance=true)" annotation(Evaluate=true, Dialog(enable=dynamic_energy_balance));
-  parameter ThermoSysPro.Units.SI.AbsolutePressure P0=1e5
+  parameter Units.SI.AbsolutePressure P0=1e5
     "Initial fluid pressure (active if the fluid is compressible, and if dynamic_energy_balance=true and dynamic_mass_balance=true and steady_state=false)"
     annotation (Evaluate=true, Dialog(enable=isCompressible and
           dynamic_energy_balance and dynamic_mass_balance and not steady_state));
-  parameter ThermoSysPro.Units.SI.SpecificEnthalpy h0=1e5
+  parameter Units.SI.SpecificEnthalpy h0=1e5
     "Initial fluid specific enthalpy (active if dynamic_energy_balance=true and steady_state=false)"
     annotation (Evaluate=true, Dialog(enable=dynamic_energy_balance and not
           steady_state));
@@ -27,10 +27,10 @@ model VolumeD "Mixing volume with 1 inlet and 3 outlets"
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter ThermoSysPro.Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
+  parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
   parameter Boolean dynamic_composition_balance=false
-    "<html>true: dynamic fluid composition balance equation <br>false: static fluid composition balance equation (active for flue gases)</html>" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.FlueGases), tab="Fluid", group="Fluid properties"));
+    "<html>true: dynamic fluid composition balance equation <br>false: static fluid composition balance equation (active for flue gases)</html>" annotation(Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
   parameter Medium.ExtraProperty X0[Medium.nX]=Medium.X_default "Initial composition values" annotation (Evaluate=true, Dialog(
       enable=dynamic_composition_balance,
       tab="Fluid",
@@ -39,42 +39,35 @@ model VolumeD "Mixing volume with 1 inlet and 3 outlets"
 
 protected
   constant Boolean isCompressible = Medium.isCompressible;
-  parameter ThermoSysPro.Units.SI.MassFlowRate gamma0=1.e-4
+  parameter Units.SI.MassFlowRate gamma0=1.e-4
     "Pseudo-diffusion conductance use for continuous flow reversal (active if diffusion=false and continuous_flow_reversal = true)";
 
 public
-  ThermoSysPro.Units.SI.Temperature T "Fluid temperature";
-  ThermoSysPro.Units.SI.AbsolutePressure P(start=1.e5) "Fluid pressure";
-  ThermoSysPro.Units.SI.SpecificEnthalpy h(start=100000)
-    "Fluid specific enthalpy";
-  ThermoSysPro.Units.SI.Density rho(start=998) "Fluid density";
-  ThermoSysPro.Units.SI.MassFlowRate BQ
-    "Right hand side of the mass balance equation";
-  ThermoSysPro.Units.SI.Power BH
-    "Right hand side of the energy balance equation";
-  ThermoSysPro.Units.SI.DerDensityByPressure ddph
+  Units.SI.Temperature T "Fluid temperature";
+  Units.SI.AbsolutePressure P(start=1.e5) "Fluid pressure";
+  Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
+  Units.SI.Density rho(start=998) "Fluid density";
+  Units.SI.MassFlowRate BQ "Right hand side of the mass balance equation";
+  Units.SI.Power BH "Right hand side of the energy balance equation";
+  Units.SI.DerDensityByPressure ddph
     "density derivative wrt pressure at constant specific enthalpy";
-  ThermoSysPro.Units.SI.DerDensityByEnthalpy ddhp
+  Units.SI.DerDensityByEnthalpy ddhp
     "density derivative wrt specific enthalpy at constant pressure";
-  ThermoSysPro.Units.SI.MassFlowRate BX[Medium.nXi] "Right hand side of the X balance equation";
+  Units.SI.MassFlowRate BX[Medium.nXi] "Right hand side of the X balance equation";
   Medium.ExtraProperty X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Fluid mass fraction";
   Medium.ExtraProperty BSubC[Medium.nC](quantity=Medium.extraPropertiesNames) "Right hand side of the trace balance equation";
   Medium.ExtraProperty SubC[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default) "Fluid trace substances";
   Medium.ExtraProperty SubCSaS[Medium.nC](quantity=Medium.extraPropertiesNames) "Trace modification in the trace balance equation";
   Medium.ThermodynamicState state;
-  ThermoSysPro.Units.SI.Power Je "Thermal power diffusion from inlet e";
-  ThermoSysPro.Units.SI.Power Js1 "Thermal power diffusion from outlet s1";
-  ThermoSysPro.Units.SI.Power Js2 "Thermal power diffusion from outlet s2";
-  ThermoSysPro.Units.SI.Power Js3 "Thermal power diffusion from outlet s3";
-  ThermoSysPro.Units.SI.Power J "Total thermal power diffusion";
-  ThermoSysPro.Units.SI.MassFlowRate gamma_e
-    "Diffusion conductance for inlet e";
-  ThermoSysPro.Units.SI.MassFlowRate gamma_s1
-    "Diffusion conductance for outlet s1";
-  ThermoSysPro.Units.SI.MassFlowRate gamma_s2
-    "Diffusion conductance for outlet s2";
-  ThermoSysPro.Units.SI.MassFlowRate gamma_s3
-    "Diffusion conductance for outlet s3";
+  Units.SI.Power Je "Thermal power diffusion from inlet e";
+  Units.SI.Power Js1 "Thermal power diffusion from outlet s1";
+  Units.SI.Power Js2 "Thermal power diffusion from outlet s2";
+  Units.SI.Power Js3 "Thermal power diffusion from outlet s3";
+  Units.SI.Power J "Total thermal power diffusion";
+  Units.SI.MassFlowRate gamma_e "Diffusion conductance for inlet e";
+  Units.SI.MassFlowRate gamma_s1 "Diffusion conductance for outlet s1";
+  Units.SI.MassFlowRate gamma_s2 "Diffusion conductance for outlet s2";
+  Units.SI.MassFlowRate gamma_s3 "Diffusion conductance for outlet s3";
   Real re "Value of r(Q/gamma) for inlet e";
   Real rs1 "Value of r(Q/gamma) for outlet s1";
   Real rs2 "Value of r(Q/gamma) for outlet s2";
@@ -340,6 +333,5 @@ equation
 <li>Daniel Bouskela</li>
 <li>Baligh El Hefni </li>
 </ul>
-</html>"),
-    uses(ThermoSysPro(version="5.0")));
+</html>"));
 end VolumeD;
