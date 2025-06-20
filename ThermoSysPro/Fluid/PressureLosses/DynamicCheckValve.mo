@@ -1,9 +1,8 @@
 within ThermoSysPro.Fluid.PressureLosses;
 model DynamicCheckValve "Dynamic check valve"
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax=8005.42 "Maximum CV";
+  parameter Units.xSI.Cv Cvmax=8005.42 "Maximum CV";
   parameter Real caract[:, 2]=[0, 0; 1, Cvmax]
     "Position vs. Cv characteristics (active if mode_caract=1)";
   parameter Units.SI.MomentOfInertia J=1 "Flap moment of inertia";
@@ -20,19 +19,18 @@ model DynamicCheckValve "Dynamic check valve"
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
   parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
   constant Real pi=Modelica.Constants.pi "pi";
-  parameter Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
+  parameter Units.SI.Acceleration g=Modelica.Constants.g_n
+    "Gravity constant";
   parameter Real eps=1.e-3 "Small number for pressure loss equation";
   parameter Units.SI.Radius r=sqrt(A/pi) "Flap radius";
-  parameter Units.SI.Angle theta_min=0 "Minimum flap aperture angle";
-  parameter Units.SI.Angle theta_max=pi/2 "Maximum flap aperture angle";
+  parameter Units.SI.Angle theta_min=0
+    "Minimum flap aperture angle";
+  parameter Units.SI.Angle theta_max=pi/2
+    "Maximum flap aperture angle";
   parameter Units.SI.Angle theta_m=(theta_min + theta_max)/2;
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
 
 public
   Boolean libre(start=true)
@@ -45,17 +43,21 @@ public
   Units.SI.AngularVelocity omega "Flap angular speed";
   Units.SI.AngularAcceleration a "Flap angular acceleration";
   Real Ouv "Valve position";
-  ThermoSysPro.Units.xSI.Cv Cv(start=Cvmax) "Cv";
+  Units.xSI.Cv Cv(start=Cvmax) "Cv";
   Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
-  ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
+  Units.SI.PressureDifference deltaP "Singular pressure loss";
   Units.SI.Density rho(start=998) "Fluid density";
   Units.SI.Temperature T(start=290) "Fluid temperature";
-  Units.SI.AbsolutePressure Pm(start=1.e5) "Fluid average pressrue";
-  Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
+  Units.SI.AbsolutePressure Pm(start=1.e5)
+    "Fluid average pressrue";
+  Units.SI.SpecificEnthalpy h(start=100000)
+    "Fluid specific enthalpy";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
+
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
 initial equation
   if mech_steady_state then
@@ -81,18 +83,15 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
   C1.diff_res_2 = C2.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
-  C1.ftype = C2.ftype;
+  C1.Xi = C2.Xi;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  X = C1.Xi;
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   h = C1.h;
   deltaP = C1.P - C2.P;
-
-  ftype = C1.ftype;
 
   /* Flap angle */
   Ouv = 1 - cos(theta);
@@ -141,12 +140,12 @@ equation
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+  T = Medium.temperature_phX(p=Pm, h=h, X=X);
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm, h, fluid, mode, C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+    rho = Medium.density_phX(p=Pm, h=h, X=X);
   end if;
   annotation (
     Icon(coordinateSystem(
