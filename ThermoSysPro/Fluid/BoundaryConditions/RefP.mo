@@ -1,6 +1,8 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefP "Fixed pressure reference"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
+    replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+
   parameter Units.SI.AbsolutePressure P0=1.e5 "Fixed fluid pressure";
 
 public
@@ -8,9 +10,9 @@ public
   Units.SI.AbsolutePressure P "Fluid pressure";
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
 
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal IPressure
     annotation (Placement(transformation(
@@ -36,12 +38,10 @@ equation
   C2.diff_res_1 = C1.diff_res_1;
   C1.diff_res_2 = C2.diff_res_2;
 
-  C1.ftype = C2.ftype;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  C1.Xi = C2.Xi;
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   P = C1.P;
