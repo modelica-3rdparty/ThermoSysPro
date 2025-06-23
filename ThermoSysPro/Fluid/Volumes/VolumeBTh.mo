@@ -134,8 +134,8 @@ equation
     Ce2.h_vol_1 = 1.e5;
     Ce2.diff_res_1 = 0;
     Ce2.diff_on_1 = false;
-    Ce1.Xi = Medium.X_default[1:Medium.nXi];
-    Ce1.SubC = Medium.C_default;
+    Ce2.Xi = Medium.X_default[1:Medium.nXi];
+    Ce2.SubC = Medium.C_default;
   end if;
 
   if (cardinality(Cs1) == 0) then
