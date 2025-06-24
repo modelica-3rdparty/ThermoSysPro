@@ -1,7 +1,6 @@
 within ThermoSysPro.Fluid.Machines;
 model CentrifugalPump "Centrifugal pump"
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter ThermoSysPro.Units.nonSI.AngularVelocity_rpm N=1400
     "Pump angular velocity in rpm (active if input M is not connected)";
@@ -19,7 +18,6 @@ model CentrifugalPump "Centrifugal pump"
     "Diffusion conductance (active if diffusion=true in neighbouring volumes)";
   parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
   parameter Integer mode_car=2
     "1:nominal values and coef. c given by parameters - 2:nominal values and coef. c computed from semi-parabolic characteristics";
@@ -68,7 +66,6 @@ model CentrifugalPump "Centrifugal pump"
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Units.SI.AngularVelocity w_a_min=1.e-4 "Small angular velocity";
   parameter Units.SI.VolumeFlowRate Qv_a_min=1.e-4 "Small volume flow rate";
   parameter Real rh_min=0.05 "Minimum efficiency";
@@ -114,12 +111,11 @@ public
   Real beta=hn_coef[2] "Coef. beta of the characteristics for hn";
   Real gamma=rh_coef[1] "Coef. gamma of the characteristics for rh";
   Real delta=rh_coef[2] "Coef. delta of the characteristics for rh";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
   ElectroMechanics.Connectors.MechanichalTorque M
     annotation (Placement(transformation(
@@ -152,12 +148,11 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
   C1.diff_res_2 = C2.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
-  C1.ftype = C2.ftype;
+  C1.Xi = C2.Xi;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  X = C1.Xi;
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   deltaP = C2.P - C1.P;
@@ -165,8 +160,6 @@ equation
 
   deltaP = rho*g*hn;
   Q = Qv*rho;
-
-  ftype = C1.ftype;
 
   /* Energy balance equation */
   if dynamic_energy_balance then
@@ -285,7 +278,7 @@ equation
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(Pm,h,fluid,mode,C1.Xco2, C1.Xh2o, C1.Xo2, C1.Xso2);
+    rho = Medium.density_phX(p=Pm, h=h, X=X);
   end if;
   annotation (
     Diagram(coordinateSystem(
