@@ -24,6 +24,8 @@ model TestVolumeBTh_Traces
             {10,10}},
         rotation=180,
         origin={38,0})));
+  Thermal.BoundaryConditions.HeatSource heatSource annotation (Placement(transformation(extent={{-10,-22},
+            {10,-42}})));
 equation
   connect(sourcePQ.C, volumeBTh.Ce1)
     annotation (Line(points={{-30,0},{-10,0}}, color={0,0,0}));
@@ -31,5 +33,7 @@ equation
           7.21645e-16},{28,7.21645e-16}}, color={0,0,0}));
   connect(volumeBTh.Cs1, sink.C)
     annotation (Line(points={{0,10},{0,26},{-6.66134e-16,26}}, color={0,0,0}));
+  connect(heatSource.C[1], volumeBTh.Cth)
+    annotation (Line(points={{0,-22.2},{0,0}}, color={0,0,0}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(coordinateSystem(preserveAspectRatio=false)));
 end TestVolumeBTh_Traces;
