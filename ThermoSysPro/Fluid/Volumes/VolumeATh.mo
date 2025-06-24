@@ -194,7 +194,6 @@ equation
   end if;
 
   Cs1.Xi = X;
-
   Cs2.Xi = X;
 
   /* Traces composition balance equations */
