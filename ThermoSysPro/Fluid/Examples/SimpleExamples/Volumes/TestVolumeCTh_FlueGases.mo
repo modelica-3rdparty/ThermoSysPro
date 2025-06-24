@@ -19,6 +19,8 @@ model TestVolumeCTh_FlueGases
     redeclare replaceable package Medium = Medium,
     T0=573.15,
     option_temperature=true) annotation (Placement(transformation(extent={{-50,20},{-30,40}})));
+  Thermal.BoundaryConditions.HeatSource heatSource(T0={573.15})   annotation (
+    Placement(transformation(extent={{-10,-24},{10,-44}})));
 equation
   connect(sourcePQ.C, volumeCTh.Ce1)
     annotation (Line(points={{-30,0},{-10,0}}, color={0,0,0}));
@@ -26,5 +28,7 @@ equation
     annotation (Line(points={{30,0},{10,0}}, color={0,0,0}));
   connect(volumeCTh.Ce2, sourceQ.C)
     annotation (Line(points={{0,10},{0,30},{-30,30}}, color={0,0,0}));
+  connect(heatSource.C[1], volumeCTh.Cth)
+    annotation (Line(points={{0,-24.2},{0,0}}, color={0,0,0}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(coordinateSystem(preserveAspectRatio=false)));
 end TestVolumeCTh_FlueGases;
