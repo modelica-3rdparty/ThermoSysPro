@@ -25,3 +25,6 @@ TestVolumeCTh_Traces
 TestVolumeDTh
 TestVolumeDTh_FlueGases
 TestVolumeDTh_Traces
+TestVolumeITh
+TestVolumeITh_FlueGases
+TestVolumeITh_Traces
