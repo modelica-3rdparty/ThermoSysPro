@@ -1,5 +1,7 @@
 within ThermoSysPro.Fluid.Machines;
 model CentrifugalPump "Centrifugal pump"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter ThermoSysPro.Units.nonSI.AngularVelocity_rpm N=1400
@@ -322,6 +324,5 @@ equation
 <li>Daniel Bouskela</li>
 <li>Baligh El Hefni </li>
 </ul>
-</html>"),
-    DymolaStoredErrors);
+</html>"));
 end CentrifugalPump;
