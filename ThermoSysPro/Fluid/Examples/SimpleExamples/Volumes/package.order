@@ -16,3 +16,9 @@ TestVolumeI_Traces
 TestVolumeCTh
 TestVolumeCTh_FlueGases
 TestVolumeCTh_Traces
+TestVolumeBTh
+TestVolumeBTh_FlueGases
+TestVolumeBTh_Traces
+TestVolumeATh
+TestVolumeATh_Traces
+TestVolumeATh_FlueGases
