@@ -1,8 +1,6 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model DynamicOnePhaseFlowPipe "Dynamic one-phase flow pipe"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Units.SI.Length L=10. "Pipe length";
