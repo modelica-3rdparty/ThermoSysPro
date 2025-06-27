@@ -44,12 +44,10 @@ model DynamicOnePhaseFlowPipe "Dynamic one-phase flow pipe"
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Integer N=Ns + 1 "Number of hydraulic nodes (= number of thermal nodes + 1)";
   parameter Units.SI.Area A=ntubes*pi*D^2/4
     "Internal cross sectional pipe area";

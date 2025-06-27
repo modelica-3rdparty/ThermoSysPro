@@ -10,9 +10,12 @@ model TestDynamicOnePhaseFlowPipe_FlueGases
   ThermoSysPro.Fluid.HeatExchangers.DynamicOnePhaseFlowPipe dynamicOnePhaseFlowPipe(
     redeclare package Medium = Medium,
     Ns=1,
-    Q(start={34.51316334625123,34.51316334625123}),
+    Q(start=fill(36, dynamicOnePhaseFlowPipe.Ns + 1)),
     h(start={3077096.0822837264,3135044.986588299,3077096.0822837264}),
-    P(start={45e5,44.75e5,44.5e5}, displayUnit="bar")) annotation (Placement(transformation(extent={{-10,-10},{10,10}}, rotation=0)));
+    P(start=linspace(
+          45,
+          44.5,
+          dynamicOnePhaseFlowPipe.Ns + 2))) annotation (Placement(transformation(extent={{-10,-10},{10,10}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP(
     redeclare package Medium = Medium,
     P0=4500000,
@@ -23,10 +26,10 @@ model TestDynamicOnePhaseFlowPipe_FlueGases
     P0=4450000,
     T0=573.15) annotation (Placement(transformation(extent={{30,-10},{50,10}}, rotation=0)));
   ThermoSysPro.Thermal.BoundaryConditions.HeatSource heatSource(
-    T0={1000.005},
+    T0=fill(726.855, dynamicOnePhaseFlowPipe.Ns),
     option_temperature=2,
-    W0={2e6}) annotation (Placement(transformation(extent={{-10,30},{10,50}}, rotation=0)));
-  ThermoSysPro.Thermal.HeatTransfer.HeatExchangerWall heatExchangerWall(Ns=1) annotation (Placement(transformation(extent={{-10,10},{10,30}}, rotation=0)));
+    W0=fill(2e6/dynamicOnePhaseFlowPipe.Ns, dynamicOnePhaseFlowPipe.Ns)) annotation (Placement(transformation(extent={{-10,30},{10,50}}, rotation=0)));
+  ThermoSysPro.Thermal.HeatTransfer.HeatExchangerWall heatExchangerWall(Ns=dynamicOnePhaseFlowPipe.Ns) annotation (Placement(transformation(extent={{-10,10},{10,30}}, rotation=0)));
 equation
   connect(sourceP.C, dynamicOnePhaseFlowPipe.C1) annotation (Line(points={{-30,0},{-10,0}}, color={0,0,255}));
   connect(dynamicOnePhaseFlowPipe.C2, sinkP.C) annotation (Line(points={{10,0},{30,0}}, color={0,0,255}));
