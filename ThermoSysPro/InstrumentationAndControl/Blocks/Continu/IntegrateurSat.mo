@@ -1,11 +1,11 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Continu;
-block IntegrateurSat
+block SaturatedIntegrator
   parameter Real k=1 "Gain";
-  parameter Real maxval=1 "Valeur maximale de la sortie";
-  parameter Real minval=0 "Valeur minimale de la sortie";
+  parameter Real maxval=1 "Maximum output value";
+  parameter Real minval=0 "Minimum output value";
   parameter Real ureset0=0
-    "Valeur de la sortie sur reset (si ureset non connecté)";
-  parameter Boolean permanent=false "Calcul du permanent";
+    "Output value on reset (if ureset is not connected)";
+  parameter Boolean permanent=false "Steady-state calculation";
 
 protected
   Real x;
@@ -35,12 +35,11 @@ initial equation
 equation
 
   assert(maxval > minval,
-    "IntegrateurSat : Le paramètre maxval doit être supérieur au paramètre minval");
+    "SaturatedIntegrator: The parameter maxval must be greater than the parameter minval");
 
   if (cardinality(reset) == 0) then
     reset.signal = false;
   end if;
-
   if (cardinality(ureset) == 0) then
     ureset.signal = ureset0;
   end if;
@@ -109,4 +108,4 @@ equation
 <p><b>Version 1.7</b></p>
 </HTML>
 "));
-end IntegrateurSat;
+end SaturatedIntegrator;

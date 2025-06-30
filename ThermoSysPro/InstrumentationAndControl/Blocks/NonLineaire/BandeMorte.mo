@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.NonLineaire;
-block BandeMorte
+block DeadBand
   parameter Real uMax=1 "Limite supérieure de la bande morte";
   parameter Real uMin=-uMax "Limite inférieure de la bande morte";
 
@@ -87,4 +87,4 @@ equation
 <p><b>Version 1.0</b></p>
 </HTML>
 "));
-end BandeMorte;
+end DeadBand;

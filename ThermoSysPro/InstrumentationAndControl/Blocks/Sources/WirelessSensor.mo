@@ -1,6 +1,6 @@
 within ThermoSysPro.InstrumentationAndControl.Blocks.Sources;
 block WirelessSensor
-  "Mesure data with expression, no connection (as MSL RealExpression)"
+  "Measure data with expression, no connection (as MSL RealExpression)"
 
   Real m=0.0 "Measure Expression" annotation (Dialog(group="Measured data"));
 
@@ -13,7 +13,7 @@ block WirelessSensor
     "Number of significant digits to be shown" annotation (Dialog(group="Animation"));
 
 
-  Real measure_col[3](each min=0, each max=255) "Corrspondig color for the box";
+  Real measure_col[3](each min=0, each max=255) "Corresponding color for the box";
   Real neg_col[3](each min=0, each max=255) "Negative color for the text";
 
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal y
@@ -59,49 +59,20 @@ equation
           fillColor=DynamicSelect({255,255,170}, {measure_col[1],measure_col[2],measure_col[3]}),
           fillPattern=FillPattern.Solid,
           lineThickness=0.5),
+        Ellipse(
+          extent={{30,70},{140,-40}},
+          lineColor={0,0,0},
+          lineThickness=0.5,
+          startAngle=100,
+          endAngle=170,
+          closure=EllipseClosure.None),
         Text(
-          extent={{-100,28},{100,-24}},
-          textColor=DynamicSelect({0,0,0},{neg_col[1],neg_col[2],neg_col[3]}),
-          textString=DynamicSelect("M", String(m,significantDigits=significantDigits))),
+          extent={{-100,110},{100,90}},
+          lineColor={0,0,0},
+          textString="WirelessSensor"),
         Text(
-          extent={{-140,-92},{140,-134}},
-          textColor={95,95,95},
-          textString="%m"),
-        Ellipse(
-          extent={{48,58},{128,-22}},
-          lineColor={0,0,0},
-          lineThickness=0.5,
-          startAngle=-80,
-          endAngle=-10,
-          closure=EllipseClosure.None),
-        Ellipse(
-          extent={{66,46},{116,-4}},
-          lineColor={0,0,0},
-          lineThickness=0.5,
-          startAngle=-80,
-          endAngle=-10,
-          closure=EllipseClosure.None),
-        Ellipse(
-          extent={{-140,42},{-30,-68}},
-          lineColor={0,0,0},
-          lineThickness=0.5,
-          startAngle=100,
-          endAngle=170,
-          closure=EllipseClosure.None),
-        Ellipse(
-          extent={{-128,26},{-48,-56}},
-          lineColor={0,0,0},
-          lineThickness=0.5,
-          startAngle=100,
-          endAngle=170,
-          closure=EllipseClosure.None),
-        Ellipse(
-          extent={{-116,6},{-66,-44}},
-          lineColor={0,0,0},
-          lineThickness=0.5,
-          startAngle=100,
-          endAngle=170,
-          closure=EllipseClosure.None)}),                Diagram(
-        coordinateSystem(preserveAspectRatio=false)),
-    uses(ThermoSysPro(version="4.0"), Modelica(version="4.0.0")));
+          extent={{-150,150},{150,110}},
+          textString="%name")
+    })
+  );
 end WirelessSensor;

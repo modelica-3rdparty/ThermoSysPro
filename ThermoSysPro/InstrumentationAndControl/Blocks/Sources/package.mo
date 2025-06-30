@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks;
-package Sources "Bibliothèque des blocs sources"
+package Sources "Library of source blocks"
 annotation (
   Window(
     x=0.05,

@@ -1,5 +1,5 @@
 within ThermoSysPro.InstrumentationAndControl.Blocks;
-package Commun
+package Common
 
 
   function rand "rand"
@@ -19,7 +19,7 @@ package Commun
             extent={{-84,18},{84,-30}},
             lineColor={255,127,0},
             textString=
-                 "fonction"),
+                 "function"),
           Text(extent={{-134,104},{142,44}}, textString=
                                                  "%name"),
           Ellipse(extent={{-100,40},{100,-100}}, lineColor={255,127,0}),
@@ -27,7 +27,7 @@ package Commun
             extent={{-82,-22},{86,-70}},
             lineColor={255,127,0},
             textString=
-                 "externe")}),
+                 "external")}),
       Documentation(info="<html>
 <p><b>Version 1.0</b></p>
 </HTML>
@@ -54,12 +54,12 @@ package Commun
             extent={{-84,18},{84,-30}},
             lineColor={255,127,0},
             textString=
-                 "fonction"),
+                 "function"),
           Text(
             extent={{-82,-22},{86,-70}},
             lineColor={255,127,0},
             textString=
-                 "externe")}),
+                 "external")}),
       Documentation(info="<html>
 <p><b>Version 1.0</b></p>
 </HTML>
@@ -79,12 +79,12 @@ package Commun
             extent={{-84,18},{84,-30}},
             lineColor={255,127,0},
             textString=
-                 "fonction"),
+                 "function"),
           Text(
             extent={{-82,-22},{86,-70}},
             lineColor={255,127,0},
             textString=
-                 "externe")}),
+                 "external")},
                              Documentation(info="<html>
 <p><b>Version 1.6</b></p>
 </HTML>
@@ -181,8 +181,8 @@ package Commun
           fillColor={46,170,220},
           fillPattern=FillPattern.Solid),
         Polygon(
-          points={{-62,2},{-58,4},{-48,8},{-36,10},{-18,12},{6,12},{26,10},{42,
-              6},{52,0},{42,4},{28,8},{6,10},{-12,10},{-18,10},{-38,8},{-50,6},
+          points={{-62,2},{-58,4},{-48,8},{-36,10},{-18,12},{6,12},{26,10},{42,6},
+              {52,0},{42,4},{28,8},{6,10},{-12,10},{-18,10},{-38,8},{-50,6},
               {-62,2}},
           lineColor={242,148,0},
           fillColor={242,148,0},
@@ -225,4 +225,4 @@ package Commun
 </HTML>
 "));
 
-end Commun;
+end Common;

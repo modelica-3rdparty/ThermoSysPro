@@ -1,6 +1,6 @@
 within ThermoSysPro.InstrumentationAndControl.Blocks.Math;
-block Polynome
-  parameter Real a[:]={1,1} "Vecteur des coefficients du polynome";
+block Polynomial
+  parameter Real a[:]={1,1} "Vector of polynomial coefficients";
 
 protected
   parameter Integer n=size(a, 1) - 1;
@@ -208,4 +208,4 @@ equation
 <p><b>Version 1.0</b></p>
 </HTML>
 "));
-end Polynome;
+end Polynomial;

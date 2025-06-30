@@ -1,5 +1,5 @@
 within ThermoSysPro.InstrumentationAndControl.Blocks.Logique;
-block Constante
+block Constant
   parameter Boolean K=true;
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputLogical yL
                                            annotation (Placement(transformation(
@@ -37,7 +37,7 @@ algorithm
           extent={{70,-80},{94,-100}},
           lineColor={160,160,164},
           textString=
-               "temps"),
+               "time"),
         Text(
           extent={{-101,8},{-81,-12}},
           lineColor={160,160,164},
@@ -66,8 +66,5 @@ algorithm
       y=0.22,
       width=0.6,
       height=0.6),
-    Documentation(info="<html>
-<p><b>Version 1.0</b></p>
-</HTML>
-"));
-end Constante;
+    Documentation(info="<html>\n<p><b>Version 1.0</b></p>\n</HTML>\n"));
+end Constant;

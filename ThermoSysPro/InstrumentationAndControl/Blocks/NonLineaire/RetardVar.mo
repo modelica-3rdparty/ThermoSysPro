@@ -1,5 +1,5 @@
 within ThermoSysPro.InstrumentationAndControl.Blocks.NonLineaire;
-block RetardVar
+block VariableDelay
   parameter Real retardMax=1 "Retard maximum (s)";
 
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal u
@@ -116,4 +116,4 @@ equation
 <p><b>Version 1.0</b></p>
 </HTML>
 "));
-end RetardVar;
+end VariableDelay;

@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.NonLineaire;
-block Limiteur
+block Limiter
   parameter Real maxval=1 "Valeur maximale de la sortie";
   parameter Real minval=-1 "Valeur minimale de la sortie";
 
@@ -94,4 +94,4 @@ equation
 <p><b>Version 1.0</b></p>
 </HTML>
 "));
-end Limiteur;
+end Limiter;

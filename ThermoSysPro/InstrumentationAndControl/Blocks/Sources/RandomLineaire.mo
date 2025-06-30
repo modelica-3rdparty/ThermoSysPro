@@ -1,14 +1,14 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Sources;
-block RandomLineaire
-  parameter Integer seed=1 "Source du générateur aléatoire";
-  parameter Real SampleOffset=0 "Instant de départ de l'échantillonnage";
-  parameter Real SampleInterval=0.01 "Période d'échantillonnage";
+block LinearRandom
+  parameter Integer seed=1 "Random generator seed";
+  parameter Real sampleOffset=0 "Sampling start time";
+  parameter Real sampleInterval=0.01 "Sampling period";
 protected
   Real p1;
   Real p2;
   Real t1;
   Real t2;
-  discrete Real Interval;
+  discrete Real interval;
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal y
                                    annotation (Placement(transformation(extent=
@@ -21,16 +21,16 @@ public
 algorithm
 
   when initial() then
-    Commun.srand(seed);
+    Common.srand(seed);
     t1 := 0;
-    t2 := SampleOffset;
+    t2 := sampleOffset;
     p1 := 0;
     p2 := 0;
-    Interval := if uL.signal then SampleInterval else Modelica.Constants.inf;
+    interval := if uL.signal then sampleInterval else Modelica.Constants.inf;
   end when;
 
   when change(uL.signal) then
-    Interval := if uL.signal then SampleInterval else Modelica.Constants.inf;
+    interval := if uL.signal then sampleInterval else Modelica.Constants.inf;
   end when;
 
   when edge(uL.signal) then
@@ -38,14 +38,14 @@ algorithm
    p1 := 0;
   end when;
 
-  when (sample(SampleOffset, Interval) and uL.signal) then
+  when (sample(sampleOffset, interval) and uL.signal) then
     p1 := p2;
-    p2 := 2*(Commun.fmod(Commun.rand()/32768*10, 1) - 0.5);
+    p2 := 2*(Common.fmod(Common.rand()/32768*10, 1) - 0.5);
     t1 := time;
-    t2 := t2 + SampleInterval;
+    t2 := t2 + sampleInterval;
   end when;
 
-  y.signal := if uL.signal then p1 + (p2 - p1)/SampleInterval*(time - t1) else 0;
+  y.signal := if uL.signal then p1 + (p2 - p1)/sampleInterval*(time - t1) else 0;
 
   annotation (
     Diagram(coordinateSystem(
@@ -132,4 +132,4 @@ algorithm
 <p><b>Adapted from the Modelica.Blocks.Sources library</b></p>
 </HTML>
 "));
-end RandomLineaire;
+end LinearRandom;

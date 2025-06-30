@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.NonLineaire;
-block SelecteurEntier "Sélection entre deux entiers"
+block IntegerSelector "Sélection entre deux entiers"
   parameter Integer C1=-1
     "Valeur de la sortie pour uCond=true si u1 non connecté";
   parameter Integer C2=1
@@ -134,4 +134,4 @@ equation
 <p><b>Version 1.6</b></p>
 </HTML>
 "));
-end SelecteurEntier;
+end IntegerSelector;

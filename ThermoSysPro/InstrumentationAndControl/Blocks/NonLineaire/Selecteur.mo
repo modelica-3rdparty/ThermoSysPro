@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.NonLineaire;
-block Selecteur
+block Selector
   parameter Real C1=-1 "Valeur de la sortie pour uCond=true si u1 non connecté";
   parameter Real C2=+1
     "Valeur de la sortie pour uCond=false si u2 non connecté";
@@ -132,4 +132,4 @@ equation
 <p><b>Version 1.6</b></p>
 </HTML>
 "));
-end Selecteur;
+end Selector;

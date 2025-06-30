@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.NonLineaire;
-block LimiteurVitesse
+block RateLimiter
   parameter Real dmax=1 "Valeur maximale de la dérivée de la sortie";
   parameter Real dmin=-1 "Valeur minimale de la dérivée de la sortie";
   parameter Real Ti(min=Modelica.Constants.small) = 0.01
@@ -95,4 +95,4 @@ equation
 <p><b>Version 1.7</b></p>
 </HTML>
 "));
-end LimiteurVitesse;
+end RateLimiter;

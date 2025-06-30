@@ -1,14 +1,14 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Discret;
 block PIsat
   parameter Real Kp=1 "Gain";
-  parameter Real Ti=1 "Constante de temps";
-  parameter Real initialCond=0 "Condition initiale";
+  parameter Real Ti=1 "Time constant";
+  parameter Real initialCond=0 "Initial condition";
 
-  parameter Real maxval=1 "Valeur maximale de la sortie";
-  parameter Real minval=0 "Valeur minimale de la sortie";
+  parameter Real maxval=1 "Maximum output value";
+  parameter Real minval=0 "Minimum output value";
 
-  parameter Real SampleOffset=0 "Instant de départ de l'échantillonnage (s)";
-  parameter Real SampleInterval=0.01 "Période d'échantillonnage (s)";
+  parameter Real SampleOffset=0 "Sampling start time (s)";
+  parameter Real SampleInterval=0.01 "Sampling period (s)";
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal u
                                       annotation (Placement(transformation(
           extent={{-120,-10},{-100,10}}, rotation=0)));
@@ -24,7 +24,7 @@ block PIsat
     SampleOffset=SampleOffset,
     SampleInterval=SampleInterval) annotation (Placement(transformation(extent=
             {{-20,-6},{0,14}}, rotation=0)));
-  NonLineaire.Limiteur Limiteur1(maxval=maxval, minval=minval)
+  ThermoSysPro.InstrumentationAndControl.Blocks.Discret.Limiter Limiteur1(maxval=maxval, minval=minval)
     annotation (Placement(transformation(extent={{60,-10},{80,10}}, rotation=0)));
   Math.Gain Gain1(Gain=1/Kp)       annotation (Placement(transformation(extent=
             {{-40,60},{-60,80}}, rotation=0)));

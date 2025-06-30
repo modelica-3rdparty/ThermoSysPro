@@ -1,6 +1,6 @@
 within ThermoSysPro.InstrumentationAndControl.Blocks.Sources;
-block ConstanteEntier
-  parameter Integer k=1 "Valeur de la sortie entiere";
+block ConstantInteger
+  parameter Integer k=1 "Integer output value";
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputInteger y
                                           annotation (Placement(transformation(
           extent={{100,-10},{120,10}}, rotation=0)));
@@ -36,7 +36,7 @@ equation
           extent={{70,-80},{94,-100}},
           lineColor={160,160,164},
           textString=
-               "temps")}),
+               "time")}),
     Icon(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},
@@ -75,4 +75,4 @@ equation
 <p><b>Version 1.6</b></p>
 </HTML>
 "));
-end ConstanteEntier;
+end ConstantInteger;

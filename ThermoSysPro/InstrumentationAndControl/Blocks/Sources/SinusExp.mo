@@ -1,11 +1,11 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Sources;
-block SinusExp
-  parameter Real amplitude=1 "Amplitude du sinus";
-  parameter Real frequence=2 "Fréquence du sinus (Hz)";
-  parameter Real phase=0 "Phase du sinus (rad)";
-  parameter Real damping=1 "Coefficient d'amortissement du sinus";
-  parameter Real offset=0 "Décalage de la sortie";
-  parameter Real startTime=0 "Instant de départ de l'échelon";
+block DampedSine
+  parameter Real amplitude=1 "Sine amplitude";
+  parameter Real frequency=2 "Sine frequency (Hz)";
+  parameter Real phase=0 "Sine phase (rad)";
+  parameter Real damping=1 "Sine damping coefficient";
+  parameter Real offset=0 "Output offset";
+  parameter Real startTime=0 "Step start time";
 
 protected
   constant Real pi=Modelica.Constants.pi;
@@ -18,7 +18,7 @@ equation
 
   y.signal = offset + (if time < startTime then 0 else amplitude*
     Modelica.Math.exp(-(time - startTime)*damping)*Modelica.Math.sin(2*pi*
-    frequence*(time - startTime) + phase));
+    frequency*(time - startTime) + phase));
   annotation (
     Icon(coordinateSystem(
         preserveAspectRatio=false,
@@ -127,7 +127,7 @@ equation
           extent={{-42,88},{9,74}},
           lineColor={160,160,164},
           textString=
-               "1/frequence"),
+               "1/frequency"),
         Polygon(
           points={{-49,73},{-40,75},{-40,71},{-49,73}},
           lineColor={192,192,192},
@@ -153,7 +153,7 @@ equation
           extent={{-82,-67},{108,-96}},
           lineColor={160,160,164},
           textString=
-               "amplitude*exp(-damping*t)*sin(2*pi*frequence*t+phase)"),
+               "amplitude*exp(-damping*t)*sin(2*pi*frequency*t+phase)"),
         Line(
           points={{-50,0},{-50,-40}},
           color={192,192,192},
@@ -173,4 +173,4 @@ equation
 <p><b>Version 1.7</b></p>
 </HTML>
 "));
-end SinusExp;
+end DampedSine;

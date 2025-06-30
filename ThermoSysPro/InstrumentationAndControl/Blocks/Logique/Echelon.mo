@@ -1,6 +1,6 @@
 within ThermoSysPro.InstrumentationAndControl.Blocks.Logique;
-block Echelon
-  parameter Real startTime=0 "Instant de l'impulsion";
+block Step
+  parameter Real startTime=0 "Pulse start time";
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputLogical yL
                                            annotation (Placement(transformation(
           extent={{100,-10},{120,10}}, rotation=0)));
@@ -79,7 +79,7 @@ algorithm
           extent={{70,-80},{94,-100}},
           lineColor={160,160,164},
           textString=
-               "temps"),
+               "time"),
         Text(
           extent={{-108,54},{-76,40}},
           lineColor={160,160,164},
@@ -99,11 +99,5 @@ algorithm
       y=0.32,
       width=0.75,
       height=0.6),
-    Documentation(info="<html>
-<p><b>Adapted from the Modelica.Blocks.Sources library</b></p>
-</HTML>
-<html>
-<p><b>Version 1.0</b></p>
-</HTML>
-"));
-end Echelon;
+    Documentation(info="<html>\n<p><b>Adapted from the Modelica.Blocks.Sources library</b></p>\n</HTML>\n<html>\n<p><b>Version 1.0</b></p>\n</HTML>\n"));
+end Step;

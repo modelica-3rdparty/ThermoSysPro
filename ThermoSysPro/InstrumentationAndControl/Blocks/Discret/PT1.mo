@@ -1,11 +1,11 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Discret;
 block PT1
   parameter Real k=1 "Gain";
-  parameter Real Ti=1 "Constante de temps (s)";
-  parameter Real initialCond=0 "Condition initiale";
+  parameter Real Ti=1 "Time constant (s)";
+  parameter Real initialCond=0 "Initial condition";
 
-  parameter Real SampleOffset=0 "Instant de départ de l'échantillonnage (s)";
-  parameter Real SampleInterval=0.01 "Période d'échantillonnage (s)";
+  parameter Real SampleOffset=0 "Sampling start time (s)";
+  parameter Real SampleInterval=0.01 "Sampling period (s)";
 
 protected
   Real x(start=initialCond);

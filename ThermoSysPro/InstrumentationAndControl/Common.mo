@@ -2,12 +2,12 @@
 package Common
 
 
-  record Duree
-    Integer nb_jours(min=0) "Nombre de jours";
-    Integer nb_heures(min=0, max=23) "Nombre d'heures";
-    Integer nb_minutes(min=0, max=59) "Nombre de minutes";
-    Integer nb_secondes(min=0, max=59) "Nombre de secondes";
-    Integer nb_dixiemes_secondes(min=0, max=9) "Nombre de dixèmes de secondes";
+  record Duration
+    Integer num_days(min=0) "Number of days";
+    Integer num_hours(min=0, max=23) "Number of hours";
+    Integer num_minutes(min=0, max=59) "Number of minutes";
+    Integer num_seconds(min=0, max=59) "Number of seconds";
+    Integer num_tenths_seconds(min=0, max=9) "Number of tenths of seconds";
     annotation (
       Icon(coordinateSystem(
           preserveAspectRatio=false,
@@ -35,16 +35,16 @@ package Common
 <p><b>ThermoSysPro Version 4.1</b></p>
 </HTML>
 "));
-  end Duree;
+  end Duration;
 
-  record DateEtHeure
-    Integer annee(min=2000) "Année";
-    Integer mois(min=1, max=12) "Mois dans l'année";
-    Integer jour(min=1, max=31) "Jour dans le mois";
-    Integer heure(min=0, max=23) "Heure du jour";
-    Integer minutes(min=0, max=59) "Nombre de minutes";
-    Integer secondes(min=0, max=59) "Nombre de secondes";
-    Integer nb_dixemes_secondes(min=0, max=9) "Nombre de dixèmes de secondes";
+  record DateAndTime
+    Integer year(min=2000) "Year";
+    Integer month(min=1, max=12) "Month in the year";
+    Integer day(min=1, max=31) "Day in the month";
+    Integer hour(min=0, max=23) "Hour of the day";
+    Integer num_minutes(min=0, max=59) "Number of minutes";
+    Integer num_seconds(min=0, max=59) "Number of seconds";
+    Integer num_tenths_seconds(min=0, max=9) "Number of tenths of seconds";
     annotation (
       Icon(coordinateSystem(
           preserveAspectRatio=false,
@@ -67,22 +67,21 @@ package Common
 <p><b>ThermoSysPro Version 4.1</b></p>
 </HTML>
 "));
-  end DateEtHeure;
+  end DateAndTime;
 
-  function CvtEntierVersDuree
-    input Integer t "Duree en dixiemes secondes";
-    output Duree d "Duree"        annotation (Placement(transformation(extent={
+  function IntToDuration
+    input Integer t "Duration in tenths of seconds";
+    output Duration d "Duration"        annotation (Placement(transformation(extent={
               {-70,-70},{70,70}}, rotation=0)));
   algorithm
-
-    d.nb_jours := integer(t/24/3600/10);
-    d.nb_heures := integer((t - d.nb_jours*24*3600*10)/3600/10);
-    d.nb_minutes := integer((t - d.nb_jours*24*3600*10 - d.nb_heures*3600*10)/
+    d.num_days := integer(t/24/3600/10);
+    d.num_hours := integer((t - d.num_days*24*3600*10)/3600/10);
+    d.num_minutes := integer((t - d.num_days*24*3600*10 - d.num_hours*3600*10)/
       60/10);
-    d.nb_secondes := integer((t - d.nb_jours*24*3600*10 - d.nb_heures*3600*10
-       - d.nb_minutes*60*10)/10);
-    d.nb_dixiemes_secondes := integer(t - d.nb_jours*24*3600*10 - d.nb_heures*
-      3600*10 - d.nb_minutes*60*10 - d.nb_secondes*10);
+    d.num_seconds := integer((t - d.num_days*24*3600*10 - d.num_hours*3600*10
+       - d.num_minutes*60*10)/10);
+    d.num_tenths_seconds := integer(t - d.num_days*24*3600*10 - d.num_hours*
+      3600*10 - d.num_minutes*60*10 - d.num_seconds*10);
     annotation (
       Icon(coordinateSystem(
           preserveAspectRatio=false,
@@ -97,7 +96,7 @@ package Common
             extent={{-84,-4},{84,-52}},
             lineColor={255,127,0},
             textString=
-                 "fonction"),
+                 "function"),
           Text(extent={{-134,104},{142,44}}, textString=
                                                  "%name")}),
       Window(
@@ -112,7 +111,7 @@ package Common
 <p><b>ThermoSysPro Version 4.1</b></p>
 </HTML>
 "));
-  end CvtEntierVersDuree;
+  end IntToDuration;
   annotation (
     Icon(coordinateSystem(
         preserveAspectRatio=false,

@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.NonLineaire;
-block RetardFixe
+block FixedDelay
   parameter Real retard=1 "Retard de la sortie sur l'entrée (s)";
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal u
                                       annotation (Placement(transformation(
@@ -102,4 +102,4 @@ equation
 <p><b>Version 1.0</b></p>
 </HTML>
 "));
-end RetardFixe;
+end FixedDelay;

@@ -1,10 +1,10 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Sources;
 block Pulse
-  parameter Real amplitude=1 "Amplitude des impulsions";
-  parameter Real width=0.5 "Largeur des impulsions (s)";
-  parameter Real period=1 "Periode des impulsions (s)";
-  parameter Real offset=0 "Décalage de la sortie";
-  parameter Real startTime=0 "Instant de départ des impulsions";
+  parameter Real amplitude=1 "Pulse amplitude";
+  parameter Real width=0.5 "Pulse width (s)";
+  parameter Real period=1 "Pulse period (s)";
+  parameter Real offset=0 "Output offset";
+  parameter Real startTime=0 "Pulse start time";
 
 protected
   Real T0;

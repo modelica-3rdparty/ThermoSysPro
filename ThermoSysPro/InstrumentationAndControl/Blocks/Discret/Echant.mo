@@ -1,8 +1,8 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Discret;
 block Echant
   parameter Real Gain=1 "Gain";
-  parameter Real SampleOffset=0 "Instant de départ de l'échantillonnage (s)";
-  parameter Real SampleInterval=0.01 "Période d'échantillonnage (s)";
+  parameter Real SampleOffset=0 "Sampling start time (s)";
+  parameter Real SampleInterval=0.01 "Sampling period (s)";
 
 protected
   Real uc;

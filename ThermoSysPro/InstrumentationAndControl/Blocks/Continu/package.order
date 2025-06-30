@@ -1,7 +1,7 @@
-Derivee
-FctTrans
-Integrateur
-IntegrateurSat
+Derivative
+TransferFunction
+Integrator
+SaturatedIntegrator
 PI
 PIsat
 PT1

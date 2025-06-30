@@ -1,7 +1,7 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Math;
-block EgEntier
-  parameter Integer C1=1 "Valeur de u1 si u1 non connecté";
-  parameter Integer C2=2 "Valeur de u2 si u2 non connecté";
+block EqualInteger
+  parameter Integer C1=1 "Value of u1 if u1 is not connected";
+  parameter Integer C2=2 "Value of u2 if u2 is not connected";
 
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputLogical yL
                                      annotation (Placement(transformation(
@@ -100,4 +100,4 @@ equation
 <p><b>Version 1.6</b></p>
 </HTML>
 "));
-end EgEntier;
+end EqualInteger;

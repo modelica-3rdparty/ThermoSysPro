@@ -1,7 +1,7 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Logique;
 block SampleTrigger
-  parameter Real period=1 "Periode des impulsions (s)";
-  parameter Real startTime=0 "Instant de départ des impulsions";
+  parameter Real period=1 "Pulse period (s)";
+  parameter Real startTime=0 "Pulse start time";
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputLogical yL
                                            annotation (Placement(transformation(

@@ -1,12 +1,12 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Continu;
-block FctTrans
+block TransferFunction
   parameter Real b[:]={1}
-    "Coefficients numérateurs de la fonction de transfert (par puissances décroissantes)";
+    "Numerator coefficients of the transfer function (in descending powers)";
   parameter Real a[:]={1,1}
-    "Coefficients dénominateurs de la fonction de transfert (par puissances décroissantes)";
+    "Denominator coefficients of the transfer function (in descending powers)";
   parameter Real U0=0
-    "Valeur de la sortie à l'instant initial (si non permanent et si u0 non connecté)";
-  parameter Boolean permanent=false "Calcul du permanent";
+    "Initial output value (if not steady-state and if u0 is not connected)";
+  parameter Boolean permanent=false "Steady-state calculation";
 
 protected
   parameter Integer na=size(a, 1);
@@ -99,4 +99,4 @@ equation
 <p><b>Version 1.7</b></p>
 </HTML>
 "));
-end FctTrans;
+end TransferFunction;

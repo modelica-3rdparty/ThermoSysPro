@@ -18,7 +18,7 @@ Log
 Log10
 Mul
 Mul3
-Polynome
+Polynomial
 Sign
 Sin
 Sqrt
@@ -28,3 +28,9 @@ SupegEntier
 SupEntier
 Tan
 BooleanToReal
+EqualInteger
+LessEqualInteger
+LessInteger
+GreaterEqualInteger
+GreaterInteger
+GreaterEqual

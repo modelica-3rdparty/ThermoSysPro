@@ -1,12 +1,12 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Continu;
 block PIsat
   parameter Real k=1 "Gain";
-  parameter Real Ti=1 "Constante de temps (s)";
-  parameter Real maxval=1 "Valeur maximale de la sortie";
-  parameter Real minval=0 "Valeur minimale de la sortie";
+  parameter Real Ti=1 "Time constant (s)";
+  parameter Real maxval=1 "Maximum output value";
+  parameter Real minval=0 "Minimum output value";
   parameter Real ureset0=0
-    "Valeur de la sortie sur reset (si ureset non connecté)";
-  parameter Boolean permanent=false "Calcul du permanent";
+    "Output value on reset (if ureset is not connected)";
+  parameter Boolean permanent=false "Steady-state calculation";
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal u
                                       annotation (Placement(transformation(
           extent={{-120,-10},{-100,10}}, rotation=0)));
@@ -129,10 +129,7 @@ equation
       y=0.18,
       width=0.56,
       height=0.73),
-    Documentation(info="<html>
-<p><b>Adapted from the Modelica.Blocks.Continuous library</b> </p>
-<p><b>Version 1.7</h4>
-</html>"),
+    Documentation(info="<html>\n<p><b>Adapted from the Modelica.Blocks.Continuous library</b> </p>\n<p><b>Version 1.7</h4>\n</html>"),
     Diagram(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},

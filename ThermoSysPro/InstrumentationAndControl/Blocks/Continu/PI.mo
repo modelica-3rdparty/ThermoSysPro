@@ -1,10 +1,10 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Continu;
 block PI
   parameter Real k=1 "Gain";
-  parameter Real Ti=1 "Constante de temps (s)";
+  parameter Real Ti=1 "Time constant (s)";
   parameter Real ureset0=0
-    "Valeur de la sortie sur reset (si ureset non connecté)";
-  parameter Boolean permanent=false "Calcul du permanent";
+    "Output value on reset (if ureset is not connected)";
+  parameter Boolean permanent=false "Steady-state calculation";
 
 protected
   Real x;
@@ -67,8 +67,8 @@ equation
           fillColor={192,192,192},
           fillPattern=FillPattern.Solid),
         Line(
-          points={{-74,-68},{-74,2},{66,58}},
-          color={0,0,255},
+          points={{-74,86},{-82,64},{-66,64},{-74,86}},
+          color={192,192,192},
           thickness=0.25),
         Text(
           extent={{-32,70},{0,42}},
@@ -129,11 +129,5 @@ equation
       y=0.2,
       width=0.58,
       height=0.65),
-    Documentation(info="<html>
-<p><b>Adapted from the Modelica.Blocks.Continuous library</b></p>
-</HTML>
-<html>
-<p><b>Version 1.6</b></p>
-</HTML>
-"));
+    Documentation(info="<html>\n<p><b>Adapted from the Modelica.Blocks.Continuous library</b></p>\n</HTML>\n<html>\n<p><b>Version 1.6</b></p>\n</HTML>\n"));
 end PI;

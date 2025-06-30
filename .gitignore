@@ -16,4 +16,9 @@ status*
 *.mof
 *.c
 buildlog.txt
-
+.FMUOutput
+*_wsl*
+wslenv.sh
+wslpath.bat
+dslog_dsbuildfmu.txt
+*.fmu

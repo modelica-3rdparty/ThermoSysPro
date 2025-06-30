@@ -1,7 +1,7 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Math;
-block Supeg
-  parameter Real C1=0 "Valeur de u1 si u1 non connecté";
-  parameter Real C2=0 "Valeur de u2 si u2 non connecté";
+block GreaterEqual
+  parameter Real C1=0 "Value of u1 if u1 is not connected";
+  parameter Real C2=0 "Value of u2 if u2 is not connected";
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal u1
                                        annotation (Placement(transformation(
           extent={{-120,50},{-100,70}}, rotation=0)));
@@ -96,4 +96,4 @@ equation
 <p><b>Version 1.6</b></p>
 </HTML>
 "));
-end Supeg;
+end GreaterEqual;

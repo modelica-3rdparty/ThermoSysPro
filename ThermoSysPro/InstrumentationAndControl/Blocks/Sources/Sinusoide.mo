@@ -1,10 +1,10 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Sources;
-block Sinusoide
+block Sine
   parameter Real amplitude=1 "Amplitude";
-  parameter Real period=1 "Periode (s)";
+  parameter Real period=1 "Period (s)";
   parameter Real phase=0 "Phase (rad)";
-  parameter Real offset=0 "Décalage de la sortie";
-  parameter Real startTime=0 "Instant de départ de la sinusoide (s)";
+  parameter Real offset=0 "Output offset";
+  parameter Real startTime=0 "Sine start time (s)";
 
 protected
   constant Real pi=Modelica.Constants.pi;
@@ -135,4 +135,4 @@ equation
 <p><b>Version 1.7</b></p>
 </HTML>
 "));
-end Sinusoide;
+end Sine;

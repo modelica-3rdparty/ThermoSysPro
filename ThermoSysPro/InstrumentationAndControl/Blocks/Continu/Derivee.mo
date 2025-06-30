@@ -1,8 +1,8 @@
 within ThermoSysPro.InstrumentationAndControl.Blocks.Continu;
-block Derivee
+block Derivative
   parameter Real k=1 "Gain";
   parameter Real Ti(min=Modelica.Constants.small) = 0.001
-    "Constante de temps (s)";
+    "Time constant (s)";
 
 protected
   Real x;
@@ -108,11 +108,5 @@ equation
       y=0.21,
       width=0.6,
       height=0.6),
-    Documentation(info="<html>
-<p><b>Adapted from the Modelica.Blocks.Continuous library</b></p>
-</HTML>
-<html>
-<p><b>Version 1.7</b></p>
-</HTML>
-"));
-end Derivee;
+    Documentation(info="<html>\n<p><b>Adapted from the Modelica.Blocks.Continuous library</b></p>\n</HTML>\n<html>\n<p><b>Version 1.7</b></p>\n</HTML>\n"));
+end Derivative;

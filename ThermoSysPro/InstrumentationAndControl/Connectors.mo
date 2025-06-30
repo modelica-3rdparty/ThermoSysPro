@@ -3,8 +3,7 @@ package Connectors "Connectors"
 
 
   connector InputDateAndTime
-    input ThermoSysPro.InstrumentationAndControl.Common.DateEtHeure
-                             signal;
+    input ThermoSysPro.InstrumentationAndControl.Common.DateAndTime signal;
     annotation (
       Window(
         x=0.37,
@@ -26,8 +25,7 @@ package Connectors "Connectors"
   end InputDateAndTime;
 
   connector OutputDateAndTime
-    output ThermoSysPro.InstrumentationAndControl.Common.DateEtHeure
-                              signal;
+    output ThermoSysPro.InstrumentationAndControl.Common.DateAndTime signal;
     annotation (
       Window(
         x=0.29,

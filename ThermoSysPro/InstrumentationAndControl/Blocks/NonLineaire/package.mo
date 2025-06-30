@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks;
-package NonLineaire "Bibliothèque des blocs non-linéaires"
+package NonLineaire "Library of nonlinear blocks"
 
 
 

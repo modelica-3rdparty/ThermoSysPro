@@ -1,16 +1,16 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.Sources;
-block Trapezoide
-  parameter Real amplitude=1 "Amplitude du trapèze";
-  parameter Real rising(final min=0) = 0.5 "Durée du front montant (s)";
-  parameter Real largeur(final min=0) = 2 "Largeur du trapèze (s)";
-  parameter Real falling(final min=0) = 0.5 "Durée du front descendant (s)";
-  parameter Real periode(final min=Modelica.Constants.small) = 4 "Période (s)";
-  parameter Integer n=-1 "Nombre de périodes (< 0 nombre de périodes infini)";
-  parameter Real offset=0 "Décalage de la sortie";
-  parameter Real startTime=0 "Instant de départ de l'échelon";
+block Trapezoid
+  parameter Real amplitude=1 "Trapezoid amplitude";
+  parameter Real rising(final min=0) = 0.5 "Rising edge duration (s)";
+  parameter Real width(final min=0) = 2 "Trapezoid width (s)";
+  parameter Real falling(final min=0) = 0.5 "Falling edge duration (s)";
+  parameter Real period(final min=Modelica.Constants.small) = 4 "Period (s)";
+  parameter Integer n=-1 "Number of periods (< 0 infinite periods)";
+  parameter Real offset=0 "Output offset";
+  parameter Real startTime=0 "Step start time";
 
 protected
-  Real T0(final start=startTime) "Instant de départ de la période courante";
+  Real T0(final start=startTime) "Start time of the current period";
   Integer counter(start=n);
   Integer counter2(start=n);
 public
@@ -19,16 +19,16 @@ public
           extent={{100,-10},{120,10}}, rotation=0)));
 equation
 
-  when ((pre(counter2) <> 0) and sample(startTime, periode)) then
+  when ((pre(counter2) <> 0) and sample(startTime, period)) then
     T0 = time;
     counter2 = pre(counter);
     counter = pre(counter) - (if pre(counter) > 0 then 1 else 0);
   end when;
 
   y.signal = offset + (if (time < startTime or (counter2 == 0) or (time >= T0
-     + rising + largeur + falling)) then 0 else if (time < T0 + rising) then (
-    time - T0)*amplitude/rising else if (time < T0 + rising + largeur) then
-    amplitude else (T0 + rising + largeur - time)*amplitude/falling + amplitude);
+     + rising + width + falling)) then 0 else if (time < T0 + rising) then (
+    time - T0)*amplitude/rising else if (time < T0 + rising + width) then
+    amplitude else (T0 + rising + width - time)*amplitude/falling + amplitude);
   annotation (
     Icon(coordinateSystem(
         preserveAspectRatio=false,
@@ -231,4 +231,4 @@ equation
 <p><b>Version 1.0</b></p>
 </HTML>
 "));
-end Trapezoide;
+end Trapezoid;

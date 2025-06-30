@@ -1,5 +1,5 @@
 ﻿within ThermoSysPro.InstrumentationAndControl.Blocks.NonLineaire;
-block LimiteurVar
+block VariableLimiter
   parameter Real maxval=1
     "Valeur maximale de la sortie si limit1 n'est pas connecté";
   parameter Real minval=-1
@@ -126,4 +126,4 @@ equation
 <p><b>Version 1.6</b></p>
 </HTML>
 "));
-end LimiteurVar;
+end VariableLimiter;
