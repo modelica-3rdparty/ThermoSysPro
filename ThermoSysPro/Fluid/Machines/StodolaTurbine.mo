@@ -96,9 +96,6 @@ equation
   Ce.diff_res_2 = Cs.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
 
-  /* Fluid composition balance equations*/
-  Ce.Xi = Cs.Xi;
-
   Ce.SubC = Cs.SubC;
 
   Q = Ce.Q;
