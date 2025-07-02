@@ -55,7 +55,6 @@ public
   Units.SI.Velocity Vs "Fluid velocity at the outlet";
   Units.SI.Density rhos(start=200) "Fluid density at the outlet";
   Real xm(start=1.0,min=0) "Average vapor mass fraction";
-  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
 public
   Medium.ThermodynamicState state_e;
@@ -99,7 +98,6 @@ equation
 
   /* Fluid composition balance equations*/
   Ce.Xi = Cs.Xi;
-  X = Ce.Xi;
 
   Ce.SubC = Cs.SubC;
 
