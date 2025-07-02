@@ -138,15 +138,15 @@ equation
   MechPower.signal = W;
 
   /* Fluid thermodynamic properties before the expansion */
-  state_e=Medium.setState_phX(p=Pe, h=Ce.h, phase=phase_e);
+  state_e=Medium.setState_ph(p=Pe, h=Ce.h, phase=phase_e);
 
   Te = state_e.T;
 
   /* Fluid thermodynamic properties after the expansion */
-  state_s1 = Medium.setState_phX(p=Ps, h=Hrs, phase=phase_s);
+  state_s1 = Medium.setState_ph(p=Ps, h=Hrs, phase=phase_s);
 
   /* Fluid thermodynamic properties at the outlet of the nozzle */
-  state_s = Medium.setState_phX(p=Ps, h=Cs.h, phase=phase_s);
+  state_s = Medium.setState_ph(p=Ps, h=Cs.h, phase=phase_s);
 
   Ts = state_s.T;
   rhos = state_s.d;
