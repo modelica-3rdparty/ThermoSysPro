@@ -28,3 +28,4 @@ TestVolumeDTh_Traces
 TestVolumeITh
 TestVolumeITh_FlueGases
 TestVolumeITh_Traces
+TestTank_withPipePressureLosses
