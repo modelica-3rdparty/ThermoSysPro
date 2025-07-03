@@ -1,15 +1,17 @@
 within ThermoSysPro.Fluid.Sensors;
 model SensorQ "Mass flow sensor"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Measure
     annotation (Placement(transformation(
         origin={0,102},
         extent={{-10,-10},{10,10}},
         rotation=90)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-90},{-90,-70}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{92,-90},{112,-70}}, rotation=0)));
 equation
 
@@ -26,12 +28,9 @@ equation
   C2.diff_res_1 = C1.diff_res_1;
   C1.diff_res_2 = C2.diff_res_2;
 
-  C1.ftype = C2.ftype;
+  C1.Xi = C2.Xi;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  C1.SubC = C2.SubC;
 
   /* Sensor signal */
   Measure.signal = C1.Q;
