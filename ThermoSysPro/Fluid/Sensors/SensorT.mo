@@ -3,18 +3,9 @@ model SensorT "Temperature sensor"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
-  parameter Integer output_unit=1 "Sensor outpu unit - 1: m3/h, other: m3/s";
-
-protected
-  constant Real pi=Modelica.Constants.pi "pi";
-  parameter Units.SI.MassFlowRate Qeps=1.e-3
-    "Minimum mass flow rate for continuous flow reversal";
 
 public
-  Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
   Units.SI.Temperature T "Fluid temperature";
-  Units.SI.AbsolutePressure P "Fluid average pressure";
-  Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
 
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Measure
@@ -48,16 +39,11 @@ equation
 
   C1.SubC = C2.SubC;
 
-  Q = C1.Q;
-
   /* Sensor signal */
   Measure.signal = T;
 
   /* Fluid thermodynamic properties */
-  P = (C1.P + C2.P)/2;
-  h = (C1.h + C2.h)/2;
-
-  T = Medium.temperature_phX(p=P, h=h, X=C1.Xi);
+  T = Medium.temperature_phX(p=C1.P, h=C1.h, X=C1.Xi);
 
   annotation (
     Diagram(coordinateSystem(
