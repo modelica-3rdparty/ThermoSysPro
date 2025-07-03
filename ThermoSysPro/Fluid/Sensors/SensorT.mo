@@ -15,7 +15,6 @@ public
   Units.SI.Temperature T "Fluid temperature";
   Units.SI.AbsolutePressure P "Fluid average pressure";
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
-  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
 
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Measure
@@ -50,7 +49,6 @@ equation
   C1.SubC = C2.SubC;
 
   Q = C1.Q;
-  X = C1.Xi;
 
   /* Sensor signal */
   Measure.signal = T;
@@ -59,7 +57,7 @@ equation
   P = (C1.P + C2.P)/2;
   h = (C1.h + C2.h)/2;
 
-  T = Medium.temperature_phX(p=P, h=h, X=X);
+  T = Medium.temperature_phX(p=P, h=h, X=C1.Xi);
 
   annotation (
     Diagram(coordinateSystem(
