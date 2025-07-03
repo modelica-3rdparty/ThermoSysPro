@@ -10,7 +10,6 @@ model TestLoopBreakerQH
   ThermoSysPro.Fluid.LoopBreakers.LoopBreakerQ loopBreakerQ(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{0,0},{20,20}}, rotation=0)));
   ThermoSysPro.Fluid.LoopBreakers.LoopBreakerH loopBreakerH(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{30,0},{50,20}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.RefT refT(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-60,0},{-40,20}}, rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe lumpedStraightPipe(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{60,0},{80,20}}, rotation=0)));
   ThermoSysPro.Fluid.Volumes.VolumeA volumeA(redeclare package Medium = Medium, dynamic_energy_balance=false) annotation (Placement(transformation(extent={{10,-30},{-10,-10}})));
 equation
   connect(refP.C2, refT.C1) annotation (Line(points={{-70,10},{-60,10}}, color={0,0,255}));
@@ -18,9 +17,8 @@ equation
   connect(constante.y, refP.IPressure) annotation (Line(points={{-79,70},{-60,70},{-60,34},{-80,34},{-80,21}}));
   connect(pump.C2, loopBreakerQ.C1) annotation (Line(points={{-10,10},{0,10}}, color={0,0,255}));
   connect(loopBreakerQ.C2, loopBreakerH.C1) annotation (Line(points={{20,10},{30,10}}, color={0,0,255}));
-  connect(loopBreakerH.C2, lumpedStraightPipe.C1) annotation (Line(points={{50,10},{60,10}}, color={0,0,255}));
-  connect(lumpedStraightPipe.C2, volumeA.Ce1) annotation (Line(points={{80,10},{100,10},{100,-20},{10,-20}}, color={0,0,0}));
   connect(volumeA.Cs1, refP.C1) annotation (Line(points={{-10,-20},{-100,-20},{-100,10},{-90,10}}, color={0,0,0}));
 
+  connect(volumeA.Ce1, loopBreakerH.C2) annotation (Line(points={{10,-20},{100,-20},{100,10},{50,10}}, color={0,0,0}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(coordinateSystem(preserveAspectRatio=false)));
 end TestLoopBreakerQH;
