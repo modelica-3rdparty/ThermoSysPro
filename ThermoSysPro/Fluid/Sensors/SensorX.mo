@@ -1,23 +1,10 @@
 within ThermoSysPro.Fluid.Sensors;
-model SensorQv "Volumetric flow sensor"
+model SensorX "X sensor"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
-  parameter Integer output_unit=1 "Sensor outpu unit - 1: m3/h, other: m3/s";
-
-protected
-  constant Real pi=Modelica.Constants.pi "pi";
-  Units.SI.Time facteur=if (output_unit == 1) then 3600 else 1 "Unit factor";
-
 public
-  Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
-  Units.SI.VolumeFlowRate Qv(start=0.5) "Volume flow rate";
-  Units.SI.AbsolutePressure Pm "Fluid average pressure";
-  Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
-  Units.SI.Density rho(start=998) "Fluid density";
-
-public
-  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Measure
+  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal[Medium.nXi] Measure
     annotation (Placement(transformation(
         origin={0,102},
         extent={{-10,-10},{10,10}},
@@ -29,8 +16,8 @@ public
 equation
 
   C1.P = C2.P;
-  C1.h = C2.h;
   C1.Q = C2.Q;
+  C1.h = C2.h;
 
   C1.h_vol_1 = C2.h_vol_1;
   C1.h_vol_2 = C2.h_vol_2;
@@ -45,16 +32,8 @@ equation
 
   C1.SubC = C2.SubC;
 
-  Q = C1.Q;
-
   /* Sensor signal */
-  Qv = Q/rho;
-  Measure.signal = Qv*facteur;
-
-  /* Fluid thermodynamic properties */
-  Pm = (C1.P + C2.P)/2;
-  h = C1.h;
-  rho = Medium.density_phX(p=Pm, h=h, X=C1.Xi);
+  Measure.signal = C1.Xi;
 
   annotation (
     Icon(coordinateSystem(
@@ -66,17 +45,15 @@ equation
           lineColor={0,0,0},
           fillPattern=FillPattern.Solid,
           fillColor=DynamicSelect({127,255,0}, fill_color_singular)),
-        Line(points={{0,-30},{0,-80}}),
+        Line(points={{0,-28},{0,-80}}),
         Line(points={{-98,-80},{102,-80}}),
-        Text(
-          extent={{-60,60},{60,0}},
-          lineColor={0,0,0},
-          textString="Qv")}),
+        Text(extent={{-60,60},{60,0}}, textString=
+                                            "X")}),
     Window(
-      x=0.3,
-      y=0.19,
-      width=0.6,
-      height=0.6),
+      x=0.62,
+      y=0.25,
+      width=0.35,
+      height=0.49),
     Diagram(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},
@@ -86,14 +63,10 @@ equation
           lineColor={0,0,0},
           fillPattern=FillPattern.Solid,
           fillColor={0,255,0}),
-        Line(points={{0,-30},{0,-80}}),
+        Line(points={{0,-28},{0,-80}}),
         Line(points={{-98,-80},{102,-80}}),
-        Text(
-          extent={{-60,64},{60,4}},
-          lineColor={28,108,200},
-          fillColor={255,255,0},
-          fillPattern=FillPattern.Solid,
-          textString =                      "Qv")}),
+        Text(extent={{-60,60},{60,0}}, textString=
+                                            "X")}),
     Documentation(info="<html>
 <p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
 <p><b>ThermoSysPro Version 4.1</b> </p>
@@ -102,7 +75,7 @@ equation
 <p><u><b>Authors</b></u></p>
 <ul>
 <li>Daniel Bouskela</li>
-<li>Baligh El Hefni</li>
+<li>Baligh El Hefni </li>
 </ul>
 </html>"));
-end SensorQv;
+end SensorX;
