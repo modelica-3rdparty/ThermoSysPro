@@ -6,14 +6,11 @@ model SensorQv "Volumetric flow sensor"
   parameter Integer output_unit=1 "Sensor outpu unit - 1: m3/h, other: m3/s";
 
 protected
-  constant Real pi=Modelica.Constants.pi "pi";
-  Units.SI.Time facteur=if (output_unit == 1) then 3600 else 1 "Unit factor";
+  parameter Units.SI.Time facteur=if (output_unit == 1) then 3600 else 1 "Unit factor";
 
 public
   Units.SI.MassFlowRate Q(start=500) "Mass flow rate";
   Units.SI.VolumeFlowRate Qv(start=0.5) "Volume flow rate";
-  Units.SI.AbsolutePressure Pm "Fluid average pressure";
-  Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
   Units.SI.Density rho(start=998) "Fluid density";
 
 public
@@ -52,9 +49,7 @@ equation
   Measure.signal = Qv*facteur;
 
   /* Fluid thermodynamic properties */
-  Pm = (C1.P + C2.P)/2;
-  h = C1.h;
-  rho = Medium.density_phX(p=Pm, h=h, X=C1.Xi);
+  rho = Medium.density_phX(p=C1.P, h=C1.h, X=C1.Xi);
 
   annotation (
     Icon(coordinateSystem(
