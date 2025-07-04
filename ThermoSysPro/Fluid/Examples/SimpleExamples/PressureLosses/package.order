@@ -9,6 +9,7 @@ TestControlValve_Traces
 TestControlValve_Traces_FlueGases
 TestLumpedStraightPipe
 TestLumpedStraightPipe_Traces
+TestLumpedStraightPipe_FlueGases
 TestDynamicReliefValve
 TestDynamicReliefValve_FlueGases
 TestDynamicReliefValve_Traces

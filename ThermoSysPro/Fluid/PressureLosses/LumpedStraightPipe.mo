@@ -120,12 +120,12 @@ equation
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
-  state=Medium.setState_phX(p=Pm, h=h, X=X, region=mode);
+  state=Medium.setState_phX(p=Pm, h=h, X=X);
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = state.d;
+    rho = Medium.density(state);
   end if;
 
 
