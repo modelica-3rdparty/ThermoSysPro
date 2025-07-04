@@ -1,11 +1,9 @@
 within ThermoSysPro.Fluid.PressureLosses;
 model LumpedStraightPipe "Lumped straight pipe (circular duct)"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
-
-
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
   parameter Units.SI.Length L=10. "Pipe length";
   parameter Units.SI.Diameter D=0.2 "Pipe internal hydraulic diameter";
@@ -22,12 +20,10 @@ model LumpedStraightPipe "Lumped straight pipe (circular duct)"
     "true: momentum balance equation with inertia - false: without inertia";
   parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
 
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Real eps=1.e-3 "Small number for pressure loss equation";
   parameter Units.SI.Area A=ntubes*pi*D^2/4
     "Pipe cross-sectional area (circular duct is assumed)";
