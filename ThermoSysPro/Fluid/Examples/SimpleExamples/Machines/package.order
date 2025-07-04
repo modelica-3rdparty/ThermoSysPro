@@ -6,3 +6,5 @@ TestStaticCentrifugalPump_Traces
 TestCentrifugalPump
 TestCentrifugalPump_FlueGases
 TestCentrifugalPump_Traces
+TestCombustionTurbine
+TestCombustionTurbine_Traces
