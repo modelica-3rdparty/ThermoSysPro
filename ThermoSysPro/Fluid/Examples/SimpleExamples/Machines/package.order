@@ -10,3 +10,4 @@ TestCombustionTurbine
 TestCombustionTurbine_Traces
 TestCompressor
 TestCompressor_Traces
+TestStaticFan
