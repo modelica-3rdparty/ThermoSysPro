@@ -7,3 +7,5 @@ TestRefP_Traces_FlueGases
 TestRefT
 TestRefSubC_Traces
 TestRefX_FlueGases
+TestAirHumidity
+TestAirHumidity_Traces
