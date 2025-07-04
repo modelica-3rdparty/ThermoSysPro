@@ -3,7 +3,7 @@ model SourcePQ "MultiFluids source with fixed pressure and mass flow rate"
 
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Units.SI.AbsolutePressure P0=300000 "Fluid pressure (active if IPressure connector is not connected)";
   parameter Units.SI.MassFlowRate Q0=100 "Mass flow (active if IMassFlow connector is not connected)";
   parameter Units.SI.Temperature T0=290 "Source temperature (active if option_temperature=true)" annotation (Evaluate=true, Dialog(enable=option_temperature));

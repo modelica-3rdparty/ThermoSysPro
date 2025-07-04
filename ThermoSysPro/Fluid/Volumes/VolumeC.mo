@@ -3,7 +3,7 @@ model VolumeC "Mixing volume with 3 inlets and 1 outlet"
 
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   replaceable function SaS = Medium.noSaS(SubC=SubC) annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Boolean dynamic_energy_balance=true
     "true: dynamic energy balance equation - false: static energy balance equation";

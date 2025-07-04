@@ -3,7 +3,7 @@ model Sink "MultiFluids sink"
 
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Units.SI.Temperature T0=290 "Source temperature (active if option_temperature=true)" annotation (Evaluate=true, Dialog(enable=option_temperature));
   parameter Units.SI.SpecificEnthalpy h0=100000 "Source specific enthalpy (active if option_temperature=false)" annotation (Evaluate=true, Dialog(enable=not option_temperature));
   parameter Boolean option_temperature=false "true:temperature fixed - false:specific enthalpy fixed";
