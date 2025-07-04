@@ -5,12 +5,8 @@ model TestStaticFan
   replaceable package Medium = ThermoSysPro.Properties.Media.FlueGases;
   ThermoSysPro.Fluid.BoundaryConditions.SourcePQ Source_Fumees(
     redeclare package Medium = Medium,
-    Xso2=0,
-    Xco2=0.0,
-    Xh2o=0.006,
-    Xo2=0.23,
+    X0={1-0.006-0.23,0.23,0.006,0,0},
     Q0=4,
-    ftype=ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType.FlueGases,
     P0=130000,
     T0=300,
     option_temperature=true) annotation (Placement(transformation(extent={{-210,-24},{-164,24}}, rotation=0)));
@@ -21,7 +17,6 @@ model TestStaticFan
         rotation=180)));
   ThermoSysPro.Fluid.Volumes.VolumeATh dynamicExchanger(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-68,50},{-48,70}}, rotation=0)));
   ThermoSysPro.Thermal.BoundaryConditions.HeatSource heatSource(
-    redeclare package Medium = Medium,
     option_temperature=2,
     W0={1e4}) annotation (Placement(transformation(extent={{-48,90},{-28,110}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLossFlueGases(
