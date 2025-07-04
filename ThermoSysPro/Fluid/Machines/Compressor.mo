@@ -1,7 +1,8 @@
 within ThermoSysPro.Fluid.Machines;
 model Compressor "Gas compressor"
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
+  replaceable package Medium = ThermoSysPro.Properties.Media.FlueGases constrainedby Modelica.Media.Interfaces.PartialMixtureMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Integer mass_flow_rate_comp=1 "Ways for computing the mass flow rate - 1: Q = rho*Qv - 2: Q = rho*f(T)";
   parameter Units.SI.Temperature Tmax=284.16
     "Air transition temperature between f1 = a*x + b and f2 = c*x + d for the computation of Q (active if mass_flow_rate_comp == 2)";
@@ -43,22 +44,15 @@ public
     "Air specific enthalpy after the isentropic compression";
   Units.SI.SpecificEntropy Se "Air specific entropy at the inlet";
   Units.SI.Density rho_e(start=1) "Air density at the inlet";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
 
 public
-  Interfaces.Connectors.FluidInlet Ce annotation (Placement(transformation(
-          extent={{-100,-10},{-80,10}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet Cs annotation (Placement(transformation(
-          extent={{80,-10},{100,10}}, rotation=0)));
-public
-  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Power
-    annotation (Placement(transformation(extent={{80,-40},{100,-20}}, rotation=
-            0)));
+  Interfaces.Connectors.FluidInlet Ce(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-100,-10},{-80,10}}, rotation=0)));
+  Interfaces.Connectors.FluidOutlet Cs(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{80,-10},{100,10}}, rotation=0)));
+  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Power annotation (Placement(transformation(extent={{80,-40},{100,-20}}, rotation=0)));
+
+  Medium.ThermodynamicState state_e;
+  Medium.ThermodynamicState state_s;
 equation
-  /* Check that the fluid type is flue gases */
-  assert(ftype == FluidType.FlueGases, "Compressor: the fluid type must be flue gases");
-
   Ce.Q = Cs.Q;
 
   Ce.h_vol_1 = Cs.h_vol_1;
@@ -70,12 +64,9 @@ equation
   Cs.diff_res_1 = Ce.diff_res_1 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
   Ce.diff_res_2 = Cs.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
-  Ce.ftype = Cs.ftype;
+  Ce.SubC = Cs.SubC;
 
-  Ce.Xco2 = Cs.Xco2;
-  Ce.Xh2o = Cs.Xh2o;
-  Ce.Xo2  = Cs.Xo2;
-  Ce.Xso2 = Cs.Xso2;
+  Ce.Xi = Cs.Xi;
 
   Q = Ce.Q;
 
@@ -84,8 +75,6 @@ equation
 
   He = Ce.h;
   Hs = Cs.h;
-
-  ftype = Ce.ftype;
 
   /* Compression rate */
   tau = Ps/Pe;
@@ -107,18 +96,19 @@ equation
   /* Specific enthalpy at the inlet */
   //Te = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pe, He, fluid, 0, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
   // Call implicitly to avoid function that cannot be differentiated.
-  He = ThermoSysPro.Properties.FlueGases.FlueGases_h(Pe, Te, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
-
+  state_e = Medium.setState_pTX(Pe,Te,Ce.Xi);
+  He = Medium.specificEnthalpy_pTX(Pe,Te,Ce.Xi);
   /* Specific entropy at the inlet */
-  Se = ThermoSysPro.Properties.FlueGases.FlueGases_s(Pe, Te, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
+  Se = Medium.specificEntropy(state_e);
 
   /* Specific enthalpy after the isentropic compression */
-  Se = ThermoSysPro.Properties.FlueGases.FlueGases_s(Ps, Tis, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
-  His = ThermoSysPro.Properties.FlueGases.FlueGases_h(Ps, Tis, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
+  state_s= Medium.setState_psX(Ps,Se,Ce.Xi);
+  Tis = Medium.temperature(state_s);
+  His = Medium.specificEnthalpy(state_s);
 
   /* Fluid density at the inlet */
   //rho_e = ThermoSysPro.Properties.Fluid.Density_Ph(Pe, He, fluid, 0, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
-  rho_e = ThermoSysPro.Properties.FlueGases.FlueGases_rho(Pe, Te, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
+  rho_e = Medium.density(state_e);
 
   /* Specific enthalpy at the outlet */
   Hs = (His - He + is_eff*He)/is_eff;
@@ -126,9 +116,9 @@ equation
   /* Temperature at the outlet */
   // Ts = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ps, Hs, fluid, 0, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
   // Call implicitly to avoid function that cannot be differentiated.
-  Hs = ThermoSysPro.Properties.FlueGases.FlueGases_h(Ps, Ts, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
-
+  Hs= Medium.specificEnthalpy_pTX(Ps,Ts,Ce.Xi);
   annotation (
+
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-120,-100},{
             120,100}}), graphics={Polygon(
           points={{-80,80},{-80,-80},{80,-40},{80,40},{-80,80}},

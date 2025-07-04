@@ -8,3 +8,5 @@ TestCentrifugalPump_FlueGases
 TestCentrifugalPump_Traces
 TestCombustionTurbine
 TestCombustionTurbine_Traces
+TestCompressor
+TestCompressor_Traces
