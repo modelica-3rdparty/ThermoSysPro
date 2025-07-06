@@ -1,8 +1,11 @@
 within ThermoSysPro.Fluid.Examples.SimpleExamples.Junctions;
-model TestMixer8
+model TestMixer8_Traces
   extends ThermoSysPro.UsersGuide.Icons.Example;
 
-  replaceable package Medium = Properties.Media.WaterSteam;
+  replaceable package Medium = Properties.Media.WaterSteam (
+      extraPropertiesNames={"Trace"},
+      C_nominal={0.1},
+      C_default={0.2});
   ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP(
     redeclare package Medium = Medium,
     C(h_vol_2(start=71016.12237181116)),
@@ -81,4 +84,4 @@ equation
 <p><b>Copyright &copy; EDF 2002 - 2024 </p>
 <p><b>ThermoSysPro Version 4.1 </h4>
 </html>"));
-end TestMixer8;
+end TestMixer8_Traces;
