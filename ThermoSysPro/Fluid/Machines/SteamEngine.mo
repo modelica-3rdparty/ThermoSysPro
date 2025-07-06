@@ -3,7 +3,6 @@ model SteamEngine "Steam engine"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
 
   parameter Real caract[:, 2]=[0, 0; 15e5, 20.0] "Engine charateristics Q=f(deltaP)";

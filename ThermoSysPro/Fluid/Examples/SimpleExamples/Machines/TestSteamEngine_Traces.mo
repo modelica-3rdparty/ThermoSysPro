@@ -12,7 +12,8 @@ model TestSteamEngine_Traces
     redeclare package Medium = Medium,
     h0=3.e6,
     option_temperature=false,
-    P0=1600000) annotation (Placement(transformation(extent={{-50,-10},{-30,10}}, rotation=0)));
+    P0=1600000,
+    SubC0={0.5}) annotation (Placement(transformation(extent={{-50,-10},{-30,10}}, rotation=0)));
 equation
   connect(sourceP.C, steamEngine1.C1) annotation (Line(points={{-30,0},{-7,0}}, color={0,0,255}));
   connect(steamEngine1.C2, puitsP.C) annotation (Line(points={{7,0},{30,0}}, color={0,0,255}));
@@ -27,24 +28,6 @@ equation
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},
         grid={2,2}), graphics),
-    Icon(graphics={
-        Rectangle(
-          lineColor={200,200,200},
-          fillColor={248,248,248},
-          fillPattern=FillPattern.HorizontalCylinder,
-          extent={{-100.0,-100.0},{100.0,100.0}},
-          radius=25.0),
-        Rectangle(
-          lineColor={128,128,128},
-          extent={{-100.0,-100.0},{100.0,100.0}},
-          radius=25.0),
-        Polygon(
-          origin={8.0,14.0},
-          lineColor={78,138,73},
-          fillColor={78,138,73},
-          pattern=LinePattern.None,
-          fillPattern=FillPattern.Solid,
-          points={{-58.0,46.0},{42.0,-14.0},{-58.0,-74.0},{-58.0,46.0}})}),
     Documentation(info="<html>
 <p><b>Copyright &copy; EDF 2002 - 2024 </p>
 <p><b>ThermoSysPro Version 4.1 </h4>
