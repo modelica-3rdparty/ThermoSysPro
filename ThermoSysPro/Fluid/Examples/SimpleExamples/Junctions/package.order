@@ -6,3 +6,6 @@ TestSplitter2_FlueGases
 TestMixer2
 TestMixer2_Traces
 TestMixer2_FlueGases
+TestDeheaterMixer2
+TestDeheaterMixer2_Traces
+TestDeheaterMixer2_FlueGases
