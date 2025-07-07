@@ -20,3 +20,7 @@ TestMixer8_Traces
 TestSplitter3
 TestSplitter3_Traces
 TestSplitter3_FlueGases
+TestStaticDrum
+TestStaticDrum_Traces
+TestStaticDrum_Plug
+TestStaticDrum_Plug_Traces

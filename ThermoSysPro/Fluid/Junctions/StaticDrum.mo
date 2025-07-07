@@ -1,11 +1,7 @@
-﻿within ThermoSysPro.Fluid.Junctions;
+within ThermoSysPro.Fluid.Junctions;
 model StaticDrum "Static drum"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.WaterSteamFluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
-
+    replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Real x=1 "Vapor separation efficiency at the outlet";
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
@@ -17,18 +13,14 @@ protected
     "Water/steam reference specific enthalpy at 0.01°C";
   parameter Units.SI.MassFlowRate gamma0=1.e-4
     "Pseudo-diffusion conductance use for continuous flow reversal (active if diffusion=false and continuous_flow_reversal = true)";
-  parameter Integer fluid=Integer(ftype) "Fluid number";
 
 public
   Units.SI.Temperature T "Fluid temperature";
   Units.SI.AbsolutePressure P(start=10.e5) "Fluid pressure";
   Units.SI.SpecificEnthalpy hl(start=100000) "Liquid phase specific enthalpy";
   Units.SI.SpecificEnthalpy hv(start=2800000) "Gas phase specific enthalpy";
-  FluidType fluids[9] "Fluids mixing in volume";
-  ThermoSysPro.Units.SI.MassFraction Xco2 "CO2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xh2o "H20 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xo2 "O2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xso2 "SO2 mass fraction";
+  Medium.MassFraction X[Medium.nXi] "Fluid mass fraction";
+  Medium.ExtraProperty SubC[Medium.nC] "Fluid trace substances";
   Units.SI.Power Je_steam "Thermal power diffusion from inlet e_steam";
   Units.SI.Power Je_sup "Thermal power diffusion from inlet e_sup";
   Units.SI.Power Je_eva "Thermal power diffusion from inlet e_eva";
@@ -56,43 +48,27 @@ public
   Real rs_sur "Value of r(Q/gamma) for outlet s_sur";
 
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce_eva annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce_eva(redeclare package Medium = Medium) annotation (
       Placement(transformation(extent={{-104,-44},{-84,-24}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce_eco annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce_eco(redeclare package Medium = Medium) annotation (
       Placement(transformation(extent={{-50,-104},{-30,-84}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs_sup annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs_sup(redeclare package Medium = Medium) annotation (
       Placement(transformation(extent={{84,24},{104,44}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs_eva annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs_eva(redeclare package Medium = Medium) annotation (
       Placement(transformation(extent={{30,-104},{50,-84}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs_sur annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs_sur(redeclare package Medium = Medium) annotation (
       Placement(transformation(extent={{28,84},{48,104}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs_purg annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs_purg(redeclare package Medium = Medium) annotation (
       Placement(transformation(extent={{84,-44},{104,-24}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce_steam annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce_steam(redeclare package Medium = Medium) annotation (
       Placement(transformation(extent={{-48,84},{-28,104}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce_sup annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce_sup(redeclare package Medium = Medium) annotation (
       Placement(transformation(extent={{-104,26},{-84,46}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat
-    annotation (Placement(transformation(extent={{-104,66},{-78,98}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat
-    annotation (Placement(transformation(extent={{72,68},{100,100}}, rotation=0)));
   Thermal.Connectors.ThermalPort Cth annotation (Placement(transformation(
           extent={{-10,-10},{10,10}}, rotation=0)));
+
+  Medium.SaturationProperties sat;
 equation
-
-  /* Check that incoming fluids are compatible with fluid in volume */
-  fluids[1] = ftype;
-  fluids[2] = Ce_steam.ftype;
-  fluids[3] = Ce_sup.ftype;
-  fluids[4] = Ce_eva.ftype;
-  fluids[5] = Ce_eco.ftype;
-  fluids[6] = Cs_eva.ftype;
-  fluids[7] = Cs_purg.ftype;
-  fluids[8] = Cs_sup.ftype;
-  fluids[9] = Cs_sur.ftype;
-
-  assert(ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.isCompatible(fluids), "StaticDrum: fluids mixing in volume are not compatible with each other");
 
   /* Unconnected connectors */
   /* Steam input */
@@ -102,11 +78,8 @@ equation
     Ce_steam.h_vol_1 = 1.e5;
     Ce_steam.diff_res_1 = 0;
     Ce_steam.diff_on_1 = false;
-    Ce_steam.ftype = ftype;
-    Ce_steam.Xco2 = 0;
-    Ce_steam.Xh2o = 0;
-    Ce_steam.Xo2  = 0;
-    Ce_steam.Xso2 = 0;
+    Ce_steam.Xi = Medium.X_default[1:Medium.nXi];
+    Ce_steam.SubC = Medium.C_default;
   end if;
 
   /* Extra input */
@@ -116,11 +89,8 @@ equation
     Ce_sup.h_vol_1 = 1.e5;
     Ce_sup.diff_res_1 = 0;
     Ce_sup.diff_on_1 = false;
-    Ce_sup.ftype = ftype;
-    Ce_sup.Xco2 = 0;
-    Ce_sup.Xh2o = 0;
-    Ce_sup.Xo2  = 0;
-    Ce_sup.Xso2 = 0;
+    Ce_sup.Xi = Medium.X_default[1:Medium.nXi];
+    Ce_sup.SubC = Medium.C_default;
   end if;
 
   /* Input from evaporator */
@@ -130,11 +100,8 @@ equation
     Ce_eva.h_vol_1 = 1.e5;
     Ce_eva.diff_res_1 = 0;
     Ce_eva.diff_on_1 = false;
-    Ce_eva.ftype = ftype;
-    Ce_eva.Xco2 = 0;
-    Ce_eva.Xh2o = 0;
-    Ce_eva.Xo2  = 0;
-    Ce_eva.Xso2 = 0;
+    Ce_eva.Xi = Medium.X_default[1:Medium.nXi];
+    Ce_eva.SubC = Medium.C_default;
   end if;
 
   /* Input from the economizer */
@@ -144,11 +111,8 @@ equation
     Ce_eco.h_vol_1 = 1.e5;
     Ce_eco.diff_res_1 = 0;
     Ce_eco.diff_on_1 = false;
-    Ce_eco.ftype = ftype;
-    Ce_eco.Xco2 = 0;
-    Ce_eco.Xh2o = 0;
-    Ce_eco.Xo2  = 0;
-    Ce_eco.Xso2 = 0;
+    Ce_eco.Xi = Medium.X_default[1:Medium.nXi];
+    Ce_eco.SubC = Medium.C_default;
   end if;
 
   /* Output to the evaporator */
@@ -210,35 +174,20 @@ equation
   Cs_sur.h_vol_1 = (1 - x)*hl + x*hv;
 
   /* Fluid composition balance equations */
-  0 = Ce_steam.Xco2*Ce_steam.Q + Ce_sup.Xco2*Ce_sup.Q + Ce_eva.Xco2*Ce_eva.Q + Ce_eco.Xco2*Ce_eco.Q - Cs_sur.Xco2*Cs_sur.Q - Cs_sup.Xco2*Cs_sup.Q - Cs_purg.Xco2*Cs_purg.Q - Cs_eva.Xco2*Cs_eva.Q;
-  0 = Ce_steam.Xh2o*Ce_steam.Q + Ce_sup.Xh2o*Ce_sup.Q + Ce_eva.Xh2o*Ce_eva.Q + Ce_eco.Xh2o*Ce_eco.Q - Cs_sur.Xh2o*Cs_sur.Q - Cs_sup.Xh2o*Cs_sup.Q - Cs_purg.Xh2o*Cs_purg.Q - Cs_eva.Xh2o*Cs_eva.Q;
-  0 = Ce_steam.Xo2*Ce_steam.Q + Ce_sup.Xo2*Ce_sup.Q + Ce_eva.Xo2*Ce_eva.Q + Ce_eco.Xo2*Ce_eco.Q - Cs_sur.Xo2*Cs_sur.Q - Cs_sup.Xo2*Cs_sup.Q - Cs_purg.Xo2*Cs_purg.Q - Cs_eva.Xo2*Cs_eva.Q;
-  0 = Ce_steam.Xso2*Ce_steam.Q + Ce_sup.Xso2*Ce_sup.Q + Ce_eva.Xso2*Ce_eva.Q + Ce_eco.Xso2*Ce_eco.Q - Cs_sur.Xso2*Cs_sur.Q - Cs_sup.Xso2*Cs_sup.Q - Cs_purg.Xso2*Cs_purg.Q - Cs_eva.Xso2*Cs_eva.Q;
+  fill(0,Medium.nXi) = Ce_steam.Xi*Ce_steam.Q + Ce_sup.Xi*Ce_sup.Q + Ce_eva.Xi*Ce_eva.Q + Ce_eco.Xi*Ce_eco.Q - Cs_sur.Xi*Cs_sur.Q - Cs_sup.Xi*Cs_sup.Q - Cs_purg.Xi*Cs_purg.Q - Cs_eva.Xi*Cs_eva.Q;
 
-  Cs_eva.ftype = ftype;
-  Cs_purg.ftype = ftype;
-  Cs_sup.ftype = ftype;
-  Cs_sur.ftype = ftype;
+  X = Cs_eva.Xi;
+  X = Cs_purg.Xi;
+  X = Cs_sup.Xi;
+  X = Cs_sur.Xi;
 
-  Xco2 = Cs_eva.Xco2;
-  Xh2o = Cs_eva.Xh2o;
-  Xo2  = Cs_eva.Xo2;
-  Xso2 = Cs_eva.Xso2;
+  /* Traces composition balance equations */
+  fill(0, Medium.nC) = Ce_steam.SubC*Ce_steam.Q + Ce_sup.SubC*Ce_sup.Q + Ce_eva.SubC*Ce_eva.Q + Ce_eco.SubC*Ce_eco.Q - Cs_sur.SubC*Cs_sur.Q - Cs_sup.SubC*Cs_sup.Q - Cs_purg.SubC*Cs_purg.Q - Cs_eva.SubC*Cs_eva.Q;
 
-  Xco2 = Cs_purg.Xco2;
-  Xh2o = Cs_purg.Xh2o;
-  Xo2  = Cs_purg.Xo2;
-  Xso2 = Cs_purg.Xso2;
-
-  Xco2 = Cs_sup.Xco2;
-  Xh2o = Cs_sup.Xh2o;
-  Xo2  = Cs_sup.Xo2;
-  Xso2 = Cs_sup.Xso2;
-
-  Xco2 = Cs_sur.Xco2;
-  Xh2o = Cs_sur.Xh2o;
-  Xo2  = Cs_sur.Xo2;
-  Xso2 = Cs_sur.Xso2;
+  SubC = Cs_eva.SubC;
+  SubC = Cs_purg.SubC;
+  SubC = Cs_sup.SubC;
+  SubC = Cs_sur.SubC;
 
   /* Flow reversal */
   if continuous_flow_reversal then
@@ -331,11 +280,11 @@ equation
   Cs_sur.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P, fluid);
+  sat = Medium.setSat_p(P);
 
-  hl = lsat.h;
-  hv = vsat.h;
-  T = lsat.T;
+  hl = Medium.bubbleEnthalpy(sat);
+  hv = Medium.dewEnthalpy(sat);
+  T = sat.Tsat;
 
   Cth.T = T;
 
