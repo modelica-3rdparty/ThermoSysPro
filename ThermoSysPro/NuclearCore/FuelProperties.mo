@@ -1,5 +1,5 @@
 within ThermoSysPro.NuclearCore;
-block FuelProperties
+block FuelProperties "Nuclear Fuel Material Properties"
   input ThermoSysPro.Units.SI.Temperature T "Fuel Temperature";
   parameter Real porosity=0.05 "Fuel porosity";
   parameter Boolean MOX=false "Whether fuel is MOX or not";
@@ -113,7 +113,7 @@ equation
           rotation=90)}),                                        Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     Documentation(info="# Property Model for Nuclear Fuel Material
-Correlations are taken from:
+Correlations, for thermal conductivity \\\\(k\\\\) and specific heat capacity \\\\(cp\\\\), are taken from:
 1. N.E. Todreas, M. S. Kazimi, Nuclear System I, Thermal Hydraulics Fundamentals. Taylor&Francis, 1798.
 2. MATPRO VERSION 11, A HANDBOOK OF MATERIALS PROPERTIES FOR USE IN THE ANALYSIS OF LIGHT WATER REACTOR FUEL ROD BEHAVIOR. NUREG/CR-0497 TREE-1280, 1979.
 

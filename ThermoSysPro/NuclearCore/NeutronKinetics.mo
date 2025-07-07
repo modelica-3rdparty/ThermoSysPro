@@ -1,17 +1,13 @@
 within ThermoSysPro.NuclearCore;
-model NeutronKinetics "This module contains a model of the neutronic flux with six groups of
-  delayed neutrons. Starting from the total reactivity, which is an input in the module and it is given
-  by the sum of all the possible feedback effects (Doppler, moderator, control bars, boron and xenon),
-  this module calculates the evolution of the fission power of the reactor. The total power is the sum of the neutronic power
-  and the residual power (which is an input of the module)."
+model NeutronKinetics "Neutronic power evolution by neutron kinetics"
 
-  parameter ThermoSysPro.Units.SI.Time Tlife=23.27e-6
+  parameter ThermoSysPro.Units.SI.Time Tlife=20e-6
     "Average lifetime of the prompt neutrons in the core (s)";
   parameter Real Kfuel=1
     "Ratio between the power produced in the fuel and the total power";
-  parameter Real Lambda[6]={0.0125,0.0308,0.1143,0.3103,1.2331,3.289}
+  parameter Real Lambda[6]={0.0124,0.0305,0.111,0.301,1.14,3.01}
     "Radioactivity constants of the groups of the delayed neutrons (1/s)";
-  parameter Real Beta[6]={0.00021,0.00142,0.00131,0.00274,0.000932,0.000313}
+  parameter Real Beta[6]={0.00021,0.00142,0.00128,0.00257,0.00075,0.00027}
     "Fraction of delayed neutrons in each group with respect to the total number of neutrons emitted per fission";
 
   parameter Real Ptot0=524e6 "Initial power of the core";
@@ -336,11 +332,16 @@ equation
           fillColor=45,
           rgbfillColor={255,128,0}),
         string="Ph2o")),
-    Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
-</HTML>
-<html>
-<p><b>ThermoSysPro Version 4.1</b></p>
-</HTML>
+    Documentation(info="# Point Kinetics Model
+
+This module contains a model of the neutronic power with six groups of delayed neutrons (it could be easily changed to 8 groups if needed). 
+Starting from the total reactivity (model input from the *ReactivityFeedbacks* module), this module calculates the time evolution of the fission power of the reactor. 
+The total power take into account also the residual power (which is computed and provided by the *DeecayHeat* module).
+
+The default values for \\\\(Tlife\\\\) (*prompt neutron lifetime*), \\\\(Beta\\\\) (*delayed neutron fraction*) and \\\\(lambda\\\\) (*decay constant*), valid for U235, are taken from *S. Marguet, La physique des réacteurs nucléaire, Ed. Lavoisier, 2013*.
+
+The equations can also be derived from the same source, setting:
+- \\\\(n(t)\\\\) proportional to \\\\(Pneut\\\\)
+- \\\\(C_i(t)\\\\) proportional to \\\\(Pdelay\\\\)
 "));
 end NeutronKinetics;
