@@ -3,21 +3,27 @@ model TestLoopBreakerP_FlueGases
   extends ThermoSysPro.UsersGuide.Icons.Example;
 
   replaceable package Medium = Properties.Media.FlueGases (extraPropertiesNames={"Trace"}, C_nominal={0.1}, C_default={0.2});
-  ThermoSysPro.Fluid.BoundaryConditions.SourcePQ sourcePQ(redeclare replaceable package Medium = Medium,
+  ThermoSysPro.Fluid.BoundaryConditions.SourcePQ sourcePQ(redeclare
+      replaceable package                                                               Medium = Medium,
     P0=4500000,
     T0=573.15,
-    option_temperature=true)                                                                             annotation (Placement(transformation(extent={{-100,0},{-80,20}}, rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss1(redeclare replaceable package Medium = Medium) annotation (Placement(transformation(extent={{-20,20},{0,40}}, rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss2(redeclare replaceable package Medium = Medium) annotation (Placement(transformation(extent={{-20,-20},{0,0}}, rotation=0)));
-  ThermoSysPro.Fluid.Junctions.Splitter2 splitter2_1(redeclare replaceable package Medium = Medium, h(start=2.83057e6))
+    option_temperature=true, SubC0={3})                                                                             annotation (Placement(transformation(extent={{-100,0},{-80,20}}, rotation=0)));
+  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss1(redeclare
+      replaceable package                                                                                    Medium = Medium) annotation (Placement(transformation(extent={{-20,20},{0,40}}, rotation=0)));
+  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss2(redeclare
+      replaceable package                                                                                    Medium = Medium) annotation (Placement(transformation(extent={{-20,-20},{0,0}}, rotation=0)));
+  ThermoSysPro.Fluid.Junctions.Splitter2 splitter2_1(redeclare replaceable
+      package                                                                      Medium = Medium, h(start=2.83057e6))
                                                                                                     annotation (Placement(transformation(extent={{-56,0},{-36,20}}, rotation=0)));
   ThermoSysPro.Fluid.Junctions.Mixer2 mixer2_1(redeclare replaceable package Medium = Medium, h(start=2.83057e6))
                                                                                               annotation (Placement(transformation(extent={{40,0},{60,20}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.Sink sink(redeclare replaceable package Medium = Medium,
+  ThermoSysPro.Fluid.BoundaryConditions.Sink sink(redeclare replaceable package
+                                                                                Medium = Medium,
     T0=573.15,
     option_temperature=true)                                                                     annotation (Placement(transformation(extent={{80,0},{100,20}}, rotation=0)));
   InstrumentationAndControl.Blocks.Sources.Constante constante(k=0.5) annotation (Placement(transformation(extent={{-80,40},{-60,60}}, rotation=0)));
-  ThermoSysPro.Fluid.LoopBreakers.LoopBreakerP loopBreakerP(redeclare replaceable package Medium = Medium) annotation (Placement(transformation(extent={{10,-20},{30,0}}, rotation=0)));
+  ThermoSysPro.Fluid.LoopBreakers.LoopBreakerP loopBreakerP(redeclare
+      replaceable package                                                                 Medium = Medium) annotation (Placement(transformation(extent={{10,-20},{30,0}}, rotation=0)));
 equation
   connect(sourcePQ.C, splitter2_1.Ce) annotation (Line(
       points={{-80,10},{-56,10}},

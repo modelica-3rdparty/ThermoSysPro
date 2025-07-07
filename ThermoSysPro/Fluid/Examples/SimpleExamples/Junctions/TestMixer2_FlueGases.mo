@@ -8,9 +8,12 @@ model TestMixer2_FlueGases
       C_default={0.2});
   ThermoSysPro.Fluid.Junctions.Mixer2 mixer2_1(redeclare package Medium = Medium, h(start=2.83057e6))
                                                                                   annotation (Placement(transformation(extent={{-6,-10},{14,10}}, rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{34,-10},{54,10}}, rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss1(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-46,10},{-26,30}}, rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss2(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-46,-30},{-26,-10}}, rotation=0)));
+  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss(redeclare
+      package                                                                                   Medium = Medium) annotation (Placement(transformation(extent={{34,-10},{54,10}}, rotation=0)));
+  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss1(redeclare
+      package                                                                                    Medium = Medium) annotation (Placement(transformation(extent={{-46,10},{-26,30}}, rotation=0)));
+  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss2(redeclare
+      package                                                                                    Medium = Medium) annotation (Placement(transformation(extent={{-46,-30},{-26,-10}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.Source sourceP(redeclare package Medium = Medium,
     T0=573.15,
     option_temperature=true)                                                              annotation (Placement(transformation(extent={{-86,10},{-66,30}}, rotation=0)));
@@ -20,7 +23,8 @@ model TestMixer2_FlueGases
   ThermoSysPro.Fluid.BoundaryConditions.SinkQ sinkP(redeclare package Medium = Medium,
     T0=573.15,
     option_temperature=true)                                                           annotation (Placement(transformation(extent={{74,-10},{94,10}}, rotation=0)));
-  InstrumentationAndControl.Blocks.Sources.Constante constante(k=0) annotation (Placement(transformation(extent={{-46,-10},{-26,10}}, rotation=0)));
+  InstrumentationAndControl.Blocks.Sources.Constante constante(k=0.3)
+                                                                    annotation (Placement(transformation(extent={{-46,-10},{-26,10}}, rotation=0)));
 equation
   connect(singularPressureLoss1.C2, mixer2_1.Ce1) annotation (Line(points={{-26,20},{0,20},{0,10}}, color={0,0,255}));
   connect(singularPressureLoss2.C2, mixer2_1.Ce2) annotation (Line(points={{-26,-20},{0,-20},{0,-10}}, color={0,0,255}));
