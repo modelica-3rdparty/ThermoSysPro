@@ -1,7 +1,7 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefSubC "Fixed SubC reference"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
- replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+ replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Medium.ExtraProperty SubC0[Medium.nC](quantity=Medium.extraPropertiesNames) = fill(0,Medium.nC) "Source trace substances" annotation (Evaluate=true, Dialog(
       tab="Fluid",

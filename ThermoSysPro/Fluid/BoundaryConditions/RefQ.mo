@@ -1,7 +1,7 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model RefQ "Fixed mass flow reference"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
- replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+ replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
 
   parameter Units.SI.MassFlowRate Q0=10 "Fixed fluid mass flow";
