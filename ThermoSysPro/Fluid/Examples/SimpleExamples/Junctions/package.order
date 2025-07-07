@@ -17,3 +17,6 @@ TestMixer3_Traces
 TestMixer3_FlueGases
 TestMixer8
 TestMixer8_Traces
+TestSplitter3
+TestSplitter3_Traces
+TestSplitter3_FlueGases
