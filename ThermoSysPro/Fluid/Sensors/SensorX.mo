@@ -1,21 +1,14 @@
 within ThermoSysPro.Fluid.Sensors;
-model SensorT "Temperature sensor"
+model SensorX "X sensor"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
-
 public
-  Units.SI.Temperature T "Fluid temperature";
-
-public
-  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Measure
+  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal[Medium.nXi] Measure
     annotation (Placement(transformation(
         origin={0,102},
         extent={{-10,-10},{10,10}},
-        rotation=90), iconTransformation(
-        extent={{-10,-10},{10,10}},
-        rotation=90,
-        origin={0,102})));
+        rotation=90)));
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-90},{-90,-70}}, rotation=0)));
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
@@ -40,30 +33,9 @@ equation
   C1.SubC = C2.SubC;
 
   /* Sensor signal */
-  Measure.signal = T;
-
-  /* Fluid thermodynamic properties */
-  T = Medium.temperature_phX(p=C1.P, h=C1.h, X=C1.Xi);
+  Measure.signal = C1.Xi;
 
   annotation (
-    Diagram(coordinateSystem(
-        preserveAspectRatio=false,
-        extent={{-100,-100},{100,100}},
-        grid={2,2}), graphics={
-        Ellipse(
-          extent={{-60,92},{60,-28}},
-          lineColor={0,0,0},
-          fillPattern=FillPattern.Solid,
-          fillColor={127,255,0}),
-        Line(points={{0,-30},{0,-80}}),
-        Line(points={{-98,-80},{102,-80}}),
-        Text(
-          extent={{-60,64},{60,4}},
-          lineColor={28,108,200},
-          fillColor={127,255,0},
-          fillPattern=FillPattern.Solid,
-          textString=
-               "T")}),
     Icon(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},
@@ -73,15 +45,28 @@ equation
           lineColor={0,0,0},
           fillPattern=FillPattern.Solid,
           fillColor=DynamicSelect({127,255,0}, fill_color_singular)),
-        Line(points={{0,-30},{0,-80}}),
+        Line(points={{0,-28},{0,-80}}),
         Line(points={{-98,-80},{102,-80}}),
-        Text(extent={{-60,64},{60,4}}, textString=
-                                            "T")}),
+        Text(extent={{-60,60},{60,0}}, textString=
+                                            "X")}),
     Window(
-      x=0.22,
-      y=0.21,
-      width=0.6,
-      height=0.6),
+      x=0.62,
+      y=0.25,
+      width=0.35,
+      height=0.49),
+    Diagram(coordinateSystem(
+        preserveAspectRatio=false,
+        extent={{-100,-100},{100,100}},
+        grid={2,2}), graphics={
+        Ellipse(
+          extent={{-60,92},{60,-28}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.Solid,
+          fillColor={0,255,0}),
+        Line(points={{0,-28},{0,-80}}),
+        Line(points={{-98,-80},{102,-80}}),
+        Text(extent={{-60,60},{60,0}}, textString=
+                                            "X")}),
     Documentation(info="<html>
 <p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
 <p><b>ThermoSysPro Version 4.1</b> </p>
@@ -90,7 +75,7 @@ equation
 <p><u><b>Authors</b></u></p>
 <ul>
 <li>Daniel Bouskela</li>
-<li>Baligh El Hefni</li>
+<li>Baligh El Hefni </li>
 </ul>
 </html>"));
-end SensorT;
+end SensorX;
