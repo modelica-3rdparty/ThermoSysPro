@@ -1,32 +1,22 @@
 within ThermoSysPro.Fluid.Junctions;
 model Mixer2 "Mixer with two inlets"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
-
+ replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
   parameter Units.SI.MassFlowRate gamma0=1.e-4
     "Pseudo-diffusion conductance use for continuous flow reversal (active if diffusion=false and continuous_flow_reversal = true)";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 public
   Real alpha1 "Extraction coefficient for inlet 1 (<=1)";
   Units.SI.AbsolutePressure P(start=10e5) "Fluid pressure";
   Units.SI.SpecificEnthalpy h(start=10e5) "Fluid specific enthalpy";
   Units.SI.Temperature T "Fluid temperature";
-  FluidType fluids[4] "Fluids mixing in volume";
-  ThermoSysPro.Units.SI.MassFraction Xco2 "CO2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xh2o "H20 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xo2 "O2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xso2 "SO2 mass fraction";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
   Units.SI.Power Je1 "Thermal power diffusion from inlet e1";
   Units.SI.Power Je2 "Thermal power diffusion from inlet e2";
   Units.SI.Power Js "Thermal power diffusion from outlet s";
@@ -39,12 +29,11 @@ public
   Real rs "Value of r(Q/gamma) for outlet s";
 
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-50,-110},{-30,-90}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
-public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce1 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-50,90},{-30,110}}, rotation=0)));
   InstrumentationAndControl.Connectors.InputReal Ialpha1
     "Extraction coefficient for inlet 1 (<=1)"
@@ -52,15 +41,6 @@ public
   InstrumentationAndControl.Connectors.OutputReal Oalpha1
     annotation (Placement(transformation(extent={{-20,50},{0,70}}, rotation=0)));
 equation
-
-  /* Check that incoming fluids are compatible with fluid in volume */
-  fluids[1] = ftype;
-  fluids[2] = Ce1.ftype;
-  fluids[3] = Ce2.ftype;
-  fluids[4] = Cs.ftype;
-
-  assert(ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.isCompatible(fluids),
-    "Mixer2: fluids mixing in volume are not compatible with each other");
 
   /* Unconnected connectors */
   if (cardinality(Ialpha1) == 0) then
@@ -82,17 +62,12 @@ equation
   Cs.h_vol_1 = h;
 
   /* Fluid composition balance equations */
-  0 = Ce1.Xco2*Ce1.Q + Ce2.Xco2*Ce2.Q - Cs.Xco2*Cs.Q;
-  0 = Ce1.Xh2o*Ce1.Q + Ce2.Xh2o*Ce2.Q - Cs.Xh2o*Cs.Q;
-  0 = Ce1.Xo2*Ce1.Q + Ce2.Xo2*Ce2.Q - Cs.Xo2*Cs.Q;
-  0 = Ce1.Xso2*Ce1.Q + Ce2.Xso2*Ce2.Q - Cs.Xso2*Cs.Q;
+  fill(0,Medium.nXi) = Ce1.Xi*Ce1.Q + Ce2.Xi*Ce2.Q - Cs.Xi*Cs.Q;
 
-  Cs.ftype = ftype;
+  Cs.Xi = X;
 
-  Cs.Xco2 = Xco2;
-  Cs.Xh2o = Xh2o;
-  Cs.Xo2  = Xo2;
-  Cs.Xso2 = Xso2;
+  /* Traces composition balance equations */
+  Ce1.Q*Ce1.SubC + Ce2.Q*Ce2.SubC = Cs.Q*Cs.SubC;
 
   /* Mass flow at the outlet */
   if (cardinality(Ialpha1) <> 0) then
@@ -147,7 +122,7 @@ equation
   Cs.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+  T = Medium.temperature_phX(p=P, h=h, X=X);
 
   annotation (
     Diagram(coordinateSystem(

@@ -1,33 +1,21 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
-model RefT "Fixed temperature reference"
+model RefSubC "Fixed SubC reference"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
+  parameter Medium.ExtraProperty SubC0[Medium.nC](quantity=Medium.extraPropertiesNames) = fill(0,Medium.nC) "Source trace substances" annotation (Evaluate=true, Dialog(
+      tab="Fluid",
+      group="Medium"));
 
-  parameter Units.SI.Temperature T0=290 "Fixed fluid temperature";
 
 public
-  Units.SI.MassFlowRate Q "Fluid mass flow rate";
-  Units.SI.AbsolutePressure P "Fluid pressure";
-  Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
-  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
-
-
 
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
-  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ITemperature annotation (Placement(transformation(
-        origin={0,110},
-        extent={{-10,-10},{10,10}},
-        rotation=270)));
 
 equation
-  if (cardinality(ITemperature) == 0) then
-    ITemperature.signal = T0;
-  end if;
-
   C1.Q = C2.Q;
   C1.P = C2.P;
   C1.h = C2.h;
@@ -43,17 +31,9 @@ equation
 
   C1.Xi = C2.Xi;
 
-  X = C1.Xi;
-
   C1.SubC = C2.SubC;
+  C1.SubC = SubC0;
 
-  Q = C1.Q;
-  P = C1.P;
-  h = C1.h;
-
-
-  /* Computation of the fluid specific enthalpy */
-  h = Medium.specificEnthalpy_pTX(p=P, T=ITemperature.signal, X=X);
 
   annotation (
     Diagram(coordinateSystem(
@@ -75,7 +55,7 @@ equation
           fillColor={128,255,0},
           fillPattern=FillPattern.Solid,
           textString=
-               "T")}),
+               "C")}),
     Icon(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},
@@ -95,7 +75,7 @@ equation
           fillColor={128,255,0},
           fillPattern=FillPattern.Solid,
           textString=
-               "T")}),
+               "C")}),
     Window(
       x=0.06,
       y=0.08,
@@ -111,6 +91,5 @@ equation
 <li>Baligh El Hefni</li>
 <li>Daniel Bouskela </li>
 </ul>
-</html>"),
-    DymolaStoredErrors);
-end RefT;
+</html>"));
+end RefSubC;
