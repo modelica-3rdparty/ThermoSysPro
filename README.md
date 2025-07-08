@@ -2,15 +2,15 @@
 
 ## Tests 
 
-![Fig1](ThermoSysPro/fig1.png)
+![Fig1](fig1.png)
 
 ## With DTLM (PbHE_V2.TEstHE2_Test_HE_Multiple_DTLM)
 
 
 
-#In the log errors occurs :
+# In the log errors occurs :
 
-#For exemple : 
+# For exemple : 
 
 Warning: The following was detected at time: 0
   Low DT1 or DT2, instable calculation, consider using NUT method
@@ -39,19 +39,19 @@ Warning: Nonlinear solver accepted imprecise solution (within integrator toleran
 Error: The following error was detected at time: 60.00001
 Model error - Modelica.Math.log (abs(staticExchangerKS_Multiple3.DT1/staticExchangerKS_Multiple3.DT2)) = Modelica.Math.log (0)
 
-#HE1 (Multiple1) - Same Flow rate: 
+# HE1 (Multiple1) - Same Flow rate: 
 Results OK 
 
-#HE2 (Multiple2) - Same inlet T°c: 
+# HE2 (Multiple2) - Same inlet T°c: 
 Results OK but warning low DT1 or DT2
 
-#HE3 (Multiple3) - Low flow rate: 
+# HE3 (Multiple3) - Low flow rate: 
 Numerous Errors messages and unrealistic temperature when low flow rate 
-![Fig2](ThermoSysPro/fig2.png)
+![Fig2](fig2.png)
 
 
 
-#HE4 (Multiple4) - changing side temperature : 
+# HE4 (Multiple4) - changing side temperature : 
 Results OK but warning low DT1 or DT2
 
 
