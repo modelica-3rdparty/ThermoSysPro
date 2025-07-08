@@ -54,5 +54,6 @@ Results OK but warning low DT1 or DT2
 
 
 # With NUT method (PbHE_V2.TEstHE2_Test_HE_Multiple_NUT)
-Everything is fine 
-
+Everything is fine : log is empty
+## HE3 (Multiple3) - Low flow rate: 
+![Fig3](fig3.png)
