@@ -7,7 +7,7 @@ model SourceP "Water/steam source with fixed pressure"
     "Source specific enthalpy (active if option_temperature=2)";
   parameter Integer option_temperature=1
     "1:temperature fixed - 2:specific enthalpy fixed";
-  parameter Integer mode=1
+  parameter Integer mode=0
     "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 public
