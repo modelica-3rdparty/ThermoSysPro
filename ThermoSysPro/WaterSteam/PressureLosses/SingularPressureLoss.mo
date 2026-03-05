@@ -22,6 +22,11 @@ public
   Units.SI.AbsolutePressure Pm(start=1.e5) "Average fluid pressure";
   Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
 
+  parameter Units.SI.MassFlowRate Q_hpy=20 "Nominal mass flow rate for homotopy";
+  parameter Units.SI.Density rho_hpy=998 "Nominal density for homotopy";
+  parameter Units.SI.AbsolutePressure Pm_hpy=1e5 "Average fluid pressure for homotopy";
+  parameter Units.SI.SpecificEnthalpy h_hpy=1e5 "Fluid specific enthalpy for homotopy";
+
   Connectors.FluidInlet C1
     annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=
            0)));
@@ -49,12 +54,12 @@ equation
   end if;
 
   /* Pressure loss */
-  deltaP = K*ThermoSysPro.Functions.ThermoSquare(Q, eps)/rho;
+   deltaP = homotopy(actual=K*ThermoSysPro.Functions.ThermoSquare(Q, eps)/rho, simplified=K*Q_hpy*Q/rho_hpy);
 
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
-  pro = ThermoSysPro.Properties.Fluid.Ph(Pm, h, mode, fluid);
+  pro = ThermoSysPro.Properties.Fluid.Ph(homotopy(actual=Pm, simplified=Pm_hpy), homotopy(actual=h, simplified=h_hpy), mode, fluid);
 
   T = pro.T;
 

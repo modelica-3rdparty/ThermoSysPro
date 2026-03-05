@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.Volumes;
+within ThermoSysPro.WaterSteam.Volumes;
 model TwoPhaseCavity "TwoPhaseCavity for one shell pass "
   parameter Boolean Vertical=true
     "true: vertical cylinder - false: horizontal cylinder";
@@ -163,6 +163,10 @@ public
   Units.SI.Diameter DH(start=0.02) "hydraulic diameter";
   Real EE[Ns](start=fill(1, Ns));
 
+  Units.SI.Density dfond;
+  parameter Units.SI.Density dfond_hpy=998 "Fluid density at the bottom of the cavity for homotopy";
+  parameter Units.SI.Density rhol_hpy=998;
+
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prol
     "Propriétés de l'eau dans le ballon" annotation (Placement(transformation(
           extent={{-250,70},{-210,110}}, rotation=0)));
@@ -294,7 +298,8 @@ equation
   Ape = Alp + Avp;
 
   /* Pressure at the bottom of the cavity */
-  Pfond = P + prod.d*g*zl;
+  Pfond = P + homotopy(actual=prod.d, simplified=dfond_hpy)*g*zl;
+  dfond = prod.d;
 
   /* Liquid phase mass balance equation */
   BQl = -Cl.Q + Qcond - Qevap + (1 - proe.x)*Ce.Q;
@@ -345,7 +350,7 @@ equation
   (lsat,vsat) = ThermoSysPro.Properties.WaterSteam.IF97.Water_sat_P(P);
 
   Tl = prol.T;
-  rhol = prol.d;
+  rhol = homotopy(actual=prol.d, simplified=rhol_hpy);
   xl = prol.x;
 
   Tv = prov.T;

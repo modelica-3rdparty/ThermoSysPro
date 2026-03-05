@@ -1,4 +1,4 @@
-﻿within ThermoSysPro.WaterSteam.PressureLosses;
+within ThermoSysPro.WaterSteam.PressureLosses;
 model ControlValve "Control valve"
   parameter ThermoSysPro.Units.xSI.Cv Cvmax=8005.42
     "Maximum CV (active if mode_caract=0)";
@@ -32,6 +32,11 @@ public
   Units.SI.Temperature T(start=290) "Fluid temperature";
   Units.SI.AbsolutePressure Pm(start=1.e5) "Fluid average pressure";
   Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
+
+  parameter Units.SI.MassFlowRate Q_hpy=20 "Nominal mass flow rate for homotopy";
+  parameter Units.SI.Density rho_hpy=998 "Nominal density for homotopy";
+  parameter Units.SI.AbsolutePressure Pm_hpy=1e5 "Average fluid pressure for homotopy";
+  parameter Units.SI.SpecificEnthalpy h_hpy=1e5 "Fluid specific enthalpy for homotopy";
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
     "Propriétés de l'eau"
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
@@ -69,9 +74,9 @@ equation
 
   /* Pressure loss */
   if (option_rho_water == 1) then
-    deltaP*Cv*abs(Cv) = 1.733e12*ThermoSysPro.Functions.ThermoSquare(Q, eps)/rho^2;
+    deltaP*Cv*abs(Cv) = homotopy(actual=1.733e12*ThermoSysPro.Functions.ThermoSquare(Q, eps)/rho^2, simplified=1.733e12*Q*Q_hpy/rho_hpy^2);
   elseif (option_rho_water == 2) then
-    deltaP*Cv*abs(Cv) = 1.733e12*ThermoSysPro.Functions.ThermoSquare(Q, eps)/(rho*rho_15);
+    deltaP*Cv*abs(Cv) = homotopy(actual=1.733e12*ThermoSysPro.Functions.ThermoSquare(Q, eps)/(rho*rho_15), simplified=1.733e12*Q*Q_hpy/(rho_hpy*rho_15));
   else
     assert(false, "ControlValve - option_rho_water: invalid option");
   end if;
@@ -94,7 +99,7 @@ equation
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
-  pro = ThermoSysPro.Properties.Fluid.Ph(Pm, h, mode, fluid);
+  pro = ThermoSysPro.Properties.Fluid.Ph(homotopy(actual=Pm, simplified=Pm_hpy), homotopy(actual=h, simplified=h_hpy), mode, fluid);
 
   T = pro.T;
 

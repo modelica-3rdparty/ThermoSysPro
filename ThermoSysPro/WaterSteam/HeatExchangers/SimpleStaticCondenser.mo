@@ -54,6 +54,11 @@ public
   Units.SI.MassFlowRate Qc(start=100) "Hot fluid mass flow rate";
   Units.SI.MassFlowRate Qf(start=100) "Cold fluid mass flow rate";
 
+  parameter Units.SI.SpecificEnthalpy Qf_hpy=20 "Cold Fluid mass flow rate for homotopy";
+  parameter Units.SI.SpecificEnthalpy Qc_hpy=20 "Hot fluid mass flow rate for homotopy";
+  parameter Units.SI.Density rhoc_hpy=998 "Density of the fluid in the hot side for homotopy";
+  parameter Units.SI.Density rhof_hpy=998 "Density of the fluid in the cold side for homotopy";
+
 public
   Connectors.FluidInlet Ec
                           annotation (Placement(transformation(extent={{-70,
@@ -125,16 +130,17 @@ equation
   /* Pressure losses in the hot side */
   Ec.P - Sc.P = DPc;
 
-  DPfc = Kc*ThermoSysPro.Functions.ThermoSquare(Qc, eps)/rhoc;
+  DPfc = homotopy(actual=Kc*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qc, eps)/rhoc, simplified= Kc*Qc*Qc_hpy/rhoc_hpy);
   DPgc = rhoc*g*(z2c - z1c);
   DPc  = DPfc + DPgc;
 
   /* Pressure losses in the cold side */
   Ef.P - Sf.P = DPf;
 
-  DPff = Kf*ThermoSysPro.Functions.ThermoSquare(Qf, eps)/rhof;
+  DPff = homotopy(actual=Kf*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qf, eps)/rhof, simplified=Kf*Qf*Qf_hpy/rhof_hpy);
   DPgf = rhof*g*(z2f - z1f);
   DPf  = DPff + DPgf;
+
 
   /* Fluid thermodynamic properties in the hot side */
   proce = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(Ec.P, Ec.h, modec);
