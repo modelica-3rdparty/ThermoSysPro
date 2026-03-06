@@ -33,6 +33,7 @@ public
   Units.SI.AbsolutePressure Pm(start=1.e5) "Fluid average pressure";
   Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
 
+  parameter Boolean Homotopy = false;
   parameter Units.SI.MassFlowRate Q_hpy=20 "Nominal mass flow rate for homotopy";
   parameter Units.SI.Density rho_hpy=998 "Nominal density for homotopy";
   parameter Units.SI.AbsolutePressure Pm_hpy=1e5 "Average fluid pressure for homotopy";
@@ -73,12 +74,22 @@ equation
   end if;
 
   /* Pressure loss */
-  if (option_rho_water == 1) then
-    deltaP*Cv*abs(Cv) = homotopy(actual=1.733e12*ThermoSysPro.Functions.ThermoSquare(Q, eps)/rho^2, simplified=1.733e12*Q*Q_hpy/rho_hpy^2);
-  elseif (option_rho_water == 2) then
-    deltaP*Cv*abs(Cv) = homotopy(actual=1.733e12*ThermoSysPro.Functions.ThermoSquare(Q, eps)/(rho*rho_15), simplified=1.733e12*Q*Q_hpy/(rho_hpy*rho_15));
+  if Homotopy then
+    if (option_rho_water == 1) then
+      deltaP*Cv*abs(Cv) = homotopy(actual=1.733e12*ThermoSysPro.Functions.ThermoSquare(Q, eps)/rho^2, simplified=1.733e12*Q*Q_hpy/rho_hpy^2);
+    elseif (option_rho_water == 2) then
+      deltaP*Cv*abs(Cv) = homotopy(actual=1.733e12*ThermoSysPro.Functions.ThermoSquare(Q, eps)/(rho*rho_15), simplified=1.733e12*Q*Q_hpy/(rho_hpy*rho_15));
+    else
+      assert(false, "ControlValve - option_rho_water: invalid option");
+    end if;
   else
-    assert(false, "ControlValve - option_rho_water: invalid option");
+    if (option_rho_water == 1) then
+      deltaP*Cv*abs(Cv) = 1.733e12*ThermoSysPro.Functions.ThermoSquare(Q, eps)/rho^2;
+    elseif (option_rho_water == 2) then
+      deltaP*Cv*abs(Cv) = 1.733e12*ThermoSysPro.Functions.ThermoSquare(Q, eps)/(rho*rho_15);
+    else
+      assert(false, "ControlValve - option_rho_water: invalid option");
+    end if;
   end if;
 
   /* Cv as a function of the valve position */
@@ -99,7 +110,11 @@ equation
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
-  pro = ThermoSysPro.Properties.Fluid.Ph(homotopy(actual=Pm, simplified=Pm_hpy), homotopy(actual=h, simplified=h_hpy), mode, fluid);
+  if Homotopy then
+    pro = ThermoSysPro.Properties.Fluid.Ph(homotopy(actual=Pm, simplified=Pm_hpy), homotopy(actual=h, simplified=h_hpy), mode, fluid);
+  else
+    pro = ThermoSysPro.Properties.Fluid.Ph(Pm, h, mode, fluid);
+  end if;
 
   T = pro.T;
 

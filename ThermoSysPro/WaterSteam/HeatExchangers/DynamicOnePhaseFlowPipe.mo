@@ -98,7 +98,7 @@ public
   Units.SI.AbsolutePressure Pm;
   Units.SI.SpecificEnthalpy hm;
 
-
+  parameter Boolean Homotopy=false;
   parameter Units.SI.AbsolutePressure Pm_hpy=1e5 "Average fluid pressure for homotopy";
   parameter Units.SI.SpecificEnthalpy hm_hpy=1e5 "Fluid specific enthalpy for homotopy";
 
@@ -206,7 +206,12 @@ equation
     dW1[i] = hc[i]*dSi*(Tp[i] - T1[i]);
 
     /* Fluid thermodynamic properties */
-    pro1[i] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(homotopy(actual=P[i + 1],simplified=Pm_hpy), homotopy(actual=h[i + 1], simplified=hm_hpy), mode);
+    if Homotopy then
+      pro1[i] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(homotopy(actual=P[i + 1],simplified=Pm_hpy), homotopy(actual=h[i + 1], simplified=hm_hpy), mode);
+    else
+      pro1[i] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(P[i + 1], h[i + 1], mode);
+    end if;
+
     rho1[i] = pro1[i].d;
     T1[i] = pro1[i].T;
 
@@ -267,7 +272,11 @@ equation
     Re2[i] = noEvent(abs(4*Q[i]/(pi*Di*mu2[i])));
 
     /* Fluid thermodynamic properties */
-    pro2[i] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(homotopy(actual=(P[i] + P[i + 1])/2, simplified=Pm_hpy),  homotopy(actual=hb[i],simplified=hm_hpy), mode);
+    if Homotopy then
+      pro2[i] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(homotopy(actual=(P[i] + P[i + 1])/2, simplified=Pm_hpy),  homotopy(actual=hb[i],simplified=hm_hpy), mode);
+    else
+      pro2[i] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph((P[i] + P[i + 1])/2, hb[i], mode);
+    end if;
 
     rho2[i] = pro2[i].d;
     T2[i] = pro2[i].T;

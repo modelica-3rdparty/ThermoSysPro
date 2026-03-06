@@ -45,6 +45,7 @@ public
   Units.SI.AbsolutePressure Pm "Fluid average pressure";
   Units.SI.SpecificEnthalpy h "Fluid specific enthalpy";
 
+  parameter Boolean Homotopy=false;
   parameter Units.SI.MassFlowRate Q_hpy=20 "Nominal mass flow rate for homotopy";
   parameter Units.SI.Density rho_hpy=998 "Nominal density for homotopy";
   parameter Units.SI.AbsolutePressure Pm_hpy=1e5 "Average fluid pressure for homotopy";
@@ -89,7 +90,11 @@ equation
     deltaP = deltaPf + rho*g*(z2 - z1);
   end if;
 
- deltaPf = homotopy(actual=khi*ThermoSysPro.Functions.ThermoSquare(Q, eps)/(2*A^2*rho), simplified=khi*Q*Q_hpy/(2*A^2*rho_hpy));
+  if Homotopy then
+   deltaPf = homotopy(actual=khi*ThermoSysPro.Functions.ThermoSquare(Q, eps)/(2*A^2*rho), simplified=khi*Q*Q_hpy/(2*A^2*rho_hpy));
+  else
+    deltaPf = khi*ThermoSysPro.Functions.ThermoSquare(Q, eps)/(2*A^2*rho);
+  end if;
 
   /* Darcy-Weisbach formula (Idel'cik p. 55). Quadratic flow regime is assumed and Re > 4000 (Re > Relim). */
   khi = lam*L/D;
@@ -110,7 +115,11 @@ equation
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
 
-  pro = ThermoSysPro.Properties.Fluid.Ph(homotopy(actual=Pm, simplified=Pm_hpy), homotopy(actual=h, simplified=h_hpy), mode, fluid);
+  if Homotopy then
+    pro = ThermoSysPro.Properties.Fluid.Ph(homotopy(actual=Pm, simplified=Pm_hpy), homotopy(actual=h, simplified=h_hpy), mode, fluid);
+  else
+    pro = ThermoSysPro.Properties.Fluid.Ph(Pm, h, mode, fluid);
+  end if;
 
   T = pro.T;
 
