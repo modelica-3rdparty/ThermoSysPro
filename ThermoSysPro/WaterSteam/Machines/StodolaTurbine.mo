@@ -49,9 +49,13 @@ public
   Units.SI.Density rhos(start=200) "Fluid density at the outlet";
   Real xm(start=1.0,min=0) "Average vapor mass fraction";
 
-  Units.SI.AbsolutePressure Pm;
-  parameter Units.SI.MassFlowRate Q_hpy=20 "Nominal mass flow rate for homotopy";
-  parameter Units.SI.AbsolutePressure Pm_hpy=1e5 "Average fluid pressure for homotopy";
+  parameter Boolean Homotopy=false annotation (Dialog(tab="Homotopy"));
+  Units.SI.AbsolutePressure Pm "Average fluid pressure";
+  parameter Units.SI.MassFlowRate Q_hpy=20 "Nominal mass flow rate for homotopy"
+                                                                                annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  parameter Units.SI.AbsolutePressure Pm_hpy=100000
+                                                 "Average fluid pressure for homotopy"
+                                                                                      annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
 public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proe
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
@@ -112,11 +116,19 @@ equation
   Pm = (Pe + Ps)/2;
 
   /* Stodola's ellipse law */
-   if noEvent((Pe > pcrit) or (Te > Tcrit)) then
-    Q = homotopy(actual=sqrt((Pe^2 - Ps^2)/(Cst*Te)), simplified=2*(Pe - Ps)*Pm_hpy/(Q_hpy*Cst*Te));
-   else
-     Q = homotopy(actual=sqrt((Pe^2 - Ps^2)/(Cst*Te*proe.x)), simplified=2*(Pe - Ps)*Pm_hpy/(Q_hpy*Cst*Te));
-   end if;
+  if Homotopy then
+     if noEvent((Pe > pcrit) or (Te > Tcrit)) then
+      Q = homotopy(actual=sqrt((Pe^2 - Ps^2)/(Cst*Te)), simplified=2*(Pe - Ps)*Pm_hpy/(Q_hpy*Cst*Te));
+     else
+       Q = homotopy(actual=sqrt((Pe^2 - Ps^2)/(Cst*Te*proe.x)), simplified=2*(Pe - Ps)*Pm_hpy/(Q_hpy*Cst*Te));
+     end if;
+  else
+    if noEvent((Pe > pcrit) or (Te > Tcrit)) then
+      Q = sqrt((Pe^2 - Ps^2)/(Cst*Te));
+     else
+       Q = sqrt((Pe^2 - Ps^2)/(Cst*Te*proe.x));
+    end if;
+  end if;
 
   /* Fluid specific enthalpy after the expansion */
   Hrs - Ce.h = xm*eta_is*(His - Ce.h);

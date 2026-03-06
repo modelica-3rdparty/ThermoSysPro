@@ -16,7 +16,7 @@ model TwoPhaseCavityOnePipe "TwoPhaseCavity for one shell pass "
   parameter Integer NbTubV=150 "Numbers of pipes in a vertical plan in Cavity";
   parameter Units.SI.Length L2=25 "tubes length";
   parameter Units.SI.Diameter Dext=0.020 "External pipe diameter";
-  parameter Units.SI.Pressure P0=1e5
+  parameter Units.SI.Pressure P0=100000
     "Fluid initial pressure (active if steady_state=false)";
   parameter Boolean steady_state=true
     "true: start from steady state - false: start from (P0, Vl0)";
@@ -109,9 +109,11 @@ public
   Units.SI.CoefficientOfHeatTransfer Kvp(start=10)
     "Heat exchange coefficient between the gas phase and the wall";
 
-  parameter Units.SI.Density dfond_hpy=998 "Fluid density at the bottom of the cavity for homotopy";
-  parameter Units.SI.Density rhol_hpy=998;
-  Units.SI.Density dfond;
+  parameter Boolean Homotopy=false annotation (Dialog(tab="Homotopy"));
+  parameter Units.SI.Density dfond_hpy=998 "Fluid density at the bottom of the cavity for homotopy" annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  parameter Units.SI.Density rhol_hpy=998 "Liquid phase density for homotopy"
+                                                                             annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  Units.SI.Density dfond "Fluid density at the bottom of the cavity";
 
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prol
     "Propriétés de l'eau dans le ballon" annotation (Placement(transformation(
@@ -232,7 +234,11 @@ equation
   Ape = Alp + Avp;
 
   /* Pressure at the bottom of the cavity */
-  Pfond = P + homotopy(actual=prod.d, simplified=dfond_hpy)*g*zl;
+  if Homotopy then
+    Pfond = P + homotopy(actual=prod.d, simplified=dfond_hpy)*g*zl;
+  else
+    Pfond = P + prod.d*g*zl;
+  end if;
   dfond = prod.d;
 
   /* Liquid phase mass balance equation */
@@ -278,7 +284,12 @@ equation
   (lsat,vsat) = ThermoSysPro.Properties.WaterSteam.IF97.Water_sat_P(P);
 
   Tl = prol.T;
-  rhol = homotopy(actual=prol.d, simplified=rhol_hpy);
+  if Homotopy then
+    rhol = homotopy(actual=prol.d, simplified=rhol_hpy);
+  else
+    rhol = prol.d;
+  end if;
+
   xl = prol.x;
 
   Tv = prov.T;

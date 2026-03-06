@@ -33,11 +33,16 @@ public
   Units.SI.AbsolutePressure Pm(start=1.e5) "Fluid average pressure";
   Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
 
-  parameter Boolean Homotopy = false;
-  parameter Units.SI.MassFlowRate Q_hpy=20 "Nominal mass flow rate for homotopy";
-  parameter Units.SI.Density rho_hpy=998 "Nominal density for homotopy";
-  parameter Units.SI.AbsolutePressure Pm_hpy=1e5 "Average fluid pressure for homotopy";
-  parameter Units.SI.SpecificEnthalpy h_hpy=1e5 "Fluid specific enthalpy for homotopy";
+  parameter Boolean Homotopy = false annotation (Dialog(tab="Homotopy"));
+  parameter Units.SI.MassFlowRate Q_hpy=20 "Nominal mass flow rate for homotopy"
+                                                                                annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  parameter Units.SI.Density rho_hpy=998 "Nominal density for homotopy"
+                                                                       annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  parameter Units.SI.AbsolutePressure Pm_hpy=100000
+                                                 "Average fluid pressure for homotopy"
+                                                                                      annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  parameter Units.SI.SpecificEnthalpy h_hpy=1e5 "Fluid specific enthalpy for homotopy"
+                                                                                      annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro
     "Propriétés de l'eau"
     annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=

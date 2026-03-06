@@ -54,11 +54,11 @@ public
   Units.SI.MassFlowRate Qc(start=100) "Hot fluid mass flow rate";
   Units.SI.MassFlowRate Qf(start=100) "Cold fluid mass flow rate";
 
-  parameter Boolean Homotopy=false;
-  parameter Units.SI.SpecificEnthalpy Qf_hpy=20 "Cold Fluid mass flow rate for homotopy";
-  parameter Units.SI.SpecificEnthalpy Qc_hpy=20 "Hot fluid mass flow rate for homotopy";
-  parameter Units.SI.Density rhoc_hpy=998 "Density of the fluid in the hot side for homotopy";
-  parameter Units.SI.Density rhof_hpy=998 "Density of the fluid in the cold side for homotopy";
+  parameter Boolean Homotopy=false annotation ( Dialog(tab="Homotopy"));
+  parameter Units.SI.SpecificEnthalpy Qf_hpy=20 "Cold Fluid mass flow rate for homotopy" annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  parameter Units.SI.SpecificEnthalpy Qc_hpy=20 "Hot fluid mass flow rate for homotopy" annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  parameter Units.SI.Density rhoc_hpy=998 "Density of the fluid in the hot side for homotopy" annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  parameter Units.SI.Density rhof_hpy=998 "Density of the fluid in the cold side for homotopy" annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
 
 public
   Connectors.FluidInlet Ec

@@ -58,8 +58,9 @@ public
   Units.SI.AbsolutePressure Pm(start=1.e5) "Fluid average pressure";
   Units.SI.SpecificEnthalpy h(start=100000) "Fluid average specific enthalpy";
 
-  parameter Units.SI.AbsolutePressure Pm_hpy=1e5 "Average fluid pressure for homotopy";
-  parameter Units.SI.SpecificEnthalpy h_hpy=1e5 "Fluid specific enthalpy for homotopy";
+   parameter Boolean Homotopy=false annotation (Dialog(tab="Homotopy"));
+  parameter Units.SI.AbsolutePressure Pm_hpy=100000 "Average fluid pressure for homotopy" annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  parameter Units.SI.SpecificEnthalpy h_hpy=1e5 "Fluid specific enthalpy for homotopy" annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
 
   Connectors.FluidInlet C1
                           annotation (Placement(transformation(extent={{-110,
@@ -137,7 +138,11 @@ equation
   Pm = (C1.P + C2.P)/2;
   h = (C1.h + C2.h)/2;
 
-  pro = ThermoSysPro.Properties.Fluid.Ph(homotopy(actual=Pm, simplified=Pm_hpy), homotopy(actual=h, simplified=h_hpy), mode, fluid);
+  if Homotopy then
+    pro = ThermoSysPro.Properties.Fluid.Ph(homotopy(actual=Pm, simplified=Pm_hpy), homotopy(actual=h, simplified=h_hpy), mode, fluid);
+  else
+    pro = ThermoSysPro.Properties.Fluid.Ph(Pm, h, mode, fluid);
+  end if;
 
   if (p_rho > 0) then
     rho = p_rho;

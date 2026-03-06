@@ -163,9 +163,12 @@ public
   Units.SI.Diameter DH(start=0.02) "hydraulic diameter";
   Real EE[Ns](start=fill(1, Ns));
 
-  Units.SI.Density dfond;
-  parameter Units.SI.Density dfond_hpy=998 "Fluid density at the bottom of the cavity for homotopy";
-  parameter Units.SI.Density rhol_hpy=998;
+  parameter Boolean Homotopy=false annotation (Dialog(tab="Homotopy"));
+  parameter Units.SI.Density dfond_hpy=998 "Fluid density at the bottom of the cavity for homotopy"
+                                                                                                   annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  parameter Units.SI.Density rhol_hpy=998 "Liquid phase density for homotopy"
+                                                                             annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
+  Units.SI.Density dfond "Fluid density at the bottom of the cavity";
 
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prol
     "Propriétés de l'eau dans le ballon" annotation (Placement(transformation(
@@ -298,7 +301,11 @@ equation
   Ape = Alp + Avp;
 
   /* Pressure at the bottom of the cavity */
-  Pfond = P + homotopy(actual=prod.d, simplified=dfond_hpy)*g*zl;
+  if Homotopy then
+    Pfond = P + homotopy(actual=prod.d, simplified=dfond_hpy)*g*zl;
+  else
+    Pfond = P + prod.d*g*zl;
+  end if;
   dfond = prod.d;
 
   /* Liquid phase mass balance equation */
@@ -350,7 +357,13 @@ equation
   (lsat,vsat) = ThermoSysPro.Properties.WaterSteam.IF97.Water_sat_P(P);
 
   Tl = prol.T;
-  rhol = homotopy(actual=prol.d, simplified=rhol_hpy);
+
+  if Homotopy then
+    rhol = homotopy(actual=prol.d, simplified=rhol_hpy);
+  else
+    rhol = prol.d;
+  end if;
+
   xl = prol.x;
 
   Tv = prov.T;

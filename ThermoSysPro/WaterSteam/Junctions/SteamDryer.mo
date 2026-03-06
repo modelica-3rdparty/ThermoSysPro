@@ -10,8 +10,8 @@ public
   Units.SI.SpecificEnthalpy h(start=10e5) "Fluid specific enthalpy";
   Real xe(start=1.0) "Vapor mass fraction at the inlet";
 
-  parameter Real xe_hpy=0.9
-                 "Vapor mass fraction at the inlet for homotopy";
+  parameter Boolean Homotopy=false annotation (Dialog(tab="Homotopy"));
+  parameter Real xe_hpy=0.9 "Vapor mass fraction at the inlet for homotopy" annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
 
 
 public
@@ -59,7 +59,11 @@ equation
   proe = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(Cev.P, Cev.h, mode_e);
 
   /* Vapor mass fraction at the inlet */
-  xe = homotopy(actual=proe.x, simplified=xe_hpy);
+  if Homotopy then
+    xe = homotopy(actual=proe.x, simplified=xe_hpy);
+  else
+    xe = proe.x;
+  end if;
 
   /* Fluid thermodynamic properties at the saturation point */
   (lsat1,vsat1) = ThermoSysPro.Properties.WaterSteam.IF97.Water_sat_P(Cev.P);
