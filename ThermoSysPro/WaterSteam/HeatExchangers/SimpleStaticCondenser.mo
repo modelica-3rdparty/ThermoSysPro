@@ -54,6 +54,7 @@ public
   Units.SI.MassFlowRate Qc(start=100) "Hot fluid mass flow rate";
   Units.SI.MassFlowRate Qf(start=100) "Cold fluid mass flow rate";
 
+  parameter Boolean Homotopy=false;
   parameter Units.SI.SpecificEnthalpy Qf_hpy=20 "Cold Fluid mass flow rate for homotopy";
   parameter Units.SI.SpecificEnthalpy Qc_hpy=20 "Hot fluid mass flow rate for homotopy";
   parameter Units.SI.Density rhoc_hpy=998 "Density of the fluid in the hot side for homotopy";
@@ -130,14 +131,24 @@ equation
   /* Pressure losses in the hot side */
   Ec.P - Sc.P = DPc;
 
-  DPfc = homotopy(actual=Kc*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qc, eps)/rhoc, simplified= Kc*Qc*Qc_hpy/rhoc_hpy);
+  if Homotopy then
+    DPfc = homotopy(actual=Kc*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qc, eps)/rhoc, simplified= Kc*Qc*Qc_hpy/rhoc_hpy);
+  else
+    Dpfc = Kc*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qc, eps)/rhoc;
+  end if;
+
   DPgc = rhoc*g*(z2c - z1c);
   DPc  = DPfc + DPgc;
 
   /* Pressure losses in the cold side */
   Ef.P - Sf.P = DPf;
 
-  DPff = homotopy(actual=Kf*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qf, eps)/rhof, simplified=Kf*Qf*Qf_hpy/rhof_hpy);
+  if Homotopy then
+    DPff = homotopy(actual=Kf*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qf, eps)/rhof, simplified=Kf*Qf*Qf_hpy/rhof_hpy);
+  else
+    Dpff = Kf*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qf, eps)/rhof;
+  end if;
+
   DPgf = rhof*g*(z2f - z1f);
   DPf  = DPff + DPgf;
 
