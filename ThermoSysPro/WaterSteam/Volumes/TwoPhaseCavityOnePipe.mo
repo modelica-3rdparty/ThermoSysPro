@@ -1,4 +1,4 @@
-within ThermoSysPro.WaterSteam.Volumes;
+﻿within ThermoSysPro.WaterSteam.Volumes;
 model TwoPhaseCavityOnePipe "TwoPhaseCavity for one shell pass "
 
   parameter Boolean Vertical=true
@@ -16,7 +16,7 @@ model TwoPhaseCavityOnePipe "TwoPhaseCavity for one shell pass "
   parameter Integer NbTubV=150 "Numbers of pipes in a vertical plan in Cavity";
   parameter Units.SI.Length L2=25 "tubes length";
   parameter Units.SI.Diameter Dext=0.020 "External pipe diameter";
-  parameter Units.SI.Pressure P0=100000
+  parameter Units.SI.Pressure P0=1e5
     "Fluid initial pressure (active if steady_state=false)";
   parameter Boolean steady_state=true
     "true: start from steady state - false: start from (P0, Vl0)";
@@ -113,7 +113,6 @@ public
   parameter Units.SI.Density dfond_hpy=998 "Fluid density at the bottom of the cavity for homotopy" annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
   parameter Units.SI.Density rhol_hpy=998 "Liquid phase density for homotopy"
                                                                              annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
-  Units.SI.Density dfond "Fluid density at the bottom of the cavity";
 
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prol
     "Propriétés de l'eau dans le ballon" annotation (Placement(transformation(
@@ -239,7 +238,6 @@ equation
   else
     Pfond = P + prod.d*g*zl;
   end if;
-  dfond = prod.d;
 
   /* Liquid phase mass balance equation */
   BQl = -Cl.Q + Qcond + QcondS + (1 - proe.x)*Ce.Q;

@@ -95,8 +95,6 @@ public
   Real lambda[N](start=fill(0.03, N), nominal=fill(0.03, N))
     "Friction pressure loss coefficient in node i";
 
-  Units.SI.AbsolutePressure Pm "Average fluid pressure";
-  Units.SI.SpecificEnthalpy hm "Average fluid enthalpy";
   parameter Boolean Homotopy=false annotation (Dialog(tab="Homotopy"));
   parameter Units.SI.AbsolutePressure Pm_hpy=100000 "Average fluid pressure for homotopy" annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
   parameter Units.SI.SpecificEnthalpy hm_hpy=1e5 "Fluid specific enthalpy for homotopy" annotation (Dialog(enable=Homotopy,tab="Homotopy"));

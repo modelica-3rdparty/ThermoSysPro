@@ -3,8 +3,7 @@ model DynamicCondenser "Dynamic Cavity"
   //parameter Modelica.SIunits.Volume Vc=4510 "Cavity total volume";
   parameter Real Vf0=0.066
     "Fraction of initial liquid volume in the Cavity (0 < Vf0 < 1)";
-  parameter Units.SI.Pressure P0c=10000
-                                      "INitial pressure in the Cavity";
+  parameter Units.SI.Pressure P0c=1e4 "INitial pressure in the Cavity";
   parameter Units.SI.Radius Rv=1.0 "Radius of the Cavity cross-sectional area";
   parameter Units.SI.Length Lv=15 "Cavity length";
   parameter Units.SI.Length L2=14 "Pipes length";
@@ -93,8 +92,8 @@ equation
   end if;
 
   connect(DynamicCondenser.Cl, C2ex)
-                               annotation (Line(points={{7.10543e-015,-73.3333},
-          {7.10543e-015,-98},{0,-98},{0,-100}}, color={0,0,255}));
+                               annotation (Line(points={{7.10543e-15,-73.3333},
+          {7.10543e-15,-98},{0,-98},{0,-100}},  color={0,0,255}));
   connect(C1, DynamicCondenser.Ce)
     annotation (Line(points={{-97,81},{-80,81},{-80,54},{-78,54},{-78,52.6667},
           {-76.5714,52.6667}}));

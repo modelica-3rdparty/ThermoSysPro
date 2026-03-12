@@ -50,7 +50,6 @@ public
   Real xm(start=1.0,min=0) "Average vapor mass fraction";
 
   parameter Boolean Homotopy=false annotation (Dialog(tab="Homotopy"));
-  Units.SI.AbsolutePressure Pm "Average fluid pressure";
   parameter Units.SI.MassFlowRate Q_hpy=20 "Nominal mass flow rate for homotopy"
                                                                                 annotation ( Dialog(enable=Homotopy,tab="Homotopy"));
   parameter Units.SI.AbsolutePressure Pm_hpy=100000
@@ -112,8 +111,6 @@ equation
     xm = (proe.x + pros1.x)/2.0;
   end if;
 
-   /* Average pressure */
-  Pm = (Pe + Ps)/2;
 
   /* Stodola's ellipse law */
   if Homotopy then
