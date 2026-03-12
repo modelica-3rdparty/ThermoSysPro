@@ -132,9 +132,9 @@ equation
   Ec.P - Sc.P = DPc;
 
   if Homotopy then
-    DPfc = homotopy(actual=Kc*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qc, eps)/rhoc, simplified= Kc*Qc*Qc_hpy/rhoc_hpy);
+    DPfc = homotopy(actual=Kc*ThermoSysPro.Functions.ThermoSquare(Qc, eps)/rhoc, simplified= Kc*Qc*Qc_hpy/rhoc_hpy);
   else
-    Dpfc = Kc*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qc, eps)/rhoc;
+    Dpfc = Kc*ThermoSysPro.Functions.ThermoSquare(Qc, eps)/rhoc;
   end if;
 
   DPgc = rhoc*g*(z2c - z1c);
@@ -144,9 +144,9 @@ equation
   Ef.P - Sf.P = DPf;
 
   if Homotopy then
-    DPff = homotopy(actual=Kf*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qf, eps)/rhof, simplified=Kf*Qf*Qf_hpy/rhof_hpy);
+    DPff = homotopy(actual=Kf*ThermoSysPro.Functions.ThermoSquare(Qf, eps)/rhof, simplified=Kf*Qf*Qf_hpy/rhof_hpy);
   else
-    Dpff = Kf*ThermoSysPro_Homotopie.Functions.ThermoSquare(Qf, eps)/rhof;
+    Dpff = Kf*ThermoSysPro.Functions.ThermoSquare(Qf, eps)/rhof;
   end if;
 
   DPgf = rhof*g*(z2f - z1f);
