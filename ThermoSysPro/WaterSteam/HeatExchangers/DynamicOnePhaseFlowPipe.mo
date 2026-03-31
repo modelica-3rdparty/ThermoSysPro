@@ -287,8 +287,13 @@ equation
     rhoc[i] = rho1[i - 1];
   end for;
 
-  proc[1] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(homotopy(actual=P[1], simplified=Pm_hpy), homotopy(actual=h[1], simplified=hm_hpy), mode);
-  proc[2] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(homotopy(actual=P[N + 1], simplified=Pm_hpy),homotopy(actual=h[N + 1], simplified=hm_hpy), mode);
+  if Homotopy then
+    proc[1] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(homotopy(actual=P[1], simplified=Pm_hpy), homotopy(actual=h[1], simplified=hm_hpy), mode);
+    proc[2] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(homotopy(actual=P[N + 1], simplified=Pm_hpy), homotopy(actual=h[N + 1], simplified=hm_hpy), mode);
+  else
+    proc[1] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(P[1], h[1], mode);
+    proc[2] = ThermoSysPro.Properties.WaterSteam.IF97.Water_Ph(P[N + 1], h[N + 1], mode);
+  end if;
 
   rhoc[1] = proc[1].d;
   rhoc[N + 1] = proc[2].d;
