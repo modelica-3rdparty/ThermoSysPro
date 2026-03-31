@@ -4,8 +4,8 @@ model TestDynamicCondenser
   parameter Real COP1( fixed=false,start=0.7)
     "Corrective terme for heat exchange coefficient or Fouling coefficient";
 
-  //parameter Modelica.SIunits.MassFlowRate QCRF = 20000 "CRF mass flow rate";
-  //parameter Modelica.SIunits.Position z=1.05 "Liquid level in Cavity";
+  //parameter ThermoSysPro.Units.SI.MassFlowRate QCRF = 20000 "CRF mass flow rate";
+  //parameter ThermoSysPro.Units.SI.Position z=1.05 "Liquid level in Cavity";
 
   ThermoSysPro.Fluid.BoundaryConditions.SourceQ Source_Eau(
                 h0=50000, Q0=19000)

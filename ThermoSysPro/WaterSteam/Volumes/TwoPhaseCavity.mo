@@ -25,7 +25,7 @@ model TwoPhaseCavity "TwoPhaseCavity for one shell pass "
   parameter Units.SI.Length PasL=0.025
     "Longitudianl step or Length bottom pipes triangular step";
   parameter Units.SI.Length PasT=0.023 " Transverse step or pipes step";
-  //parameter Modelica.SIunits.Angle Angle = 60 "Average bend angle (deg)";
+  //parameter ThermoSysPro.Units.SI.Angle Angle = 60 "Average bend angle (deg)";
   parameter ThermoSysPro.Units.nonSI.Angle_deg Angle=60
     "Average bend angle (deg)";
   parameter Units.SI.Pressure P0=1e5
@@ -70,7 +70,7 @@ model TwoPhaseCavity "TwoPhaseCavity for one shell pass "
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi;
   parameter Integer Ns3=2*Ns "Number of segments for half pipes";
-  //parameter Modelica.SIunits.PathLength Ls1=L1/Ns "Section length for one pass pipe";
+  //parameter ThermoSysPro.Units.SI.PathLength Ls1=L1/Ns "Section length for one pass pipe";
   parameter Units.SI.CoefficientOfHeatTransfer h4=1
     "h4 = 1, Heat exchange coefficient";
   parameter Units.SI.Area S4=1 " S4 = 1, Heat exchange surface  ";
@@ -81,7 +81,7 @@ public
   Units.SI.Pressure P "Fluid average pressure";
   Units.SI.Pressure Pfond "Fluid pressure at the bottom of the cavity";
   Units.SI.SpecificEnthalpy hl "Liquid phase spepcific enthalpy";
-  //Modelica.SIunits.SpecificEnthalpy hl0 "Liquid phase spepcific enthalpy";
+  //ThermoSysPro.Units.SI.SpecificEnthalpy hl0 "Liquid phase spepcific enthalpy";
   Units.SI.SpecificEnthalpy hv "Gas phase spepcific enthalpy";
   Units.SI.Temperature Tl "Liquid phase temperature";
   Units.SI.Temperature Tv "Gas phase temperature";
@@ -146,9 +146,9 @@ public
     "Heat exchange surface for section 2 ; pipe 2 ";
   Units.SI.Area Surf_ext3(start=1.e2)
     "Heat exchange surface for section 3 ; pipe 3";
-  //Modelica.SIunits.ReynoldsNumber Rel (start= 6.e4)  "liquid Reynolds number";
+  //ThermoSysPro.Units.SI.ReynoldsNumber Rel (start= 6.e4)  "liquid Reynolds number";
   Units.SI.ReynoldsNumber Rel(start=6.e4) "liquid Reynolds number";
-  // Modelica.SIunits.ReynoldsNumber Rev( start= 6.e3) "Steam Reynolds number";
+  // ThermoSysPro.Units.SI.ReynoldsNumber Rev( start= 6.e3) "Steam Reynolds number";
   Real Prl(start=1) "liquid Prandtl number in node i";
   Units.SI.ThermalConductivity kl(start=1) "liquid thermal conductivity";
   Units.SI.DynamicViscosity mul(start=2.e-4) "liquid dynamic viscosity ";

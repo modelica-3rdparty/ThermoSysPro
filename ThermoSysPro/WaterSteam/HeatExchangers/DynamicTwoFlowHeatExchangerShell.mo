@@ -9,8 +9,8 @@ model DynamicTwoFlowHeatExchangerShell
   parameter Integer Ns=1 "Numver of segments";
   parameter ThermoSysPro.Units.SI.Diameter Dint=0.1 "Pipe internal diameter";
   parameter ThermoSysPro.Units.SI.Diameter Dext=0.11 "Pipe external diameter";
-  //parameter Modelica.SIunits.Diameter Ds = 0.39 "shell internal diameter";
-  //parameter Modelica.SIunits.Diameter De = 0.019 "tube external diameter";
+  //parameter ThermoSysPro.Units.SI.Diameter Ds = 0.39 "shell internal diameter";
+  //parameter ThermoSysPro.Units.SI.Diameter De = 0.019 "tube external diameter";
   parameter Integer Ntubes=1 "Number of pipes in parallel";
 
   ThermoSysPro.WaterSteam.HeatExchangers.DynamicOnePhaseFlowShell

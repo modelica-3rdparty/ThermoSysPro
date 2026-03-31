@@ -8,12 +8,12 @@ record ThermoProperties_T
     min=HitecLimits.DMIN,
     max=HitecLimits.DMAX,
     nominal=HitecLimits.DNOM) "Density";
-  //Modelica.SIunits.SpecificEnergy u(
+  //ThermoSysPro.Units.SI.SpecificEnergy u(
     //min=ThermoSysPro.Properties.WaterSteam.InitLimits.SEMIN,
     //max=ThermoSysPro.Properties.WaterSteam.InitLimits.SEMAX,
     //nominal=ThermoSysPro.Properties.WaterSteam.InitLimits.SENOM)
     //"Specific inner energy";
-  //Modelica.SIunits.SpecificEntropy s(
+  //ThermoSysPro.Units.SI.SpecificEntropy s(
     //min=ThermoSysPro.Properties.WaterSteam.InitLimits.SSMIN,
     //max=ThermoSysPro.Properties.WaterSteam.InitLimits.SSMAX,
     //nominal=ThermoSysPro.Properties.WaterSteam.InitLimits.SSNOM)
@@ -23,9 +23,9 @@ record ThermoProperties_T
     max=HitecLimits.CPMAX,
     nominal=HitecLimits.CPNOM) "Specific heat capacity at constant presure";
 
-  //Modelica.SIunits.DerDensityByEnthalpy ddhp
+  //ThermoSysPro.Units.SI.DerDensityByEnthalpy ddhp
     //"Derivative of density wrt. specific enthalpy at constant pressure";
-  //Modelica.SIunits.DerDensityByPressure ddph
+  //ThermoSysPro.Units.SI.DerDensityByPressure ddph
    // "Derivative of density wrt. pressure at constant specific enthalpy";
   //Real duph(unit="m3/kg")
     //"Derivative of specific inner energy wrt. pressure at constant specific enthalpy";

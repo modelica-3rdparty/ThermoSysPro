@@ -54,7 +54,7 @@ public
     "Absorption of the glass layer";
   Units.SI.Temperature Tsky(start=300) "Sky temperature";
   Units.SI.Temperature Tglass[Ns](start=fill(300, Ns)) "Glass temperature";
-  //Modelica.SIunits.Power WW ;
+  //ThermoSysPro.Units.SI.Power WW ;
 
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ISun
     "Flux (W/m²)"

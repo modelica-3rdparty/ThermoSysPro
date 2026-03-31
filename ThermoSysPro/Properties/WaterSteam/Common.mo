@@ -566,8 +566,8 @@ package Common
     Units.SI.SpecificHeatCapacity cv
       "Specific heat capacity at constant volume";
     /*
-  Modelica.SIunits.SpecificEnergy u "Specific inner energy";
-  Modelica.SIunits.SpecificEntropy s "Specific entropy";
+  ThermoSysPro.Units.SI.SpecificEnergy u "Specific inner energy";
+  ThermoSysPro.Units.SI.SpecificEntropy s "Specific entropy";
   Real pd "Derivative of pressure wrt. density";
   */
     annotation (
@@ -1579,11 +1579,11 @@ package Common
   end helmholtzToBoundaryProps3rd;
 
   record IF97PhaseBoundaryProperties3rd
-    "Thermodynamic base properties on the phase boundary, Analytic Jacobian verModelica.SIunitson"
+    "Thermodynamic base properties on the phase boundary, Analytic Jacobian verThermoSysPro.Units.SIon"
     extends Modelica.Icons.Record;
     Units.SI.SpecificHeatCapacity R "specific heat capacity";
     Units.SI.Temperature T "temperature";
-    Units.SI.Density d "denModelica.SIunitsty";
+    Units.SI.Density d "density";
     Units.SI.SpecificEnthalpy h "specific enthalpy";
     Units.SI.SpecificEntropy s "specific entropy";
     Units.SI.SpecificHeatCapacity cp "heat capacity at constant pressure";
@@ -1594,16 +1594,16 @@ package Common
     ThermoSysPro.Units.xSI.DerPressureByTemperature pt
       "derivative of pressure wrt temperature";
     ThermoSysPro.Units.xSI.DerPressureByDensity pd
-      "derivative of pressure wrt denModelica.SIunitsty";
+      "derivative of pressure wrt density";
     Real vt(unit="m3/(kg.K)")
       "derivative of specific volume w.r.t. temperature";
     Real vp(unit="m3/(kg.Pa)") "derivative of specific volume w.r.t. pressure";
     Real cvt "Derivative of cv w.r.t. temperature";
     Real cpt "Derivative of cp w.r.t. temperature";
     Real ptt "2nd derivative of pressure wrt temperature";
-    Real pdd "2nd derivative of pressure wrt denModelica.SIunitsty";
+    Real pdd "2nd derivative of pressure wrt density";
     Real ptd
-      "Mixed derivative of pressure w.r.t. denModelica.SIunitsty and temperature";
+      "Mixed derivative of pressure w.r.t. density and temperature";
     Real vtt "2nd derivative of specific volume w.r.t. temperature";
     Real vpp "2nd derivative of specific volume w.r.t. pressure";
     Real vtp

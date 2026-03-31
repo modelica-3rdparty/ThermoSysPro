@@ -843,8 +843,8 @@ package Units "Additional SI and non-SI units"
             final unit="1");
     type FluxiodQuantum = Real (final quantity="FluxiodQuantum", final unit="Wb");
 
-    type TimeAging = Real (final quantity="1/Modelica.SIunits.Time",final unit="1/s");
-    type ChargeAging = Real (final quantity="1/Modelica.SIunits.ElectricCharge",final unit="1/(A.s)");
+    type TimeAging = Real (final quantity="1/Time",final unit="1/s");
+    type ChargeAging = Real (final quantity="1/ElectricCharge",final unit="1/(A.s)");
 
    // Other types not defined in ISO 31-1992
     type PerUnit = Real(unit = "1");

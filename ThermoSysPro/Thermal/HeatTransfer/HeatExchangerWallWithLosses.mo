@@ -76,7 +76,7 @@ public
   Units.SI.Velocity v_wind(start=2) "Wind Velocity";
   Units.SI.ReynoldsNumber Re(start=6.e4) "Fluid Reynolds number ";
   Units.SI.GrashofNumber Gr[Ns](start=fill(1.e9, Ns)) "Fluid Grashof number ";
- //Modelica.SIunits.Power WLosses[Ns](start=fill(10,Ns));
+ //ThermoSysPro.Units.SI.Power WLosses[Ns](start=fill(10,Ns));
 
   ThermoSysPro.Thermal.Connectors.ThermalPort WT2[Ns] "Side 2"
     annotation (Placement(transformation(extent={{-10,10},{10,30}}, rotation=0)));
