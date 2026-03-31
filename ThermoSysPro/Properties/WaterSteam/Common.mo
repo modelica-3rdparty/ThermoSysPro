@@ -1583,7 +1583,7 @@ package Common
     extends Modelica.Icons.Record;
     Units.SI.SpecificHeatCapacity R "specific heat capacity";
     Units.SI.Temperature T "temperature";
-    Units.SI.Density d "denThermoSysPro.Units.SIty";
+    Units.SI.Density d "density";
     Units.SI.SpecificEnthalpy h "specific enthalpy";
     Units.SI.SpecificEntropy s "specific entropy";
     Units.SI.SpecificHeatCapacity cp "heat capacity at constant pressure";
@@ -1594,16 +1594,16 @@ package Common
     ThermoSysPro.Units.xSI.DerPressureByTemperature pt
       "derivative of pressure wrt temperature";
     ThermoSysPro.Units.xSI.DerPressureByDensity pd
-      "derivative of pressure wrt denThermoSysPro.Units.SIty";
+      "derivative of pressure wrt density";
     Real vt(unit="m3/(kg.K)")
       "derivative of specific volume w.r.t. temperature";
     Real vp(unit="m3/(kg.Pa)") "derivative of specific volume w.r.t. pressure";
     Real cvt "Derivative of cv w.r.t. temperature";
     Real cpt "Derivative of cp w.r.t. temperature";
     Real ptt "2nd derivative of pressure wrt temperature";
-    Real pdd "2nd derivative of pressure wrt denThermoSysPro.Units.SIty";
+    Real pdd "2nd derivative of pressure wrt density";
     Real ptd
-      "Mixed derivative of pressure w.r.t. denThermoSysPro.Units.SIty and temperature";
+      "Mixed derivative of pressure w.r.t. density and temperature";
     Real vtt "2nd derivative of specific volume w.r.t. temperature";
     Real vpp "2nd derivative of specific volume w.r.t. pressure";
     Real vtp
