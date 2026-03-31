@@ -11,9 +11,9 @@ function derDynamicViscosity_derrho_derT
 
   output Real der_mu "Dynamic Viscosity time derivative";
 
-  //Modelica.SIunits.Duration dt=1;
-  //Modelica.SIunits.AbsolutePressure delta_rho = 0.01*rho;
-  //Modelica.SIunits.SpecificEnthalpy delta_T = 0.01*T;
+  //ThermoSysPro.Units.SI.Duration dt=1;
+  //ThermoSysPro.Units.SI.AbsolutePressure delta_rho = 0.01*rho;
+  //ThermoSysPro.Units.SI.SpecificEnthalpy delta_T = 0.01*T;
 
 algorithm
   // Water/Steam  /// FONCTIONNE EN DIPHASIQUE ???

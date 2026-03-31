@@ -1,6 +1,6 @@
 within ThermoSysPro.Fluid.Examples.Control;
 model MassFlowRateAirCoalWater "MassFlowRateAirCoalWater"
- // Modelica.SIunits.Power Welec
+ // ThermoSysPro.Units.SI.Power Welec
  //   "(Percent, max=100)Electrical power produced by the generator";
   Units.SI.Power Welec(start=804.461)
     "(MW)Electrical power produced by the generator";

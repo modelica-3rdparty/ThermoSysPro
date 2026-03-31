@@ -8,7 +8,7 @@ model GenericCombustion1D "Generic combustion chamber 1D"
 
   parameter Integer NCEL = 7;
   parameter Units.SI.Area Acham=1 "Average cross-sectional area of the combustion chamber";
-  // parameter Modelica.SIunits.Area SM[NCEL] = {639.92,198.58,466.48,466.48,466.48,523.79,523.79}
+  // parameter ThermoSysPro.Units.SI.Area SM[NCEL] = {639.92,198.58,466.48,466.48,466.48,523.79,523.79}
   parameter Units.SI.Area SM[NCEL]=fill(100, NCEL) "Heat exchange area for the node i = projetee )";
   parameter Real RSURF[NCEL] = cat(1,{1.321},fill(1.409,NCEL - 1)) "Real surface/projected surface";
   parameter ThermoSysPro.Units.xSI.PressureLossCoefficient kcham=0.01 "Pressure loss coefficient in the combustion chamber";
@@ -69,7 +69,7 @@ public
   Real XsfH2O(start=0.1) "H2O mass fraction in the flue gases";
   Real XsfO2(start=0) "O2 mass fraction in the flue gases";
   Real XsfSO2(start=0) "SO2 mass fraction in the flue gases";
-  //////////////////////Modelica.SIunits.Power Wfuel(start=5e8) "LHV power available in the fuel";
+  //////////////////////ThermoSysPro.Units.SI.Power Wfuel(start=5e8) "LHV power available in the fuel";
   Units.SI.Power Wpth(start=1e6) "Thermal losses power";
   Real exc(start=1) "Combustion air ratio";
   Units.SI.MassFlowRate Qcv(start=1) "Volatile ashes mass flow rate";

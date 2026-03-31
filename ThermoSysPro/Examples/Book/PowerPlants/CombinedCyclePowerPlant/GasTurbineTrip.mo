@@ -13,8 +13,8 @@ model GasTurbineTrip "CCPP model to simulate a gas turbine trip"
   parameter Real EtaIsNomBP(fixed=false,start=0.92)
     "Turbine MP: Nominal isentropic efficiency ";
 // //
-  //parameter Modelica.SIunits.AbsolutePressure PoutPumpEx(fixed=false,start=22e5)"Flow pressure at the outlet of the pump";
-  //parameter Modelica.SIunits.Length zc(fixed=false,start=1.5) "Condenser water level";
+  //parameter ThermoSysPro.Units.SI.AbsolutePressure PoutPumpEx(fixed=false,start=22e5)"Flow pressure at the outlet of the pump";
+  //parameter ThermoSysPro.Units.SI.Length zc(fixed=false,start=1.5) "Condenser water level";
 
   parameter Real LP_Pump_a1(fixed=false,start=-6000)
     "x^2 coef. of the pump characteristics hn = f(vol_flow) (s2/m5)";

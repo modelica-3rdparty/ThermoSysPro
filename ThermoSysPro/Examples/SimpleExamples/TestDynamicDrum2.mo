@@ -1,6 +1,6 @@
 within ThermoSysPro.Examples.SimpleExamples;
 model TestDynamicDrum2
-  //parameter Modelica.SIunits.MassFlowRate Qin(fixed=false,start=80)
+  //parameter ThermoSysPro.Units.SI.MassFlowRate Qin(fixed=false,start=80)
   //  "Mass flow rate";
   parameter ThermoSysPro.Units.xSI.Cv CvmaxWater(fixed=false, start=670)
     "Maximum CV (active if mode_caract=0)";

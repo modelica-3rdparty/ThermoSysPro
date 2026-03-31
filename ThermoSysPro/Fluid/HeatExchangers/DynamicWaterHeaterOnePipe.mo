@@ -5,8 +5,8 @@ model DynamicWaterHeaterOnePipe "Dynamic water heater"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
 
-  //parameter Modelica.SIunits.Volume Vc=4510 "Cavity total volume";
-  //parameter Modelica.SIunits.Area Ac=200 "Cavity cross-sectional area";
+  //parameter ThermoSysPro.Units.SI.Volume Vc=4510 "Cavity total volume";
+  //parameter ThermoSysPro.Units.SI.Area Ac=200 "Cavity cross-sectional area";
   parameter Units.SI.Radius Rv=1.0 "Radius of the cavity cross-sectional area";
   parameter Units.SI.Length L1=12.5
     "Length of drowned pipes in liquid (pipes 1)";
@@ -20,7 +20,7 @@ model DynamicWaterHeaterOnePipe "Dynamic water heater"
   parameter Units.SI.Length PasL=0.03
     "Longitudianl step or Length bottom pipes triangular step";
   parameter Units.SI.Length PasT=0.03 "Transverse step or pipes step";
-  //parameter Modelica.SIunits.Angle Angle = 60 "Average bend angle (deg)";
+  //parameter ThermoSysPro.Units.SI.Angle Angle = 60 "Average bend angle (deg)";
   parameter Integer Ns=10 "Number of segments for one tube pass (half U pipe)";
   parameter Integer ntubes1=500 "Numbers of drowned pipes in liquid for pipes 1";
   parameter Integer ntubes2=500 "Numbers of the pipes immersed in steam = NbTub2, for pipes 2";
@@ -32,7 +32,7 @@ model DynamicWaterHeaterOnePipe "Dynamic water heater"
     "Density of the metal of the cooling pipes";
   parameter Units.SI.ThermalConductivity lambda=26
     "Wall thermal conductivity of the cooling pipes";
-  //parameter Modelica.SIunits.CoefficientOfHeatTransfer hcond=25000 "Heat transfer coefficient between the vapor and the cooling pipes";
+  //parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer hcond=25000 "Heat transfer coefficient between the vapor and the cooling pipes";
   parameter Real DpfCorr=1.00 "Corrective terme for friction pressure loss (dpf) in node i";
   parameter Real COP0v=1.0 "Corrective terme for Heat exchange coefficient or Fouling coefficient steam side";
   parameter Real COP0l=1 "Corrective terme for Heat exchange coefficient or Fouling coefficient liquid side";

@@ -1,6 +1,6 @@
 within ThermoSysPro.WaterSteam.HeatExchangers;
 model DynamicCondenser "Dynamic Cavity"
-  //parameter Modelica.SIunits.Volume Vc=4510 "Cavity total volume";
+  //parameter ThermoSysPro.Units.SI.Volume Vc=4510 "Cavity total volume";
   parameter Real Vf0=0.066
     "Fraction of initial liquid volume in the Cavity (0 < Vf0 < 1)";
   parameter Units.SI.Pressure P0c=1e4 "INitial pressure in the Cavity";
@@ -20,7 +20,7 @@ model DynamicCondenser "Dynamic Cavity"
     "Density of the metal of the cooling pipes";
   parameter Units.SI.ThermalConductivity lambda=26
     "Wall thermal conductivity of the cooling pipes";
-  //parameter Modelica.SIunits.CoefficientOfHeatTransfer hcond=25000
+  //parameter ThermoSysPro.Units.SI.CoefficientOfHeatTransfer hcond=25000
   //  "Heat transfer coefficient between the vapor and the cooling pipes";
 
   Volumes.TwoPhaseCavityOnePipe DynamicCondenser(
