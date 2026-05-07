@@ -1,3 +1,5 @@
 TestDynamicOnePhaseFlowPipe
 TestDynamicOnePhaseFlowPipe_Traces
 TestDynamicOnePhaseFlowPipe_FlueGases
+TestStaticExchangerKS
+TestStaticExchangerKS_Traces
