@@ -2,8 +2,8 @@
 model SimpleDynamicCondenser "Simple dynamic condenser"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.WaterSteam "Medium model for the condenser cavity" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
-  replaceable package Medium_Cooling = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.WaterSteam "Medium model for the cooling pipes" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model for the condenser cavity" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_Cooling = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model for the cooling pipes" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.Volume V=1 "Cavity volume";
   parameter Units.SI.Area A=1 "Cavity cross-sectional area";
