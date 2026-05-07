@@ -1,10 +1,9 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model StaticCondenserHEI "HEI static condenser"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.WaterSteamFluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model for the condensing side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_Cooling = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the cooling side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Real Kf=0 "Friction pressure loss coefficient for the cold side";
   parameter Units.SI.Position z1c=0 "Hot inlet altitude";
@@ -72,17 +71,10 @@ model StaticCondenserHEI "HEI static condenser"
     "Air diffusion conductance (active if diffusion=true in neighbouring volumes)";
   parameter Boolean continuous_flow_reversal=false "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter IF97Region region_c=IF97Region.All_regions "IF97 region for the hot side (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_cs=IF97Region.All_regions "IF97 region at the outlet of the hot side (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_f=IF97Region.All_regions "IF97 region for the cold side (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
-  parameter Integer fluid=Integer(ftype) "Water fluid number";
-  parameter Integer mode_c=Integer(region_c) - 1 "IF97 region for the hot side. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_cs=Integer(region_cs) - 1 "IF97 region at the outlet of the hot side. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_f=Integer(region_f) - 1 "IF97 region for the cold side. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Units.SI.MassFlowRate gamma0=1.e-4
     "Pseudo-diffusion conductance use for continuous flow reversal (active if diffusion=false and continuous_flow_reversal = true)";
   parameter Real eps=1.e-0 "Small number for pressure loss equation";
@@ -150,7 +142,6 @@ public
     "Extraction water average specific enthalpy";
   Units.SI.SpecificEnthalpy Hex(start=100000)
     "Drain specific enthalpy at the outlet";
-  FluidType fluids[5] "Fluids mixing in volume";
   Units.SI.Power Jvt "Thermal power diffusion from inlet Cvt";
   Units.SI.Power Jev "Thermal power diffusion from inlet Cev";
   Units.SI.Power Jep "Thermal power diffusion from inlet Cep";
@@ -164,67 +155,37 @@ public
   Real rev "Value of r(Q/gamma) for inlet Cev";
   Real rep "Value of r(Q/gamma) for inlet Cep";
   Real rex "Value of r(Q/gamma) for outlet Cex";
-  FluidType ftype_p "Cooling pipe fluid type";
-  Integer fluid_p=Integer(ftype_p) "Cooling pipe fluid number";
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions in the condenser cavity";
+  Medium.ExtraProperty SubC[Medium.nC](start=Medium.C_default) "Trace substance concentrations in the condenser cavity";
+  Medium_Cooling.MassFraction X_Cooling[Medium_Cooling.nXi](start=Medium_Cooling.X_default[1:Medium_Cooling.nXi]) "Mass fractions in the cooling pipe";
+  Medium.ThermodynamicState state_ce "Thermodynamic state at the condensing-side inlet average enthalpy";
+  Medium.ThermodynamicState state_cs "Thermodynamic state at the extraction outlet";
+  Medium_Cooling.ThermodynamicState state_fe "Thermodynamic state at the cooling water inlet";
+  Medium_Cooling.ThermodynamicState state_fs "Thermodynamic state at the cooling water outlet";
+  Medium_Cooling.ThermodynamicState state_mf "Average thermodynamic state of the cooling water";
+  Medium.SaturationProperties sat "Saturation properties inside the condenser";
 
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cee "Cooling water inlet"
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cee(redeclare package Medium = Medium_Cooling) "Cooling water inlet"
     annotation (Placement(transformation(extent={{-112,-72},{-88,-50}},
           rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cse
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cse(redeclare package Medium = Medium_Cooling)
     "Cooling water outlet" annotation (Placement(transformation(extent={{90,-72},
             {114,-50}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cex "Extraction water"
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cex(redeclare package Medium = Medium) "Extraction water"
     annotation (Placement(transformation(extent={{-12,-112},{14,-88}}, rotation=
            0), iconTransformation(extent={{-12,-112},{14,-88}})));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cvt "Turbine outlet"
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cvt(redeclare package Medium = Medium) "Turbine outlet"
     annotation (Placement(transformation(extent={{-13,88},{13,114}}, rotation=0),
         iconTransformation(extent={{-13,88},{13,114}})));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph profs
-    "Proprietes eau"
-    annotation (Placement(transformation(extent={{50,80},{70,100}}, rotation=0)));
 public
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph profe
-    "Proprietes eau"
-    annotation (Placement(transformation(extent={{20,80},{40,100}}, rotation=0)));
-public
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proce
-    "Proprietes eau"
-    annotation (Placement(transformation(extent={{-100,-100},{-80,-80}},
-          rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat
-    annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
-           0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat
-    annotation (Placement(transformation(extent={{-60,80},{-40,100}}, rotation=
-            0)));
-public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cep "Drain inlet"
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cep(redeclare package Medium = Medium) "Drain inlet"
     annotation (Placement(transformation(extent={{-112,8},{-88,30}}, rotation=0)));
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cev "Vapor inlet"
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cev(redeclare package Medium = Medium) "Vapor inlet"
     annotation (Placement(transformation(extent={{-112,50},{-88,72}}, rotation=
             0)));
-public
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph procs
-    "Proprietes eau"
-    annotation (Placement(transformation(extent={{80,-100},{100,-80}}, rotation=
-           0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph promf
-    "Proprietes eau"
-    annotation (Placement(transformation(extent={{80,80},{100,100}}, rotation=0)));
 equation
-
-  /* Check that incoming fluids are compatible with fluid in volume */
-  fluids[1] = ftype;
-  fluids[2] = Cvt.ftype;
-  fluids[3] = Cev.ftype;
-  fluids[4] = Cep.ftype;
-  fluids[5] = Cex.ftype;
-
-  /* Check that the fluid type for the cooling pipe is water/steam */
-  assert((ftype_p == FluidType.WaterSteam) or (ftype_p == FluidType.WaterSteamSimple), "StaticCondenserHEI: the fluid type for the cooling pipe must be water/steam");
-
   /* Unconnected connectors */
   if (cardinality(Cev) == 0) then
     Cev.Q = 0;
@@ -232,11 +193,8 @@ equation
     Cev.h_vol_1 = 1.e5;
     Cev.diff_res_1 = 0;
     Cev.diff_on_1 = false;
-    Cev.ftype = ftype;
-    Cev.Xco2 = 0;
-    Cev.Xh2o = 0;
-    Cev.Xo2 = 0;
-    Cev.Xso2 = 0;
+    Cev.Xi = Medium.X_default[1:Medium.nXi];
+    Cev.SubC = Medium.C_default;
   end if;
 
   if (cardinality(Cep) == 0) then
@@ -245,11 +203,8 @@ equation
     Cep.h_vol_1 = 1.e5;
     Cep.diff_res_1 = 0;
     Cep.diff_on_1 = false;
-    Cep.ftype = ftype;
-    Cep.Xco2 = 0;
-    Cep.Xh2o = 0;
-    Cep.Xo2 = 0;
-    Cep.Xso2 = 0;
+    Cep.Xi = Medium.X_default[1:Medium.nXi];
+    Cep.SubC = Medium.C_default;
   end if;
 
   // Water/steam cavity
@@ -273,7 +228,7 @@ equation
   // 0 = Cvt.Q*(Cvt.h - lsat.h) + Cev.Q*(Cev.h - lsat.h) + Cep.Q*(Cep.h - lsat.h) -  W;
 
   /* Extraction water average specific enthalpy */
-  Hml = lsat.h;
+  Hml = Medium.bubbleEnthalpy(sat);
   // Hml = (lsat.h + Hex)/2;
 
   Cvt.h_vol_2 = Hml;
@@ -290,18 +245,16 @@ equation
   // Cex.h_vol_1 = Hex;
 
   /* Extraction water specific enthalpy */
-  Hex = noEvent(if (rho_ex > 0) then lsat.h + ((Cex.P - Pcond)/rho_ex) else lsat.h);
+  Hex = noEvent(if (rho_ex > 0) then Medium.bubbleEnthalpy(sat) + ((Cex.P - Pcond)/rho_ex) else Medium.bubbleEnthalpy(sat));
 
   /* Gravity pressure losses in the hot side */
   DPgc = rho_ex*g*(z2c - z1c);
 
   /* Fluid composition in the cavity (no balance equations) */
-  Cex.ftype = ftype;
-
-  Cex.Xco2 = 0;
-  Cex.Xh2o = 0;
-  Cex.Xo2  = 0;
-  Cex.Xso2 = 0;
+  X = Cvt.Xi;
+  SubC = Cvt.SubC;
+  Cex.Xi = X;
+  Cex.SubC = SubC;
 
   /* Flow reversal */
   if continuous_flow_reversal then
@@ -370,16 +323,11 @@ equation
   Cse.diff_res_1 = Cee.diff_res_1 + 1/gamma_diff;
   Cee.diff_res_2 = Cse.diff_res_2 + 1/gamma_diff;
 
-  Cee.ftype = Cse.ftype;
-
-  Cee.Xco2 = Cse.Xco2;
-  Cee.Xh2o = Cse.Xh2o;
-  Cee.Xo2  = Cse.Xo2;
-  Cee.Xso2 = Cse.Xso2;
-
-  ftype_p = Cee.ftype;
+  Cee.Xi = Cse.Xi;
+  Cee.SubC = Cse.SubC;
 
   Qf = Cee.Q;
+  X_Cooling = Cee.Xi;
 
   /* Pressure losses in the cold side */
   Cee.P - Cse.P = DPf;
@@ -392,33 +340,33 @@ equation
   W = Qf*(Cse.h - Cee.h);
 
   /* Fluid thermodynamic properties of the hot side */
-  proce = ThermoSysPro.Properties.Fluid.Ph(Cvt.P, Hmv, mode_c, fluid);
-  procs = ThermoSysPro.Properties.Fluid.Ph(Cex.P, Cex.h, mode_cs, fluid);
-  //procs = ThermoSysPro.Properties.Fluid.Ph(Pcond + Cex.P)/2, (lsat.h + Cex.h)/2, modecs);
+  state_ce = Medium.setState_phX(p=Cvt.P, h=Hmv, X=X);
+  state_cs = Medium.setState_phX(p=Cex.P, h=Cex.h, X=X);
+  // state_cs could alternatively use an average pressure and enthalpy between saturation and extraction outlet.
 
-  Tec = proce.T;
-  Tsc = procs.T;
+  Tec = Medium.temperature(state_ce);
+  Tsc = Medium.temperature(state_cs);
 
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(Pcond, fluid);
+  sat = Medium.setSat_p(Pcond);
 
   if (p_rhoc > 0) then
     rho_ex = p_rhoc;
   else
-    rho_ex = procs.d;
+    rho_ex = Medium.density(state_cs);
   end if;
 
   /* Fluid thermodynamic properties of the cold side */
-  profe = ThermoSysPro.Properties.Fluid.Ph(Cee.P, Cee.h, mode_f, fluid_p);
-  profs = ThermoSysPro.Properties.Fluid.Ph(Cse.P, Cse.h, mode_f, fluid_p);
-  promf = ThermoSysPro.Properties.Fluid.Ph((Cee.P + Cse.P)/2, (Cee.h + Cse.h)/2, mode_f, fluid_p);
+  state_fe = Medium_Cooling.setState_phX(p=Cee.P, h=Cee.h, X=X_Cooling);
+  state_fs = Medium_Cooling.setState_phX(p=Cse.P, h=Cse.h, X=X_Cooling);
+  state_mf = Medium_Cooling.setState_phX(p=(Cee.P + Cse.P)/2, h=(Cee.h + Cse.h)/2, X=X_Cooling);
 
-  Tef = profe.T;
-  Tsf = profs.T;
+  Tef = Medium_Cooling.temperature(state_fe);
+  Tsf = Medium_Cooling.temperature(state_fs);
 
   if (p_rhof > 0) then
     rhof = p_rhof;
   else
-    rhof = promf.d;
+    rhof = Medium_Cooling.density(state_mf);
   end if;
 
   /* Calculation of the heat exchange surface */
@@ -461,19 +409,19 @@ equation
   U = Ucorr*U1*FM*FC*Fw;
 
   /* Calculation of the average specific heat capacity of the cold water */
-  Cpmf = promf.cp;
+  Cpmf = Medium_Cooling.specificHeatCapacityCp(state_mf);
 
   /* Calculation of the expected HEI saturation temperature  */
   Tsat_att = Tef + (W/(Qf*Cpmf))*(1/(1 - Modelica.Math.exp(-(U*S_ech)/(Qf*Cpmf))));
 
   /* Calculation of expected HEI saturation pressure  */
-  Psat_att = ThermoSysPro.Properties.Fluid.P_sat(Tsat_att, fluid);
+  Psat_att = Medium.saturationPressure(Tsat_att);
 
   /* Calculation of the HEI pressure cut-off */
   Pcut_off = (5.752433E-04*(Tef-273.15)^3 + 1.735162E-02*(Tef-273.15)^2 + 8.052739E-02*(Tef-273.15) + 2.109159E+01)*100;
 
   /* Calculation of the HEI saturation temperature at pressure cut-off  */
-  Tcut_off = ThermoSysPro.Properties.Fluid.T_sat(Pcut_off, fluid);
+  Tcut_off = Medium.saturationTemperature(Pcut_off);
 
   /* Calculation of HEI zero-load  pressure */
   Pzero_load = (5.008000E-04*(Tef - 273.15)^3 + 2.039549E-02*(Tef - 273.15)^2 + 2.277566E-01*(Tef - 273.15) + 1.027824E+01)*100;
@@ -489,7 +437,7 @@ equation
   end if;
 
   /* Calculation of the expected HEI corrected saturation pressure */
-  Tsat = ThermoSysPro.Properties.Fluid.T_sat(Pcond, fluid);
+  Tsat = Medium.saturationTemperature(Pcond);
 
   /* Calculation of the Terminal Temperature Difference */
   TTD = Tsat - Tsf;

@@ -12,3 +12,5 @@ TestSimpleStaticCondenser
 TestSimpleStaticCondenser_Traces
 TestStaticCondenser
 TestStaticCondenser_Traces
+TestStaticCondenserHEI
+TestStaticCondenserHEI_Traces
