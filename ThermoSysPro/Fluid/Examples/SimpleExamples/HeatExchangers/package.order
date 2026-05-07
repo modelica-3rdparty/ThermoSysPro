@@ -10,3 +10,5 @@ TestSimpleDynamicCondenser
 TestSimpleDynamicCondenser_Traces
 TestSimpleStaticCondenser
 TestSimpleStaticCondenser_Traces
+TestStaticCondenser
+TestStaticCondenser_Traces
