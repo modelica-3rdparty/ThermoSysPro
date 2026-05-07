@@ -1,6 +1,8 @@
 TestDynamicOnePhaseFlowPipe
 TestDynamicOnePhaseFlowPipe_Traces
 TestDynamicOnePhaseFlowPipe_FlueGases
+TestFixedPowerHeatExchanger
+TestFixedPowerHeatExchanger_Traces
 TestStaticExchangerKS
 TestStaticExchangerKS_Traces
 TestStaticPlateHeatExchanger
