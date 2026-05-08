@@ -1,8 +1,8 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model StaticWallFlueGasesExchanger "Static wall - flue gases exchanger"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.FlueGases constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Mixture gas medium" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Integer Ns=10 "Number of segments";
   parameter Integer NbTub=100 "Number of pipes";
@@ -30,11 +30,6 @@ model StaticWallFlueGasesExchanger "Static wall - flue gases exchanger"
   parameter Boolean diffusion=false "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
 
 protected
-  constant Real Mco2=44.009 "CO2 molar mass";
-  constant Real Mh2o=18.0148 "H2O molar mass";
-  constant Real Mo2=31.998 "O2 molar mass";
-  constant Real Mn2=28.014 "N2 molar mass";
-  constant Real Mso2=64.063 "SO2 molar mass";
   constant Real pi=Modelica.Constants.pi;
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   parameter Integer N=Ns + 1 "Number of hydraulic nodes (= number of thermal nodes + 1)";
@@ -49,6 +44,8 @@ protected
   parameter Units.SI.Length Perb=Surf_ext/Ls "Geometrical parameter";
   parameter Units.SI.CoefficientOfHeatTransfer Kdef=50
     "Heat exchange coefficient in case of zero flow";
+  parameter Integer iH2O=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium.substanceNames, {"H2O", "Water", "water"}) "Index of water vapor in the medium composition";
+  parameter Integer iCO2=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium.substanceNames, {"CO2", "Carbondioxide", "Carbon dioxide", "carbondioxide"}) "Index of carbon dioxide in the medium composition";
   parameter Units.SI.MassFlowRate gamma0=1.e-4
     "Pseudo-diffusion conductance use for continuous flow reversal (active if diffusion=false and continuous_flow_reversal=true)";
   parameter Real eps=1.e-1 "Small number for the computation of the pressure losses";
@@ -74,14 +71,8 @@ public
     "H2O partial pressure in thermal node i";
   ThermoSysPro.Units.SI.MassFraction Xh2o "H2O mass fraction";
   ThermoSysPro.Units.SI.MassFraction Xco2 "CO2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xo2 "O2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xso2 "SO2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xn2 "N2 mass fraction";
   ThermoSysPro.Units.SI.MassFraction Xvh2o "H2O volume fraction";
   ThermoSysPro.Units.SI.MassFraction Xvco2 "CO2 volume fraction";
-  ThermoSysPro.Units.SI.MassFraction Xvo2 "O2 volume fraction";
-  ThermoSysPro.Units.SI.MassFraction Xvn2 "N2 volume fraction";
-  ThermoSysPro.Units.SI.MassFraction Xvso2 "SO2 volume fraction";
   Units.SI.CoefficientOfHeatTransfer K(start=0)
     "Total heat exchange coefficient";
   Units.SI.CoefficientOfHeatTransfer Kc(start=0)
@@ -99,8 +90,9 @@ public
          - 1)) "Temperature difference between the fluid and the wall";
   Units.SI.Temperature TFilm[N - 1] "Film temperature";
   Real Mmt "Total flue gases molar mass";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
+  parameter Units.SI.MolarMass MM[Medium.nX]={Medium.fluidConstants[j].molarMass for j in 1:Medium.nX} "Component molar masses";
+  Medium.ThermodynamicState state1[N - 1] "Thermodynamic state in thermal node i";
+  Medium.ThermodynamicState state2[N] "Thermodynamic state in hydraulic node i";
   Real diff_res[N] "Diffusion resistance in hydraulic node i";
   Real diff_res_t "Total diffusion resistance in the pipe";
   Real diff_res_e[N - 1] "Diffusion resistance at inlet of thermal node i";
@@ -120,20 +112,21 @@ public
   Real rs[N - 1] "Value of r(Q/gamma) for outlet of thermal node i";
 
 public
-  Interfaces.Connectors.FluidInlet C1 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(transformation(
           extent={{-110,-10},{-90,10}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort CTh[Ns]
     annotation (Placement(transformation(extent={{-10,20},{10,40}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet C2 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
 equation
 
-  /* Check that the fluid type is flue gases */
-  assert(ftype == FluidType.FlueGases, "StaticWallFlueGasesExchanger: the fluid type must be flue gases");
+  assert(Medium.nX > 1, "StaticWallFlueGasesExchanger: Medium must be a gas mixture");
+  assert(iH2O > 0, "StaticWallFlueGasesExchanger: Medium.substanceNames must contain H2O/Water for radiative heat transfer");
+  assert(iCO2 > 0, "StaticWallFlueGasesExchanger: Medium.substanceNames must contain CO2/Carbondioxide for radiative heat transfer");
 
   /* Wall boundary */
   CTh.W = -dW1;
-  CTh.T = Tp;
+  Tp = CTh.T;
 
   /* Pipe boundaries */
   P[1] = C1.P;
@@ -157,30 +150,18 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + diff_res_t;
   C1.diff_res_2 = C2.diff_res_2 + diff_res_t;
 
-  C1.ftype = C2.ftype;
+  C1.Xi = C2.Xi;
+  C1.SubC = C2.SubC;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2 = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
-
-  ftype = C1.ftype;
-
-  Xh2o = C1.Xh2o;
-  Xco2 = C1.Xco2;
-  Xo2 = C1.Xo2;
-  Xso2 = C1.Xso2;
-  Xn2 = 1 - C1.Xco2 - C1.Xh2o - C1.Xo2 - C1.Xso2;
+  Xh2o = C1.Xi[iH2O];
+  Xco2 = C1.Xi[iCO2];
 
   /* Volume fractions */
-  Xvco2 = (Xco2/Mco2)/(Xco2/Mco2 + Xh2o/Mh2o + Xo2/Mo2 + Xn2/Mn2 + Xso2/Mso2);
-  Xvh2o = (Xh2o/Mh2o)/(Xco2/Mco2 + Xh2o/Mh2o + Xo2/Mo2 + Xn2/Mn2 + Xso2/Mso2);
-  Xvo2 = (Xo2/Mo2)/(Xco2/Mco2 + Xh2o/Mh2o + Xo2/Mo2 + Xn2/Mn2 + Xso2/Mso2);
-  Xvn2 = (Xn2/Mn2)/(Xco2/Mco2 + Xh2o/Mh2o + Xo2/Mo2 + Xn2/Mn2 + Xso2/Mso2);
-  Xvso2 = (Xso2/Mso2)/(Xco2/Mco2 + Xh2o/Mh2o + Xo2/Mo2 + Xn2/Mn2 + Xso2/Mso2);
+  Xvco2 = Xco2/MM[iCO2]/sum({C1.Xi[k]/MM[k] for k in 1:Medium.nX});
+  Xvh2o = Xh2o/MM[iH2O]/sum({C1.Xi[k]/MM[k] for k in 1:Medium.nX});
 
   /* Total molar mass */
-  Mmt = Xvco2*Mco2 + Xvh2o*Mh2o + Xvo2*Mo2 + Xvn2*Mn2 + Xvso2*Mso2;
+  Mmt = sum({C1.Xi[k]/MM[k] for k in 1:Medium.nX})^(-1);
 
   /* Mass and energy balance equations (thermal nodes) */
   for i in 1:N - 1 loop
@@ -194,8 +175,8 @@ equation
     deltaT[i] = T1[i] - Tp[i];
 
     /* Partial gas pressures */
-    Ph2o[i] = P[i + 1]*Xh2o*Mmt/Mh2o;
-    Pco2[i] = P[i + 1]*Xco2*Mmt/Mco2;
+    Ph2o[i] = P[i + 1]*Xvh2o;
+    Pco2[i] = P[i + 1]*Xvco2;
 
     if (abs(Q[i]) >= Qmin) then
       /* Convective heat exchange coefficient */
@@ -267,7 +248,8 @@ equation
     J[i] = Je[i] + Js[i];
 
     /* Fluid thermodynamic properties */
-    T1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(P[i + 1], h[i + 1], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
+    state1[i] = Medium.setState_phX(p=P[i + 1], h=h[i + 1], X=C1.Xi);
+    T1[i] = Medium.temperature(state1[i]);
   end for;
 
   /* Momentum balance equations (hydraulic nodes) */
@@ -280,13 +262,15 @@ equation
     gamma[i] = if diffusion then 1/diff_res[i] else gamma0;
 
     /* Fluid thermodynamic properties */
+    state2[i] = Medium.setState_phX(p=(P[i] + P[i + 1])/2, h=hb[i], X=C1.Xi);
+
     if (p_rho > 0) then
       rho2[i] = p_rho;
     else
-      rho2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((P[i] + P[i + 1])/2, hb[i], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
+      rho2[i] = Medium.density(state2[i]);
     end if;
 
-    T2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((P[i] + P[i + 1])/2, hb[i], fluid, 0, Xco2, Xh2o, Xo2, Xso2);
+    T2[i] = Medium.temperature(state2[i]);
   end for;
 
   /* Total heat exchange coefficient ??? */
