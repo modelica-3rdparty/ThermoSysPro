@@ -2,10 +2,7 @@ within ThermoSysPro.Fluid.Examples.SimpleExamples.HeatExchangers;
 model TestSimpleDynamicCondenser_Traces
   extends ThermoSysPro.UsersGuide.Icons.Example;
 
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam(
-    extraPropertiesNames={"Trace1", "Trace2"},
-    C_nominal={0.1, 2},
-    C_default={0.2, 5});
+  replaceable package Medium = ThermoSysPro.Fluid.Examples.SimpleExamples.Media.WaterSteam_FullyVolatileTrace;
 
   ThermoSysPro.Fluid.BoundaryConditions.SinkP puitsPCaloporteur(
     redeclare package Medium = Medium,
@@ -20,7 +17,7 @@ model TestSimpleDynamicCondenser_Traces
     option_temperature=false,
     h0=2401e3,
     P0=15050,
-    SubC0={10,20}) annotation (Placement(transformation(extent={{-207,148},{-183,170}}, rotation=0)));
+    SubC0={10}) annotation (Placement(transformation(extent={{-207,148},{-183,170}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkQ PuitsRechauffeurEau(
     redeclare package Medium = Medium,
     h0=191812,
@@ -29,7 +26,7 @@ model TestSimpleDynamicCondenser_Traces
     redeclare package Medium = Medium,
     Q0=29804.5,
     h0=113e3,
-    SubC0={10,20}) annotation (Placement(transformation(extent={{-212,30},{-172,68}}, rotation=0)));
+    SubC0={10}) annotation (Placement(transformation(extent={{-212,30},{-172,68}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss PerteChargeCondPompe1(
     redeclare package Medium = Medium,
     K=1e-6) annotation (Placement(transformation(origin={36,50}, extent={{6,-10},{-6,10}}, rotation=180)));
@@ -39,11 +36,12 @@ model TestSimpleDynamicCondenser_Traces
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss PerteChargeCondPompe3(
     redeclare package Medium = Medium,
     K(fixed=false)=1e-3,
-    Q(start=192, fixed=true))
+    Q(fixed=true,start=192))
                       annotation (Placement(transformation(origin={-120,159}, extent={{10,-10},{-10,10}}, rotation=180)));
   ThermoSysPro.Fluid.HeatExchangers.SimpleDynamicCondenser Condenseur(
     redeclare package Medium = Medium,
     redeclare package Medium_Cooling = Medium,
+    redeclare function PhasesSeparationFunction = Medium.PhasesSeparation(x=Condenseur.xv),
     D=0.018,
     V=1000,
     A=100,

@@ -1,9 +1,11 @@
-﻿within ThermoSysPro.Fluid.HeatExchangers;
+within ThermoSysPro.Fluid.HeatExchangers;
 model SimpleDynamicCondenser "Simple dynamic condenser"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model for the condenser cavity" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   replaceable package Medium_Cooling = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model for the cooling pipes" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable function SaS = Medium.noSaS(SubC = SubCv) annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable function PhasesSeparationFunction = Medium.HomogeneousPhasesSeparation(SubC = Cv.SubC) annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.Volume V=1 "Cavity volume";
   parameter Units.SI.Area A=1 "Cavity cross-sectional area";
@@ -30,6 +32,14 @@ model SimpleDynamicCondenser "Simple dynamic condenser"
   parameter Real Vf0=0.5 "Fraction of initial water volume in the drum (active if dynamic_energy_balance=true and steady_state=false)" annotation(Evaluate=true, Dialog(enable=dynamic_energy_balance and not steady_state));
   parameter Units.SI.AbsolutePressure P0=0.1e5
     "Fluid initial pressure (active if dynamic_energy_balance=true and steady_state=false)"
+    annotation (Evaluate=true, Dialog(enable=dynamic_energy_balance and not
+          steady_state));
+  parameter Medium.ExtraProperty SubCl0[Medium.nC](quantity=Medium.extraPropertiesNames)=Medium.C_default
+    "Initial liquid phase trace substances (active if dynamic_energy_balance=true and steady_state=false)"
+    annotation (Evaluate=true, Dialog(enable=dynamic_energy_balance and not
+          steady_state));
+  parameter Medium.ExtraProperty SubCv0[Medium.nC](quantity=Medium.extraPropertiesNames)=Medium.C_default
+    "Initial vapor phase trace substances (active if dynamic_energy_balance=true and steady_state=false)"
     annotation (Evaluate=true, Dialog(enable=dynamic_energy_balance and not
           steady_state));
   parameter Boolean continuous_flow_reversal=false "true: continuous flow reversal - false: discontinuous flow reversal";
@@ -74,6 +84,11 @@ public
     "Right hand side of the mass balance equation of the liquid phase in the cavity";
   Units.SI.MassFlowRate BQv
     "Right hand side of the mass balance equation of the gas phase in the cavity";
+  Medium.ExtraProperty BSubCl[Medium.nC](quantity=Medium.extraPropertiesNames)
+    "Right hand side of the trace balance equation of the liquid phase in the cavity";
+  Medium.ExtraProperty BSubCv[Medium.nC](quantity=Medium.extraPropertiesNames)
+    "Right hand side of the trace balance equation of the vapor phase in the cavity";
+  Medium.C_BiPhase C_record;
   Units.SI.Power BHl
     "Right hand side of the energy balance equation of the liquid phase in the cavity";
   Units.SI.Power BHv
@@ -99,6 +114,9 @@ public
   Units.SI.MassFlowRate gamma_diff(start=1.e-4)
     "Diffusion conductance in the pipes";
   Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions in the condenser cavity";
+  Medium.ExtraProperty SubCl[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default) "Liquid phase trace substances in the cavity";
+  Medium.ExtraProperty SubCv[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default) "Vapor phase trace substances in the cavity";
+  Medium.ExtraProperty SubCSaS[Medium.nC](quantity=Medium.extraPropertiesNames) "Trace modification in the trace balance equation";
   Medium_Cooling.MassFraction Xp[Medium_Cooling.nXi](start=Medium_Cooling.X_default[1:Medium_Cooling.nXi]) "Mass fractions in the cooling pipes";
   Medium.ThermodynamicState state_l "Liquid phase thermodynamic state in the cavity";
   Medium.ThermodynamicState state_v "Vapor phase thermodynamic state in the cavity";
@@ -124,11 +142,15 @@ initial equation
       der(hv) = 0;
       der(Vl) = 0;
       der(P) = 0;
+      der(SubCl) = fill(0, Medium.nC);
+      der(SubCv) = fill(0, Medium.nC);
     else
       hl = Medium.bubbleEnthalpy(Medium.setSat_p(P0));
       hv = Medium.dewEnthalpy(Medium.setSat_p(P0));
       Vl = Vf0*V;
       P = P0;
+      SubCl = SubCl0;
+      SubCv = SubCv0;
     end if;
   end if;
 
@@ -237,8 +259,25 @@ equation
 
   /* Fluid composition in the cavity (no balance equations) */
   Cv.Xi = Cl.Xi;
-  Cv.SubC = Cl.SubC;
   X = Cv.Xi;
+
+  /* Traces composition balance equations */
+  C_record = PhasesSeparationFunction();
+
+  SubCSaS = SaS();
+
+  BSubCl = Qcond*C_record.Cl - Qevap*SubCl - Cl.Q*Cl.SubC;
+  BSubCv = Cv.Q*Cv.SubC + Qevap*SubCl - Qcond*C_record.Cg;
+
+  if dynamic_energy_balance then
+    Vl*rhol*der(SubCl) + SubCl*BQl = BSubCl;
+    Vv*rhov*der(SubCv) + SubCv*BQv + Vv*rhov*SubCSaS = BSubCv;
+  else
+    SubCl*BQl = BSubCl;
+    SubCv*BQv + Vv*rhov*SubCSaS = BSubCv;
+  end if;
+
+  Cl.SubC = SubCl;
 
   /* Pipes inlet and outlet */
   Cee.Q = Cse.Q;
