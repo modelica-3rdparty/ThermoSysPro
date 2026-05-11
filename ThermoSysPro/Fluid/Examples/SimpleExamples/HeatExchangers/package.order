@@ -14,6 +14,9 @@ TestStaticWallFlueGasesExchanger_CustomMixture
 TestStaticPlateHeatExchanger
 TestStaticPlateHeatExchanger_Traces
 TestStaticPlateHeatExchanger_FlueGases
+TestDynamicPlateHeatExchanger
+TestDynamicPlateHeatExchanger_Traces
+TestDynamicPlateHeatExchanger_FlueGases
 TestNTUWaterHeater
 TestNTUWaterHeater_Traces
 TestNTUWaterHeater_FlueGases
@@ -25,3 +28,4 @@ TestStaticCondenser
 TestStaticCondenser_Traces
 TestStaticCondenserHEI
 TestStaticCondenserHEI_Traces
+TestDynamicPlateHeatExchangerW

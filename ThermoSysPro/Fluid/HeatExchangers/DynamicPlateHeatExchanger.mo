@@ -1,8 +1,9 @@
 ﻿within ThermoSysPro.Fluid.HeatExchangers;
 model DynamicPlateHeatExchanger "Dynamic plate heat exchanger"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium_c = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the hot fluid" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_f = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the cold fluid" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.ThermalConductivity lambdam=15.0
     "Metal thermal conductivity";
@@ -63,14 +64,10 @@ model DynamicPlateHeatExchanger "Dynamic plate heat exchanger"
   parameter Units.SI.Density p_rhof=0
     "If > 0, fixed fluid density for the cold fluid"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_c=IF97Region.All_regions "Hot fluid IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype_c==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_f=IF97Region.All_regions "Cold fluid IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype_f==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
-  parameter Integer mode_c=Integer(region_c) - 1 "Hot fluid IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_f=Integer(region_f) - 1 "Cold fluid IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Integer N=Ns + 1 "Number of hydraulic nodes (= number of thermal nodes + 1)";
   parameter Units.SI.Area Ac=1
     "Internal cross sectional pipe area for the hot fluid";
@@ -174,18 +171,16 @@ public
   Units.SI.Temperature Tsc "Fluid temperature at the hot outlet";
   Units.SI.Temperature Tef "Fluid temperature at the cold inlet";
   Units.SI.Temperature Tsf "Fluid temperature at the cold outlet";
-  FluidType ftype_c "Hot fluid type";
-  FluidType ftype_f "Cold fluid type";
-  Integer fluid_c=Integer(ftype_c) "Hot fluid number";
-  Integer fluid_f=Integer(ftype_f) "Cold fluid number";
-  ThermoSysPro.Units.SI.MassFraction Xco2_c "Hot fluid CO2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xco2_f "Cold fluid CO2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xh2o_c "Hot fluid H2O mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xh2o_f "Cold fluid H2O mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xo2_c "Hot fluid O2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xo2_f "Cold fluid O2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xso2_c "Hot fluid SO2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xso2_f "Cold fluid SO2 mass fraction";
+  Medium_c.MassFraction Xc[Medium_c.nXi](start=Medium_c.X_default[1:Medium_c.nXi]) "Mass fractions of the hot fluid";
+  Medium_f.MassFraction Xf[Medium_f.nXi](start=Medium_f.X_default[1:Medium_f.nXi]) "Mass fractions of the cold fluid";
+  Medium_c.ThermodynamicState state_c1[N - 1] "Hot fluid thermodynamic state in thermal node i";
+  Medium_f.ThermodynamicState state_f1[N - 1] "Cold fluid thermodynamic state in thermal node i";
+  Medium_c.ThermodynamicState state_c2[N] "Hot fluid thermodynamic state in hydraulic node i";
+  Medium_f.ThermodynamicState state_f2[N] "Cold fluid thermodynamic state in hydraulic node i";
+  Medium_c.ThermodynamicState state_ce "Thermodynamic state of the hot fluid at the inlet";
+  Medium_c.ThermodynamicState state_cs "Thermodynamic state of the hot fluid at the outlet";
+  Medium_f.ThermodynamicState state_fe "Thermodynamic state of the cold fluid at the inlet";
+  Medium_f.ThermodynamicState state_fs "Thermodynamic state of the cold fluid at the outlet";
   Real diff_res_c[N] "Diffusion resistance in hydraulic node i for the hot fluid";
   Real diff_res_f[N] "Diffusion resistance in hydraulic node i for the cold fluid";
   Real diff_res_t_c "Total diffusion resistance in the pipe for the hot fluid";
@@ -224,13 +219,13 @@ public
   Real rs_f[N - 1] "Value of r(Q/gamma) for outlet of thermal node i for the cold fluid";
 
 public
-  Interfaces.Connectors.FluidInlet Ec annotation (Placement(transformation(
+  Interfaces.Connectors.FluidInlet Ec(redeclare package Medium = Medium_c) annotation (Placement(transformation(
           extent={{-110,-10},{-90,10}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet Ef annotation (Placement(transformation(
+  Interfaces.Connectors.FluidInlet Ef(redeclare package Medium = Medium_f) annotation (Placement(transformation(
           extent={{-60,-70},{-40,-50}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet Sf annotation (Placement(transformation(
+  Interfaces.Connectors.FluidOutlet Sf(redeclare package Medium = Medium_f) annotation (Placement(transformation(
           extent={{40,-70},{60,-50}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet Sc annotation (Placement(transformation(
+  Interfaces.Connectors.FluidOutlet Sc(redeclare package Medium = Medium_c) annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
 initial equation
   if dynamic_energy_balance then
@@ -242,8 +237,8 @@ initial equation
     else
       if option_temperature then
         for i in 2:N loop
-          hc[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pc0, Tc0[i - 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-          hf[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pf0, Tf0[i - 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
+          hc[i] = Medium_c.specificEnthalpy(Medium_c.setState_pTX(p=Pc0, T=Tc0[i - 1], X=Medium_c.X_default));
+          hf[i] = Medium_f.specificEnthalpy(Medium_f.setState_pTX(p=Pf0, T=Tf0[i - 1], X=Medium_f.X_default));
         end for;
       else
         for i in 2:N loop
@@ -299,31 +294,14 @@ equation
   Sf.diff_res_1 = Ef.diff_res_1 + diff_res_t_f;
   Ef.diff_res_2 = Sf.diff_res_2 + diff_res_t_f;
 
-  Ec.ftype = Sc.ftype;
-  Sf.ftype = Ef.ftype;
+  Ec.Xi = Sc.Xi;
+  Ec.SubC = Sc.SubC;
 
-  Ec.Xco2 =  Sc.Xco2;
-  Ec.Xh2o = Sc.Xh2o;
-  Ec.Xo2 = Sc.Xo2;
-  Ec.Xso2 = Sc.Xso2;
+  Sf.Xi = Ef.Xi;
+  Sf.SubC = Ef.SubC;
 
-  Sf.Xco2 = Ef.Xco2;
-  Sf.Xh2o = Ef.Xh2o;
-  Sf.Xo2 = Ef.Xo2;
-  Sf.Xso2 = Ef.Xso2;
-
-  ftype_c = Ec.ftype;
-  ftype_f = Sf.ftype;
-
-  Xco2_c = Ec.Xco2;
-  Xh2o_c = Ec.Xh2o;
-  Xo2_c = Ec.Xo2;
-  Xso2_c = Ec.Xso2;
-
-  Xco2_f = Sf.Xco2;
-  Xh2o_f = Sf.Xh2o;
-  Xo2_f = Sf.Xo2;
-  Xso2_f = Sf.Xso2;
+  Xc = Ec.Xi;
+  Xf = Ef.Xi;
 
   /* Exchange area for the plate exchanger */
   dS = (nbp - 2)*Sp/(N - 1);
@@ -457,26 +435,28 @@ equation
     if (p_rhoc > 0) then
       rhoc1[i] = p_rhoc;
     else
-      rhoc1[i] = ThermoSysPro.Properties.Fluid.Density_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
+      rhoc1[i] = Medium_c.density(state_c1[i]);
     end if;
 
-    Tc1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    cpc1[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    muc1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    kc1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(Pc[i + 1], hc[i + 1], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    lambdac1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhoc1[i], Tc1[i], Pc[i + 1], 0, fluid_c);
+    state_c1[i] = Medium_c.setState_phX(p=Pc[i + 1], h=hc[i + 1], X=Xc);
+    Tc1[i] = Medium_c.temperature(state_c1[i]);
+    cpc1[i] = Medium_c.specificHeatCapacityCp(state_c1[i]);
+    muc1[i] = Medium_c.dynamicViscosity(state_c1[i]);
+    kc1[i] = Medium_c.thermalConductivity(state_c1[i]);
+    lambdac1[i] = Medium_c.thermalConductivity(state_c1[i]);
 
     if (p_rhof > 0) then
       rhof1[i] = p_rhof;
     else
-      rhof1[i] = ThermoSysPro.Properties.Fluid.Density_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
+      rhof1[i] = Medium_f.density(state_f1[i]);
     end if;
 
-    Tf1[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    cpf1[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    muf1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    kf1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph(Pf[i + 1], hf[i + 1], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    lambdaf1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhof1[i], Tf1[i], Pf[i + 1], 0, fluid_f);
+    state_f1[i] = Medium_f.setState_phX(p=Pf[i + 1], h=hf[i + 1], X=Xf);
+    Tf1[i] = Medium_f.temperature(state_f1[i]);
+    cpf1[i] = Medium_f.specificHeatCapacityCp(state_f1[i]);
+    muf1[i] = Medium_f.dynamicViscosity(state_f1[i]);
+    kf1[i] = Medium_f.thermalConductivity(state_f1[i]);
+    lambdaf1[i] = Medium_f.thermalConductivity(state_f1[i]);
   end for;
 
   /* Pressure losses correlations */
@@ -517,32 +497,38 @@ equation
     if (p_rhoc > 0) then
       rhoc2[i] = p_rhoc;
     else
-      rhoc2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
+      rhoc2[i] = Medium_c.density(state_c2[i]);
     end if;
 
-    Tc2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    cpc2[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    muc2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-    kc2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph((Pc[i] + Pc[i + 1])/2, hbc[i], fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
+    state_c2[i] = Medium_c.setState_phX(p=(Pc[i] + Pc[i + 1])/2, h=hbc[i], X=Xc);
+    Tc2[i] = Medium_c.temperature(state_c2[i]);
+    cpc2[i] = Medium_c.specificHeatCapacityCp(state_c2[i]);
+    muc2[i] = Medium_c.dynamicViscosity(state_c2[i]);
+    kc2[i] = Medium_c.thermalConductivity(state_c2[i]);
 
     if (p_rhof > 0) then
       rhof2[i] = p_rhof;
     else
-      rhof2[i] = ThermoSysPro.Properties.Fluid.Density_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
+      rhof2[i] = Medium_f.density(state_f2[i]);
     end if;
 
-    Tf2[i] = ThermoSysPro.Properties.Fluid.Temperature_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    cpf2[i] = ThermoSysPro.Properties.Fluid.SpecificHeatCapacityCp_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    muf2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-    kf2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_Ph((Pf[i] + Pf[i + 1])/2, hbf[i], fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
+    state_f2[i] = Medium_f.setState_phX(p=(Pf[i] + Pf[i + 1])/2, h=hbf[i], X=Xf);
+    Tf2[i] = Medium_f.temperature(state_f2[i]);
+    cpf2[i] = Medium_f.specificHeatCapacityCp(state_f2[i]);
+    muf2[i] = Medium_f.dynamicViscosity(state_f2[i]);
+    kf2[i] = Medium_f.thermalConductivity(state_f2[i]);
   end for;
 
   /* Calcul des températures en entrée et en sortie de l'échangeur */
-   Tec = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ec.P, Ec.h, fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
-   Tsc = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sc.P, Sc.h, fluid_c, mode_c, Xco2_c, Xh2o_c, Xo2_c, Xso2_c);
+   state_ce = Medium_c.setState_phX(p=Ec.P, h=Ec.h, X=Xc);
+   state_cs = Medium_c.setState_phX(p=Sc.P, h=Sc.h, X=Xc);
+   Tec = Medium_c.temperature(state_ce);
+   Tsc = Medium_c.temperature(state_cs);
 
-   Tef = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ef.P, Ef.h, fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
-   Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Sf.P, Sf.h, fluid_f, mode_f, Xco2_f, Xh2o_f, Xo2_f, Xso2_f);
+   state_fe = Medium_f.setState_phX(p=Ef.P, h=Ef.h, X=Xf);
+   state_fs = Medium_f.setState_phX(p=Sf.P, h=Sf.h, X=Xf);
+   Tef = Medium_f.temperature(state_fe);
+   Tsf = Medium_f.temperature(state_fs);
 
   /* Total fluid diffusion resistance */
   diff_res_t_c = sum(diff_res_c);
