@@ -38,5 +38,7 @@ TestTwoPhaseVolume
 TestTwoPhaseVolume_Traces
 TestTwoPhaseCavity
 TestTwoPhaseCavity_Traces
+TestTwoPhaseCavityOnePipe
+TestTwoPhaseCavityOnePipe_Traces
 TestPressurizer
 TestPressurizer_Traces

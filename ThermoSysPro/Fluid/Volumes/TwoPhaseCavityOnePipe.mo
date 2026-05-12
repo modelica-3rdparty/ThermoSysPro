@@ -1,9 +1,9 @@
 ﻿within ThermoSysPro.Fluid.Volumes;
 model TwoPhaseCavityOnePipe "TwoPhaseCavity for one shell pass "
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.WaterSteamFluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable function SaS = Medium.noSaS(SubC = SubCv) annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable function PhasesSeparationFunction = Medium.HomogeneousPhasesSeparation(SubC = CvBP.SubC) annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Boolean Vertical=true "true: vertical cylinder - false: horizontal cylinder";
   parameter Units.SI.Radius R=1.05 "Radius of the Cavity cross-sectional area";
@@ -41,13 +41,19 @@ model TwoPhaseCavityOnePipe "TwoPhaseCavity for one shell pass "
           steady_state));
   parameter Boolean continuous_flow_reversal=false "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
+  parameter Medium.ExtraProperty SubCl0[Medium.nC](quantity=Medium.extraPropertiesNames)=Medium.C_default
+    "Initial liquid phase trace substances"
+    annotation (Evaluate=true, Dialog(enable=dynamic_energy_balance and not steady_state));
+  parameter Medium.ExtraProperty SubCv0[Medium.nC](quantity=Medium.extraPropertiesNames)=Medium.C_default
+    "Initial vapor phase trace substances"
+    annotation (Evaluate=true, Dialog(enable=dynamic_energy_balance and not steady_state));
 
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi;
-  parameter Integer fluid=Integer(ftype) "Fluid number";
   parameter Units.SI.MassFlowRate gamma0=1.e-4
     "Pseudo-diffusion conductance use for continuous flow reversal (active if diffusion=false and continuous_flow_reversal = true)";
+  Medium.C_BiPhase C_record;
 
 public
   Units.SI.Pressure P(start=10000) "Fluid average pressure";
@@ -113,7 +119,6 @@ public
     "Heat exchange coefficient between the liquid phase and the wall";
   Units.SI.CoefficientOfHeatTransfer Kvp(start=10)
     "Heat exchange coefficient between the gas phase and the wall";
-  FluidType fluids[5] "Fluids mixing in volume";
   Units.SI.Power Je "Thermal power diffusion from inlet Ce";
   Units.SI.Power JvGCT "Thermal power diffusion from inlet CvGCT";
   Units.SI.Power JvBP "Thermal power diffusion from inlet CvBP";
@@ -128,22 +133,33 @@ public
   Real rvGCT "Value of r(Q/gamma) for inlet CvGCT";
   Real rvBP "Value of r(Q/gamma) for inlet CvBP";
   Real rl "Value of r(Q/gamma) for outlet Cl";
+  Medium.ExtraProperty BSubCl[Medium.nC](quantity=Medium.extraPropertiesNames)
+    "Right hand side of the trace balance equation of the liquid phase";
+  Medium.ExtraProperty BSubCv[Medium.nC](quantity=Medium.extraPropertiesNames)
+    "Right hand side of the trace balance equation of the vapor phase";
+  Medium.ExtraProperty SubCl[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default)
+    "Liquid phase trace substances";
+  Medium.ExtraProperty SubCv[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default)
+    "Vapor phase trace substances";
+  Medium.ExtraProperty SubCSaS[Medium.nC](quantity=Medium.extraPropertiesNames)
+    "Trace modification in the trace balance equation";
 
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prol
-    "Propri鴩s de l'eau dans le ballon" annotation (Placement(transformation(
-          extent={{-250,70},{-210,110}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prov
-    "Propri鴩s de la vapeur dans le ballon" annotation (Placement(
-        transformation(extent={{60,70},{100,110}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat
-    annotation (Placement(transformation(extent={{-250,-200},{-210,-160}},
-          rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat
-                                           annotation (Placement(transformation(
-          extent={{58,-200},{98,-160}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet CvBP "Steam input" annotation (Placement(
+  Medium.ThermodynamicState state_l "Liquid state in the cavity";
+  Medium.ThermodynamicState state_v "Vapor state in the cavity";
+  Medium.ThermodynamicState state_in_l "Water inlet state";
+  Medium.ThermodynamicState state_in_v "Average vapor inlet state";
+  Medium.ThermodynamicState state_out_l "Water outlet state";
+  Medium.SaturationProperties sat "Saturation properties at cavity pressure";
+  Units.SI.SpecificEnthalpy hlsat "Bubble enthalpy at cavity pressure";
+  Units.SI.SpecificEnthalpy hvsat "Dew enthalpy at cavity pressure";
+  Real ddphl "Liquid density derivative wrt. pressure at constant enthalpy";
+  Real ddhpl "Liquid density derivative wrt. enthalpy at constant pressure";
+  Real ddphv "Vapor density derivative wrt. pressure at constant enthalpy";
+  Real ddhpv "Vapor density derivative wrt. enthalpy at constant pressure";
+
+  Interfaces.Connectors.FluidInlet CvBP(redeclare package Medium = Medium) "Steam input" annotation (Placement(
         transformation(extent={{-86,50},{-66,70}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet Cl "Water output" annotation (Placement(
+  Interfaces.Connectors.FluidOutlet Cl(redeclare package Medium = Medium) "Water output" annotation (Placement(
         transformation(extent={{-85,-170},{-65,-150}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort Cth3[Ns]
                                      annotation (Placement(transformation(
@@ -152,18 +168,9 @@ public
     "Water level"                        annotation (Placement(transformation(
           extent={{88,-107},{108,-87}}, rotation=0)));
 public
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prod
-    annotation (Placement(transformation(extent={{-250,-16},{-210,24}},
-          rotation=0)));
-  Interfaces.Connectors.FluidInlet Ce "Water input" annotation (Placement(
+  Interfaces.Connectors.FluidInlet Ce(redeclare package Medium = Medium) "Water input" annotation (Placement(
         transformation(extent={{-219,19},{-199,39}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proe
-    "Propri鴩s de l'eau dans le ballon" annotation (Placement(transformation(
-          extent={{-250,-106},{-210,-66}}, rotation=0)));
-  Properties.WaterSteam.Common.ThermoProperties_ph provIn
-    "Propri鴩s de la vapeur dans le ballon" annotation (Placement(
-        transformation(extent={{0,70},{40,110}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet CvGCT "Steam input" annotation (Placement(
+  Interfaces.Connectors.FluidInlet CvGCT(redeclare package Medium = Medium) "Steam input" annotation (Placement(
         transformation(extent={{-160,50},{-140,70}}, rotation=0)));
 initial equation
   if dynamic_energy_balance then
@@ -175,27 +182,21 @@ initial equation
       der(P) = 0;
       der(Tp) = 0;
       der(hvIn) = 0;
+      der(SubCl) = fill(0, Medium.nC);
+      der(SubCv) = fill(0, Medium.nC);
     else
-      hl = lsat.h;
-      hv = vsat.h;
+      hl = hlsat;
+      hv = hvsat;
       Vl = Vf0*V;
       P = P0;
       Tp = 320;
       hvIn = hv;
+      SubCl = SubCl0;
+      SubCv = SubCv0;
     end if;
   end if;
 
 equation
-  /* Check that incoming fluids are compatible with fluid in volume */
-  fluids[1] = ftype;
-  fluids[2] = Ce.ftype;
-  fluids[3] = CvGCT.ftype;
-  fluids[4] = CvBP.ftype;
-  fluids[5] = Cl.ftype;
-
-  assert(ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.isCompatible(fluids),
-    "TwoPhaseCavityOnePipe: fluids mixing in volume are not compatible with each other");
-
   /* Unconnected connectors */
   if (cardinality(Ce) == 0) then
     Ce.Q = 0;
@@ -203,11 +204,7 @@ equation
     Ce.h_vol_1 = 1.e5;
     Ce.diff_res_1 = 0;
     Ce.diff_on_1 = false;
-    Ce.ftype = ftype;
-    Ce.Xco2 = 0;
-    Ce.Xh2o = 0;
-    Ce.Xo2 = 0;
-    Ce.Xso2 = 0;
+    Ce.SubC = Medium.C_default;
   end if;
 
   if (cardinality(CvGCT) == 0) then
@@ -216,11 +213,7 @@ equation
     CvGCT.h_vol_1 = 1.e5;
     CvGCT.diff_res_1 = 0;
     CvGCT.diff_on_1 = false;
-    CvGCT.ftype = ftype;
-    CvGCT.Xco2 = 0;
-    CvGCT.Xh2o = 0;
-    CvGCT.Xo2 = 0;
-    CvGCT.Xso2 = 0;
+    CvGCT.SubC = Medium.C_default;
   end if;
 
   if (cardinality(CvBP) == 0) then
@@ -229,11 +222,7 @@ equation
     CvBP.h_vol_1 = 1.e5;
     CvBP.diff_res_1 = 0;
     CvBP.diff_on_1 = false;
-    CvBP.ftype = ftype;
-    CvBP.Xco2 = 0;
-    CvBP.Xh2o = 0;
-    CvBP.Xo2 = 0;
-    CvBP.Xso2 = 0;
+    CvBP.SubC = Medium.C_default;
   end if;
 
   if (cardinality(Cl) == 0) then
@@ -274,22 +263,22 @@ equation
   Ape = Alp + Avp;
 
   /* Pressure at the bottom of the cavity */
-  Pfond = P + prod.d*g*zl;
+  Pfond = P + Medium.density(state_out_l)*g*zl;
 
   /* Liquid phase mass balance equation */
-  BQl = -Cl.Q + Qcond + QcondS + (1 - proe.x)*Ce.Q;
+  BQl = -Cl.Q + Qcond + QcondS + (1 - Medium.vapourQuality(state_in_l))*Ce.Q;
 
   if dynamic_energy_balance then
-    rhol*der(Vl) + Vl*(prol.ddph*der(P) + prol.ddhp*der(hl)) = BQl;
+    rhol*der(Vl) + Vl*(ddphl*der(P) + ddhpl*der(hl)) = BQl;
   else
     0 = BQl;
   end if;
 
   /* Vapor phase mass balance equation */
-  BQv = CvBP.Q + CvGCT.Q - Qcond - QcondS + proe.x*Ce.Q;
+  BQv = CvBP.Q + CvGCT.Q - Qcond - QcondS + Medium.vapourQuality(state_in_l)*Ce.Q;
 
   if dynamic_energy_balance then
-    rhov*der(Vv) + Vv*(prov.ddph*der(P) + prov.ddhp*der(hv)) = BQv;
+    rhov*der(Vv) + Vv*(ddphv*der(P) + ddhpv*der(hv)) = BQv;
   else
     0 = BQv;
   end if;
@@ -300,19 +289,19 @@ equation
   Ce.P = P;
 
   /* Liquid phase energy balance equation */
-  BHl = -Cl.Q*(Cl.h - (hl - P/rhol)) + (Qcond + QcondS)*(lsat.h - (hl - P/rhol)) + (1 - proe.x)*Ce.Q*((if (proe.x > 0) then lsat.h else Ce.h) - (hl - P/rhol)) - Wlp + Wvl + Jt_l;
+  BHl = -Cl.Q*(Cl.h - (hl - P/rhol)) + (Qcond + QcondS)*(hlsat - (hl - P/rhol)) + (1 - Medium.vapourQuality(state_in_l))*Ce.Q*((if (Medium.vapourQuality(state_in_l) > 0) then hlsat else Ce.h) - (hl - P/rhol)) - Wlp + Wvl + Jt_l;
 
   if dynamic_energy_balance then
-    Vl*((P/rhol*prol.ddph - 1)*der(P) + (P/rhol*prol.ddhp + rhol)*der(hl)) = BHl;
+    Vl*((P/rhol*ddphl - 1)*der(P) + (P/rhol*ddhpl + rhol)*der(hl)) = BHl;
   else
     0 = BHl;
   end if;
 
   /* Gas phase energy balance equation */
-  BHv = CvBP.Q*(CvBP.h - (hv - P/rhov)) + CvGCT.Q*(CvGCT.h - (hv - P/rhov)) - (Qcond + QcondS)*(lsat.h - (hv - P/rhov)) + proe.x*Ce.Q*((if (proe.x < 1) then vsat.h else Ce.h) - (hv - P/rhov)) - Wvl - Wvp + Wt + Jt_v;
+  BHv = CvBP.Q*(CvBP.h - (hv - P/rhov)) + CvGCT.Q*(CvGCT.h - (hv - P/rhov)) - (Qcond + QcondS)*(hlsat - (hv - P/rhov)) + Medium.vapourQuality(state_in_l)*Ce.Q*((if (Medium.vapourQuality(state_in_l) < 1) then hvsat else Ce.h) - (hv - P/rhov)) - Wvl - Wvp + Wt + Jt_v;
 
   if dynamic_energy_balance then
-    Vv*((P/rhov*prov.ddph - 1)*der(P) + (P/rhov*prov.ddhp + rhov)*der(hv)) = BHv;
+    Vv*((P/rhov*ddphv - 1)*der(P) + (P/rhov*ddhpv + rhov)*der(hv)) = BHv;
   else
     0 = BHv;
   end if;
@@ -324,25 +313,34 @@ equation
 
   /* Condensation mass flow rates */
   // Only the power used to condensate steam
-  Qcond = (-Wt + Wt2 + noEvent(max(Wvl, 0)) + Wvp)/(vsat.h - lsat.h);
+  Qcond = (-Wt + Wt2 + noEvent(max(Wvl, 0)) + Wvp)/(hvsat - hlsat);
 
-  QcondS = (1 - provIn.x)*(CvBP.Q + CvGCT.Q);
+  QcondS = (1 - Medium.vapourQuality(state_in_v))*(CvBP.Q + CvGCT.Q);
 
   /* Steam average specific enthalpy input cavity */
   // 0 = noEvent(hvIn*(max(CvBP.Q, 1e-10) + max(CvGCT.Q, 1e-10)) - max(CvBP.Q, 1e-10)*CvBP.h - max(CvGCT.Q, 1e-10)*CvGCT.h);
   if dynamic_energy_balance then
-    0.1*provIn.d*der(hvIn) = CvBP.Q*(CvBP.h - (hvIn - P/rhov)) + CvGCT.Q*(CvGCT.h - (hvIn - P/rhov));
+    0.1*Medium.density(state_in_v)*der(hvIn) = CvBP.Q*(CvBP.h - (hvIn - P/rhov)) + CvGCT.Q*(CvGCT.h - (hvIn - P/rhov));
   else
     0 = hvIn*(CvBP.Q + CvGCT.Q) - CvBP.Q*CvBP.h - CvGCT.Q*CvGCT.h;
   end if;
 
-  /* Fluid composition (no balance equations) */
-  Cl.ftype = ftype;
+  /* Traces composition balance equations */
+  C_record = PhasesSeparationFunction();
+  SubCSaS = SaS();
 
-  Cl.Xco2 = 0;
-  Cl.Xh2o = 0;
-  Cl.Xo2  = 0;
-  Cl.Xso2 = 0;
+  BSubCl = (1 - Medium.vapourQuality(state_in_l))*Ce.Q*Ce.SubC - Cl.Q*Cl.SubC + (Qcond + QcondS)*C_record.Cl;
+  BSubCv = CvBP.Q*CvBP.SubC + CvGCT.Q*CvGCT.SubC + Medium.vapourQuality(state_in_l)*Ce.Q*Ce.SubC - (Qcond + QcondS)*C_record.Cg;
+
+  if dynamic_energy_balance then
+    rhol*Vl*der(SubCl) + SubCl*BQl = BSubCl;
+    rhov*Vv*der(SubCv) + SubCv*BQv + rhov*Vv*SubCSaS = BSubCv;
+  else
+    SubCl*BQl = BSubCl;
+    SubCv*BQv + rhov*Vv*SubCSaS = BSubCv;
+  end if;
+
+  Cl.SubC = SubCl;
 
   /* Flow reversal */
   if continuous_flow_reversal then
@@ -398,41 +396,47 @@ equation
   Cl.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties*/
-  proe = ThermoSysPro.Properties.Fluid.Ph(P, Ce.h, 0, fluid);
-  prol = ThermoSysPro.Properties.Fluid.Ph((P+Pfond)/2, hl, 0, fluid);
+  state_in_l = Medium.setState_phX(p=P, h=Ce.h, X=Medium.reference_X);
+  state_l = Medium.setState_phX(p=(P + Pfond)/2, h=hl, X=Medium.reference_X);
+  state_in_v = Medium.setState_phX(p=P, h=hvIn, X=Medium.reference_X);
+  state_v = Medium.setState_phX(p=P, h=hv, X=Medium.reference_X);
+  state_out_l = Medium.setState_phX(p=Pfond, h=Cl.h, X=Medium.reference_X);
+  sat = Medium.setSat_p(P);
+  hlsat = Medium.bubbleEnthalpy(sat);
+  hvsat = Medium.dewEnthalpy(sat);
 
-  provIn = ThermoSysPro.Properties.Fluid.Ph(P,  hvIn,  0, fluid);
-  prov = ThermoSysPro.Properties.Fluid.Ph(P,  hv,  0, fluid);
-  prod = ThermoSysPro.Properties.Fluid.Ph(Pfond,  Cl.h, 0, fluid);
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(P,fluid);
+  ddphl = Medium.density_derp_h(state_l);
+  ddhpl = Medium.density_derh_p(state_l);
+  ddphv = Medium.density_derp_h(state_v);
+  ddhpv = Medium.density_derh_p(state_v);
 
-  Tl = prol.T;
-  rhol = prol.d;
-  xl = prol.x;
+  Tl = Medium.temperature(state_l);
+  rhol = Medium.density(state_l);
+  xl = noEvent(max(0, min(1, (hl - hlsat)/(hvsat - hlsat))));
 
-  Tv = prov.T;
-  rhov = prov.d;
-  xv = prov.x;
+  Tv = Medium.temperature(state_v);
+  rhov = Medium.density(state_v);
+  xv = noEvent(max(0, min(1, (hv - hlsat)/(hvsat - hlsat))));
 
-  muv = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(provIn.d, provIn.T, fluid);
-  mul = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol, Tl, fluid);
-  kl = noEvent(ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol, Tl, P, 0, fluid));
-  kv = noEvent(ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(provIn.d, provIn.T, P, 0,fluid));
+  muv = Medium.dynamicViscosity(state_in_v);
+  mul = Medium.dynamicViscosity(state_l);
+  kl = noEvent(Medium.thermalConductivity(state_l));
+  kv = noEvent(Medium.thermalConductivity(state_in_v));
 
   /* Heat transfer coefficient between liquid and wall*/
   /* SACADURA, Von Karman equation*/
   Rel = noEvent(abs(Cl.Q*zl/(pi*R^2*mul)));
 
-  Klp = 0.037*kl*Rel^0.8*(mul*prol.cp/kl)^0.3333/zl;
+  Klp = 0.037*kl*Rel^0.8*(mul*Medium.specificHeatCapacityCp(state_l)/kl)^0.3333/zl;
 
   /* Heat transfer coefficient between steam and wall*/
-  Rev = noEvent(abs((CvBP.Q + CvGCT.Q + proe.x*Ce.Q)*(L - zl)/(pi*R^2*muv)));
-  Revl = noEvent(abs((CvBP.Q + CvGCT.Q + proe.x*Ce.Q)*(2*R)/(pi*R^2*muv)));
+  Rev = noEvent(abs((CvBP.Q + CvGCT.Q + Medium.vapourQuality(state_in_l)*Ce.Q)*(L - zl)/(pi*R^2*muv)));
+  Revl = noEvent(abs((CvBP.Q + CvGCT.Q + Medium.vapourQuality(state_in_l)*Ce.Q)*(2*R)/(pi*R^2*muv)));
 
-  Kvp = 0.037*kv*Rev^0.8*(muv*prov.cp/kv)^0.3333/(L - zl);
+  Kvp = 0.037*kv*Rev^0.8*(muv*Medium.specificHeatCapacityCp(state_v)/kv)^0.3333/(L - zl);
 
   /* Heat transfer coefficient between steam and liquid */
-  Kvl = 0.105*kv*Revl^0.68*(muv*prov.cp/kv)^0.33333*(L/2/R)^(-0.103)/(2*R);
+  Kvl = 0.105*kv*Revl^0.68*(muv*Medium.specificHeatCapacityCp(state_v)/kv)^0.33333*(L/2/R)^(-0.103)/(2*R);
 
   /* Thermal power losses*/
   /* Energy balance equation at the wall */
@@ -459,8 +463,8 @@ equation
     if Cal_hcond then
       // Nusselt corelation
       hcond3[i] = ThermoSysPro.Functions.SmoothCond(Tv - Tp1[i],
-                       COP*0.728*((g*rhol*(rhol - rhov)*kl^3*(vsat.h - lsat.h))/(NbTubV*mul*Dext*ThermoSysPro.Functions.SmoothMax((Tv-Tp1[i]), 0.1)))^0.25,
-                       COP*0.728*((g*rhol*(rhol - rhov)*kl^3*(vsat.h -lsat.h))/(NbTubV*mul*Dext*0.1))^0.25);
+                       COP*0.728*((g*rhol*(rhol - rhov)*kl^3*(hvsat - hlsat))/(NbTubV*mul*Dext*ThermoSysPro.Functions.SmoothMax((Tv-Tp1[i]), 0.1)))^0.25,
+                       COP*0.728*((g*rhol*(rhol - rhov)*kl^3*(hvsat - hlsat))/(NbTubV*mul*Dext*0.1))^0.25);
     else
       hcond3[i] = hcond;
     end if;
@@ -473,7 +477,7 @@ equation
 
   /* Total power exchanged for deheating*/
   /* This equation is not valid for mass flow rate in the pipes = 0 */
-  Wt2 = noEvent(if (hvIn > vsat.h) then -(CvBP.Q + CvGCT.Q)*(hvIn - vsat.h) else 0);
+  Wt2 = noEvent(if (hvIn > hvsat) then -(CvBP.Q + CvGCT.Q)*(hvIn - hvsat) else 0);
 
   annotation (
     Diagram(coordinateSystem(
