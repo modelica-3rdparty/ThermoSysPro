@@ -130,10 +130,10 @@ public
   Medium.ExtraProperty SubCSaS[Medium.nC](quantity=Medium.extraPropertiesNames)
     "Trace modification in the trace balance equation";
 
-  Medium.ThermodynamicState prol "Liquid state in the drum";
-  Medium.ThermodynamicState prov "Vapor state in the drum";
-  Medium.ThermodynamicState prom "Evaporation loop state";
-  Medium.ThermodynamicState prod "Downcomer outlet state";
+  Medium.ThermodynamicState state_l "Liquid state in the drum";
+  Medium.ThermodynamicState state_v "Vapor state in the drum";
+  Medium.ThermodynamicState state_m "Evaporation loop state";
+  Medium.ThermodynamicState state_out_l "Downcomer outlet state";
   Medium.SaturationProperties sat "Saturation properties at drum pressure";
   Units.SI.SpecificEnthalpy hlsat "Bubble enthalpy at drum pressure";
   Units.SI.SpecificEnthalpy hvsat "Dew enthalpy at drum pressure";
@@ -275,7 +275,7 @@ equation
   Ape = Alp + Avp;
 
   /* Pressure at the bottom of the drum */
-  Pfond = P + Medium.density(prod)*g*zl;
+  Pfond = P + Medium.density(state_out_l)*g*zl;
 
   /* Liquid phase mass balance equation */
   BQl = Ce1.Q + Ce2.Q + Ce3.Q - Cd.Q - Cs.Q + (1 - xmv)*Cm.Q + Qcond - Qevap;
@@ -460,25 +460,25 @@ equation
   Cv.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  prol = Medium.setState_phX(p=P, h=hl, X=Medium.reference_X);
-  prov = Medium.setState_phX(p=P, h=hv, X=Medium.reference_X);
-  prod = Medium.setState_phX(p=Pfond, h=Cd.h, X=Medium.reference_X);
-  prom = Medium.setState_phX(p=P, h=Cm.h, X=Medium.reference_X);
+  state_l = Medium.setState_phX(p=P, h=hl, X=Medium.reference_X);
+  state_v = Medium.setState_phX(p=P, h=hv, X=Medium.reference_X);
+  state_out_l = Medium.setState_phX(p=Pfond, h=Cd.h, X=Medium.reference_X);
+  state_m = Medium.setState_phX(p=P, h=Cm.h, X=Medium.reference_X);
   sat = Medium.setSat_p(P);
   hlsat = Medium.bubbleEnthalpy(sat);
   hvsat = Medium.dewEnthalpy(sat);
 
-  ddphl = Medium.density_derp_h(prol);
-  ddhpl = Medium.density_derh_p(prol);
-  ddphv = Medium.density_derp_h(prov);
-  ddhpv = Medium.density_derh_p(prov);
+  ddphl = Medium.density_derp_h(state_l);
+  ddhpl = Medium.density_derh_p(state_l);
+  ddphv = Medium.density_derp_h(state_v);
+  ddhpv = Medium.density_derh_p(state_v);
 
-  Tl = Medium.temperature(prol);
-  rhol = Medium.density(prol);
+  Tl = Medium.temperature(state_l);
+  rhol = Medium.density(state_l);
   xl = noEvent(max(0, min(1, (hl - hlsat)/(hvsat - hlsat))));
 
-  Tv = Medium.temperature(prov);
-  rhov = Medium.density(prov);
+  Tv = Medium.temperature(state_v);
+  rhov = Medium.density(state_v);
   xv = noEvent(max(0, min(1, (hv - hlsat)/(hvsat - hlsat))));
 
   xmv = if noEvent(Cm.Q > 0) then noEvent(max(0, min(1, (Cm.h - hlsat)/(hvsat - hlsat)))) else 0;
