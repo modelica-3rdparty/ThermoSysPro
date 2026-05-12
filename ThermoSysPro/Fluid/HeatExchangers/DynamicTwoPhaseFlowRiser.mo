@@ -1,8 +1,8 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model DynamicTwoPhaseFlowRiser "Dynamic two-phase flow riser"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.Length L=10. "Pipe length";
   parameter Units.SI.Diameter D=0.02 "Hydraulic diameter";
@@ -41,12 +41,10 @@ model DynamicTwoPhaseFlowRiser "Dynamic two-phase flow riser"
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
   constant Units.SI.Acceleration g=Modelica.Constants.g_n "Gravity constant";
   constant Real pi=Modelica.Constants.pi "pi";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Integer N=Ns + 1
     "Number of hydraulic nodes (= number of thermal nodes + 1)";
   parameter Units.SI.Area A=ntubes*pi*D^2/4
@@ -57,12 +55,9 @@ protected
   parameter Units.SI.Area dSi=pi*Di*dx1
     "Internal heat exchange area for a node";
   parameter Real Mmol=18.015 "Water molar mass";
-  parameter Units.SI.AbsolutePressure pcrit=ThermoSysPro.Properties.WaterSteam.BaseIF97.data.PCRIT
-    "Critical pressure";
-  parameter Units.SI.Temperature Tcrit=ThermoSysPro.Properties.WaterSteam.BaseIF97.data.TCRIT
-    "Critical temperature";
-  parameter Units.SI.AbsolutePressure ptriple=ThermoSysPro.Properties.WaterSteam.BaseIF97.triple.ptriple
-    "Triple point pressure";
+  parameter Units.SI.AbsolutePressure pcrit=Medium.fluidConstants[1].criticalPressure "Critical pressure";
+  parameter Units.SI.Temperature Tcrit=Medium.fluidConstants[1].criticalTemperature "Critical temperature";
+  parameter Units.SI.AbsolutePressure ptriple=Medium.fluidConstants[1].triplePointPressure "Triple point pressure";
   parameter Real xb1=0.0002 "Min value for vapor mass fraction";
   parameter Real xb2=0.85 "Max value for vapor mass fraction";
   parameter Units.SI.MassFlowRate gamma0=1.e-4
@@ -193,12 +188,14 @@ public
   Real lambdav[N](start=fill(0.03, N), nominal=fill(0.03, N))
     "Friction pressure loss coefficient in node i for the vapor)";
   Real filo[N] "Pressure loss coefficient for two-phase flow";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
-  ThermoSysPro.Units.SI.MassFraction Xco2 "CO2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xh2o "H2O mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xo2 "O2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xso2 "SO2 mass fraction";
+  Units.SI.DerDensityByPressure ddph[N - 1] "Density derivative wrt. pressure";
+  Units.SI.DerDensityByEnthalpy ddhp[N - 1] "Density derivative wrt. enthalpy";
+  Medium.ThermodynamicState state1[N - 1];
+  Medium.ThermodynamicState state2[N];
+  Medium.ThermodynamicState state_c[2];
+  Medium.SaturationProperties sat1[N - 1];
+  Medium.SaturationProperties sat2[N];
+  Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
   Real diff_res_l[N] "Diffusion resistance in hydraulic node i for the liquid";
   Real diff_res_v[N] "Diffusion resistance in hydraulic node i for the vapor";
   Real diff_res[N] "Total diffusion resistance in hydraulic node i";
@@ -219,32 +216,12 @@ public
   Real re[N - 1] "Value of r(Q/gamma) for inlet of thermal node i";
   Real rs[N - 1] "Value of r(Q/gamma) for outlet of thermal node i";
 
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro1[N - 1]
-    annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
-           0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proc[2]
-    annotation (Placement(transformation(extent={{80,80},{100,100}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pro2[N]
-    annotation (Placement(transformation(extent={{-60,80},{-40,100}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat2[N]
-    annotation (Placement(transformation(extent={{80,-100},{100,-80}}, rotation=
-           0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat2[N]
-    annotation (Placement(transformation(extent={{40,-100},{60,-80}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat1[N - 1]
-    annotation (Placement(transformation(extent={{-60,-100},{-40,-80}},
-          rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat1[N - 1]
-    annotation (Placement(transformation(extent={{-100,-100},{-80,-80}},
-          rotation=0)));
 public
-  Interfaces.Connectors.FluidInlet C1 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(transformation(
           extent={{-110,0},{-90,20}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort CTh1[Ns]
     annotation (Placement(transformation(extent={{-10,60},{10,80}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet C2 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(transformation(
           extent={{90,0},{110,20}}, rotation=0)));
   ThermoSysPro.Thermal.Connectors.ThermalPort CTh2[Ns]
     annotation (Placement(transformation(extent={{-10,-60},{10,-40}}, rotation=
@@ -259,7 +236,7 @@ initial equation
     else
       if option_temperature then
         for i in 2:N loop
-          h[i] = ThermoSysPro.Properties.Fluid.SpecificEnthalpy_PT(Pb[i], T0[i - 1],fluid, mode, Xco2, Xh2o, Xo2, Xso2);
+          h[i] = Medium.specificEnthalpy_pTX(Pb[i], T0[i - 1], X);
         end for;
       else
         for i in 2:N loop
@@ -282,9 +259,6 @@ initial equation
   end if;
 
 equation
-
-  /* Check that the fluid type is water/steam */
-  assert((ftype == FluidType.WaterSteam) or (ftype == FluidType.WaterSteamSimple), "DynamicTwoPhaseFlowRiser: the fluid type must be water/steam");
 
   /* Wall temperature */
   Tp1 = CTh1.T;
@@ -318,19 +292,9 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + diff_res_t;
   C1.diff_res_2 = C2.diff_res_2 + diff_res_t;
 
-  C1.ftype = C2.ftype;
-
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2 = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
-
-  ftype = C1.ftype;
-
-  Xco2 = C1.Xco2;
-  Xh2o = C1.Xh2o;
-  Xo2 = C1.Xo2;
-  Xso2 = C1.Xso2;
+  C1.Xi = C2.Xi;
+  X = C1.Xi;
+  C1.SubC = C2.SubC;
 
   /* Mass and energy balance equations (thermal nodes) */
   for i in 1:N - 1 loop
@@ -338,7 +302,7 @@ equation
 
     /* Mass balance equation */
     if dynamic_energy_balance and dynamic_mass_balance then
-      A*(pro1[i].ddph*der(P[i + 1]) + pro1[i].ddhp*der(h[i + 1]))*dx1 = BQ[i];
+      A*(ddph[i]*der(P[i + 1]) + ddhp[i]*der(h[i + 1]))*dx1 = BQ[i];
     else
       0 = BQ[i];
     end if;
@@ -351,7 +315,7 @@ equation
         if simplified_dynamic_energy_balance then
           A*(-der(P[i + 1]) + rho1[i]*der(h[i + 1]))*dx1 = BH[i];
         else
-          A*((h[i + 1]*pro1[i].ddph - 1)*der(P[i + 1]) + (h[i + 1]*pro1[i].ddhp + rho1[i])*der(h[i + 1]))*dx1 = BH[i];
+          A*((h[i + 1]*ddph[i] - 1)*der(P[i + 1]) + (h[i + 1]*ddhp[i] + rho1[i])*der(h[i + 1]))*dx1 = BH[i];
         end if;
       else
         A*rho1[i]*der(h[i + 1])*dx1 = BH[i];
@@ -447,37 +411,39 @@ equation
     end if;
 
     /* Fluid thermodynamic properties */
-    pro1[i] = ThermoSysPro.Properties.Fluid.Ph(P[i + 1], h[i + 1], mode, fluid);
+    state1[i] = Medium.setState_phX(P[i + 1], h[i + 1], X);
 
-    rho1[i] = pro1[i].d;
-    T1[i] = pro1[i].T;
-    xv1[i] = if noEvent((P[i+1] > pcrit) or (T1[i] > Tcrit)) then 1 else pro1[i].x;
+    rho1[i] = Medium.density(state1[i]);
+    T1[i] = Medium.temperature(state1[i]);
+    xv1[i] = if noEvent((P[i+1] > pcrit) or (T1[i] > Tcrit)) then 1 else Medium.vapourQuality(state1[i]);
+    ddph[i] = Medium.density_derp_h(state1[i]);
+    ddhp[i] = Medium.density_derh_p(state1[i]);
 
-    (lsat1[i],vsat1[i]) = ThermoSysPro.Properties.Fluid.Water_sat_P(P[i + 1], fluid);
+    sat1[i] = Medium.setSat_p(P[i + 1]);
 
     if noEvent((P[i+1] > pcrit) or (T1[i] > Tcrit)) then
       xbs[i]   = 0;
       xbi[i]   = 1;
-      rhol1[i] = pro1[i].d;
-      rhov1[i] = pro1[i].d;
-      cpl1[i]   = pro1[i].cp;
-      cpv1[i]   = pro1[i].cp;
+      rhol1[i] = rho1[i];
+      rhov1[i] = rho1[i];
+      cpl1[i]  = Medium.specificHeatCapacityCp(state1[i]);
+      cpv1[i]  = Medium.specificHeatCapacityCp(state1[i]);
       lv[i]    = 1;
     else
-      xbs[i]   = min(pro1[i].x, 0.90);
-      xbi[i]   = max(pro1[i].x, 0.10);
-      rhol1[i] = max(pro1[i].d, lsat1[i].rho);
-      rhov1[i] = min(pro1[i].d, vsat1[i].rho);
-      cpl1[i]   = if noEvent(xv1[i] <= 0.0) then pro1[i].cp else lsat1[i].cp;
-      cpv1[i]   = if noEvent(xv1[i] >= 1.0) then pro1[i].cp else vsat1[i].cp;
-      lv[i]    = vsat1[i].h - lsat1[i].h;
+      xbs[i]   = min(xv1[i], 0.90);
+      xbi[i]   = max(xv1[i], 0.10);
+      rhol1[i] = max(rho1[i], Medium.bubbleDensity(sat1[i]));
+      rhov1[i] = min(rho1[i], Medium.dewDensity(sat1[i]));
+      cpl1[i]  = if noEvent(xv1[i] <= 0.0) then Medium.specificHeatCapacityCp(state1[i]) else Medium.specificHeatCapacityCp(Medium.setBubbleState(sat1[i]));
+      cpv1[i]  = if noEvent(xv1[i] >= 1.0) then Medium.specificHeatCapacityCp(state1[i]) else Medium.specificHeatCapacityCp(Medium.setDewState(sat1[i]));
+      lv[i]    = Medium.dewEnthalpy(sat1[i]) - Medium.bubbleEnthalpy(sat1[i]);
     end if;
 
-    mul1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol1[i], T1[i], fluid);
-    muv1[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhov1[i], T1[i], fluid);
+    mul1[i] = Medium.dynamicViscosity(Medium.setBubbleState(sat1[i]));
+    muv1[i] = Medium.dynamicViscosity(Medium.setDewState(sat1[i]));
 
-    kl1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol1[i], T1[i], P[i + 1], mode, fluid);
-    kv1[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhov1[i], T1[i], P[i + 1], mode, fluid);
+    kl1[i] = Medium.thermalConductivity(Medium.setBubbleState(sat1[i]));
+    kv1[i] = Medium.thermalConductivity(Medium.setDewState(sat1[i]));
 
     Pb[i + 1] = max(min(P[i + 1], pcrit - 1), ptriple);
   end for;
@@ -532,25 +498,25 @@ equation
     gamma[i] = if diffusion then 1/diff_res[i] else gamma0;
 
     /* Fluid thermodynamic properties */
-    pro2[i] = ThermoSysPro.Properties.Fluid.Ph((P[i] + P[i + 1])/2, hb[i],mode,fluid);
+    state2[i] = Medium.setState_phX((P[i] + P[i + 1])/2, hb[i], X);
 
-    rho2[i] = pro2[i].d;
-    xv2[i] = if noEvent(((P[i] + P[i + 1])/2 > pcrit) or (T2[i] > Tcrit)) then 1 else pro2[i].x;
-    T2[i] = pro2[i].T;
+    rho2[i] = Medium.density(state2[i]);
+    xv2[i] = if noEvent(((P[i] + P[i + 1])/2 > pcrit) or (T2[i] > Tcrit)) then 1 else Medium.vapourQuality(state2[i]);
+    T2[i] = Medium.temperature(state2[i]);
 
-    (lsat2[i],vsat2[i]) = ThermoSysPro.Properties.Fluid.Water_sat_P((P[i] + P[i + 1])/2, fluid);
+    sat2[i] = Medium.setSat_p((P[i] + P[i + 1])/2);
 
-    rhol2[i] = if noEvent((P[i+1] > pcrit) or (T2[i] > Tcrit)) then pro2[i].d else max(pro2[i].d, lsat2[i].rho);
-    rhov2[i] = if noEvent((P[i+1] > pcrit) or (T2[i] > Tcrit)) then pro2[i].d else min(pro2[i].d, vsat2[i].rho);
+    rhol2[i] = if noEvent((P[i+1] > pcrit) or (T2[i] > Tcrit)) then rho2[i] else max(rho2[i], Medium.bubbleDensity(sat2[i]));
+    rhov2[i] = if noEvent((P[i+1] > pcrit) or (T2[i] > Tcrit)) then rho2[i] else min(rho2[i], Medium.dewDensity(sat2[i]));
 
-    cpl2[i]  = if noEvent((P[i+1] > pcrit) or (T2[i] > Tcrit)) then pro2[i].cp else (if noEvent(xv2[i] <= 0.0) then pro2[i].cp else lsat2[i].cp);
-    cpv2[i]  = if noEvent((P[i+1] > pcrit) or (T2[i] > Tcrit)) then pro2[i].cp else (if noEvent(xv2[i] >= 1.0) then pro2[i].cp else vsat2[i].cp);
+    cpl2[i]  = if noEvent((P[i+1] > pcrit) or (T2[i] > Tcrit)) then Medium.specificHeatCapacityCp(state2[i]) else (if noEvent(xv2[i] <= 0.0) then Medium.specificHeatCapacityCp(state2[i]) else Medium.specificHeatCapacityCp(Medium.setBubbleState(sat2[i])));
+    cpv2[i]  = if noEvent((P[i+1] > pcrit) or (T2[i] > Tcrit)) then Medium.specificHeatCapacityCp(state2[i]) else (if noEvent(xv2[i] >= 1.0) then Medium.specificHeatCapacityCp(state2[i]) else Medium.specificHeatCapacityCp(Medium.setDewState(sat2[i])));
 
-    mul2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhol2[i], T2[i],fluid);
-    muv2[i] = ThermoSysPro.Properties.Fluid.DynamicViscosity_rhoT(rhov2[i], T2[i],fluid);
+    mul2[i] = Medium.dynamicViscosity(Medium.setBubbleState(sat2[i]));
+    muv2[i] = Medium.dynamicViscosity(Medium.setDewState(sat2[i]));
 
-    kl2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhol2[i], T2[i], (P[i] + P[i + 1])/2, mode, fluid);
-    kv2[i] = ThermoSysPro.Properties.Fluid.ThermalConductivity_rhoT(rhov2[i], T2[i], (P[i] + P[i + 1])/2, mode, fluid);
+    kl2[i] = Medium.thermalConductivity(Medium.setBubbleState(sat2[i]));
+    kv2[i] = Medium.thermalConductivity(Medium.setDewState(sat2[i]));
   end for;
 
   /* Fluid densities at the boundaries of the nodes */
@@ -558,11 +524,11 @@ equation
     rhoc[i] = rho1[i - 1];
   end for;
 
-  proc[1] = ThermoSysPro.Properties.Fluid.Ph(P[1], h[1], mode, fluid);
-  proc[2] = ThermoSysPro.Properties.Fluid.Ph(P[N + 1], h[N + 1], mode, fluid);
+  state_c[1] = Medium.setState_phX(P[1], h[1], X);
+  state_c[2] = Medium.setState_phX(P[N + 1], h[N + 1], X);
 
-  rhoc[1] = proc[1].d;
-  rhoc[N + 1] = proc[2].d;
+  rhoc[1] = Medium.density(state_c[1]);
+  rhoc[N + 1] = Medium.density(state_c[2]);
 
   W1t = sum(dW1);
 
