@@ -55,9 +55,12 @@ protected
   parameter Units.SI.Area dSi=pi*Di*dx1
     "Internal heat exchange area for a node";
   parameter Real Mmol=18.015 "Water molar mass";
-  parameter Units.SI.AbsolutePressure pcrit=Medium.fluidConstants[1].criticalPressure "Critical pressure";
-  parameter Units.SI.Temperature Tcrit=Medium.fluidConstants[1].criticalTemperature "Critical temperature";
-  parameter Units.SI.AbsolutePressure ptriple=Medium.fluidConstants[1].triplePointPressure "Triple point pressure";
+  parameter Units.SI.AbsolutePressure pcrit=ThermoSysPro.Properties.WaterSteam.BaseIF97.data.PCRIT
+    "Critical pressure";
+  parameter Units.SI.Temperature Tcrit=ThermoSysPro.Properties.WaterSteam.BaseIF97.data.TCRIT
+    "Critical temperature";
+  parameter Units.SI.AbsolutePressure ptriple=ThermoSysPro.Properties.WaterSteam.BaseIF97.triple.ptriple
+    "Triple point pressure";
   parameter Real xb1=0.0002 "Min value for vapor mass fraction";
   parameter Real xb2=0.85 "Max value for vapor mass fraction";
   parameter Units.SI.MassFlowRate gamma0=1.e-4
