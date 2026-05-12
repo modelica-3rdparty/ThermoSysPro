@@ -226,7 +226,131 @@ equation
     Diagram(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-120,-120},{120,120}},
-        grid={2,2})),
+        grid={2,2}), graphics={
+        Text(
+          extent={{86,112},{98,102}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillPattern=FillPattern.Sphere,
+          fillColor={191,0,0},
+          textString=
+               "Air"),
+        Text(
+          extent={{82,-106},{94,-116}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillPattern=FillPattern.Sphere,
+          fillColor={191,0,0},
+          textString=
+               "Air"),
+        Text(
+          extent={{-36,-112},{-12,-120}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillPattern=FillPattern.Sphere,
+          fillColor={191,0,0},
+          textString=
+               "Water"),
+        Text(
+          extent={{-38,114},{-12,106}},
+          lineColor={0,0,0},
+          lineThickness=1,
+          fillPattern=FillPattern.Sphere,
+          fillColor={191,0,0},
+          textString=
+               "Steam"),
+        Polygon(
+          points={{100,-62},{0,100},{0,100},{-100,-62},{100,-62}},
+          lineColor={28,108,200},
+          fillColor={0,255,0},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{89,40},{79,20},{99,20},{89,40}},
+          lineColor={0,0,0},
+          lineThickness=0.5,
+          fillPattern=FillPattern.Sphere,
+          fillColor={191,0,0}),
+        Line(
+          points={{89,20},{89,4}},
+          color={0,0,0},
+          thickness=1),
+        Ellipse(
+          extent={{-20,100},{20,60}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.HorizontalCylinder,
+          fillColor={255,0,0}),
+        Ellipse(
+          extent={{60,-39},{100,-79}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.HorizontalCylinder,
+          fillColor={0,128,255}),
+        Ellipse(
+          extent={{-100,-39},{-60,-79}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.HorizontalCylinder,
+          fillColor={0,128,255}),
+        Polygon(
+          points={{-28,30},{-36,34},{-16,68},{-8,64},{-28,30}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.VerticalCylinder,
+          fillColor={255,0,0}),
+        Polygon(
+          points={{-49,-6},{-57,-2},{-36,34},{-28,30},{-49,-6}},
+          lineColor={255,128,0},
+          fillColor={255,128,0},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{-71,-44},{-79,-40},{-57,-2},{-49,-6},{-71,-44}},
+          lineColor={0,128,255},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{38,33},{30,29},{9,64},{16,69},{38,33}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.VerticalCylinder,
+          fillColor={255,0,0}),
+        Polygon(
+          points={{60,-6},{52,-10},{30,29},{38,33},{60,-6}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.VerticalCylinder,
+          fillColor={255,128,0}),
+        Polygon(
+          points={{80,-40},{70,-42},{52,-10},{60,-6},{80,-40}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.VerticalCylinder,
+          fillColor={0,128,255}),
+        Polygon(
+          points={{-5,-48},{55,-38},{55,-58},{-5,-48},{-5,-48}},
+          lineColor={28,108,200},
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{5,-48},{-55,-58},{-55,-38},{5,-48},{5,-48}},
+          lineColor={28,108,200},
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{-100,-79},{-80,-100}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.HorizontalCylinder,
+          fillColor={0,255,255}),
+        Ellipse(
+          extent={{80,-79},{100,-100}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.HorizontalCylinder,
+          fillColor={0,255,255}),
+        Rectangle(
+          extent={{-89,-79},{90,-100}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.HorizontalCylinder,
+          fillColor={0,255,255}),
+        Text(
+          extent={{-38,22},{36,-38}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.HorizontalCylinder,
+          fillColor={255,255,0},
+          textString=
+               "Volume")}),
     Icon(coordinateSystem(
         preserveAspectRatio=false,
         extent={{-120,-120},{120,120}},
@@ -234,18 +358,80 @@ equation
         Polygon(
           points={{100,-62},{0,100},{0,100},{-100,-62},{100,-62}},
           lineColor={0,255,0},
-          fillColor=DynamicSelect({85,170,255}, if diffusion then fill_color_singular else fill_color_static),
+          fillColor= DynamicSelect({85,170,255},
+          if diffusion then fill_color_singular
+          else fill_color_static),
           fillPattern=FillPattern.Solid,
           lineThickness=0),
         Line(
-          points={{110,-99},{110,104}},
-          color={28,108,200},
-          thickness=1),
+          points={{110,20},{110,-8}},
+          color={0,0,0},
+          thickness=0),
         Ellipse(
           extent={{-20,100},{20,60}},
           lineColor={0,0,0},
           fillPattern=FillPattern.HorizontalCylinder,
           fillColor={255,0,0}),
+        Ellipse(
+          extent={{60,-39},{100,-79}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.HorizontalCylinder,
+          fillColor={0,128,255}),
+        Ellipse(
+          extent={{-100,-39},{-60,-79}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.HorizontalCylinder,
+          fillColor={0,128,255}),
+        Polygon(
+          points={{-28,30},{-36,34},{-16,68},{-8,64},{-28,30}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.VerticalCylinder,
+          fillColor={255,0,0}),
+        Polygon(
+          points={{-49,-6},{-57,-2},{-36,34},{-28,30},{-49,-6}},
+          lineColor={255,128,0},
+          fillColor={255,128,0},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{-71,-44},{-79,-40},{-57,-2},{-49,-6},{-71,-44}},
+          lineColor={0,128,255},
+          fillColor={0,128,255},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{38,33},{30,29},{9,64},{16,69},{38,33}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.VerticalCylinder,
+          fillColor={255,0,0}),
+        Polygon(
+          points={{60,-6},{52,-10},{30,29},{38,33},{60,-6}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.VerticalCylinder,
+          fillColor={255,128,0}),
+        Polygon(
+          points={{80,-40},{70,-42},{52,-10},{60,-6},{80,-40}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.VerticalCylinder,
+          fillColor={0,128,255}),
+        Polygon(
+          points={{-5,-48},{55,-38},{55,-58},{-5,-48},{-5,-48}},
+          lineColor={28,108,200},
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{5,-48},{-55,-58},{-55,-38},{5,-48},{5,-48}},
+          lineColor={28,108,200},
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Ellipse(
+          extent={{80,-79},{100,-100}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.HorizontalCylinder,
+          fillColor={0,255,255}),
+        Ellipse(
+          extent={{-100,-79},{-80,-100}},
+          lineColor={0,0,0},
+          fillPattern=FillPattern.HorizontalCylinder,
+          fillColor={0,255,255}),
         Rectangle(
           extent={{-89,-79},{90,-100}},
           lineColor={0,0,0},
@@ -254,15 +440,31 @@ equation
         Text(
           extent={{20,120},{54,100}},
           lineColor={238,46,47},
+          fillColor={255,213,170},
+          fillPattern=FillPattern.Solid,
           textString="Steam inlet"),
         Text(
           extent={{126,116},{154,100}},
           lineColor={0,0,255},
+          fillColor={255,213,170},
+          fillPattern=FillPattern.Solid,
           textString="Air outlet"),
         Text(
           extent={{126,-104},{150,-116}},
           lineColor={0,0,255},
-          textString="Air inlet")}),
+          fillColor={255,213,170},
+          fillPattern=FillPattern.Solid,
+          textString="Air inlet"),
+        Line(
+          points={{110,-99},{110,104}},
+          color={28,108,200},
+          thickness=1),
+        Polygon(
+          points={{110,12},{100,-8},{120,-8},{110,12}},
+          lineColor={0,0,0},
+          lineThickness=0,
+          fillPattern=FillPattern.Sphere,
+          fillColor={191,0,0})}),
     Window(
       x=0.09,
       y=0.08,
