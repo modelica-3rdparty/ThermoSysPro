@@ -9,7 +9,7 @@ algorithm
   //   C_record.Cg := SubC;
 
   // Non-volatile
-  C_record.Cl := SubC/(1 - x);
+  C_record.Cl := SubC/max(1 - x, Modelica.Constants.eps);
   C_record.Cg := fill(0, size(SubC, 1));
 
   //   // Fully-volatile

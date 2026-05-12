@@ -2,6 +2,7 @@ within ThermoSysPro.Fluid.Junctions;
 model StaticDrum "Static drum"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
     replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable function PhasesSeparationFunction = Medium.HomogeneousPhasesSeparation(SubC = Ce_steam.SubC) annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Real x=1 "Vapor separation efficiency at the outlet";
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
@@ -20,7 +21,10 @@ public
   Units.SI.SpecificEnthalpy hl(start=100000) "Liquid phase specific enthalpy";
   Units.SI.SpecificEnthalpy hv(start=2800000) "Gas phase specific enthalpy";
   Medium.MassFraction X[Medium.nXi] "Fluid mass fraction";
-  Medium.ExtraProperty SubC[Medium.nC] "Fluid trace substances";
+  Medium.ExtraProperty SubCl[Medium.nC](quantity=Medium.extraPropertiesNames) "Liquid phase trace substances";
+  Medium.ExtraProperty SubCv[Medium.nC](quantity=Medium.extraPropertiesNames) "Vapor phase trace substances";
+  Medium.ExtraProperty SubCs_sur[Medium.nC](quantity=Medium.extraPropertiesNames) "Trace substances at the steam/reheater outlet";
+  Medium.C_BiPhase C_record;
   Units.SI.Power Je_steam "Thermal power diffusion from inlet e_steam";
   Units.SI.Power Je_sup "Thermal power diffusion from inlet e_sup";
   Units.SI.Power Je_eva "Thermal power diffusion from inlet e_eva";
@@ -68,6 +72,10 @@ public
           extent={{-10,-10},{10,10}}, rotation=0)));
 
   Medium.SaturationProperties sat;
+  Medium.ThermodynamicState state_e_steam "Steam inlet state";
+  Medium.ThermodynamicState state_e_sup "Extra inlet state";
+  Medium.ThermodynamicState state_e_eva "Evaporator inlet state";
+  Medium.ThermodynamicState state_e_eco "Economizer inlet state";
 equation
 
   /* Unconnected connectors */
@@ -182,12 +190,18 @@ equation
   X = Cs_sur.Xi;
 
   /* Traces composition balance equations */
-  fill(0, Medium.nC) = Ce_steam.SubC*Ce_steam.Q + Ce_sup.SubC*Ce_sup.Q + Ce_eva.SubC*Ce_eva.Q + Ce_eco.SubC*Ce_eco.Q - Cs_sur.SubC*Cs_sur.Q - Cs_sup.SubC*Cs_sup.Q - Cs_purg.SubC*Cs_purg.Q - Cs_eva.SubC*Cs_eva.Q;
+  C_record = PhasesSeparationFunction();
 
-  SubC = Cs_eva.SubC;
-  SubC = Cs_purg.SubC;
-  SubC = Cs_sup.SubC;
-  SubC = Cs_sur.SubC;
+  fill(0, Medium.nC) = (1 - Medium.vapourQuality(state_e_steam))*Ce_steam.Q*Ce_steam.SubC + (1 - Medium.vapourQuality(state_e_sup))*Ce_sup.Q*Ce_sup.SubC + (1 - Medium.vapourQuality(state_e_eva))*Ce_eva.Q*Ce_eva.SubC + (1 - Medium.vapourQuality(state_e_eco))*Ce_eco.Q*Ce_eco.SubC - Cs_eva.Q*Cs_eva.SubC - Cs_purg.Q*Cs_purg.SubC - Cs_sup.Q*Cs_sup.SubC + Medium.vapourQuality(state_e_steam)*Ce_steam.Q*C_record.Cl + Medium.vapourQuality(state_e_sup)*Ce_sup.Q*C_record.Cl + Medium.vapourQuality(state_e_eva)*Ce_eva.Q*C_record.Cl + Medium.vapourQuality(state_e_eco)*Ce_eco.Q*C_record.Cl - (1 - x)*Cs_sur.Q*SubCl;
+
+  fill(0, Medium.nC) = Medium.vapourQuality(state_e_steam)*Ce_steam.Q*C_record.Cg + Medium.vapourQuality(state_e_sup)*Ce_sup.Q*C_record.Cg + Medium.vapourQuality(state_e_eva)*Ce_eva.Q*C_record.Cg + Medium.vapourQuality(state_e_eco)*Ce_eco.Q*C_record.Cg - x*Cs_sur.Q*SubCv;
+
+  SubCs_sur = (1 - x)*SubCl + x*SubCv;
+
+  Cs_eva.SubC = SubCl;
+  Cs_purg.SubC = SubCl;
+  Cs_sup.SubC = SubCl;
+  Cs_sur.SubC = SubCs_sur;
 
   /* Flow reversal */
   if continuous_flow_reversal then
@@ -280,6 +294,10 @@ equation
   Cs_sur.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
+  state_e_steam = Medium.setState_phX(p=P, h=Ce_steam.h, X=Medium.reference_X);
+  state_e_sup = Medium.setState_phX(p=P, h=Ce_sup.h, X=Medium.reference_X);
+  state_e_eva = Medium.setState_phX(p=P, h=Ce_eva.h, X=Medium.reference_X);
+  state_e_eco = Medium.setState_phX(p=P, h=Ce_eco.h, X=Medium.reference_X);
   sat = Medium.setSat_p(P);
 
   hl = Medium.bubbleEnthalpy(sat);
