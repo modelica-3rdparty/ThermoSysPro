@@ -36,5 +36,7 @@ TestDynamicDrum
 TestDynamicDrum_Traces
 TestTwoPhaseVolume
 TestTwoPhaseVolume_Traces
+TestTwoPhaseCavity
+TestTwoPhaseCavity_Traces
 TestPressurizer
 TestPressurizer_Traces
