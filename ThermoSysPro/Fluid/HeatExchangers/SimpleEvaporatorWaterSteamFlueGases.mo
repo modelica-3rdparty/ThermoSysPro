@@ -1,8 +1,9 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model SimpleEvaporatorWaterSteamFlueGases "Simple water/steam - flue gases evaporator"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model for the water/steam side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_FlueGases = ThermoSysPro.Properties.Media.FlueGases constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the flue gases side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Real Kdpf=10 "Flue gases pressure drop coefficient";
   parameter Real Kdpe=10 "Water/steam pressure drop coefficient";
@@ -10,10 +11,8 @@ model SimpleEvaporatorWaterSteamFlueGases "Simple water/steam - flue gases evapo
     "Diffusion conductance for the water/steam side (active if diffusion=true in neighbouring volumes)";
   parameter Units.SI.MassFlowRate gamma_diff_fg=1e-4
     "Diffusion conductance for the flue gases side (active if diffusion=true in neighbouring volumes)";
-  parameter IF97Region region=IF97Region.All_regions "IF97 region for the water/steam side (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
-  parameter Integer mode=Integer(region) - 1 "IF97 region for the water/steam side. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Real eps=1.e-0 "Small number for pressure loss equation";
 
 public
@@ -39,37 +38,26 @@ public
   Units.SI.Density rhof(start=0.9) "Flue gases density";
   Units.SI.Density rhoe(start=700) "Water density";
   Units.SI.Power W(start=1e8) "Power exchanged";
-  FluidType ftype_ws "Fluid type for the water/steam side";
-  Integer fluid_ws=Integer(ftype_ws) "Fluid number for the water/steam side";
-  FluidType ftype_fg "Fluid type for the flue gases side";
-  Integer fluid_fg=Integer(ftype_fg) "Fluid number for the flue gases side";
+  Medium.MassFraction Xws[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Water/steam mass fractions";
+  Medium_FlueGases.MassFraction Xfg[Medium_FlueGases.nXi](start=Medium_FlueGases.X_default[1:Medium_FlueGases.nXi]) "Flue gases mass fractions";
+  Medium.ExtraProperty SubCws[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default) "Water/steam trace substances";
+  Medium_FlueGases.ExtraProperty SubCfg[Medium_FlueGases.nC](quantity=Medium_FlueGases.extraPropertiesNames, start=Medium_FlueGases.C_default) "Flue gases trace substances";
+  Medium.ThermodynamicState state_ws_in "Water/steam inlet thermodynamic state";
+  Medium.ThermodynamicState state_ws_out "Water/steam outlet thermodynamic state";
+  Medium.ThermodynamicState state_ws_m "Water/steam average thermodynamic state";
+  Medium.SaturationProperties sat_ws "Water/steam saturation properties at the outlet pressure";
+  Medium_FlueGases.ThermodynamicState state_fg_in "Flue gases inlet thermodynamic state";
+  Medium_FlueGases.ThermodynamicState state_fg_out "Flue gases outlet thermodynamic state";
 
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cws2 annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cws2(redeclare package Medium = Medium) annotation (
       Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cws1 annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cws1(redeclare package Medium = Medium) annotation (
       Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cfg1 annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cfg1(redeclare package Medium = Medium_FlueGases) annotation (
       Placement(transformation(extent={{-10,80},{10,100}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cfg2 annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cfg2(redeclare package Medium = Medium_FlueGases) annotation (
       Placement(transformation(extent={{-10,-100},{10,-80}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proee
-    annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
-           0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proes
-    annotation (Placement(transformation(extent={{-52,80},{-32,100}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proem
-    annotation (Placement(transformation(extent={{-76,80},{-56,100}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsat
-                                           annotation (Placement(transformation(
-          extent={{80,80},{100,100}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsat
-    annotation (Placement(transformation(extent={{58,80},{78,100}}, rotation=0)));
 equation
-  /* Check that the fluid type for the water/steam side is water/steam */
-  assert((ftype_ws == FluidType.WaterSteam) or (ftype_ws == FluidType.WaterSteamSimple), "SimpleEvaporatorWaterSteamFlueGases: the fluid type must be water/steam for the water/steam side");
-
   /* Flue gases inlet */
   Pef = Cfg1.P;
   Hef = Cfg1.h;
@@ -89,14 +77,10 @@ equation
   Cfg2.diff_res_1 = Cfg1.diff_res_1 + 1/gamma_diff_fg;
   Cfg1.diff_res_2 = Cfg2.diff_res_2 + 1/gamma_diff_fg;
 
-  Cfg1.ftype = Cfg2.ftype;
-
-  Cfg2.Xco2 = Cfg1.Xco2;
-  Cfg2.Xh2o = Cfg1.Xh2o;
-  Cfg2.Xo2  = Cfg1.Xo2;
-  Cfg2.Xso2 = Cfg1.Xso2;
-
-  ftype_fg = Cfg1.ftype;
+  Cfg1.Xi = Cfg2.Xi;
+  Xfg = Cfg1.Xi;
+  Cfg1.SubC = Cfg2.SubC;
+  SubCfg = Cfg1.SubC;
 
   /* Water inlet */
   Pee = Cws1.P;
@@ -117,14 +101,10 @@ equation
   Cws2.diff_res_1 = Cws1.diff_res_1 + 1/gamma_diff_ws;
   Cws1.diff_res_2 = Cws2.diff_res_2 + 1/gamma_diff_ws;
 
-  Cws1.ftype = Cws2.ftype;
-
-  Cws2.Xco2 = Cws1.Xco2;
-  Cws2.Xh2o = Cws1.Xh2o;
-  Cws2.Xo2  = Cws1.Xo2;
-  Cws2.Xso2 = Cws1.Xso2;
-
-  ftype_ws = Cws1.ftype;
+  Cws1.Xi = Cws2.Xi;
+  Xws = Cws1.Xi;
+  Cws1.SubC = Cws2.SubC;
+  SubCws = Cws1.SubC;
 
   /* Pressure losses */
   Pef = Psf + Kdpf*ThermoSysPro.Functions.ThermoSquare(Qf, eps)/rhof;
@@ -135,26 +115,28 @@ equation
   W = Qe*(Hse - Hee);
 
   /* Flue gases specific enthalpy at the inlet */
-  Tef = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pef, Hef, fluid_fg, 0, Cfg1.Xco2,  Cfg1.Xh2o,  Cfg1.Xo2,  Cfg1.Xso2);
+  state_fg_in = Medium_FlueGases.setState_phX(p=Pef, h=Hef, X=Xfg);
+  Tef = Medium_FlueGases.temperature(state_fg_in);
 
   /* Flue gases specific enthalpy at the outlet */
-  Tsf = ThermoSysPro.Properties.Fluid.Temperature_Ph(Psf, Hsf, fluid_fg, 0, Cfg1.Xco2,  Cfg1.Xh2o,  Cfg1.Xo2,  Cfg1.Xso2);
+  state_fg_out = Medium_FlueGases.setState_phX(p=Psf, h=Hsf, X=Xfg);
+  Tsf = Medium_FlueGases.temperature(state_fg_out);
 
   /* Flue gases density */
-  rhof = ThermoSysPro.Properties.Fluid.Density_Ph(Pef, Hef, fluid_fg, 0, Cfg1.Xco2,  Cfg1.Xh2o,  Cfg1.Xo2,  Cfg1.Xso2);
+  rhof = Medium_FlueGases.density(state_fg_in);
 
   /* Water/steam thermodynamic properties */
-  proee = ThermoSysPro.Properties.Fluid.Ph(Pee, Hee, mode, fluid_ws);
-  Tee = proee.T;
+  state_ws_in = Medium.setState_phX(p=Pee, h=Hee, X=Xws);
+  Tee = Medium.temperature(state_ws_in);
 
-  proem = ThermoSysPro.Properties.Fluid.Ph((Pee + Pse)/2, (Hee + Hse)/2, mode, fluid_ws);
-  rhoe = proem.d;
+  state_ws_m = Medium.setState_phX(p=(Pee + Pse)/2, h=(Hee + Hse)/2, X=Xws);
+  rhoe = Medium.density(state_ws_m);
 
-  proes = ThermoSysPro.Properties.Fluid.Ph(Pse, Hse, mode, fluid_ws);
-  Tse = proes.T;
+  state_ws_out = Medium.setState_phX(p=Pse, h=Hse, X=Xws);
+  Tse = Medium.temperature(state_ws_out);
 
-  (lsat,vsat) = ThermoSysPro.Properties.Fluid.Water_sat_P(Pse, fluid_ws);
-  Hse = vsat.h;
+  sat_ws = Medium.setSat_p(Pse);
+  Hse = Medium.dewEnthalpy(sat_ws);
 
   annotation (Diagram(graphics={
         Rectangle(
