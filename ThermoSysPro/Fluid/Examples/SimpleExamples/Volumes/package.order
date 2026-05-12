@@ -30,3 +30,5 @@ TestVolumeITh_FlueGases
 TestVolumeITh_Traces
 TestTank_withPipePressureLosses
 TestTank_Traces_withPipePressureLosses
+TestDynamicDrum
+TestDynamicDrum_Traces
