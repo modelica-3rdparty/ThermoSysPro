@@ -37,6 +37,5 @@ TestStaticCondenser
 TestStaticCondenser_Traces
 TestStaticCondenserHEI
 TestStaticCondenserHEI_Traces
-TestStaticAerocondenser
 TestDynamicPlateHeatExchangerW
-TestStaticAerocondenser_TSP
+TestStaticAerocondenser

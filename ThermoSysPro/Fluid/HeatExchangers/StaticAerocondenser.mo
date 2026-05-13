@@ -471,8 +471,72 @@ equation
       width=0.76,
       height=0.76),
     Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
-<p><b>ThermoSysPro Version 4.1</b> </p>
+<h4># StaticAerocondenser</h4>
+
+<p>
+Static model of an air-cooled condenser. A water/steam flow is condensed at the
+condensation pressure and the released heat is transferred to a cooling-air flow.
+An optional drain inlet <code>Cw</code> can be enabled with <code>use_Cw=true</code>.
+</p>
+
+<h4>## Main hypotheses</h4>
+<ul>
+<li>The model is static: no mass or energy storage is represented.</li>
+<li>The condensing side is assumed to be at a single condensation pressure <code>Pcond</code>.</li>
+<li>The liquid outlet enthalpy <code>he</code> is the saturated liquid enthalpy at <code>Pcond</code>.</li>
+<li>The pressure at the bottom of the condenser includes the hydrostatic head: <code>Pfond = Pcond + rho_e*g*z</code>.</li>
+<li>The air side is single phase and exchanges heat with the condensing side through an NTU-effectiveness law.</li>
+<li>The air pressure loss is quadratic: <code>deltaP = Ka*Qa*abs(Qa)/rho_a</code>.</li>
+<li>The water/steam pressure loss is represented through the imposed relation between <code>Pcond</code>, <code>Pfond</code>, and the connected ports.</li>
+<li>Fluid composition and trace substances are transported without internal accumulation or phase-separation model.</li>
+</ul>
+
+<h4>## Connectors</h4>
+<ul>
+<li><code>Cws1</code>: steam inlet on the condensing side.</li>
+<li><code>Cws2</code>: condensate outlet on the condensing side.</li>
+<li><code>Cw</code>: optional drain inlet on the condensing side; disabled internally when <code>use_Cw=false</code>.</li>
+<li><code>Cair1</code>: cooling-air inlet.</li>
+<li><code>Cair2</code>: cooling-air outlet.</li>
+</ul>
+
+<h4>## Main equations</h4>
+<ul>
+<li>Water/steam mass balance: <code>0 = Cws1.Q + Cw.Q - Cws2.Q</code>.</li>
+<li>Water/steam energy balance: <code>0 = (Cws1.h - he)*Cws1.Q + (Cw.h - he)*Cw.Q - (Cws2.h - he)*Cws2.Q - W + J</code>.</li>
+<li>Air heat power: <code>W = Qa*(has - hae)</code>.</li>
+<li>Air-side NTU: <code>Nut = Se*U/(Qa*cp_a)</code> when <code>Qa*cp_a &gt; 0</code>.</li>
+<li>Two-phase effectiveness: <code>Ef = 1 - exp(-Nut)</code>.</li>
+<li>Condensation temperature: <code>Tcond = (Tas + Tae*(Ef - 1))/Ef</code>.</li>
+<li>Condensation pressure: <code>Pcond = Medium.saturationPressure(Tcond)</code>.</li>
+</ul>
+
+<h4>## Media and transported quantities</h4>
+<ul>
+<li><code>Medium</code> is the condensing-side medium and must provide two-phase saturation properties.</li>
+<li><code>Medium_Air</code> is the air-side medium and is evaluated with the generic Medium API.</li>
+<li>Condensing-side mass fractions are taken from <code>Cws1.Xi</code> and propagated to <code>Cws2.Xi</code>.</li>
+<li>Air-side mass fractions are propagated between <code>Cair1</code> and <code>Cair2</code>.</li>
+<li>Trace substances are passed through directly; no source/sink or separation term is added in this component.</li>
+</ul>
+
+<h4>## Heat-transfer law</h4>
+<p>
+The reference heat-transfer coefficient <code>Uref</code> is corrected by
+<code>UCOR</code> and by an empirical dependency on the inlet air temperature:
+</p>
+<p><code>U = UCOR*Uref*(-2e-4*(Tae - 273.16)^2 + 0.0187*(Tae - 273.16) + 0.5007)</code></p>
+
+<h4>## Limitations</h4>
+<ul>
+<li>The model is intended for steady-state or quasi-steady network calculations.</li>
+<li>It does not represent condenser metal thermal inertia, air-side distributed effects, fan behavior, or detailed tube geometry.</li>
+<li>The optional drain inlet is mixed algebraically with the steam inlet before condensation.</li>
+<li>Reverse-flow behavior is handled with the connector enthalpy variables and the <code>continuous_flow_reversal</code> option.</li>
+</ul>
+
+<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
+<p><b>ThermoSysPro Version 4.1</b></p>
 </html>",
    revisions="<html>
 <p><u><b>Author</b></u></p>
