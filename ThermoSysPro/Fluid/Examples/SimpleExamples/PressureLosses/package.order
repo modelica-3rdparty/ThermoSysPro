@@ -13,6 +13,9 @@ TestInvSingularPressureLoss_Traces
 TestControlValve
 TestControlValve_Traces
 TestControlValve_Traces_FlueGases
+TestThreeWayValve
+TestThreeWayValve_FlueGases
+TestThreeWayValve_Traces
 TestDynamicReliefValve
 TestDynamicReliefValve_FlueGases
 TestDynamicReliefValve_Traces

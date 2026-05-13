@@ -1,10 +1,9 @@
 within ThermoSysPro.Fluid.PressureLosses;
 model ThreeWayValve "Three way valve"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter ThermoSysPro.Units.xSI.Cv Cvmax1=8005.42 "Valve 1 max CV";
   parameter ThermoSysPro.Units.xSI.Cv Cvmax2=8005.42 "Valve 2 max CV";
@@ -29,45 +28,27 @@ model ThreeWayValve "Three way valve"
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
   parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
+  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
   parameter Boolean dynamic_composition_balance=false
-    "<html>true: dynamic fluid composition balance equation <br>false: static fluid composition balance equation (active for flue gases)</html>" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.FlueGases), tab="Fluid", group="Fluid properties"));
+    "<html>true: dynamic fluid composition balance equation <br>false: static fluid composition balance equation</html>" annotation(Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
 
-  parameter ThermoSysPro.Units.SI.MassFraction Xco20=0.0
-    "Initial CO2 mass fraction" annotation (Evaluate=true, Dialog(
+  parameter Medium.ExtraProperty X0[Medium.nX]=Medium.X_default
+    "Initial composition values" annotation (Evaluate=true, Dialog(
       enable=dynamic_composition_balance,
       tab="Fluid",
-      group=
-          "Initial composition values (active for flue gases only if dynamic_composition_balance=true)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xh2o0=if ftype == FluidType.FlueGases then 0.05 else 0
-    "Initial H20 mass fraction" annotation (Evaluate=true, Dialog(
-      enable=dynamic_composition_balance,
-      tab="Fluid",
-      group=
-          "Initial composition values (active for flue gases only if dynamic_composition_balance=true)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xo20=0.23
-    "Initial O2 mass fraction" annotation (Evaluate=true, Dialog(
-      enable=dynamic_composition_balance,
-      tab="Fluid",
-      group=
-          "Initial composition values (active for flue gases only if dynamic_composition_balance=true)"));
-  parameter ThermoSysPro.Units.SI.MassFraction Xso20=0
-    "Initial SO2 mass fraction" annotation (Evaluate=true, Dialog(
-      enable=dynamic_composition_balance,
-      tab="Fluid",
-      group=
-          "Initial composition values (active for flue gases only if dynamic_composition_balance=true)"));
+      group="Medium"));
 
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal Ouv
     annotation (Placement(transformation(
         origin={0,110},
         extent={{-10,-10},{10,10}},
         rotation=270)));
-  Interfaces.Connectors.FluidInlet C1 annotation (layer="icon", Placement(
+  Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (layer="icon", Placement(
         transformation(extent={{-110,-50},{-90,-30}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet C2 annotation (layer="icon", Placement(
+  Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (layer="icon", Placement(
         transformation(extent={{90,-50},{110,-30}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve Valve1(
+    redeclare package Medium = Medium,
     Cvmax=Cvmax1,
     caract=caract1,
     mode_caract=mode_caract1,
@@ -78,9 +59,10 @@ model ThreeWayValve "Three way valve"
         origin={-6,-50},
         extent={{10,-10},{-10,10}},
         rotation=90)));
-  Interfaces.Connectors.FluidOutlet C3 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidOutlet C3(redeclare package Medium = Medium) annotation (Placement(transformation(
           extent={{-10,-110},{10,-90}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve Valve2(
+    redeclare package Medium = Medium,
     Cvmax=Cvmax2,
     caract=caract2,
     mode_caract=mode_caract2,
@@ -95,20 +77,16 @@ model ThreeWayValve "Three way valve"
   ThermoSysPro.InstrumentationAndControl.Blocks.Math.Add Add1(k2=-1) annotation (Placement(transformation(
           extent={{-40,40},{-20,60}}, rotation=0)));
   Volumes.VolumeA VolumeA1(
+    redeclare package Medium = Medium,
     V=V,
     p_rho=p_rho,
     dynamic_energy_balance=dynamic_energy_balance,
     diffusion=diffusion,
     continuous_flow_reversal=continuous_flow_reversal,
-    ftype=ftype,
-    region=region,
     dynamic_composition_balance=dynamic_composition_balance,
-    Xco20=Xco20,
-    Xh2o0=Xh2o0,
-    Xo20=Xo20,
-    Xso20=Xso20)            annotation (Placement(transformation(extent={{-10,
+    X0=X0)            annotation (Placement(transformation(extent={{-10,
             -10},{10,10}}, rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.PipePressureLoss PerteDP1(K=0, region=region, gamma_diff=gamma_diff)
+  ThermoSysPro.Fluid.PressureLosses.PipePressureLoss PerteDP1(redeclare package Medium = Medium, K=0, gamma_diff=gamma_diff)
     annotation (Placement(transformation(extent={{-60,-10},{-40,10}}, rotation=
             0)));
 equation
