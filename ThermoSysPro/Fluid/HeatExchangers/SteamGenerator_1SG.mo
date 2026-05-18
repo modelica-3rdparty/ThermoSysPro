@@ -1,10 +1,9 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model SteamGenerator_1SG "Single steam generator"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.WaterSteamFluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model for the secondary water/steam side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_Primary = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the primary side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Real H0_Mix_AlimDomeGV=1194812.89980521;
   parameter Boolean inertia=false
@@ -33,6 +32,7 @@ model SteamGenerator_1SG "Single steam generator"
 
 public
   ThermoSysPro.Fluid.HeatExchangers.DynamicOnePhaseFlowPipe UtubeHotLeg(
+    redeclare package Medium = Medium_Primary,
     L=10.848,
     D=0.01687,
     z2=10.848,
@@ -60,6 +60,7 @@ public
         rotation=270)));
 
   ThermoSysPro.Fluid.HeatExchangers.DynamicOnePhaseFlowPipe UtubeColdtLeg(
+    redeclare package Medium = Medium_Primary,
     L=10.848,
     D=0.01687,
     h(start={1326153.46646787,1310848.36111251,1299218.76228131,
@@ -87,6 +88,7 @@ public
         rotation=90)));
 
   ThermoSysPro.Fluid.Volumes.DynamicDrum DomeGV(
+    redeclare package Medium = Medium,
     hl(start=1257382.15477056),
     hv(start=2771260.46625813),
     cpp=500,
@@ -100,12 +102,12 @@ public
     continuous_flow_reversal=continuous_flow_reversal,
     diffusion=diffusion,
     Vf0=Vf0,
-    P0=P0,
-    wsftype=wsftype)
+    P0=P0)
               annotation (Placement(transformation(extent={{-22,64},{22,107}},
           rotation=0)));
 protected
   ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe DPSeparateurCyclone(
+    redeclare package Medium = Medium,
     L=1,
     D=0.95886,
     lambda=0.03,
@@ -116,6 +118,7 @@ protected
         rotation=90)));
 public
   ThermoSysPro.Fluid.Volumes.VolumeC MixAlimDomeGV(
+    redeclare package Medium = Medium,
     h0=H0_Mix_AlimDomeGV,
     h(start=1194851.37111438),
     V=0.01,
@@ -123,39 +126,40 @@ public
     steady_state=steady_state,
     dynamic_mass_balance=dynamic_mass_balance,
     continuous_flow_reversal=continuous_flow_reversal,
-    diffusion=diffusion,
-    ftype=ftype)                               " "
+    diffusion=diffusion)                               " "
     annotation (Placement(transformation(
         origin={94,63},
         extent={{-8,-8},{8,8}},
         rotation=270)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss DPnulle_AlimDwnc(
+      redeclare package Medium = Medium,
       K=1e-4)
     annotation (Placement(transformation(
         origin={94,88},
         extent={{-6,-7},{6,7}},
         rotation=270)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss DPnulle_DomeDwnc(
+    redeclare package Medium = Medium,
     p_rho=0,
     C2(P(start=6829391.22090726), Q(fixed=false, start=6643)),
     K=0.172144)                   annotation (Placement(transformation(extent={{53,53},
             {63,73}},          rotation=0)));
 
 public
-  ThermoSysPro.Fluid.Sensors.SensorP CapteurPAlim
+  ThermoSysPro.Fluid.Sensors.SensorP CapteurPAlim(redeclare package Medium = Medium)
     annotation (Placement(transformation(
         origin={99,26},
         extent={{-6,-6},{6,6}},
         rotation=270)));
 
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet fluidOutletI
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet fluidOutletI(redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{-10,139},{10,159}}, rotation=
             0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet fluidInlet annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet fluidInlet(redeclare package Medium = Medium) annotation (
       Placement(transformation(extent={{42,102},{62,122}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet fluidInlet1 annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet fluidInlet1(redeclare package Medium = Medium_Primary) annotation (
       Placement(transformation(extent={{-56,-132},{-36,-112}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet fluidOutletI1
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet fluidOutletI1(redeclare package Medium = Medium_Primary)
     annotation (Placement(transformation(extent={{36,-132},{56,-112}}, rotation=
            0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal outputReal
@@ -163,6 +167,7 @@ public
             0)));
 public
   ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe DownComerGV(
+    redeclare package Medium = Medium,
     p_rho=0,
     h(start=1194851.3),
     z1=10.8,
@@ -217,6 +222,7 @@ public
         rotation=270)));
 
   ThermoSysPro.Fluid.HeatExchangers.DynamicTwoPhaseFlowRiser RiserGV(
+    redeclare package Medium = Medium,
     Ns=5,
     h(start={1194851.37008144,1260885.3160958,1364323.64228458,1450411.24087846,
           1525552.01981793,1595519.78942018,1595519.78863864}),
@@ -247,24 +253,24 @@ public
         rotation=90)));
 
   ThermoSysPro.Fluid.Volumes.VolumeC volumeA(
+    redeclare package Medium = Medium,
     h0=1185.2e3,
     dynamic_energy_balance=dynamic_energy_balance,
     steady_state=steady_state,
     dynamic_mass_balance=dynamic_mass_balance,
     continuous_flow_reversal=continuous_flow_reversal,
     diffusion=diffusion,
-    ftype=ftype,
     P0=6849350)                annotation (Placement(transformation(
         origin={1,-90},
         extent={{-10,-10},{10,10}},
         rotation=90)));
   ThermoSysPro.Fluid.Volumes.VolumeC volumeA1(
+    redeclare package Medium = Medium,
     dynamic_energy_balance=dynamic_energy_balance,
     steady_state=steady_state,
     dynamic_mass_balance=dynamic_mass_balance,
     continuous_flow_reversal=continuous_flow_reversal,
-    diffusion=diffusion,
-    ftype=ftype)                                                                                                                   annotation (
+    diffusion=diffusion)                                                                                                                   annotation (
       Placement(transformation(
         origin={0,18},
         extent={{-10,-10},{10,10}},

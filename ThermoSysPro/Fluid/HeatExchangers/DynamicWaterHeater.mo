@@ -1,9 +1,9 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model DynamicWaterHeater "Dynamic water heater"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.WaterSteamFluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model for the water/steam cavity" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_Cooling = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the cooling pipes" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   //parameter Modelica.SIunits.Volume Vc=4510 "Cavity total volume";
   //parameter Modelica.SIunits.Area Ac=200 "Cavity cross-sectional area";
@@ -39,7 +39,7 @@ model DynamicWaterHeater "Dynamic water heater"
   parameter Boolean inertia=true "true: momentum balance equation with inertia - false: without inertia";
   parameter Boolean advection=true "true: momentum balance equation with advection terme - false: without advection terme";
   parameter Boolean dynamic_energy_balance=true "true: dynamic energy balance equation - false: static energy balance equation";
-  parameter Boolean dynamic_mass_balance=true "true: dynamic mass balance equation - false: static mass balance equation (active if the fluid is compressible and if dynamic_energy_balance=true)" annotation(Evaluate=true, Dialog(enable=isCompressible and dynamic_energy_balance));
+  parameter Boolean dynamic_mass_balance=true "true: dynamic mass balance equation - false: static mass balance equation (active if the fluid is compressible and if dynamic_energy_balance=true)" annotation(Evaluate=true, Dialog(enable=Medium_Cooling.isCompressible and dynamic_energy_balance));
   parameter Boolean simplified_dynamic_energy_balance=true "true: simplified dynamic energy balance equation - false: full dynamic energy balance equation (active if dynamic_energy_balance=true and dynamic_mass_balance=true)" annotation(Evaluate=true, Dialog(enable=dynamic_energy_balance and dynamic_mass_balance));
   parameter Boolean steady_state=true "true: start from steady state - false: start from (P0c, Vf0) (active if dynamic_energy_balance=true)" annotation(Evaluate=true, Dialog(enable=dynamic_energy_balance));
   parameter Real Vf0=0.66 "Fraction of initial water volume in the drum (active if dynamic_energy_balance=true and steady_state=false)" annotation(Evaluate=true, Dialog(enable=dynamic_energy_balance and not steady_state));
@@ -51,6 +51,7 @@ model DynamicWaterHeater "Dynamic water heater"
   parameter Boolean diffusion=false "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
 
   Volumes.TwoPhaseCavity WaterHeating(
+    redeclare package Medium = Medium,
     Vf0=Vf0,
     P0=P0c,
     Ns=Ns,
@@ -73,11 +74,11 @@ model DynamicWaterHeater "Dynamic water heater"
     steady_state=steady_state,
     Cal_hconv=true,
     continuous_flow_reversal=continuous_flow_reversal,
-    diffusion=diffusion,
-    wsftype=wsftype)
+    diffusion=diffusion)
     annotation (                        Placement(transformation(extent={{-100,
             -100},{100,100}}, rotation=0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicOnePhaseFlowPipe pipe_3(
+    redeclare package Medium = Medium_Cooling,
     option_temperature=false,
     D=Dc,
     Ns=Ns*2,
@@ -95,20 +96,20 @@ model DynamicWaterHeater "Dynamic water heater"
     simplified_dynamic_energy_balance=simplified_dynamic_energy_balance,
     advection=advection)
     annotation (Placement(transformation(extent={{-35,-34},{60,0}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet  C1vap "Vapor inlet" annotation (Placement(
+  Interfaces.Connectors.FluidInlet  C1vap(redeclare package Medium = Medium) "Vapor inlet" annotation (Placement(
         transformation(extent={{-10,90},{10,110}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet  C2ex "Condensed water extraction outlet"
+  Interfaces.Connectors.FluidOutlet  C2ex(redeclare package Medium = Medium) "Condensed water extraction outlet"
     annotation (Placement(transformation(extent={{-10,-110},{10,-90}}, rotation=
            0)));
-  Interfaces.Connectors.FluidInlet  Ce1 "Cooling water inlet" annotation (
+  Interfaces.Connectors.FluidInlet  Ce1(redeclare package Medium = Medium_Cooling) "Cooling water inlet" annotation (
       Placement(transformation(extent={{-110,-55},{-90,-35}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet  Ce2 "Cooling water outlet" annotation (
+  Interfaces.Connectors.FluidOutlet  Ce2(redeclare package Medium = Medium_Cooling) "Cooling water outlet" annotation (
       Placement(transformation(extent={{-110,34},{-90,54}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal sortieReelle
     annotation (Placement(transformation(extent={{92,-86},{112,-66}}, rotation=
             0)));
 
-  Interfaces.Connectors.FluidInlet  C1 "Extra water inlet" annotation (
+  Interfaces.Connectors.FluidInlet  C1(redeclare package Medium = Medium) "Extra water inlet" annotation (
       Placement(transformation(extent={{-74,82},{-54,102}}, rotation=0)));
   Thermal.HeatTransfer.HeatExchangerWall Wall_3(
     D=Dc,
@@ -123,6 +124,7 @@ model DynamicWaterHeater "Dynamic water heater"
     steady_state=steady_state)
     annotation (Placement(transformation(extent={{-34,-24},{60,24}}, rotation=0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicOnePhaseFlowPipe pipe_1(
+    redeclare package Medium = Medium_Cooling,
     option_temperature=false,
     D=Dc,
     Ns=Ns,
@@ -155,6 +157,7 @@ model DynamicWaterHeater "Dynamic water heater"
     annotation (Placement(transformation(extent={{-35,-69},{59,-21}}, rotation=
             0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicOnePhaseFlowPipe pipe_2(
+    redeclare package Medium = Medium_Cooling,
     option_temperature=false,
     D=Dc,
     Ns=Ns,
@@ -186,30 +189,30 @@ model DynamicWaterHeater "Dynamic water heater"
     steady_state=steady_state)
     annotation (Placement(transformation(extent={{-35,21},{59,69}}, rotation=0)));
   Volumes.VolumeC volumeC(
+    redeclare package Medium = Medium_Cooling,
     h0=890e3,
     dynamic_energy_balance=dynamic_energy_balance,
     steady_state=steady_state,
     diffusion=diffusion,
     dynamic_mass_balance=dynamic_mass_balance,
-    continuous_flow_reversal=continuous_flow_reversal,
-    ftype=ftype)                annotation (Placement(transformation(extent={{
+    continuous_flow_reversal=continuous_flow_reversal)                annotation (Placement(transformation(extent={{
             -56,35},{-74,53}}, rotation=0)));
   Volumes.VolumeD volumeD(
+    redeclare package Medium = Medium_Cooling,
     h0=790e3,
     dynamic_energy_balance=dynamic_energy_balance,
     steady_state=steady_state,
     diffusion=diffusion,
     dynamic_mass_balance=dynamic_mass_balance,
-    continuous_flow_reversal=continuous_flow_reversal,
-    ftype=ftype)   annotation (Placement(transformation(extent={{-74,-54},{-56,
+    continuous_flow_reversal=continuous_flow_reversal)   annotation (Placement(transformation(extent={{-74,-54},{-56,
             -36}}, rotation=0)));
   Volumes.VolumeD volumeD1(
+    redeclare package Medium = Medium_Cooling,
     h0=850e3,
     dynamic_energy_balance=dynamic_energy_balance,
     steady_state=steady_state,
     diffusion=diffusion,
-    dynamic_mass_balance=dynamic_mass_balance,
-    ftype=ftype)   annotation (Placement(transformation(
+    dynamic_mass_balance=dynamic_mass_balance)   annotation (Placement(transformation(
         origin={75,-33},
         extent={{-9,-9},{9,9}},
         rotation=90)));
@@ -221,11 +224,8 @@ equation
     C1.h_vol_1 = 1.e5;
     C1.diff_res_1 = 0;
     C1.diff_on_1 = false;
-    C1.ftype = ftype;
-    C1.Xco2 = 0;
-    C1.Xh2o = 0;
-    C1.Xo2 = 0;
-    C1.Xso2 = 0;
+    C1.Xi = Medium.X_default[1:Medium.nXi];
+    C1.SubC = Medium.C_default;
   end if;
 
   connect(C1vap, WaterHeating.Cv)

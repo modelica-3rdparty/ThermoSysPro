@@ -1,9 +1,9 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model DynamicCondenser "Dynamic condenser"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.WaterSteamFluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model for the condensing cavity" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_Cooling = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the cooling pipes" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.Radius Rv=1.0 "Radius of the Cavity cross-sectional area";
   parameter Units.SI.Length Lv=15 "Cavity length";
@@ -45,6 +45,7 @@ model DynamicCondenser "Dynamic condenser"
   parameter Boolean diffusion=false "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
 
   Volumes.TwoPhaseCavityOnePipe DynamicCondenser(
+    redeclare package Medium = Medium,
     Vf0=Vf0,
     P0=P0c,
     Ns=Ns,
@@ -56,7 +57,6 @@ model DynamicCondenser "Dynamic condenser"
     R=Rv,
     L=Lv,
     Vertical=true,
-    wsftype=wsftype,
     dynamic_energy_balance=dynamic_energy_balance,
     steady_state=steady_state,
     continuous_flow_reversal=continuous_flow_reversal,
@@ -64,6 +64,7 @@ model DynamicCondenser "Dynamic condenser"
     annotation (                        Placement(transformation(extent={{-100,-100},
             {100,100}},       rotation=0)));
   DynamicOnePhaseFlowPipe pipe_3(
+    redeclare package Medium = Medium_Cooling,
     D=Dc,
     L=L2,
     ntubes=ntubest,
@@ -80,20 +81,20 @@ model DynamicCondenser "Dynamic condenser"
     T0=T0,
     h0=h0)
     annotation (Placement(transformation(extent={{-58,-20},{54,18}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet  C1vap "Vapor inlet" annotation (Placement(
+  Interfaces.Connectors.FluidInlet  C1vap(redeclare package Medium = Medium) "Vapor inlet" annotation (Placement(
         transformation(extent={{-10,90},{10,110}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet  C2ex "Condensed water extraction outlet"
+  Interfaces.Connectors.FluidOutlet  C2ex(redeclare package Medium = Medium) "Condensed water extraction outlet"
     annotation (Placement(transformation(extent={{-10,-110},{10,-90}}, rotation=
            0)));
-  Interfaces.Connectors.FluidInlet  Ce1 "Cooling water inlet" annotation (
+  Interfaces.Connectors.FluidInlet  Ce1(redeclare package Medium = Medium_Cooling) "Cooling water inlet" annotation (
       Placement(transformation(extent={{-110,-11},{-90,9}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet  Ce2 "Cooling water outlet" annotation (
+  Interfaces.Connectors.FluidOutlet  Ce2(redeclare package Medium = Medium_Cooling) "Cooling water outlet" annotation (
       Placement(transformation(extent={{89,-11},{109,9}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal sortieReelle
     annotation (Placement(transformation(extent={{98,-62},{118,-42}}, rotation=
             0)));
 
-  Interfaces.Connectors.FluidInlet  C1 "Extra water inlet" annotation (
+  Interfaces.Connectors.FluidInlet  C1(redeclare package Medium = Medium) "Extra water inlet" annotation (
       Placement(transformation(extent={{-91,65},{-71,85}},  rotation=0),
         iconTransformation(extent={{-91,65},{-71,85}})));
   Thermal.HeatTransfer.HeatExchangerWall Wall_3(
@@ -108,7 +109,7 @@ model DynamicCondenser "Dynamic condenser"
     dynamic_energy_balance=dynamic_energy_balance,
     steady_state=steady_state)
     annotation (Placement(transformation(extent={{-58,-4},{54,40}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet  C2vap "Vapor inlet" annotation (Placement(
+  Interfaces.Connectors.FluidInlet  C2vap(redeclare package Medium = Medium) "Vapor inlet" annotation (Placement(
         transformation(extent={{-49,82},{-29,102}}, rotation=0),
         iconTransformation(extent={{-49,82},{-29,102}})));
 equation
@@ -119,11 +120,8 @@ equation
     C1.h_vol_1 = 1.e5;
     C1.diff_res_1 = 0;
     C1.diff_on_1 = false;
-    C1.ftype = ftype;
-    C1.Xco2 = 0;
-    C1.Xh2o = 0;
-    C1.Xo2 = 0;
-    C1.Xso2 = 0;
+    C1.Xi = Medium.X_default[1:Medium.nXi];
+    C1.SubC = Medium.C_default;
   end if;
 
   if (cardinality(C2vap) == 1) then
@@ -132,11 +130,8 @@ equation
     C2vap.h_vol_1 = 1.e5;
     C2vap.diff_res_1 = 0;
     C2vap.diff_on_1 = false;
-    C2vap.ftype = ftype;
-    C2vap.Xco2 = 0;
-    C2vap.Xh2o = 0;
-    C2vap.Xo2 = 0;
-    C2vap.Xso2 = 0;
+    C2vap.Xi = Medium.X_default[1:Medium.nXi];
+    C2vap.SubC = Medium.C_default;
   end if;
 
   connect(DynamicCondenser.Cl, C2ex)
