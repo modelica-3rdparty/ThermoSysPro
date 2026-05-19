@@ -7,34 +7,22 @@ model TestFixedPowerHeatExchanger
   ThermoSysPro.Fluid.HeatExchangers.FixedPowerHeatExchanger fixedPowerHeatExchanger(
     redeclare package Medium_c = Medium,
     redeclare package Medium_f = Medium,
-    DW=1e5,
-    DPc=1,
-    DPf=1) annotation (Placement(transformation(extent={{-20,44},{0,64}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SourceP sourcePc(
+    DW=1e6)
+           annotation (Placement(transformation(extent={{-20,44},{0,64}}, rotation=0)));
+  ThermoSysPro.Fluid.BoundaryConditions.SourcePQ sourcePQ(
     redeclare package Medium = Medium,
-    T0=340) annotation (Placement(transformation(extent={{-80,44},{-60,64}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SourceP sourcePf(
-    redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-60,24},{-40,44}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SinkP sinkPc(
+    T0=340) annotation (Placement(transformation(extent={{-70,22},{-50,42}}, rotation=0)));
+  ThermoSysPro.Fluid.BoundaryConditions.SourcePQ sourcePQ1(
+    redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-58,44},{-38,64}}, rotation=0)));
+  ThermoSysPro.Fluid.BoundaryConditions.Sink  sinkPc(
     redeclare package Medium = Medium) annotation (Placement(transformation(extent={{40,44},{60,64}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SinkP sinkPf(
+  ThermoSysPro.Fluid.BoundaryConditions.Sink  sinkPf(
     redeclare package Medium = Medium) annotation (Placement(transformation(extent={{20,24},{40,44}}, rotation=0)));
-  ThermoSysPro.Fluid.Volumes.VolumeD volumePc(
-    redeclare package Medium = Medium,
-    V=1,
-    steady_state=false,
-    h0=2.8e5) annotation (Placement(transformation(extent={{10,44},{30,64}}, rotation=0)));
-  ThermoSysPro.Fluid.Volumes.VolumeD volumePf(
-    redeclare package Medium = Medium,
-    V=1,
-    steady_state=false,
-    h0=7e4) annotation (Placement(transformation(extent={{-10,24},{10,44}}, rotation=0)));
 equation
-  connect(sourcePc.C, fixedPowerHeatExchanger.Ec) annotation (Line(points={{-60,54},{-20,54},{-20,48}}, color={0,0,255}));
-  connect(sourcePf.C, fixedPowerHeatExchanger.Ef) annotation (Line(points={{-40,34},{-20,34},{-20,57}}, color={0,0,255}));
-  connect(fixedPowerHeatExchanger.Sc, volumePc.Ce) annotation (Line(points={{0,48},{8,48},{8,54},{10,54}}, color={0,0,255}));
-  connect(volumePc.Cs3, sinkPc.C) annotation (Line(points={{30,54},{40,54}}, color={0,0,255}));
-  connect(fixedPowerHeatExchanger.Sf, volumePf.Ce) annotation (Line(points={{0,57},{6,57},{6,34},{-10,34}}, color={0,0,255}));
-  connect(volumePf.Cs3, sinkPf.C) annotation (Line(points={{10,34},{20,34}}, color={0,0,255}));
+  connect(sourcePQ.C, fixedPowerHeatExchanger.Ec) annotation (Line(points={{-50,32},{-16,32},{-16,48},{-15.8,48}},
+                                                                                                        color={0,0,255}));
+  connect(sourcePQ1.C, fixedPowerHeatExchanger.Ef) annotation (Line(points={{-38,54},{-20,54}}, color={0,0,255}));
+  connect(fixedPowerHeatExchanger.Sc, sinkPf.C) annotation (Line(points={{-4.2,48},{-4.2,34},{20,34}}, color={0,0,0}));
+  connect(fixedPowerHeatExchanger.Sf, sinkPc.C) annotation (Line(points={{-0.2,54.1},{19.9,54.1},{19.9,54},{40,54}}, color={0,0,0}));
   annotation (experiment(StopTime=1000), Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(coordinateSystem(preserveAspectRatio=false)));
 end TestFixedPowerHeatExchanger;

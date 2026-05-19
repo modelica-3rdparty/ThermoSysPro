@@ -1,10 +1,9 @@
 within ThermoSysPro.Fluid.Combustion.CombustionChambers;
 model GTCombustionChamber "Gas turbine combustion chamber"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FlueGasesFluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the water/steam side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_FlueGases = ThermoSysPro.Properties.Media.FlueGases constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the flue gases side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Real kcham=1 "Pressure loss coefficient in the combustion chamber";
   parameter Units.SI.Area Acham=1 "Average cross-sectional area of the combustion chamber";
@@ -28,6 +27,11 @@ protected
   constant Real amCO2 = amC + 2*amO "CO2 molecular mass";
   constant Real amH2O = 2*amH + amO "H2O molecular mass";
   constant Real amSO2 = amS + 2*amO "SO2 molecular mass";
+  parameter Integer iN2=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium_FlueGases.substanceNames, {"N2", "Nitrogen", "nitrogen"}) "Index of nitrogen in the flue gases composition";
+  parameter Integer iO2=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium_FlueGases.substanceNames, {"O2", "Oxygen", "oxygen"}) "Index of oxygen in the flue gases composition";
+  parameter Integer iH2O=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium_FlueGases.substanceNames, {"H2O", "Water", "water"}) "Index of water vapor in the flue gases composition";
+  parameter Integer iCO2=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium_FlueGases.substanceNames, {"CO2", "Carbondioxide", "Carbon dioxide", "carbondioxide"}) "Index of carbon dioxide in the flue gases composition";
+  parameter Integer iSO2=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium_FlueGases.substanceNames, {"SO2", "Sulfurdioxide", "Sulfur dioxide", "sulfurdioxide"}) "Index of sulfur dioxide in the flue gases composition";
   parameter Units.SI.MassFlowRate gamma0=1.e-4
     "Pseudo-diffusion conductance use for continuous flow reversal (active if diffusion=false and continuous_flow_reversal = true)";
 
@@ -84,7 +88,6 @@ public
   Units.SI.Area Achamc(start=1) "Intermediate variable for the computation of the average corss-section aera of the combusion chamber";
   Real XeaO2c(start=0.2) "Intermediate variable for the computation of the O2 mass fraction";
   Units.SI.SpecificEnthalpy h(start=10e5) "Fluid specific enthalpy";
-  FluidType fluids[3] "Fluids mixing in volume";
   Units.SI.Power Ja "Thermal power diffusion from inlet Ca";
   Units.SI.Power Jws "Thermal power diffusion from inlet Cws";
   Units.SI.Power Jfg "Thermal power diffusion from outlet Cfg";
@@ -95,30 +98,31 @@ public
   Real ra "Value of r(Q/gamma) for inlet Ca";
   Real rws "Value of r(Q/gamma) for inlet Cws";
   Real rfg "Value of r(Q/gamma) for outlet Cfg";
-  FluidType ftype_ws "Water/steam fluid type";
-  Integer fluid_ws=Integer(ftype_ws) "Water/steam fluid number";
+  Medium.MassFraction Xws[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Water/steam mass fractions";
+  Medium_FlueGases.MassFraction Xea[Medium_FlueGases.nX](start=Medium_FlueGases.X_default) "Air inlet mass fractions";
+  Medium_FlueGases.MassFraction Xsf[Medium_FlueGases.nX](start=Medium_FlueGases.X_default) "Flue gases outlet mass fractions";
+  Medium.ExtraProperty SubCws[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default) "Water/steam trace substances";
+  Medium_FlueGases.ExtraProperty SubCfg[Medium_FlueGases.nC](quantity=Medium_FlueGases.extraPropertiesNames, start=Medium_FlueGases.C_default) "Flue gases trace substances";
+  Medium_FlueGases.ThermodynamicState state_air_in "Air inlet thermodynamic state";
+  Medium_FlueGases.ThermodynamicState state_fg_out "Flue gases outlet thermodynamic state";
+  Medium_FlueGases.ThermodynamicState state_atom_in "Atomisation compressor inlet state";
 
 public
   ThermoSysPro.Fluid.Interfaces.Connectors.FuelInlet Cfuel "Fuel inlet"
     annotation (Placement(transformation(extent={{-10,-100},{10,-80}}, rotation=
            0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ca "Air inlet"
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ca(redeclare package Medium = Medium_FlueGases) "Air inlet"
     annotation (Placement(transformation(extent={{-100,-10},{-80,10}}, rotation=
            0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cfg "Flue gases outlet"
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cfg(redeclare package Medium = Medium_FlueGases) "Flue gases outlet"
     annotation (Placement(transformation(extent={{80,-10},{100,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cws "Water/steam inlet"
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cws(redeclare package Medium = Medium) "Water/steam inlet"
     annotation (Placement(transformation(extent={{-70,80},{-50,100}}, rotation=
             0)));
 equation
 
-  /* Check that incoming fluids are compatible with fluid in volume */
-  fluids[1] = ftype;
-  fluids[2] = Ca.ftype;
-  fluids[3] = Cfg.ftype;
-
-  assert(ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.isCompatible(fluids),
-    "GenericCombustion1D: fluids mixing in volume are not compatible with each other");
+  assert(Medium_FlueGases.nX > 1, "GTCombustionChamber: Medium_FlueGases must be a gas mixture");
+  assert(iN2 > 0 and iO2 > 0 and iH2O > 0 and iCO2 > 0 and iSO2 > 0, "GTCombustionChamber: Medium_FlueGases.substanceNames must contain nitrogen, oxygen, water, carbon dioxide and sulfur dioxide");
 
   /* Fuel inlet */
   Qfuel = Cfuel.Q;
@@ -131,35 +135,32 @@ equation
   Cpfuel = Cfuel.cp;
 
   /* Water inlet */
-  assert((ftype_ws == FluidType.WaterSteam) or (ftype_ws == FluidType.WaterSteamSimple), "GenericCombustion: the fluid type for the water/steam inlet must be water/steam");
-
   Cws.diff_res_2 = 0;
   Cws.diff_on_2 = diffusion;
 
-  ftype_ws = Cws.ftype;
-
   Qews = Cws.Q;
   Hews = Cws.h;
+  Xws = Cws.Xi;
+  SubCws = Cws.SubC;
 
   /* Air inlet */
   Qea = Ca.Q;
   Pea = Ca.P;
   Hea = Ca.h;
 
-  XeaCO2 = Ca.Xco2;
-  XeaH2O = Ca.Xh2o;
-  XeaO2 = Ca.Xo2;
-  XeaSO2 = Ca.Xso2;
+  Xea[1:Medium_FlueGases.nXi] = Ca.Xi;
+  if Medium_FlueGases.nXi < Medium_FlueGases.nX then
+    Xea[Medium_FlueGases.nX] = 1 - sum(Ca.Xi);
+  end if;
+  XeaCO2 = Xea[iCO2];
+  XeaH2O = Xea[iH2O];
+  XeaO2 = Xea[iO2];
+  XeaSO2 = Xea[iSO2];
 
   /* Flue gases outlet */
   Qsf = Cfg.Q;
   Psf = Cfg.P;
   Hsf = Cfg.h;
-
-  XsfCO2 = Cfg.Xco2;
-  XsfH2O = Cfg.Xh2o;
-  XsfO2 = Cfg.Xo2;
-  XsfSO2 = Cfg.Xso2;
 
   /* Mass balance equation */
   0 = Qea + Qews + Qfuel - Qsf;
@@ -190,8 +191,6 @@ equation
   Cws.h_vol_2 = h;
   Ca.h_vol_2 = h;
   Cfg.h_vol_1 = h;
-
-  Cfg.ftype = ftype;
 
   /* No flow reversal */
   Cfg.h = Cfg.h_vol_1;
@@ -233,11 +232,13 @@ equation
 
   /* Specific enthalpy and entropy at the inlet of the atomisation compressor */
   if air_atomisation then
-     Hecpat  = ThermoSysPro.Properties.FlueGases.FlueGases_h(Pecpat, Tecpat, XeaCO2, XeaH2O, XeaO2c, XeaSO2);
-     Secpat  = ThermoSysPro.Properties.FlueGases.FlueGases_s(Pecpat, Tecpat, XeaCO2, XeaH2O, XeaO2c, XeaSO2);
-     Hiscpat = ThermoSysPro.Properties.FlueGases.FlueGases_h_Ps(Pscpat, Secpat, XeaCO2, XeaH2O, XeaO2c, XeaSO2);
+     Hecpat = Medium_FlueGases.specificEnthalpy_pTX(p=Pecpat, T=Tecpat, X=Xea);
+     state_atom_in = Medium_FlueGases.setState_pTX(p=Pecpat, T=Tecpat, X=Xea);
+     Secpat = Medium_FlueGases.specificEntropy(state_atom_in);
+     Hiscpat = Medium_FlueGases.isentropicEnthalpy(p_downstream=Pscpat, refState=state_atom_in);
   else
      Hecpat =  60000;
+     state_atom_in = Medium_FlueGases.setState_pTX(p=Pecpat, T=Tecpat, X=Xea);
      Secpat = -2000;
      Hiscpat = 60000;
   end if;
@@ -249,17 +250,19 @@ equation
   Hrfg = 2501.569e3*XsfH2O;
 
   /* Air specific enthalpy at the inlet */
-  Hea = ThermoSysPro.Properties.FlueGases.FlueGases_h(Pea, Tea, XeaCO2, XeaH2O, XeaO2c, XeaSO2);
+  Hea = Medium_FlueGases.specificEnthalpy_pTX(p=Pea, T=Tea, X=Xea);
+  state_air_in = Medium_FlueGases.setState_pTX(p=Pea, T=Tea, X=Xea);
 
   /* Flue gases specific enthalpy at the outlet */
-  Hsf = ThermoSysPro.Properties.FlueGases.FlueGases_h(Psf, Tsf, XsfCO2, XsfH2O, XsfO2, XsfSO2);
+  Hsf = Medium_FlueGases.specificEnthalpy_pTX(p=Psf, T=Tsf, X=Xsf);
+  state_fg_out = Medium_FlueGases.setState_pTX(p=Psf, T=Tsf, X=Xsf);
 
   /* Air density at the inlet */
-  rhoea = ThermoSysPro.Properties.FlueGases.FlueGases_rho(Pea, Tea, XeaCO2, XeaH2O, XeaO2c, XeaSO2);
+  rhoea = Medium_FlueGases.density(state_air_in);
   Vea = if (rhoea > 0.001) then 1/rhoea else 1/1.1;
 
   /* Flue gases density at the outlet */
-  rhosf = ThermoSysPro.Properties.FlueGases.FlueGases_rho(Psf, Tsf, XsfCO2, XsfH2O, XsfO2, XsfSO2);
+  rhosf = Medium_FlueGases.density(state_fg_out);
   Vsf = if (rhosf > 0.001) then 1/rhosf else 1/0.1;
 
   0 = if (eta_is > eps_a) then (eta_isc - eta_is) else (eta_isc - eps_a);
@@ -277,6 +280,15 @@ equation
 
   /* SO2 flue gases mass fraction */
   XsfSO2*(Qea + Qews + Qfuel) = (Qea*XeaSO2) + (Qfuel*XSfuel*amSO2/amS);
+
+  Xsf[iN2] = 1 - XsfCO2 - XsfH2O - XsfO2 - XsfSO2;
+  Xsf[iO2] = XsfO2;
+  Xsf[iH2O] = XsfH2O;
+  Xsf[iCO2] = XsfCO2;
+  Xsf[iSO2] = XsfSO2;
+  Cfg.Xi = Xsf[1:Medium_FlueGases.nXi];
+  Cfg.SubC = Ca.SubC;
+  SubCfg = Cfg.SubC;
 
   /* Fuel thermal power */
   Wfuel = Qfuel*LHVfuel;
