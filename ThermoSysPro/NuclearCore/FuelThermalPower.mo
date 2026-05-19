@@ -18,7 +18,7 @@ model FuelThermalPower "Meshed model that describes the dynamic of the conductio
   parameter ThermoSysPro.Units.SI.Density rho=(1-fuel_porosity)*1/(pu_mFraction/rho_puo2+(1-pu_mFraction)/rho_uo2) "Density of MOX" annotation(Dialog(group="Fuel Properties",enable=false));
 
   parameter Integer Rods_per_FA=264 "Number of fuel Rods per Fuel Assembly" annotation(Dialog(group="Geometry"));
-  parameter Integer FA=193 "Radius of the fuel pellet" annotation(Dialog(group="Geometry"));
+  parameter Integer FA=193 "Number of Fuel Assembly" annotation(Dialog(group="Geometry"));
   parameter ThermoSysPro.Units.SI.Radius Rp=0.004095 "Radius of the fuel pellet" annotation(Dialog(group="Geometry"));
   parameter ThermoSysPro.Units.SI.Radius Rclad=0.00418 "Internal radius of the cladding" annotation(Dialog(group="Geometry"));
   parameter Integer Nz=6 "Number of axial zones" annotation(Dialog(group="Geometry"));
