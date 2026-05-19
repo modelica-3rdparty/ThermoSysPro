@@ -26,14 +26,10 @@ public
   Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
 public
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proe
-    annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
-           0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph pros
-    annotation (Placement(transformation(extent={{80,80},{100,100}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ps props
-    annotation (Placement(transformation(extent={{-100,-100},{-80,-80}},
-          rotation=0)));
+  Medium.ThermodynamicState state_e "Fluid thermodynamic state before the compression";
+  Medium.ThermodynamicState state_s "Fluid thermodynamic state after the compression";
+  Medium.ThermodynamicState state_is
+    "Fluid thermodynamic state after the isentropic compression";
 equation
 
   C1.Q = C2.Q;
@@ -61,22 +57,22 @@ equation
   pi = Ps/Pe;
 
   /* Average vapor mass fraction */
-  xm = (proe.x + pros.x)/2.0;
+  xm = (Medium.vapourQuality(state_e) + Medium.vapourQuality(state_s))/2.0;
 
   /* Compression efficiency */
   His - C1.h = max(xm, 0.01)*eta*(C2.h - C1.h);
 
   /* Fluid thermodynamic properties before the compression */
-  proe = ThermoSysPro.Properties.C3H3F5.C3H3F5_Ph(Pe, C1.h);
-  Te = proe.T;
+  state_e = Medium.setState_phX(Pe, C1.h, C1.Xi);
+  Te = Medium.temperature(state_e);
 
   /* Fluid thermodynamic properties after the compression */
-  pros = ThermoSysPro.Properties.C3H3F5.C3H3F5_Ph(Ps, C2.h);
-  Ts = pros.T;
+  state_s = Medium.setState_phX(Ps, C2.h, C2.Xi);
+  Ts = Medium.temperature(state_s);
 
   /* Fluid thermodynamic properties after the identropic compression */
-  props = ThermoSysPro.Properties.C3H3F5.C3H3F5_Ps(Ps, proe.s);
-  His = props.h;
+  state_is = Medium.setState_psX(Ps, Medium.specificEntropy(state_e), C1.Xi);
+  His = Medium.specificEnthalpy(state_is);
 
   annotation (
     Diagram(coordinateSystem(

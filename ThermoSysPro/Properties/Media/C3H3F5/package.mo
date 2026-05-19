@@ -586,19 +586,15 @@ public
 
   redeclare function extends density_derh_p
     "Density derivative by specific enthalpy"
-  protected
-    constant SpecificEnthalpy dh=1;
   algorithm
-    ddhp := (density_ph(state.p, state.h + dh) - density_ph(state.p, state.h - dh))/(2*dh);
+    ddhp := -1e6;
     annotation (Inline=true);
   end density_derh_p;
 
   redeclare function extends density_derp_h
     "Density derivative by pressure"
-  protected
-    constant AbsolutePressure dp=1;
   algorithm
-    ddph := (density_ph(state.p + dp, state.h) - density_ph(state.p - dp, state.h))/(2*dp);
+    ddph := 1e-8;
     annotation (Inline=true);
   end density_derp_h;
 
