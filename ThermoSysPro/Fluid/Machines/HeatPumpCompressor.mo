@@ -1,7 +1,7 @@
 within ThermoSysPro.Fluid.Machines;
 model HeatPumpCompressor "Heat pump compressor "
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+  replaceable package Medium = ThermoSysPro.Properties.Media.C3H3F5 constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium
+    "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Real pi=10.0 "Compression factor (Ps/Pe)";
   parameter Real eta=0.85 "Isentropic efficiency";
@@ -20,12 +20,10 @@ public
   Units.SI.Temperature Te "Inlet temperature";
   Units.SI.Temperature Ts "Outlet temperature";
   Real xm(start=1.0) "Average vapor mass fraction";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
 
-  Interfaces.Connectors.FluidInlet C1 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(transformation(
           extent={{-110,-10},{-90,10}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet C2 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
 public
   ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proe
@@ -38,9 +36,6 @@ public
           rotation=0)));
 equation
 
-  /* Check that the fluid type is C3H3F5 */
-  assert(ftype == FluidType.C3H3F5, "HeatPumpCompressor: the fluid type must be C3H3F5");
-
   C1.Q = C2.Q;
 
   C1.h_vol_1 = C2.h_vol_1;
@@ -52,18 +47,12 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
   C1.diff_res_2 = C2.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
-  C1.ftype = C2.ftype;
-
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
+  C1.SubC = C2.SubC;
+  C1.Xi = C2.Xi;
 
   Q = C1.Q;
   Pe = C1.P;
   Ps = C2.P;
-
-  ftype = C1.ftype;
 
   /* Mechnical power delivered to the compressor */
   W = Q*(C2.h - C1.h) / (1 - W_fric/100);
@@ -78,15 +67,15 @@ equation
   His - C1.h = max(xm, 0.01)*eta*(C2.h - C1.h);
 
   /* Fluid thermodynamic properties before the compression */
-  proe = ThermoSysPro.Properties.Fluid.Ph(Pe, C1.h, 0, fluid);
+  proe = ThermoSysPro.Properties.C3H3F5.C3H3F5_Ph(Pe, C1.h);
   Te = proe.T;
 
   /* Fluid thermodynamic properties after the compression */
-  pros = ThermoSysPro.Properties.Fluid.Ph(Ps, C2.h, 0, fluid);
+  pros = ThermoSysPro.Properties.C3H3F5.C3H3F5_Ph(Ps, C2.h);
   Ts = pros.T;
 
   /* Fluid thermodynamic properties after the identropic compression */
-  props = ThermoSysPro.Properties.Fluid.Ps(Ps, proe.s, 0, fluid);
+  props = ThermoSysPro.Properties.C3H3F5.C3H3F5_Ps(Ps, proe.s);
   His = props.h;
 
   annotation (

@@ -9,6 +9,7 @@ TestCentrifugalPump_Traces
 TestCombustionTurbine
 TestCombustionTurbine_Traces
 TestGasTurbine
+TestHeatPumpCompressor
 TestInternalCombustionEngine
 TestCHPEngineBarkantineSystem
 TestCompressor

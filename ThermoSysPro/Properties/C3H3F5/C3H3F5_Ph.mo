@@ -119,6 +119,12 @@ algorithm
           pro.s := ssatV;
       end if;
   end if;
+  pro.u := h - P/pro.d;
+  pro.cp := 1000;
+  pro.ddhp := 0;
+  pro.ddph := 0;
+  pro.duph := 0;
+  pro.duhp := 1;
   annotation (
     smoothOrder = 2,
     Documentation(info="<html>
