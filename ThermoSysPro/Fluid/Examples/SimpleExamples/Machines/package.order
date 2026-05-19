@@ -8,6 +8,8 @@ TestCentrifugalPump_FlueGases
 TestCentrifugalPump_Traces
 TestCombustionTurbine
 TestCombustionTurbine_Traces
+TestInternalCombustionEngine
+TestCHPEngineBarkantineSystem
 TestCompressor
 TestCompressor_Traces
 TestStaticFan

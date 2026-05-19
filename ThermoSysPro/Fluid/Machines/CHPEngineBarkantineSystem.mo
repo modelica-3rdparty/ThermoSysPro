@@ -1,5 +1,8 @@
 within ThermoSysPro.Fluid.Machines;
 model CHPEngineBarkantineSystem
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the water/steam side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_FlueGases = ThermoSysPro.Properties.Media.FlueGases constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the flue gases side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+
   parameter Units.SI.Temperature Tair=300 "Inlet air temperature";
   parameter Real RechFumEff=0.73 "Flue gases heater efficiency";
   parameter Real RechWaterEff=0.9 "Water heater efficiency";
@@ -27,11 +30,14 @@ model CHPEngineBarkantineSystem
     Vol=1)  annotation (Placement(transformation(extent={{62,-26},{38,-2}},
           rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourcePQ WaterSource(
+    redeclare package Medium = Medium,
     h0=293e3,
     Q0=11.8,
     P0=300000) annotation (Placement(transformation(extent={{62,-46},{40,-24}},
           rotation=0)));
   ThermoSysPro.Fluid.Machines.InternalCombustionEngine Engine(
+    redeclare package Medium = Medium,
+    redeclare package Medium_FlueGases = Medium_FlueGases,
     DPe=1,
     MMg=20,
     Kd=1.33,
@@ -50,25 +56,37 @@ model CHPEngineBarkantineSystem
         rotation=90)));
   ThermoSysPro.Fluid.HeatExchangers.StaticExchangerDTorWorEff
     ExchangerWaterWater(
+    redeclare package Medium_c = Medium,
+    redeclare package Medium_f = Medium,
     EffEch=RechWaterEff, exchanger_type=3,
     Kf=50)     annotation (Placement(transformation(
         origin={0,-66},
         extent={{14,14},{-14,-14}},
         rotation=270)));
-  ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe PDC1(L=0.0001)
+  ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe PDC1(
+    redeclare package Medium = Medium,
+    L=0.0001)
     annotation (Placement(transformation(
         origin={-60,-10},
         extent={{10,-10},{-10,10}},
         rotation=90)));
-  ThermoSysPro.Fluid.BoundaryConditions.Sink WaterSteamSink annotation (
+  ThermoSysPro.Fluid.BoundaryConditions.Sink WaterSteamSink(
+      redeclare package Medium = Medium,
+      option_temperature=true,
+      T0=320) annotation (
       Placement(transformation(extent={{-22,-72},{-44,-48}}, rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe PDC2(L=0.0001)
+  ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe PDC2(
+    redeclare package Medium = Medium,
+    L=0.0001)
     annotation (Placement(transformation(
         origin={-80,-10},
         extent={{10,-10},{-10,10}},
         rotation=270)));
   ThermoSysPro.Fluid.HeatExchangers.StaticExchangerDTorWorEff
-    ExchangerWaterFlueGases(                             EffEch=RechFumEff,
+    ExchangerWaterFlueGases(
+    redeclare package Medium_c = Medium_FlueGases,
+    redeclare package Medium_f = Medium,
+    EffEch=RechFumEff,
     exchanger_type=3,
     Kf=50,
     DTfroid=283.15,
@@ -77,24 +95,28 @@ model CHPEngineBarkantineSystem
         origin={0,68},
         extent={{-14,-14},{14,14}},
         rotation=90)));
-  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss silencieux(K=20)
+  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss silencieux(
+    redeclare package Medium = Medium_FlueGases,
+    K=20)
            annotation (Placement(transformation(
         origin={-39,16},
         extent={{10,-9},{-10,9}},
         rotation=270)));
-  Interfaces.Connectors.FluidOutlet outletWaterSteam annotation (Placement(
+  Interfaces.Connectors.FluidOutlet outletWaterSteam(redeclare package Medium =
+        Medium) annotation (Placement(
         transformation(extent={{180,80},{220,120}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet inletWaterSteam annotation (Placement(
+  Interfaces.Connectors.FluidInlet inletWaterSteam(redeclare package Medium =
+        Medium) annotation (Placement(
         transformation(extent={{-220,80},{-180,120}}, rotation=0)));
-  BoundaryConditions.Sink FlueGasesSink annotation (Placement(transformation(
-          extent={{-56,86},{-80,110}}, rotation=0)));
+  BoundaryConditions.Sink FlueGasesSink(
+    redeclare package Medium = Medium_FlueGases,
+    option_temperature=true,
+    T0=400) annotation (Placement(transformation(extent={{-56,86},{-80,110}},
+          rotation=0)));
   BoundaryConditions.SourcePQ AirSource(
-    Xco2=0,
-    Xh2o=0.005,
-    Xo2=0.23,
-    Xso2=0,
+    redeclare package Medium = Medium_FlueGases,
+    X0={0.765,0.23,0.005,0,0},
     h0=40000,
-    ftype=ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType.FlueGases,
     option_temperature=true,
     P0=160000)
     annotation (Placement(transformation(extent={{64,2},{40,26}}, rotation=0)));
