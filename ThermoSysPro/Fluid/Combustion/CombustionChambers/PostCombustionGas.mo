@@ -2,6 +2,7 @@
 model PostCombustionGas "Post-combustion"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the water/steam properties" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   replaceable package Medium_FlueGases = ThermoSysPro.Properties.Media.FlueGases constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the flue gases side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Real XClfuel=0 "Chloride mass fraction in fuel";
@@ -148,6 +149,7 @@ public
   Medium_FlueGases.MassFraction Xea[Medium_FlueGases.nX](start=Medium_FlueGases.X_default) "Air inlet mass fractions";
   Medium_FlueGases.MassFraction Xef[Medium_FlueGases.nX](start=Medium_FlueGases.X_default) "Flue gases inlet mass fractions";
   Medium_FlueGases.MassFraction Xsf[Medium_FlueGases.nX](start=Medium_FlueGases.X_default) "Flue gases outlet mass fractions";
+  Medium.ThermodynamicState state_fuel_water "Water in fuel thermodynamic state";
 
 public
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ca(redeclare package Medium = Medium_FlueGases) "Air inlet"
@@ -160,9 +162,6 @@ public
   ThermoSysPro.Fluid.Interfaces.Connectors.FuelInlet Cfuel "Fuel inlet"
     annotation (Placement(transformation(extent={{-40,-100},{-20,-80}},
           rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_pT pro1
-    annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
-           0)));
 equation
 
   assert(Medium_FlueGases.nX > 1, "PostCombustionGas: Medium_FlueGases must be a gas mixture");
@@ -295,8 +294,11 @@ equation
   // - -
 
   /* Specific enthalpy of the water in fuel */
-  pro1 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Pea, Tec, mode);
-  Hwfuel = pro1.h;
+  state_fuel_water = Medium.setState_pTX(
+    p=Pea,
+    T=Tec,
+    region=mode);
+  Hwfuel = Medium.specificEnthalpy(state_fuel_water);
 
   /* Fuel specific enthalpy */
   Hfuel = Cpfuel*(Tec - 273.16);

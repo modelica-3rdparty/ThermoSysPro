@@ -274,6 +274,11 @@ public
   Medium_FlueGases.MassFraction Xsf[Medium_FlueGases.nX](start=Medium_FlueGases.X_default) "Flue gases outlet mass fractions";
   Medium.ExtraProperty SubCws[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default) "Water/steam trace substances";
   Medium_FlueGases.ExtraProperty SubCfg[Medium_FlueGases.nC](quantity=Medium_FlueGases.extraPropertiesNames, start=Medium_FlueGases.C_default) "Flue gases trace substances";
+  Medium.ThermodynamicState state_biomass_water "Water in biomass thermodynamic state";
+  Medium.ThermodynamicState state_biomass_water_sat_v "Saturated vapor state of water in biomass";
+  Medium.ThermodynamicState state_biomass_water_sat_l "Saturated liquid state of water in biomass";
+  Medium.ThermodynamicState state_dried_water "Water vapor state after drying";
+  Medium.ThermodynamicState state_water_seal_vapor "Water seal vapor state";
 
 public
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ca2(redeclare package Medium = Medium_FlueGases) annotation (Placement(
@@ -283,21 +288,6 @@ public
             0)));
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet port_eau_refroid(redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{70,20},{90,40}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_pT pro1
-    annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
-           0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_pT pro2
-    annotation (Placement(transformation(extent={{-100,60},{-80,80}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_pT pro3
-    annotation (Placement(transformation(extent={{-100,40},{-80,60}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_pT pro4
-    annotation (Placement(transformation(extent={{-100,20},{-80,40}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_pT pro5
-    annotation (Placement(transformation(extent={{-60,80},{-40,100}}, rotation=
-            0)));
 public
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ca1(redeclare package Medium = Medium_FlueGases) annotation (Placement(
         transformation(extent={{-10,-100},{10,-80}}, rotation=0)));
@@ -439,21 +429,33 @@ equation
   end if;
 
   /* Specific enthalpy of the water in the biomass */
-  pro1 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Peap, Teom, mode);
-  Heauom = pro1.h;
+  state_biomass_water = Medium.setState_pTX(
+    p=Peap,
+    T=Teom,
+    region=mode);
+  Heauom = Medium.specificEnthalpy(state_biomass_water);
 
   /* Water phase transition energy at Teom */
   Psateom = ThermoSysPro.Properties.WaterSteam.BaseIF97.Basic.psat(Teom);
-  pro2 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Psateom, Teom, 2);
-  Hvteom = pro2.h;
-  pro3 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Psateom, Teom, 1);
-  Hlteom = pro3.h;
+  state_biomass_water_sat_v = Medium.setState_pTX(
+    p=Psateom,
+    T=Teom,
+    region=2);
+  Hvteom = Medium.specificEnthalpy(state_biomass_water_sat_v);
+  state_biomass_water_sat_l = Medium.setState_pTX(
+    p=Psateom,
+    T=Teom,
+    region=1);
+  Hlteom = Medium.specificEnthalpy(state_biomass_water_sat_l);
 
   Hvapteom = Hvteom - Hlteom;
 
   /* Specific enthalpy of the water in the biomass */
-  pro4 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Psf, T1sfm, 0);
-  Hs1vom = pro4.h;
+  state_dried_water = Medium.setState_pTX(
+    p=Psf,
+    T=T1sfm,
+    region=0);
+  Hs1vom = Medium.specificEnthalpy(state_dried_water);
 
   /* Specific enthalpy of the biomass at Teom */
   Heom = Cpom*(Teom - 273.15);
@@ -663,9 +665,12 @@ end if;
     P4m = Q4eom*CpMACHs4*((T3o - 273.15) - (T4o - 273.15));
     P4h = Q4eom*X4H2O*Cp4liq*((T4o - 273.15) - (T4er - 273.15));
     Q4v = rendje*(P4m - P4h)/(Cp4liq*(373.15 - (T4er - 273.15)) + Hvapo);
-    pro5 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Peap, 373.15, 2);
-    H4 = pro5.h;
-    P4v = Q4v*pro5.h;
+    state_water_seal_vapor = Medium.setState_pTX(
+      p=Peap,
+      T=373.15,
+      region=2);
+    H4 = Medium.specificEnthalpy(state_water_seal_vapor);
+    P4v = Q4v*Medium.specificEnthalpy(state_water_seal_vapor);
   else
     T4o = 273.15;
     TsMACH = T3o;
@@ -675,8 +680,11 @@ end if;
     P4m = 0;
     P4h = 0;
     Q4v = 0;
-    pro5 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Peap, 373.15, 2);
-    H4 = pro5.h;
+    state_water_seal_vapor = Medium.setState_pTX(
+      p=Peap,
+      T=373.15,
+      region=2);
+    H4 = Medium.specificEnthalpy(state_water_seal_vapor);
     P4v = 0;
   end if;
 
