@@ -1,15 +1,22 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.CombustionChamber;
 model TestGTCombustionChamber
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
+  replaceable package Medium_FlueGases = ThermoSysPro.Properties.Media.FlueGases;
 
-  ThermoSysPro.Fluid.BoundaryConditions.Sink Puits_Fumees2
+  ThermoSysPro.Fluid.BoundaryConditions.Sink Puits_Fumees2(
+    redeclare package Medium = Medium_FlueGases,
+    T0=1200,
+    option_temperature=true)
     annotation (Placement(transformation(
         origin={149,-2},
         extent={{23,-24},{-23,24}},
         rotation=180)));
-  ThermoSysPro.Fluid.Combustion.CombustionChambers.GTCombustionChamber GTCombustionChamber2(Cfg(P(
-          fixed=true, start=14.1e5)), kcham(fixed=false, start=1)) annotation (
+  ThermoSysPro.Fluid.Combustion.CombustionChambers.GTCombustionChamber GTCombustionChamber2(
+    redeclare package Medium = Medium,
+    redeclare package Medium_FlueGases = Medium_FlueGases) annotation (
       Placement(transformation(extent={{-67,-68},{67,64}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourcePQ sourcePQ2(
+    redeclare package Medium = Medium,
     Q0=0,
     P0=15e5,
     h0=300e3)
@@ -29,15 +36,12 @@ model TestGTCombustionChamber
     LHV=47500e3) annotation (Placement(transformation(extent={{-107,-93},{-71,-57}},
           rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourcePQ Source_Fumees2(
-    Xso2=0,
-    Xco2=0.0,
-    Xo2=0.23,
-    Xh2o=0.01,
+    redeclare package Medium = Medium_FlueGases,
     P0=15e5,
     Q0=415,
     T0=680,
     option_temperature=true,
-    ftype=ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType.FlueGases)
+    X0={0.76,0.23,0.01,0,0})
     annotation (Placement(transformation(extent={{-174,-26},{-128,22}},
           rotation=0)));
 equation

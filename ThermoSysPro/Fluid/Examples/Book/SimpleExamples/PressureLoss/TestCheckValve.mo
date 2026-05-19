@@ -1,10 +1,13 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.PressureLoss;
 model TestCheckValve
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
-  ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP1
+  ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP1(
+    redeclare package Medium = Medium)
                                      annotation (Placement(transformation(
           extent={{-40,-10},{-20,10}},  rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkP puitsP1(
+                                   redeclare package Medium = Medium,
                                    P0=6e5) annotation (Placement(transformation(
           extent={{40,-10},{60,10}},  rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Pulse pulse(
@@ -13,7 +16,8 @@ model TestCheckValve
     period=100,
     offset=3e5) annotation (Placement(transformation(extent={{-80,-10},{-60,10}},
                    rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.CheckValve checkValve3
+  ThermoSysPro.Fluid.PressureLosses.CheckValve checkValve3(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{0,-10},{20,10}},   rotation=0)));
 equation
   connect(sourceP1.C, checkValve3.C1)

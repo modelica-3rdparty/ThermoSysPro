@@ -1,12 +1,14 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.Volume;
 model TestPressurizer
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
-  parameter Units.SI.Power Wch(fixed=false) = 0.29e6
+  parameter Units.SI.Power Wch(fixed=true) = 0.29e6
     "Power released by the electrical heaters";
-  parameter Real OUVfeedwaterValve( fixed=false)=0.01
+  parameter Real OUVfeedwaterValve( fixed=true)=0.01
     "Position of the feedwater valve";
 
   ThermoSysPro.Fluid.PressureLosses.ControlValve FeedwaterValve_Spray(
+    redeclare package Medium = Medium,
     Cv(start=100),
     C1(
       P(start=160e5),
@@ -17,11 +19,13 @@ model TestPressurizer
     Cvmax=5000) annotation (Placement(transformation(extent={{-110,130},{-90,
             150}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve SteamValve(
+    redeclare package Medium = Medium,
     Cv(start=25000),
     Cvmax(fixed=true) = 5000,
     Pm(start=15500000))
     annotation (Placement(transformation(extent={{58,130},{78,150}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe lumpedStraightPipe(
+    redeclare package Medium = Medium,
     L=1,
     D=1,
     z1=1,
@@ -37,23 +41,28 @@ model TestPressurizer
           true) = 0.5) annotation (Placement(transformation(extent={{0,156},{20,
             176}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP(
+    redeclare package Medium = Medium,
     option_temperature=false,
     h0=1270e3,
     P0=16000000)
            annotation (Placement(transformation(extent={{-168,124},{-148,144}},
           rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SinkQ sinkQ(Q0=0, h0=3e6)
+  ThermoSysPro.Fluid.BoundaryConditions.SinkQ sinkQ(
+    redeclare package Medium = Medium,
+    Q0=0,
+    h0=3e6)
     annotation (Placement(transformation(extent={{106,124},{126,144}}, rotation=
            0)));
   ThermoSysPro.Fluid.Volumes.Pressurizer     pressurizer(
+    redeclare package Medium = Medium,
     Zm=10.15,
     Klv=0.5e6,
     cpp=600,
     hl(start=1629887.98290107),
     hv(start=2596216.59571565),
     Zl(start=5.5900717167325),
-    Yw0=60,
-    steady_state=true,
+    Yw0=32.92,
+    steady_state=false,
     V=61.12,
     Rp=1.27,
     Ae=96.23,
@@ -64,12 +73,15 @@ model TestPressurizer
     Ccond=0.02,
     Cevap=0.05,
     Yw(start=32.92),
-    y(start=0.3292, fixed=true),
+    y(start=0.3292),
     P0=15500000,
-    P(start=15500000, fixed=true),
+    P(start=15500000),
     Tp(start=617.94155291055)) annotation (Placement(transformation(extent={{-92,
             -12},{32,118}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SinkQ sinkQ1(            Q0=0, h0=1600000)
+  ThermoSysPro.Fluid.BoundaryConditions.SinkQ sinkQ1(
+    redeclare package Medium = Medium,
+    Q0=0,
+    h0=1600000)
            annotation (Placement(transformation(extent={{-30,-76},{-10,-56}},
           rotation=0)));
   ThermoSysPro.Thermal.BoundaryConditions.HeatSource SourceC1(

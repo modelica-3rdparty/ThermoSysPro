@@ -1,13 +1,17 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.PressureLoss;
 model TestPipePressureLoss
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
-  ThermoSysPro.Fluid.BoundaryConditions.SourceP SourceP1
+  ThermoSysPro.Fluid.BoundaryConditions.SourceP SourceP1(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{-85,-10},{-65,10}}, rotation=
             0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SinkP PuitsP1
+  ThermoSysPro.Fluid.BoundaryConditions.SinkP PuitsP1(
+    redeclare package Medium = Medium)
                                           annotation (Placement(transformation(
           extent={{64,-10},{84,10}},rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.PipePressureLoss pipePressureLoss
+  ThermoSysPro.Fluid.PressureLosses.PipePressureLoss pipePressureLoss(
+    redeclare package Medium = Medium)
                                           annotation (Placement(transformation(
           extent={{-40,-53},{38,53}},
                                     rotation=0)));
