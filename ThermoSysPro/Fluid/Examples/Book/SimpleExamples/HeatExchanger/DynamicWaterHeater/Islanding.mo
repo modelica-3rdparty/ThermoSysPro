@@ -1,17 +1,21 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.HeatExchanger.DynamicWaterHeater;
 model Islanding
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
   ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP(
+    redeclare package Medium = Medium,
     option_temperature=false,
     P0=22.733e5,
     h0=2650.6e3)
             annotation (Placement(transformation(extent={{-192,110},{-150,150}},
           rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkP Puit_condenseur1(
+      redeclare package Medium = Medium,
       option_temperature=false, P0(fixed=true) = 10e5)
              annotation (Placement(transformation(extent={{124,-202},{160,-162}},
           rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve ControlValve_eau(
+    redeclare package Medium = Medium,
     Q(fixed=false, start=56),
     Cvmax(fixed=false) = 354.534,
     mode_caract=0,
@@ -21,6 +25,8 @@ model Islanding
             {108,-166}}, rotation=0)));
 
   ThermoSysPro.Fluid.HeatExchangers.DynamicWaterHeater WaterHeating(
+    redeclare package Medium = Medium,
+    redeclare package Medium_Cooling = Medium,
     Dc=0.016,
     Lc=2.56,
     PasL=0.027,
@@ -129,15 +135,22 @@ model Islanding
     annotation (Placement(transformation(extent={{-58,-90},{162,96}}, rotation=
             0)));
 
-  ThermoSysPro.Fluid.BoundaryConditions.Sink Puit_condenseur2(h0=940.000e3)
+  ThermoSysPro.Fluid.BoundaryConditions.Sink Puit_condenseur2(
+    redeclare package Medium = Medium,
+    h0=940.000e3)
              annotation (Placement(transformation(extent={{-150,22},{-192,66}},
           rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLossWaterIn(Q(fixed=false, start=650), K=35)
+    singularPressureLossWaterIn(
+    redeclare package Medium = Medium,
+    Q(fixed=false, start=650),
+    K=35)
                          annotation (Placement(transformation(extent={{-99,-48},
             {-79,-28}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLossWaterOut(Q(fixed=false, start=650), K=30,
+    singularPressureLossWaterOut(
+    redeclare package Medium = Medium,
+    Q(fixed=false, start=650), K=30,
     C2(h_vol_1(start=927700), h(start=927700)))
                          annotation (Placement(transformation(extent={{-80,34},
             {-100,54}}, rotation=0)));
@@ -151,13 +164,16 @@ model Islanding
                    annotation (Placement(transformation(extent={{-196,-88},{
             -176,-68}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP1(
+    redeclare package Medium = Medium,
     P0=71.29e5,
     h0=772.09e3,
     T0=454.46,
     option_temperature=true)
     annotation (Placement(transformation(extent={{-192,-60},{-150,-16}},
           rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.RefQ refQ(Q0=53)
+  ThermoSysPro.Fluid.BoundaryConditions.RefQ refQ(
+    redeclare package Medium = Medium,
+    Q0=53)
     annotation (Placement(transformation(extent={{-115,34},{-135,54}}, rotation=
            0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Tables.Table1DTemps Debit_eauA(
@@ -176,11 +192,15 @@ model Islanding
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Constante Level(k=0.43)
                           annotation (Placement(transformation(extent={{191,
             -140},{169,-118}}, rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.IdealCheckValve checkValve(C2(h_vol_1(start=2600e3), h(start=2600e3)))
+  ThermoSysPro.Fluid.PressureLosses.IdealCheckValve checkValve(
+      redeclare package Medium = Medium,
+      C2(h_vol_1(start=2600e3), h(start=2600e3)))
     annotation (Placement(transformation(extent={{-100,122},{-84,138}},
           rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLossPurge(Q(fixed=false, start=56), K=1e-3,
+    singularPressureLossPurge(
+    redeclare package Medium = Medium,
+    Q(fixed=false, start=56), K=1e-3,
     T(fixed=true, start=461.56),
     Pm(start=2220000))   annotation (Placement(transformation(
         origin={54,-138},
@@ -191,6 +211,7 @@ model Islanding
                    annotation (Placement(transformation(extent={{162,-178},{182,
             -158}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe PressureLoss_Steam(
+    redeclare package Medium = Medium,
     Q(fixed=false, start=650),
     lambda(fixed=false) = 0.03,
     L=48.72,
