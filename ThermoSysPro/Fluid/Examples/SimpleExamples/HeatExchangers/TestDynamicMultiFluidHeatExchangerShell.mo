@@ -8,6 +8,8 @@ model TestDynamicMultiFluidHeatExchangerShell
   ThermoSysPro.Fluid.HeatExchangers.DynamicMultiFluidHeatExchangerShell exchanger(
     redeclare package Medium_shell = Medium_shell,
     redeclare package Medium_pipe = Medium_pipe,
+    Dint=0.016,
+    Dext=0.019,
     dynamic_energy_balance=false,
     dynamic_mass_balance=false,
     inertia=false) annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
@@ -19,6 +21,7 @@ equation
   connect(sourcePipe.C, exchanger.Cws1) annotation (Line(points={{-50,0},{-10,0}}, color={0,0,255}));
   connect(exchanger.Cws2, sinkPipe.C) annotation (Line(points={{10,0},{50,0}}, color={0,0,255}));
   connect(sourceShell.C, exchanger.Cfg1) annotation (Line(points={{10,60},{20,60},{20,5},{0,5}}, color={0,0,255}));
-  connect(exchanger.Cfg2, sinkShell.C) annotation (Line(points={{0,-5},{0,-50}}, color={0,0,255}));
+  connect(exchanger.Cfg2, sinkShell.C) annotation (Line(points={{0,-5},{0,-32},{0,-60},{-10,-60}},
+                                                                                 color={0,0,255}));
   annotation (experiment(StopTime=1), Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(coordinateSystem(preserveAspectRatio=false)));
 end TestDynamicMultiFluidHeatExchangerShell;

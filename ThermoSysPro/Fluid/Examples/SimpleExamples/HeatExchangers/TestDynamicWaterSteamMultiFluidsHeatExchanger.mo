@@ -17,7 +17,8 @@ model TestDynamicWaterSteamMultiFluidsHeatExchanger
   ThermoSysPro.Fluid.BoundaryConditions.SinkP sink2(redeclare package Medium = Medium_2, P0=100000, h0=1.2e6, option_temperature=false) annotation (Placement(transformation(extent={{50,-10},{70,10}})));
 equation
   connect(source1.C, exchanger.Cfg1) annotation (Line(points={{10,60},{20,60},{20,5},{0,5}}, color={0,0,255}));
-  connect(exchanger.Cfg2, sink1.C) annotation (Line(points={{0,-5},{0,-50}}, color={0,0,255}));
+  connect(exchanger.Cfg2, sink1.C) annotation (Line(points={{0,-5},{0,-32},{0,-60},{-10,-60}},
+                                                                             color={0,0,255}));
   connect(source2.C, exchanger.Cws1) annotation (Line(points={{-50,0},{-10,0}}, color={0,0,255}));
   connect(exchanger.Cws2, sink2.C) annotation (Line(points={{10,0},{50,0}}, color={0,0,255}));
   annotation (experiment(StopTime=1), Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(coordinateSystem(preserveAspectRatio=false)));
