@@ -46,7 +46,6 @@ model TestSteamGenerator_1SG
     D_Riser=0.04,
     L_Dome=6.3,
     R_Dome=2.4,
-    D_DownComer=1.5,
     V_MixARE=22.5,
     DomeGV(
       zl(fixed=true, start=1.0),

@@ -26,10 +26,16 @@ model SteamGenerator_1SG "Individual steam generator"
   parameter ThermoSysPro.Units.SI.Length R_Dome=sqrt(V_Dome/(L_Dome*Modelica.Constants.pi)) "Radius of the dome" annotation (Dialog(tab="General", group="Dome"));
 
   parameter ThermoSysPro.Units.SI.Volume V_DownComer=8.0 "Volume of the downcomer" annotation (Dialog(tab="General", group="DownComer"));
-  parameter ThermoSysPro.Units.SI.Length D_DownComer=fromVtoDeq(
-      V_DownComer,
-      Leq/2,
-      1) "Equivalent diameter of the downcomer (considered one pipe and Leq/2)" annotation (Dialog(tab="General", group="DownComer"));
+  parameter ThermoSysPro.Units.SI.Diameter Dint_DownComer=4.0 "Inner diameter of the annular downcomer" annotation (Dialog(tab="General", group="DownComer"));
+  final parameter AnnularHydraulicEquivalence downComerHydraulicEquivalence=
+      fromAnnularVtoHydraulicEquivalence(
+        V_DownComer,
+        Leq/2,
+        Dint_DownComer);
+  final parameter ThermoSysPro.Units.SI.Diameter Dh_DownComer=
+      downComerHydraulicEquivalence.Dh "Hydraulic diameter of the annular downcomer";
+  final parameter Real neq_DownComer=downComerHydraulicEquivalence.neq
+      "Equivalent number of circular pipes preserving the downcomer flow area";
 
   parameter ThermoSysPro.Units.SI.Volume V_MixARE=12.0 "Volume where feedwater mixes with recirculation" annotation (Dialog(tab="General", group="MixARE"));
 
@@ -111,8 +117,8 @@ model SteamGenerator_1SG "Individual steam generator"
     p_rho=0,
     mode=1,
     L=Leq/2,
-    D=D_DownComer,
-    ntubes=1,
+    D=Dh_DownComer,
+    ntubes=neq_DownComer,
     z1=Leq/2,
     lambda=0.09) "DownComerGV" annotation (Placement(transformation(
         origin={94,-50},
@@ -183,10 +189,35 @@ model SteamGenerator_1SG "Individual steam generator"
   algorithm
     D := sqrt((4*V)/(L*Modelica.Constants.pi*ntubes));
   end fromVtoDeq;
+
+  record AnnularHydraulicEquivalence
+    ThermoSysPro.Units.SI.Diameter Dh;
+    Real neq;
+  end AnnularHydraulicEquivalence;
+
+  function fromAnnularVtoHydraulicEquivalence
+    input ThermoSysPro.Units.SI.Volume V;
+    input ThermoSysPro.Units.SI.Length L;
+    input ThermoSysPro.Units.SI.Diameter Dint;
+    output AnnularHydraulicEquivalence hydraulicEquivalence;
+  protected
+    ThermoSysPro.Units.SI.Area A;
+    ThermoSysPro.Units.SI.Diameter Dext;
+  algorithm
+    assert(V > 0, "The annular volume must be strictly positive");
+    assert(L > 0, "The annular length must be strictly positive");
+    assert(Dint >= 0, "The annular inner diameter must be positive or zero");
+    A := V/L;
+    Dext := sqrt(Dint^2 + 4*A/Modelica.Constants.pi);
+    hydraulicEquivalence.Dh := Dext - Dint;
+    hydraulicEquivalence.neq :=
+      A/(Modelica.Constants.pi*hydraulicEquivalence.Dh^2/4);
+  end fromAnnularVtoHydraulicEquivalence;
 equation
   CirculationRate = DownComerGV.Q/fluidOutletI.Q;
   W_GV_primary = (fluidInlet1.h - fluidOutletI1.h)*fluidInlet1.Q;
   W_GV_secondary = -(fluidInlet.h - fluidOutletI.h)*fluidInlet.Q;
+
   /* Unconnected connectors */
   if (cardinality(fluidOutletI_purge) == 1) then
     fluidOutletI_purge.Q = 0;
