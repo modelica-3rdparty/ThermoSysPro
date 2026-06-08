@@ -2,8 +2,11 @@ within ThermoSysPro.Fluid.Examples.SimpleExamples.LoopBreakers;
 model TestLoopBreakerP_Traces
   extends ThermoSysPro.UsersGuide.Icons.Example;
 
-  replaceable package Medium = Properties.Media.WaterSteam (extraPropertiesNames={"Trace"}, C_nominal={0.1}, C_default={0.2});
-  ThermoSysPro.Fluid.BoundaryConditions.SourcePQ sourcePQ(redeclare replaceable package Medium = Medium) annotation (Placement(transformation(extent={{-100,0},{-80,20}}, rotation=0)));
+  replaceable package Medium = Properties.Media.WaterSteam (
+      extraPropertiesNames={"Trace"},
+      C_nominal={0.1},
+      C_default={0.2});
+  ThermoSysPro.Fluid.BoundaryConditions.SourcePQ sourcePQ(redeclare replaceable package Medium = Medium, SubC0={3}) annotation (Placement(transformation(extent={{-100,0},{-80,20}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss1(redeclare replaceable package Medium = Medium) annotation (Placement(transformation(extent={{-20,20},{0,40}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss singularPressureLoss2(redeclare replaceable package Medium = Medium) annotation (Placement(transformation(extent={{-20,-20},{0,0}}, rotation=0)));
   ThermoSysPro.Fluid.Junctions.Splitter2 splitter2_1(redeclare replaceable package Medium = Medium) annotation (Placement(transformation(extent={{-56,0},{-36,20}}, rotation=0)));
