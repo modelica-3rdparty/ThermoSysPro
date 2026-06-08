@@ -1,10 +1,7 @@
 within ThermoSysPro.Fluid.BoundaryConditions;
 model PlugA "Plug"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-
+    replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false
@@ -16,7 +13,7 @@ public
   Units.SI.SpecificEnthalpy h(start=100000) "Fluid specific enthalpy";
 
 
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
 equation
 
@@ -26,8 +23,6 @@ equation
   C.h_vol_1 = h;
   C.diff_res_1 = 0;
   C.diff_on_1 = diffusion;
-
-  ftype = C.ftype;
 
   /* Flow reversal */
   if continuous_flow_reversal then

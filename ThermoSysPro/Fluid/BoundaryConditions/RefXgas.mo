@@ -2,7 +2,7 @@ within ThermoSysPro.Fluid.BoundaryConditions;
 model RefXgas "Fixed gas composition"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Medium.ExtraProperty X0[Medium.nXi] = Medium.X_default[1:Medium.nXi] "Source mass fraction" annotation (Dialog(
       tab="Fluid",
       group="Medium"));

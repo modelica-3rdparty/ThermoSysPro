@@ -1,11 +1,7 @@
 within ThermoSysPro.Fluid.Junctions;
 model MassFlowMultiplier "Mass flow multipliier"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
-
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Real alpha=2 "Flow multiplier";
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
@@ -13,24 +9,16 @@ model MassFlowMultiplier "Mass flow multipliier"
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
   parameter Units.SI.Density p_rho=0 "If > 0, fixed fluid density"
     annotation (Evaluate=true, Dialog(tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
-  parameter Boolean flue_gases=(ftype == FluidType.FlueGases) "Flue gases";
   parameter Units.SI.MassFlowRate gamma0=1.e-4
     "Pseudo-diffusion conductance use for continuous flow reversal (active if diffusion=false and continuous_flow_reversal = true)";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 public
   Units.SI.AbsolutePressure P(start=10e5) "Fluid pressure";
   Units.SI.SpecificEnthalpy h(start=10e5) "Fluid specific enthalpy";
   Units.SI.Temperature T "Fluid temperature";
   Units.SI.Density rho(start=998) "Fluid density";
-  FluidType fluids[3] "Fluids mixing in volume";
-  ThermoSysPro.Units.SI.MassFraction Xco2 "CO2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xh2o "H20 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xo2 "O2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xso2 "SO2 mass fraction";
   Units.SI.Power Je "Thermal power diffusion from inlet e";
   Units.SI.Power Js "Thermal power diffusion from outlet s";
   Units.SI.Power J "Total thermal power diffusion";
@@ -40,19 +28,11 @@ public
   Real rs "Value of r(Q/gamma) for outlet s";
 
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{90,-10},{110,10}}, rotation=0)));
 equation
-
-  /* Check that incoming fluids are compatible with fluid in volume */
-  fluids[1] = ftype;
-  fluids[2] = Ce.ftype;
-  fluids[3] = Cs.ftype;
-
-  assert(ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.isCompatible(fluids),
-    "MassFlowMultiplier: fluids mixing in volume are not compatible with each other");
 
   /* Mass balance equation */
   0 = alpha*Ce.Q - Cs.Q;
@@ -67,17 +47,9 @@ equation
   Cs.h_vol_1 = h;
 
   /* Fluid composition */
-  0 = Ce.Xco2*alpha*Ce.Q - Cs.Xco2*Cs.Q;
-  0 = Ce.Xh2o*alpha*Ce.Q - Cs.Xh2o*Cs.Q;
-  0 = Ce.Xo2*alpha*Ce.Q - Cs.Xo2*Cs.Q;
-  0 = Ce.Xso2*alpha*Ce.Q - Cs.Xso2*Cs.Q;
+  Ce.Xi*alpha*Ce.Q = Cs.Xi*Cs.Q;
 
-  Cs.ftype = ftype;
-
-  Cs.Xco2 = Xco2;
-  Cs.Xh2o = Xh2o;
-  Cs.Xo2  = Xo2;
-  Cs.Xso2 = Xso2;
+  Ce.SubC*alpha*Ce.Q = Cs.SubC*Cs.Q;
 
   /* Flow reversal */
   if continuous_flow_reversal then
@@ -116,12 +88,12 @@ equation
   Cs.diff_on_1 = diffusion;
 
  /* Fluid thermodynamic properties */
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
+  T = Medium.temperature_phX(P, h, Cs.Xi);
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.Fluid.Density_Ph(P,h,fluid,mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
+    rho = Medium.density_phX(P,h,Cs.Xi);
   end if;
 
   annotation (

@@ -1,31 +1,19 @@
 within ThermoSysPro.Fluid.Junctions;
 model Mixer8 "Mixer with eight inlets"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
-
+ replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Boolean continuous_flow_reversal=false
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-
 protected
   parameter Units.SI.MassFlowRate gamma0=1.e-4
     "Pseudo-diffusion conductance use for continuous flow reversal (active if diffusion=false and continuous_flow_reversal = true)";
-  parameter Integer mode=Integer(region) - 1 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 public
   Units.SI.AbsolutePressure P(start=10e5) "Fluid pressure";
   Units.SI.SpecificEnthalpy h(start=10e5) "Fluid specific enthalpy";
   Units.SI.Temperature T "Fluid temperature";
-  FluidType fluids[10] "Fluids mixing in volume";
-  ThermoSysPro.Units.SI.MassFraction Xco2 "CO2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xh2o "H20 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xo2 "O2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xso2 "SO2 mass fraction";
   Units.SI.Power Je1 "Thermal power diffusion from inlet e1";
   Units.SI.Power Je2 "Thermal power diffusion from inlet e2";
   Units.SI.Power Je3 "Thermal power diffusion from inlet e3";
@@ -56,47 +44,32 @@ public
   Real rs
          "Value of r(Q/gamma) for outlet s";
 
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce5 annotation (layer=
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce5(redeclare package Medium = Medium) annotation (layer=
         "icon", Placement(transformation(extent={{-110,-50},{-90,-30}},
           rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce6 annotation (layer=
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce6(redeclare package Medium = Medium) annotation (layer=
         "icon", Placement(transformation(extent={{-112,-109},{-92,-89}},
           rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce7 annotation (layer=
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce7(redeclare package Medium = Medium) annotation (layer=
         "icon", Placement(transformation(extent={{-40,-109},{-20,-89}},
           rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce3 annotation (layer=
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce3(redeclare package Medium = Medium) annotation (layer=
         "icon", Placement(transformation(extent={{-112,90},{-92,110}}, rotation=
            0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce2 annotation (layer=
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce2(redeclare package Medium = Medium) annotation (layer=
         "icon", Placement(transformation(extent={{-40,90},{-20,110}}, rotation=
             0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce1 annotation (layer=
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce1(redeclare package Medium = Medium) annotation (layer=
         "icon", Placement(transformation(extent={{20,92},{40,112}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs annotation (layer=
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cs(redeclare package Medium = Medium) annotation (layer=
         "icon", Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce8 annotation (layer=
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce8(redeclare package Medium = Medium) annotation (layer=
         "icon", Placement(transformation(extent={{20,-109},{40,-89}}, rotation=
             0)));
-
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce4 annotation (layer=
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ce4(redeclare package Medium = Medium) annotation (layer=
         "icon", Placement(transformation(extent={{-112,30},{-92,50}}, rotation=
             0)));
 equation
-  /* Check that incoming fluids are compatible with fluid in volume */
-  fluids[1] = ftype;
-  fluids[2] = Ce1.ftype;
-  fluids[3] = Ce2.ftype;
-  fluids[4] = Ce3.ftype;
-  fluids[5] = Ce4.ftype;
-  fluids[6] = Ce5.ftype;
-  fluids[7] = Ce6.ftype;
-  fluids[8] = Ce7.ftype;
-  fluids[9] = Ce8.ftype;
-  fluids[10] = Cs.ftype;
-
-  assert(ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.isCompatible(fluids),
-    "Mixer8: fluids mixing in volume are not compatible with each other");
 
   /* Unconnected connectors */
   if (cardinality(Ce1) == 0) then
@@ -105,11 +78,8 @@ equation
     Ce1.h_vol_1 = 1.e5;
     Ce1.diff_res_1 = 0;
     Ce1.diff_on_1 = false;
-    Ce1.ftype = ftype;
-    Ce1.Xco2 = 0;
-    Ce1.Xh2o = 0;
-    Ce1.Xo2 = 0;
-    Ce1.Xso2 = 0;
+    Ce1.Xi = Medium.X_default[1:Medium.nXi];
+    Ce1.SubC = Medium.C_default;
   end if;
 
   if (cardinality(Ce2) == 0) then
@@ -118,11 +88,8 @@ equation
     Ce2.h_vol_1 = 1.e5;
     Ce2.diff_res_1 = 0;
     Ce2.diff_on_1 = false;
-    Ce2.ftype = ftype;
-    Ce2.Xco2 = 0;
-    Ce2.Xh2o = 0;
-    Ce2.Xo2 = 0;
-    Ce2.Xso2 = 0;
+    Ce2.Xi = Medium.X_default[1:Medium.nXi];
+    Ce2.SubC = Medium.C_default;
   end if;
 
   if (cardinality(Ce3) == 0) then
@@ -131,11 +98,8 @@ equation
     Ce3.h_vol_1 = 1.e5;
     Ce3.diff_res_1 = 0;
     Ce3.diff_on_1 = false;
-    Ce3.ftype = ftype;
-    Ce3.Xco2 = 0;
-    Ce3.Xh2o = 0;
-    Ce3.Xo2 = 0;
-    Ce3.Xso2 = 0;
+    Ce3.Xi = Medium.X_default[1:Medium.nXi];
+    Ce3.SubC = Medium.C_default;
   end if;
 
   if (cardinality(Ce4) == 0) then
@@ -144,11 +108,8 @@ equation
     Ce4.h_vol_1 = 1.e5;
     Ce4.diff_res_1 = 0;
     Ce4.diff_on_1 = false;
-    Ce4.ftype = ftype;
-    Ce4.Xco2 = 0;
-    Ce4.Xh2o = 0;
-    Ce4.Xo2 = 0;
-    Ce4.Xso2 = 0;
+    Ce4.Xi = Medium.X_default[1:Medium.nXi];
+    Ce4.SubC = Medium.C_default;
   end if;
 
   if (cardinality(Ce5) == 0) then
@@ -157,11 +118,8 @@ equation
     Ce5.h_vol_1 = 1.e5;
     Ce5.diff_res_1 = 0;
     Ce5.diff_on_1 = false;
-    Ce5.ftype = ftype;
-    Ce5.Xco2 = 0;
-    Ce5.Xh2o = 0;
-    Ce5.Xo2 = 0;
-    Ce5.Xso2 = 0;
+    Ce5.Xi = Medium.X_default[1:Medium.nXi];
+    Ce5.SubC = Medium.C_default;
   end if;
 
   if (cardinality(Ce6) == 0) then
@@ -170,11 +128,8 @@ equation
     Ce6.h_vol_1 = 1.e5;
     Ce6.diff_res_1 = 0;
     Ce6.diff_on_1 = false;
-    Ce6.ftype = ftype;
-    Ce6.Xco2 = 0;
-    Ce6.Xh2o = 0;
-    Ce6.Xo2 = 0;
-    Ce6.Xso2 = 0;
+    Ce6.Xi = Medium.X_default[1:Medium.nXi];
+    Ce6.SubC = Medium.C_default;
   end if;
 
   if (cardinality(Ce7) == 0) then
@@ -183,11 +138,8 @@ equation
     Ce7.h_vol_1 = 1.e5;
     Ce7.diff_res_1 = 0;
     Ce7.diff_on_1 = false;
-    Ce7.ftype = ftype;
-    Ce7.Xco2 = 0;
-    Ce7.Xh2o = 0;
-    Ce7.Xo2 = 0;
-    Ce7.Xso2 = 0;
+    Ce7.Xi = Medium.X_default[1:Medium.nXi];
+    Ce7.SubC = Medium.C_default;
   end if;
 
   if (cardinality(Ce8) == 0) then
@@ -196,11 +148,8 @@ equation
     Ce8.h_vol_1 = 1.e5;
     Ce8.diff_res_1 = 0;
     Ce8.diff_on_1 = false;
-    Ce8.ftype = ftype;
-    Ce8.Xco2 = 0;
-    Ce8.Xh2o = 0;
-    Ce8.Xo2 = 0;
-    Ce8.Xso2 = 0;
+    Ce8.Xi = Medium.X_default[1:Medium.nXi];
+    Ce8.SubC = Medium.C_default;
   end if;
 
   if (cardinality(Cs) == 0) then
@@ -237,17 +186,9 @@ equation
   Cs.h_vol_1 = h;
 
   /* Fluid composition balance equations */
-  0 = Ce1.Xco2*Ce1.Q + Ce2.Xco2*Ce2.Q + Ce3.Xco2*Ce3.Q + Ce4.Xco2*Ce4.Q  + Ce5.Xco2*Ce5.Q  + Ce6.Xco2*Ce6.Q  + Ce7.Xco2*Ce7.Q  + Ce8.Xco2*Ce8.Q  - Cs.Xco2*Cs.Q;
-  0 = Ce1.Xh2o*Ce1.Q + Ce2.Xh2o*Ce2.Q + Ce3.Xh2o*Ce3.Q + Ce4.Xh2o*Ce4.Q   + Ce5.Xh2o*Ce5.Q   + Ce6.Xh2o*Ce6.Q   + Ce7.Xh2o*Ce7.Q   + Ce8.Xh2o*Ce8.Q    - Cs.Xh2o*Cs.Q;
-  0 = Ce1.Xo2*Ce1.Q + Ce2.Xo2*Ce2.Q + Ce3.Xo2*Ce3.Q + Ce4.Xo2*Ce4.Q  + Ce5.Xo2*Ce5.Q  + Ce6.Xo2*Ce6.Q  + Ce7.Xo2*Ce7.Q  + Ce8.Xo2*Ce8.Q   - Cs.Xo2*Cs.Q;
-  0 = Ce1.Xso2*Ce1.Q + Ce2.Xso2*Ce2.Q + Ce3.Xso2*Ce3.Q + Ce4.Xso2*Ce4.Q  + Ce5.Xso2*Ce5.Q  + Ce6.Xso2*Ce6.Q  + Ce7.Xso2*Ce7.Q  + Ce8.Xso2*Ce8.Q   - Cs.Xso2*Cs.Q;
+  Cs.Xi*Cs.Q = Ce1.Xi*Ce1.Q + Ce2.Xi*Ce2.Q + Ce3.Xi*Ce3.Q + Ce4.Xi*Ce4.Q  + Ce5.Xi*Ce5.Q  + Ce6.Xi*Ce6.Q  + Ce7.Xi*Ce7.Q  + Ce8.Xi*Ce8.Q;
 
-  Cs.ftype = ftype;
-
-  Cs.Xco2 = Xco2;
-  Cs.Xh2o = Xh2o;
-  Cs.Xo2  = Xo2;
-  Cs.Xso2 = Xso2;
+  Cs.SubC*Cs.Q = Ce1.SubC*Ce1.Q + Ce2.SubC*Ce2.Q + Ce3.SubC*Ce3.Q + Ce4.SubC*Ce4.Q  + Ce5.SubC*Ce5.Q  + Ce6.SubC*Ce6.Q  + Ce7.SubC*Ce7.Q  + Ce8.SubC*Ce8.Q;
 
   /* Flow reversal */
   if continuous_flow_reversal then
@@ -342,7 +283,7 @@ equation
   Cs.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  T = ThermoSysPro.Properties.Fluid.Temperature_Ph(P, h, fluid, mode, Cs.Xco2, Cs.Xh2o, Cs.Xo2, Cs.Xso2);
+  T = Medium.temperature_phX(P, h, Cs.Xi);
 
   annotation (
     Diagram(coordinateSystem(
