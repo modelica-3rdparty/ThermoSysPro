@@ -1,17 +1,26 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.Volume;
 model TestStaticDrum3
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
-  ThermoSysPro.Fluid.Junctions.StaticDrum StaticDrumTh1
+  ThermoSysPro.Fluid.Junctions.StaticDrum StaticDrumTh1(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{-30,1},{20,51}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLossVALI1(K=1e-4)
+    singularPressureLossVALI1(
+    redeclare package Medium = Medium,
+    K=1e-4)
     annotation (Placement(transformation(extent={{38,7},{58,27}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLossVALI2(K=1e-4)
+    singularPressureLossVALI2(
+    redeclare package Medium = Medium,
+    K=1e-4)
     annotation (Placement(transformation(extent={{-58,-8},{-38,12}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SinkQ sinkQ(Q0=10)
+  ThermoSysPro.Fluid.BoundaryConditions.SinkQ sinkQ(
+    redeclare package Medium = Medium,
+    Q0=10)
     annotation (Placement(transformation(extent={{74,7},{94,27}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourcePQ sourcePQ(
+    redeclare package Medium = Medium,
     Q0=100,
     h0=1400e3,
     P0=10000000)
@@ -22,11 +31,16 @@ model TestStaticDrum3
         extent={{-10,-10},{10,10}},
         rotation=90)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLossVALI3(K=1e-4)
+    singularPressureLossVALI3(
+    redeclare package Medium = Medium,
+    K=1e-4)
     annotation (Placement(transformation(extent={{38,52},{58,72}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.Sink sink
+  ThermoSysPro.Fluid.BoundaryConditions.Sink sink(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{74,52},{94,72}}, rotation=0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicTwoPhaseFlowPipe dynamicTwoPhaseFlowPipe(
+    redeclare package Medium = Medium,
+    inertia=false,
     z1=0,
     rugosrel=0.0001,
     D=0.05,
@@ -37,16 +51,19 @@ model TestStaticDrum3
         extent={{13.5,11.5},{-13.5,-11.5}},
         rotation=270)));
   ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe lumpedStraightPipe(
+    redeclare package Medium = Medium,
     lambda(fixed=false) = 0.03,
     D=0.05,
     ntubes=10,
     L=10,
     z1=10,
-    Q(fixed=true, start=30)) annotation (Placement(transformation(
+    Q(fixed=false, start=30)) annotation (Placement(transformation(
         origin={20,-45},
         extent={{-14,-12},{14,12}},
         rotation=270)));
-  ThermoSysPro.Fluid.Volumes.VolumeA volumeA annotation (Placement(transformation(
+  ThermoSysPro.Fluid.Volumes.VolumeA volumeA(
+    redeclare package Medium = Medium,
+    steady_state=false) annotation (Placement(transformation(
           extent={{1,-72},{-9,-62}}, rotation=0)));
   ThermoSysPro.Thermal.BoundaryConditions.HeatSource heatSource1(
     option_temperature=2,

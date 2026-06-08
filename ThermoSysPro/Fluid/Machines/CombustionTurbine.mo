@@ -1,7 +1,8 @@
 within ThermoSysPro.Fluid.Machines;
 model CombustionTurbine "Combustion turbine"
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
+  replaceable package Medium = ThermoSysPro.Properties.Media.FlueGases constrainedby Modelica.Media.Interfaces.PartialMixtureMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   parameter Real A3=0 "X^3 coefficient of the efficiency curve";
   parameter Real A2=-0.04778 "X^2 coefficient of the efficiency curve";
   parameter Real A1=0.09555 "X^1 coefficient of the efficiency curve";
@@ -33,25 +34,15 @@ public
   Units.SI.SpecificEnthalpy His(start=6e5)
     "Flue gases specific enthalpy after the isentropic expansion";
   Units.SI.SpecificEntropy Se "Flue gases specific entropy at the inlet";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
 
 public
-  Interfaces.Connectors.FluidInlet Ce annotation (Placement(transformation(
-          extent={{-110,-10},{-90,10}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet Cs annotation (Placement(transformation(
-          extent={{90,-10},{110,10}}, rotation=0)));
-public
-  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal CompressorPower
-    annotation (Placement(transformation(extent={{-120,-50},{-100,-30}},
-          rotation=0)));
-public
-  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal MechPower
-    annotation (Placement(transformation(extent={{100,-100},{120,-80}},
-          rotation=0)));
+  Interfaces.Connectors.FluidInlet Ce(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
+  Interfaces.Connectors.FluidOutlet Cs(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal CompressorPower annotation (Placement(transformation(extent={{-120,-50},{-100,-30}}, rotation=0)));
+  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal MechPower annotation (Placement(transformation(extent={{100,-100},{120,-80}}, rotation=0)));
+
+  Medium.ThermodynamicState state_e;
 equation
-  /* Check that the fluid type is flue gases */
-  assert(ftype == FluidType.FlueGases, "CombustionTurbine: the fluid type must be flue gases");
 
   Ce.Q = Cs.Q;
 
@@ -64,12 +55,9 @@ equation
   Cs.diff_res_1 = Ce.diff_res_1 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
   Ce.diff_res_2 = Cs.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
-  Ce.ftype = Cs.ftype;
+  Ce.SubC = Cs.SubC;
 
-  Ce.Xco2 = Cs.Xco2;
-  Ce.Xh2o = Cs.Xh2o;
-  Ce.Xo2  = Cs.Xo2;
-  Ce.Xso2 = Cs.Xso2;
+  Ce.Xi = Cs.Xi;
 
   Q = Ce.Q;
 
@@ -78,8 +66,6 @@ equation
 
   He = Ce.h;
   Hs = Cs.h;
-
-  ftype = Ce.ftype;
 
   /* Input compressor power (negative value) */
   Wcp = CompressorPower.signal;
@@ -104,20 +90,21 @@ equation
   MechPower.signal = Wmech;
 
   /* Temperature at the inlet */
-  Te = ThermoSysPro.Properties.Fluid.Temperature_Ph(Pe, He, fluid, 0, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
+  state_e = Medium.setState_phX(Pe,He,Ce.Xi);
+  Te=Medium.temperature(state_e);
 
   /* Specific entropy at the inlet */
-  Se = ThermoSysPro.Properties.FlueGases.FlueGases_s(Pe, Te, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
+  Se = Medium.specificEntropy(state_e);
 
   /* Specific enthalpy after the isentropic expansion */
-  Se = ThermoSysPro.Properties.FlueGases.FlueGases_s(Ps, Tis, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
-  His = ThermoSysPro.Properties.FlueGases.FlueGases_h(Ps, Tis, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
+  Tis=Medium.temperature(Medium.setState_psX(Ps,Se,Ce.Xi));
+  His = Medium.specificEnthalpy_pTX(Ps,Tis,Ce.Xi);
 
   /* Specific enthalpy at the outlet */
   Hs = is_eff*(His - He) +  He;
 
   /* Temperature at the outlet */
-  Ts = ThermoSysPro.Properties.Fluid.Temperature_Ph(Ps, Hs, fluid, 0, Ce.Xco2, Ce.Xh2o, Ce.Xo2, Ce.Xso2);
+  Ts = Medium.temperature_phX(Ps,Hs,Ce.Xi);
 
   annotation (
     Diagram(coordinateSystem(

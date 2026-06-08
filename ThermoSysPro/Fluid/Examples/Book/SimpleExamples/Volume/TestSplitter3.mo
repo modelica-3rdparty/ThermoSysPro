@@ -1,30 +1,37 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.Volume;
 model TestSplitter3
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
-  ThermoSysPro.Fluid.Junctions.Splitter3 splitter3
+  ThermoSysPro.Fluid.Junctions.Splitter3 splitter3(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{-16,-10},{4,10}},  rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SourceQ sourceP1(Q0=100,
+  ThermoSysPro.Fluid.BoundaryConditions.SourceQ sourceP1(
+      redeclare package Medium = Medium,
+      Q0=100,
       option_temperature=true)
     annotation (Placement(transformation(extent={{-96,-10},{-76,10}},
           rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLoss3 annotation (Placement(transformation(extent={{-56,-10},
+    singularPressureLoss3(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{-56,-10},
             {-36,10}},  rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.Sink sinkP2
+  ThermoSysPro.Fluid.BoundaryConditions.Sink sinkP2(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{84,30},{104,50}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.Sink sinkP3
+  ThermoSysPro.Fluid.BoundaryConditions.Sink sinkP3(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{84,-50},{104,-30}},  rotation=
            0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLoss4 annotation (Placement(transformation(extent={{44,30},
+    singularPressureLoss4(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{44,30},
             {64,50}},rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLoss5 annotation (Placement(transformation(extent={{44,-50},
+    singularPressureLoss5(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{44,-50},
             {64,-30}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Constante constante1(k=
         0) annotation (Placement(transformation(extent={{-36,10},{-16,30}},
           rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SinkP sinkP4
+  ThermoSysPro.Fluid.BoundaryConditions.SinkP sinkP4(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{84,-10},{104,10}},  rotation=
             0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Constante constante2(k=

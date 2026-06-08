@@ -1,5 +1,6 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.HeatExchanger;
 model TestDynamicCondenser
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
   parameter Real COP1( fixed=false,start=0.7)
     "Corrective terme for heat exchange coefficient or Fouling coefficient";
@@ -8,18 +9,25 @@ model TestDynamicCondenser
   //parameter Modelica.SIunits.Position z=1.05 "Liquid level in Cavity";
 
   ThermoSysPro.Fluid.BoundaryConditions.SourceQ Source_Eau(
+                redeclare package Medium = Medium,
                 h0=50000, Q0=19000)
           annotation (Placement(transformation(extent={{-191,-27},{-133,29}},
           rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SourceQ Source_vapeur(Q0=310, h0=
+  ThermoSysPro.Fluid.BoundaryConditions.SourceQ Source_vapeur(
+        redeclare package Medium = Medium,
+        Q0=310, h0=
         2400e3)
             annotation (Placement(transformation(extent={{-192,144},{-134,200}},
           rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SinkQ Puit_condenseur1(Q0=310)
+  ThermoSysPro.Fluid.BoundaryConditions.SinkQ Puit_condenseur1(
+    redeclare package Medium = Medium,
+    Q0=310)
              annotation (Placement(transformation(extent={{151,-187},{213,-133}},
           rotation=0)));
 
   ThermoSysPro.Fluid.HeatExchangers.DynamicCondenser DynamicCondenser(
+    redeclare package Medium = Medium,
+    redeclare package Medium_Cooling = Medium,
     Dc=0.016,
     ec=0.5e-3,
     ntubest=52176,
@@ -57,17 +65,20 @@ model TestDynamicCondenser
                 annotation (Placement(transformation(extent={{-47,-52},{71,64}},
           rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkP Puit_Eau(
+    redeclare package Medium = Medium,
     option_temperature=false,
     P0=100000)
              annotation (Placement(transformation(extent={{181,-8},{201,12}},
           rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
     PressureLoss_VapeurIn(
+    redeclare package Medium = Medium,
     Q(start=900),
     K=1e-4,
     Pm(start=10000))      annotation (Placement(transformation(extent={{-100,
             162},{-80,182}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve Valve_ext(
+    redeclare package Medium = Medium,
     Q(fixed=false, start=927),
     C1(P(start=10000), Q(start=927)),
     Cvmax=15000,
@@ -77,10 +88,14 @@ model TestDynamicCondenser
                           annotation (Placement(transformation(extent={{113,
             -123},{91,-101}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    PressureLoss_VapeurIn_in4(K=1e-4, Q(fixed=false, start=0.01))
+    PressureLoss_VapeurIn_in4(
+    redeclare package Medium = Medium,
+    K=1e-4,
+    Q(fixed=false, start=0.01))
                          annotation (Placement(transformation(extent={{-102,83},
             {-82,102}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceQ Source_Vsup1(Q0=0.00001,
+      redeclare package Medium = Medium,
       h0=2759.6e3)
           annotation (                           Placement(transformation(
           extent={{-191,65},{-134,119}}, rotation=0)));
@@ -91,10 +106,12 @@ model TestDynamicCondenser
           rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
     PressureLoss_EauOut(
+    redeclare package Medium = Medium,
     K=1e-4,
     Q(start=20000))              annotation (Placement(transformation(extent={{112,-8},
             {132,12}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.IdealCheckValve PressureLoss_VapeurIn1(
+     redeclare package Medium = Medium,
      Q(start=1000))       annotation (Placement(transformation(
         origin={12,96},
         extent={{-6,-9},{6,9}},

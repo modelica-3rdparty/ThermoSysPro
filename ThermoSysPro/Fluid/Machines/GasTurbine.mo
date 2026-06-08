@@ -1,5 +1,8 @@
 within ThermoSysPro.Fluid.Machines;
 model GasTurbine "Combustion turbine for CICO and Barilla plants"
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the water/steam side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_FlueGases = ThermoSysPro.Properties.Media.FlueGases constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the flue gases side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+
   parameter Real comp_tau_n=15 "Nominal compression nominal rate";
   parameter Real comp_eff_n=0.9 "Compressor nominal efficiency";
   parameter Real A0=0.1725914;
@@ -16,12 +19,14 @@ model GasTurbine "Combustion turbine for CICO and Barilla plants"
   parameter Real Kcham=1 "Chamber pressure loss coefficient";
   parameter Units.SI.Power Wpth=1e5 "Combustion chamber thermal losses";
 
-  ThermoSysPro.Fluid.BoundaryConditions.AirHumidity xAIR
+  ThermoSysPro.Fluid.BoundaryConditions.AirHumidity xAIR(
+    redeclare package Medium = Medium_FlueGases)
                     annotation (Placement(transformation(
         origin={-84,30},
         extent={{-10,-10},{10,10}},
         rotation=270)));
   ThermoSysPro.Fluid.Machines.Compressor Compresseur(
+    redeclare package Medium = Medium_FlueGases,
     A4=A4,
     A3=A3,
     A2=A2,
@@ -31,6 +36,8 @@ model GasTurbine "Combustion turbine for CICO and Barilla plants"
     is_eff_n=comp_eff_n)                   annotation (Placement(transformation(
           extent={{-82,-28},{-32,28}}, rotation=0)));
   ThermoSysPro.Fluid.Combustion.CombustionChambers.GTCombustionChamber chambreCombustionTAC(
+    redeclare package Medium = Medium,
+    redeclare package Medium_FlueGases = Medium_FlueGases,
     Acham=1,
     eta_comb=1,
     kcham=Kcham,
@@ -42,6 +49,7 @@ model GasTurbine "Combustion turbine for CICO and Barilla plants"
     Tsf(start=1495))   annotation (Placement(transformation(extent={{-25,31},{
             25,83}}, rotation=0)));
   ThermoSysPro.Fluid.Machines.CombustionTurbine TurbineAgaz(
+    redeclare package Medium = Medium_FlueGases,
     Te(start=1495),
     Pe(start=13.2e5),
     A2=B2,
@@ -54,11 +62,14 @@ model GasTurbine "Combustion turbine for CICO and Barilla plants"
     Ts(start=894.518, fixed=false))
                                    annotation (Placement(transformation(extent=
             {{47,-22},{79,22}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet Entree_air annotation (Placement(
+  Interfaces.Connectors.FluidInlet Entree_air(redeclare package Medium =
+        Medium_FlueGases) annotation (Placement(
         transformation(extent={{-104,-4},{-96,4}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet Sortie_fumees annotation (Placement(
+  Interfaces.Connectors.FluidOutlet Sortie_fumees(redeclare package Medium =
+        Medium_FlueGases) annotation (Placement(
         transformation(extent={{96,-4},{104,4}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet Entree_eau_combustion annotation (Placement(
+  Interfaces.Connectors.FluidInlet Entree_eau_combustion(redeclare package
+        Medium = Medium) annotation (Placement(
         transformation(extent={{-64,96},{-56,104}}, rotation=0)));
   Interfaces.Connectors.FuelInlet Entree_combustible
     annotation (Placement(transformation(extent={{56,96},{64,104}}, rotation=0)));

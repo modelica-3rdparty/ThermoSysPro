@@ -1,5 +1,6 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.SolarCollector;
 model TestFresnelField
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
 public
   ThermoSysPro.Thermal.HeatTransfer.HeatExchangerWall heatExchangerWall(
@@ -46,6 +47,7 @@ public
     annotation (Placement(transformation(extent={{-40,-36},{40,-2}}, rotation=0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicTwoPhaseFlowPipe
     dynamicTwoPhaseFlowPipe(
+    redeclare package Medium = Medium,
     ntubes=1,
     steady_state=true,
     rugosrel=0.00005,
@@ -85,9 +87,13 @@ public
     T0=303)
     annotation (Placement(transformation(extent={{-40,-16},{40,72}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkP sinkP(
+    redeclare package Medium = Medium,
     h0=2000e3, P0=125e5)          annotation (Placement(transformation(extent={
             {48,-54},{68,-34}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SourceQ sourceP(Q0=11, h0=1500e3)
+  ThermoSysPro.Fluid.BoundaryConditions.SourceQ sourceP(
+    redeclare package Medium = Medium,
+    Q0=11,
+    h0=1500e3)
                annotation (Placement(transformation(extent={{-69,-53},{-49,-33}},
           rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Rampe DNI(

@@ -1,10 +1,9 @@
 within ThermoSysPro.Fluid.Boilers;
 model BoilerSystem "Boiler"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FlueGasesFluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the water/steam side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_FlueGases = ThermoSysPro.Properties.Media.FlueGases constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the flue gases side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.Temperature Tsf=423.16
     "Flue gases temperature at the outlet";
@@ -19,7 +18,6 @@ model BoilerSystem "Boiler"
     "Diffusion conductance for the water/steam side (active if diffusion=true in neighbouring volumes)";
   parameter Boolean continuous_flow_reversal=false "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
   ThermoSysPro.Fluid.Combustion.BoundaryConditions.FuelSourcePQ Fuel(
     Xashes=0.011,
@@ -36,6 +34,8 @@ model BoilerSystem "Boiler"
     annotation (Placement(transformation(extent={{-56,-10},{-36,10}}, rotation=
             0)));
   ThermoSysPro.Fluid.Boilers.FossilFuelBoiler Boiler(
+    redeclare package Medium = Medium,
+    redeclare package Medium_FlueGases = Medium_FlueGases,
     Qsf(start=45.8744, fixed=false),
     Pee(fixed=false),
     Qe(fixed=false, start=6),
@@ -59,15 +59,15 @@ model BoilerSystem "Boiler"
         origin={-10,0},
         extent={{20,-20},{-20,20}},
         rotation=270)));
-  Interfaces.Connectors.FluidInlet InletWaterSteam "Water inlet" annotation (
+  Interfaces.Connectors.FluidInlet InletWaterSteam(redeclare package Medium = Medium) "Water inlet" annotation (
       Placement(transformation(extent={{40,-110},{60,-90}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet OutletWaterSteam "Water/steam outlet"
+  Interfaces.Connectors.FluidOutlet OutletWaterSteam(redeclare package Medium = Medium) "Water/steam outlet"
     annotation (Placement(transformation(extent={{40,90},{60,110}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet OutletFlueGases "Flue gases outlet"
+  Interfaces.Connectors.FluidOutlet OutletFlueGases(redeclare package Medium = Medium_FlueGases) "Flue gases outlet"
                                                     annotation (Placement(
         transformation(extent={{-80,90},{-60,110}}, rotation=0),
         iconTransformation(extent={{-80,90},{-60,110}})));
-  Interfaces.Connectors.FluidInlet InletFlueGases "Flue gases inlet"
+  Interfaces.Connectors.FluidInlet InletFlueGases(redeclare package Medium = Medium_FlueGases) "Flue gases inlet"
                                                   annotation (Placement(
         transformation(extent={{-80,-110},{-60,-90}}, rotation=0)));
 equation

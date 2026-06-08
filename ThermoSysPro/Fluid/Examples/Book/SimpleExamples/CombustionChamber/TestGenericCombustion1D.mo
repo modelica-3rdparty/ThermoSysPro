@@ -1,7 +1,11 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.CombustionChamber;
 model TestGenericCombustion1D "TestGenericCombustion1D"
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
+  replaceable package Medium_FlueGases = ThermoSysPro.Properties.Media.FlueGases;
 
   ThermoSysPro.Fluid.Combustion.CombustionChambers.GenericCombustion1D genericCombustionCCS(
+    redeclare package Medium = Medium,
+    redeclare package Medium_FlueGases = Medium_FlueGases,
     NCEL=7,
     Qm(fixed=false),
     Qsf(fixed=false),
@@ -31,29 +35,38 @@ model TestGenericCombustion1D "TestGenericCombustion1D"
     Hum=0.08) annotation (Placement(transformation(extent={{-106,-43},{-72,-5}},
           rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourcePQ sourceAir(
-    Xso2=0,
+    redeclare package Medium = Medium_FlueGases,
     Q0=609.29,
-    Xh2o=0.01,
-    Xo2=0.230,
-    Xco2=0,
     P0=191000,
     T0=524.89,
-    ftype=ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType.FlueGases,
-    option_temperature=true)
+    option_temperature=true,
+    X0={0.76,0.23,0.01,0,0})
     annotation (Placement(transformation(extent={{-44,-98},{0,-58}}, rotation=0)));
 
-  ThermoSysPro.Fluid.BoundaryConditions.Sink sink annotation (Placement(transformation(
+  ThermoSysPro.Fluid.BoundaryConditions.Sink sink(
+    redeclare package Medium = Medium_FlueGases,
+    T0=1200,
+    option_temperature=true) annotation (Placement(transformation(
           extent={{0,70},{44,112}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SourcePQ SourcePQ_Water(Q0=0, P0=100000)
+  ThermoSysPro.Fluid.BoundaryConditions.SourcePQ SourcePQ_Water(
+    redeclare package Medium = Medium,
+    Q0=0,
+    P0=100000)
     annotation (Placement(transformation(extent={{-107,23},{-71,57}}, rotation=
             0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicTwoPhaseFlowPipe              PipeWaterSteam(
+    redeclare package Medium = Medium,
     Ns=7,
+    inertia=false,
+    dynamic_energy_balance=false,
     z2=56,
     rugosrel=5e-5,
     ntubes=403,
     L=58,
     D=0.0327,
+    P(start=fill(2.0e7, 9)),
+    Q(start=fill(486.69, 8)),
+    h(start=fill(1.8e6, 9)),
     C2(Q(fixed=false, start=486.69), P(
         fixed=false,
         start=1.96318e+07,
@@ -65,6 +78,9 @@ model TestGenericCombustion1D "TestGenericCombustion1D"
         rotation=270)));
   ThermoSysPro.Thermal.HeatTransfer.HeatExchangerWall              paroiEcrans(
     Ns=7,
+    dynamic_energy_balance=false,
+    Tp1(start=fill(500, 7)),
+    Tp2(start=fill(400, 7)),
     lambda=40,
     steady_state=true,
     ntubes=403,
@@ -76,15 +92,17 @@ model TestGenericCombustion1D "TestGenericCombustion1D"
         extent={{51.5,-15},{-51.5,15}},
         rotation=270)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkP              sinkWaterSteam2(
+    redeclare package Medium = Medium,
     option_temperature=false,
-    Q(start=486.69, fixed=true),
+    Q(start=486.69),
     h0=2.5e+06,
-    P0(fixed=false) = 19621600)
+    P0=19621600)
     annotation (Placement(transformation(
         origin={90,90.5},
         extent={{14.5,-15},{-14.5,15}},
         rotation=270)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP              sourceEcrans(
+    redeclare package Medium = Medium,
     h0=1.292e+06,
     option_temperature=false,
     P0=20112000)
