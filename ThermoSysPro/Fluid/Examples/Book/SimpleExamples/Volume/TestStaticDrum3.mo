@@ -8,12 +8,14 @@ model TestStaticDrum3
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
     singularPressureLossVALI1(
     redeclare package Medium = Medium,
-    K=1e-4)
+    K=1e-4,
+    rho(start=688.4113, displayUnit="g/cm3"))
     annotation (Placement(transformation(extent={{38,7},{58,27}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
     singularPressureLossVALI2(
     redeclare package Medium = Medium,
-    K=1e-4)
+    K=1e-4,
+    rho(start=691.7364, displayUnit="g/cm3"))
     annotation (Placement(transformation(extent={{-58,-8},{-38,12}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkQ sinkQ(
     redeclare package Medium = Medium,
@@ -33,7 +35,8 @@ model TestStaticDrum3
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
     singularPressureLossVALI3(
     redeclare package Medium = Medium,
-    K=1e-4)
+    K=1e-4,
+    rho(start=55.45212, displayUnit="g/cm3"))
     annotation (Placement(transformation(extent={{38,52},{58,72}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.Sink sink(
     redeclare package Medium = Medium)
@@ -46,7 +49,9 @@ model TestStaticDrum3
     D=0.05,
     ntubes=10,
     L=10,
-    z2=10)           annotation (Placement(transformation(
+    z2=10,
+    P(start={10053832.0,10046967.0,10041924.0,10037550.0,10033392.0,10029237.0,10024966.0,10020505.0,10015807.0,10010839.0,10005576.0,10000000.0}, each displayUnit="bar"))
+                     annotation (Placement(transformation(
         origin={-28.5,-45.5},
         extent={{13.5,11.5},{-13.5,-11.5}},
         rotation=270)));

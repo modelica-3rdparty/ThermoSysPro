@@ -13,7 +13,7 @@ model TestDynamicTwoPhaseFlowPipe
                                           annotation (Placement(transformation(extent={{-40,-48},{40,10}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP(
     redeclare package Medium = Medium,
-    C(Q(start=1)),
+    C(Q(start=1, fixed=true)),
     option_temperature=false,
     h0=800e3,
     P0=2000000) annotation (Placement(transformation(extent={{-90,-28},{-70,-8}}, rotation=0)));
@@ -21,7 +21,7 @@ model TestDynamicTwoPhaseFlowPipe
     redeclare package Medium = Medium,
     option_temperature=false,
     h0=2000e3,
-    P0=19.9e5) annotation (Placement(transformation(extent={{70,-28},{90,-8}}, rotation=0)));
+    P0=19.9e5) annotation (Placement(transformation(extent={{68,-28},{88,-8}}, rotation=0)));
   ThermoSysPro.Thermal.BoundaryConditions.HeatSource heatSource(
     option_temperature=2,
     T0={1000,1100,1200,1300,1400,1500,1600,1700,1800,1900},
@@ -36,7 +36,7 @@ model TestDynamicTwoPhaseFlowPipe
     D=0.03) annotation (Placement(transformation(extent={{-40,-28},{40,52}}, rotation=0)));
 equation
   connect(sourceP.C, dynamicTwoPhaseFlowPipe.C1) annotation (Line(points={{-70,-18},{-42,-18},{-42,-19},{-40,-19}}, color={0,0,255}));
-  connect(dynamicTwoPhaseFlowPipe.C2, sinkP.C) annotation (Line(points={{40,-19},{70,-18}}, color={0,0,255}));
+  connect(dynamicTwoPhaseFlowPipe.C2, sinkP.C) annotation (Line(points={{40,-19},{68,-18}}, color={0,0,255}));
   connect(heatSource.C, heatExchangerWall.WT2) annotation (Line(points={{0,31.2},{0,20}}, color={191,95,0}));
   connect(heatExchangerWall.WT1, dynamicTwoPhaseFlowPipe.CTh) annotation (Line(points={{0,4},{0,-10.3}}, color={191,95,0}));
   annotation (experiment(StopTime=1500), Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(coordinateSystem(preserveAspectRatio=false)));

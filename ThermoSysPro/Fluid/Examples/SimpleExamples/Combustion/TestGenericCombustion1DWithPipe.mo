@@ -4,13 +4,13 @@ model TestGenericCombustion1DWithPipe
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
   replaceable package Medium_FlueGases = ThermoSysPro.Properties.Media.FlueGases;
 
-  ThermoSysPro.Fluid.Combustion.CombustionChambers.GenericCombustion1D combustionChamber(
+  ThermoSysPro.Fluid.Combustion.CombustionChambers.GenericCombustion1D genericCombustionCCS(
     redeclare package Medium = Medium,
     redeclare package Medium_FlueGases = Medium_FlueGases,
     NCEL=7,
     Qm(fixed=false),
     Qsf(fixed=false),
-    kcham(fixed=true)=0.1,
+    kcham(fixed=true) = 0.1,
     Acham=275,
     Xbf=0,
     ImbCV=0.05,
@@ -18,8 +18,7 @@ model TestGenericCombustion1DWithPipe
     Kec=8.8,
     SM={639.92,198.58,466.48,466.48,466.48,358.56,358.56},
     ImbBF=0.0,
-    Psf(start=113275))
-    annotation (Placement(transformation(extent={{-62,-56},{62,72}}, rotation=0)));
+    Psf(start=113275)) annotation (Placement(transformation(extent={{-62,-56},{62,72}}, rotation=0)));
   ThermoSysPro.Fluid.Combustion.BoundaryConditions.FuelSourcePQ sourceFuel(
     Xn=0.0208,
     Xashes=0.136,
@@ -90,21 +89,16 @@ model TestGenericCombustion1DWithPipe
   ThermoSysPro.Fluid.BoundaryConditions.SinkP sinkPipe(
     redeclare package Medium = Medium,
     option_temperature=false,
-    Q(start=486.69),
+    Q(start=486.69, fixed=true),
     h0=2.5e6,
-    P0=19621600)
+    P0(fixed=false) = 19621600)
     annotation (Placement(transformation(origin={90,90.5}, extent={{14.5,-15},{-14.5,15}}, rotation=270)));
 equation
-  connect(sourceFuel.C, combustionChamber.Cfuel)
-    annotation (Line(points={{-72,-24},{-55.8,-24}}, color={0,0,0}));
-  connect(combustionChamber.Cfg, sinkFlueGases.C)
-    annotation (Line(points={{0,65.6},{0,91}}, color={0,0,0}));
-  connect(sourceAir.C, combustionChamber.Ca)
-    annotation (Line(points={{0,-78},{0,-49.6}}, color={0,0,0}));
-  connect(sourceWaterSteam.C, combustionChamber.Cws)
-    annotation (Line(points={{-71,40},{-55.8,40}}, color={0,0,255}));
-  connect(combustionChamber.Cth, wall.WT2)
-    annotation (Line(points={{55.8,8},{68,8},{68,7.5},{76,7.5}}, color={191,95,0}));
+  connect(sourceFuel.C, genericCombustionCCS.Cfuel) annotation (Line(points={{-72,-24},{-55.8,-24}}, color={0,0,0}));
+  connect(genericCombustionCCS.Cfg, sinkFlueGases.C) annotation (Line(points={{0,65.6},{0,91}}, color={0,0,0}));
+  connect(sourceAir.C, genericCombustionCCS.Ca) annotation (Line(points={{0,-78},{0,-49.6}}, color={0,0,0}));
+  connect(sourceWaterSteam.C, genericCombustionCCS.Cws) annotation (Line(points={{-71,40},{-55.8,40}}, color={0,0,255}));
+  connect(genericCombustionCCS.Cth, wall.WT2) annotation (Line(points={{55.8,8},{68,8},{68,7.5},{76,7.5}}, color={191,95,0}));
   connect(wall.WT1, pipeWaterSteam.CTh)
     annotation (Line(points={{70,7.5},{71,7.5},{71,8},{86.2,8}}, color={191,95,0}));
   connect(sourcePipe.C, pipeWaterSteam.C1)

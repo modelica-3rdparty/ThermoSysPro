@@ -38,8 +38,8 @@ model TestTwoPhaseCavityOnePipe_Traces
     h0=2.8e6,
     SubC0={10}) annotation (Placement(transformation(extent={{-110,50},{-90,70}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkQ sinkWater(
-    redeclare package Medium = Medium,
-    Q0=0) annotation (Placement(transformation(extent={{-90,-60},{-70,-40}}, rotation=0)));
+    redeclare package Medium = Medium, Q0=3)
+          annotation (Placement(transformation(extent={{-90,-60},{-70,-40}}, rotation=0)));
 
   ThermoSysPro.Thermal.BoundaryConditions.HeatSource heatSource(
     T0={293.15, 293.15},

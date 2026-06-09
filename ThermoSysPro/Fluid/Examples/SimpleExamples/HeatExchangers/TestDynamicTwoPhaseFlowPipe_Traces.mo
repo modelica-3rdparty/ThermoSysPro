@@ -15,7 +15,7 @@ model TestDynamicTwoPhaseFlowPipe_Traces
                                           annotation (Placement(transformation(extent={{-40,-48},{40,10}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP(
     redeclare package Medium = Medium,
-    C(Q(start=1), SubC(start={0.1})),
+    C(Q(start=1, fixed=true), SubC(start={0.1})),
     option_temperature=false,
     h0=800e3,
     P0=2000000,
