@@ -69,7 +69,7 @@ public
     Cd(P(start=67.9e5)),
     zl(fixed=false, start=0.66),
     R=4.2818979,
-    Mp=32000) annotation (Placement(transformation(extent={{-22,64},{22,107}},
+    Mp=32000) annotation (Placement(transformation(extent={{-22,62},{22,105}},
           rotation=0)));
     //redeclare package SinkAndSource = SinkAndSource,
   ThermoSysPro.WaterSteam.PressureLosses.LumpedStraightPipe DPSeparateurCyclone(
@@ -277,16 +277,14 @@ equation
   connect(RiserGV.CTh1, heatExchangerWall1.WT2)
                                               annotation (Line(points={{19.55,
           -41},{40.8,-41}}, color={191,95,0}));
-  connect(DomeGV.Cv, fluidOutletI) annotation (Line(points={{22,107},{22,
-          124},{0,124},{0,149}},
-                           color={255,0,0}));
+  connect(DomeGV.Cv, fluidOutletI) annotation (Line(points={{22,105},{22,124},{
+          0,124},{0,149}}, color={255,0,0}));
   connect(DPSeparateurCyclone.C2, DomeGV.Cm) annotation (Line(points={{
-          6.12303e-16,47},{6.12303e-16,52},{22,52},{22,64}},   color={0,0,255}));
-  connect(DomeGV.Cs, DPnulle_DomeDwnc.C1) annotation (Line(points={{22,76.9},
-          {40,76.9},{40,63},{47,63}},color={0,0,255}));
-  connect(DomeGV.yLevel, outputReal) annotation (Line(points={{24.2,85.5},{
-          32,85.5},{32,128},{-34,128},{-34,96},{-52,96}},
-                                                       color={0,0,255}));
+          6.12303e-16,47},{6.12303e-16,52},{22,52},{22,62}},   color={0,0,255}));
+  connect(DomeGV.Cs, DPnulle_DomeDwnc.C1) annotation (Line(points={{22,74.9},{
+          40,74.9},{40,63},{47,63}}, color={0,0,255}));
+  connect(DomeGV.yLevel, outputReal) annotation (Line(points={{24.2,83.5},{32,
+          83.5},{32,128},{-34,128},{-34,96},{-52,96}}, color={0,0,255}));
   connect(volumeA.Cs2, fluidOutletI2) annotation (Line(points={{11,-96},{26,-96},
           {26,-93},{41,-93}}, color={0,0,255}));
   connect(RiserGV.C1, volumeA.Cs1) annotation (Line(points={{0.65,-73},{0,-73},{
