@@ -1,5 +1,9 @@
 within ThermoSysPro.WaterSteam.PressureLosses;
 model IdealSwitchValve "Ideal switch valve"
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
   parameter Units.SI.MassFlowRate Qmin=1.e-6
     "Mass flow when the valve is closed";
   parameter Boolean continuous_flow_reversal=false
@@ -20,16 +24,18 @@ public
         origin={0,70},
         extent={{-10,-10},{10,10}},
         rotation=270)));
-  Connectors.FluidInlet C1
+  Connectors.FluidInlet C1(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{-110,
             -72},{-90,-52}}, rotation=0)));
-  Connectors.FluidOutlet C2
+  Connectors.FluidOutlet C2(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{90,-70},
             {110,-50}}, rotation=0)));
 equation
 
   C1.Q = C2.Q;
   C1.h = C2.h;
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   deltaP = C1.P - C2.P;

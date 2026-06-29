@@ -1,5 +1,9 @@
 ﻿within ThermoSysPro.WaterSteam.PressureLosses;
 model SwitchValve "Switch valve"
+replaceable package Species =
+      ThermoSysPro.ConvectedQuantities.Substances.None          annotation (
+      choicesAllMatching=true, Dialog(tab="Fluid", group="Transported Substances"));
+
   parameter ThermoSysPro.Units.xSI.PressureLossCoefficient k=1000
     "Pressure loss coefficient";
   parameter Units.SI.MassFlowRate Qmin=1.e-6
@@ -34,16 +38,18 @@ public
         origin={0,72},
         extent={{-10,-10},{10,10}},
         rotation=270)));
-  Connectors.FluidInlet C1
+  Connectors.FluidInlet C1(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{-110,
             -70},{-90,-50}}, rotation=0)));
-  Connectors.FluidOutlet C2
+  Connectors.FluidOutlet C2(redeclare package Species = Species)
                           annotation (Placement(transformation(extent={{90,-68},
             {110,-48}}, rotation=0)));
 equation
 
   C1.Q = C2.Q;
   C1.h = C2.h;
+
+  C1.SubC = C2.SubC;
 
   h = C1.h;
   Q = C1.Q;
