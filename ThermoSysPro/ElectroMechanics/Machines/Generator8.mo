@@ -37,13 +37,13 @@ equation
     Wmec5.signal = 0;
   end if;
   if (cardinality(Wmec6) == 0) then
-    Wmec3.signal = 0;
+   Wmec6.signal = 0;
   end if;
   if (cardinality(Wmec7) == 0) then
-    Wmec4.signal = 0;
+   Wmec7.signal = 0;
   end if;
   if (cardinality(Wmec8) == 0) then
-    Wmec5.signal = 0;
+   Wmec8.signal = 0;
   end if;
   assert(eta <= 100, "Generator : efficiency over 100%");
   assert(eta >= 0, "Generator : efficiency below 0%");
