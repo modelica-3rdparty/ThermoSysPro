@@ -1,56 +1,40 @@
 within ThermoSysPro.Properties.MoltenSalt;
+
 record ThermoProperties_T
   //ThermoSysPro.Units.AbsoluteTemperature T(
-    //min=ThermoSysPro.Properties.WaterSteam.InitLimits.TMIN,
-    //max=ThermoSysPro.Properties.WaterSteam.InitLimits.TMAX,
-    //nominal=ThermoSysPro.Properties.WaterSteam.InitLimits.TNOM) "Temperature";
-  Units.SI.Density d(
-    min=HitecLimits.DMIN,
-    max=HitecLimits.DMAX,
-    nominal=HitecLimits.DNOM) "Density";
+  //min=ThermoSysPro.Properties.WaterSteam.InitLimits.TMIN,
+  //max=ThermoSysPro.Properties.WaterSteam.InitLimits.TMAX,
+  //nominal=ThermoSysPro.Properties.WaterSteam.InitLimits.TNOM) "Temperature";
+  Units.SI.Density d(min = HitecLimits.DMIN, max = HitecLimits.DMAX, nominal = HitecLimits.DNOM) "Density";
   //ThermoSysPro.Units.SI.SpecificEnergy u(
-    //min=ThermoSysPro.Properties.WaterSteam.InitLimits.SEMIN,
-    //max=ThermoSysPro.Properties.WaterSteam.InitLimits.SEMAX,
-    //nominal=ThermoSysPro.Properties.WaterSteam.InitLimits.SENOM)
-    //"Specific inner energy";
+  //min=ThermoSysPro.Properties.WaterSteam.InitLimits.SEMIN,
+  //max=ThermoSysPro.Properties.WaterSteam.InitLimits.SEMAX,
+  //nominal=ThermoSysPro.Properties.WaterSteam.InitLimits.SENOM)
+  //"Specific inner energy";
   //ThermoSysPro.Units.SI.SpecificEntropy s(
-    //min=ThermoSysPro.Properties.WaterSteam.InitLimits.SSMIN,
-    //max=ThermoSysPro.Properties.WaterSteam.InitLimits.SSMAX,
-    //nominal=ThermoSysPro.Properties.WaterSteam.InitLimits.SSNOM)
-    //"Specific entropy";
-  Units.SI.SpecificHeatCapacity cp(
-    min=HitecLimits.CPMIN,
-    max=HitecLimits.CPMAX,
-    nominal=HitecLimits.CPNOM) "Specific heat capacity at constant presure";
-
+  //min=ThermoSysPro.Properties.WaterSteam.InitLimits.SSMIN,
+  //max=ThermoSysPro.Properties.WaterSteam.InitLimits.SSMAX,
+  //nominal=ThermoSysPro.Properties.WaterSteam.InitLimits.SSNOM)
+  //"Specific entropy";
+  Units.SI.SpecificHeatCapacity cp(min = HitecLimits.CPMIN, max = HitecLimits.CPMAX, nominal = HitecLimits.CPNOM) "Specific heat capacity at constant presure";
   //ThermoSysPro.Units.SI.DerDensityByEnthalpy ddhp
-    //"Derivative of density wrt. specific enthalpy at constant pressure";
+  //"Derivative of density wrt. specific enthalpy at constant pressure";
   //ThermoSysPro.Units.SI.DerDensityByPressure ddph
-   // "Derivative of density wrt. pressure at constant specific enthalpy";
+  // "Derivative of density wrt. pressure at constant specific enthalpy";
   //Real duph(unit="m3/kg")
-    //"Derivative of specific inner energy wrt. pressure at constant specific enthalpy";
+  //"Derivative of specific inner energy wrt. pressure at constant specific enthalpy";
   //Real duhp(unit = "1")
-    //"Derivative of specific inner energy wrt. specific enthalpy at constant pressure";
+  //"Derivative of specific inner energy wrt. specific enthalpy at constant pressure";
   //ThermoSysPro.Units.MassFraction x "Vapor mass fraction";
-  Units.SI.ThermalConductivity k(
-    min=HitecLimits.LAMMIN,
-    max=HitecLimits.LAMMAX,
-    nominal=HitecLimits.LAMNOM);
-  Units.SI.DynamicViscosity mu(
-    min=HitecLimits.ETAMIN,
-    max=HitecLimits.ETAMAX,
-    nominal=HitecLimits.ETANOM);
+  Units.SI.ThermalConductivity k(min = HitecLimits.LAMMIN, max = HitecLimits.LAMMAX, nominal = HitecLimits.LAMNOM);
+  Units.SI.DynamicViscosity mu(min = HitecLimits.ETAMIN, max = HitecLimits.ETAMAX, nominal = HitecLimits.ETANOM);
   Units.SI.DerDensityByTemperature ddTp;
   Units.SI.DerDensityByPressure ddpT;
-  annotation (Icon(graphics={
-        Rectangle(
-          extent={{-100,60},{100,-90}},
-          lineColor={0,0,255},
-          fillColor={255,255,127},
-          fillPattern=FillPattern.Solid),
-        Text(extent={{-127,125},{127,65}}, textString=
-                                               "%name"),
-        Line(points={{-100,-40},{100,-40}}, color={0,0,0}),
-        Line(points={{-100,10},{100,10}}, color={0,0,0}),
-        Line(points={{0,60},{0,-90}}, color={0,0,0})}));
+  annotation(
+    Icon(graphics = {Rectangle(extent = {{-100, 60}, {100, -90}}, lineColor = {0, 0, 255}, fillColor = {255, 255, 127}, fillPattern = FillPattern.Solid), Text(extent = {{-127, 125}, {127, 65}}, textString = "%name"), Line(points = {{-100, -40}, {100, -40}}, color = {0, 0, 0}), Line(points = {{-100, 10}, {100, 10}}, color = {0, 0, 0}), Line(points = {{0, 60}, {0, -90}}, color = {0, 0, 0})}),
+    Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+    "));
 end ThermoProperties_T;

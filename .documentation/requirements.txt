@@ -1,0 +1,6 @@
+jupyter-book==1.0.4
+matplotlib
+numpy
+OpenModelicaCompiler==0.3.3
+pyyaml
+tqdm

@@ -1,8 +1,11 @@
 within ThermoSysPro.NuclearCore;
+
 model Xenon "xenon as fission product"
   parameter Boolean steady_state = true "Steady-state (true) or fixed values (false) initialization";
-  parameter Real Xe_start = 0 "Initial concentration of Xenon (if steady_state=false)" annotation (Dialog(enable=not steady_state));
-  parameter Real I_start = 0 "Initial concentration of Iode (if steady_state=false)" annotation (Dialog(enable=not steady_state));
+  parameter Real Xe_start = 0 "Initial concentration of Xenon (if steady_state=false)" annotation(
+    Dialog(enable = not steady_state));
+  parameter Real I_start = 0 "Initial concentration of Iode (if steady_state=false)" annotation(
+    Dialog(enable = not steady_state));
   parameter ThermoSysPro.Units.SI.Power NominalThPower = 2768e6 "Nominal Thermal Power";
   parameter ThermoSysPro.Units.SI.Mass FuelMass = 72376 "Nuclear Fuel Mass";
   parameter Real Enrichment = 0.02433 "Fuel enrichement";
@@ -27,12 +30,12 @@ model Xenon "xenon as fission product"
   ThermoSysPro.Units.SI.Frequency DecayProduction "";
   ThermoSysPro.Units.SI.Frequency DecayRemoval "";
   ThermoSysPro.Units.SI.Frequency AbsorptionRemoval "";
-  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal Wrel
-    annotation (Placement(transformation(extent={{-92,-10},{-72,10}})));
-  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Xe
-    annotation (Placement(transformation(extent={{72,-52},{92,-32}})));
-  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal I
-    annotation (Placement(transformation(extent={{72,30},{92,50}})));
+  ThermoSysPro.InstrumentationAndControl.Connectors.InputReal Wrel annotation(
+    Placement(transformation(extent = {{-92, -10}, {-72, 10}})));
+  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Xe annotation(
+    Placement(transformation(extent = {{72, -52}, {92, -32}})));
+  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal I annotation(
+    Placement(transformation(extent = {{72, 30}, {92, 50}})));
 initial equation
   if steady_state then
     der(I_135) = 0;
@@ -46,23 +49,21 @@ equation
   I.signal = I_135;
   power = FissionEnergy*FissionRate;
   ThFissionRate = FissionRate/FastFissionFactor;
-  ThFissionRate = NeutronFlux * microCrossSection * U_235;
-  FissilMass = FuelMass * Enrichment;
-  U_235 = FissilMass * 1000 / AtomicMass * Modelica.Constants.N_A;
-  power = Wrel.signal * NominalThPower;
+  ThFissionRate = NeutronFlux*microCrossSection*U_235;
+  FissilMass = FuelMass*Enrichment;
+  U_235 = FissilMass*1000/AtomicMass*Modelica.Constants.N_A;
+  power = Wrel.signal*NominalThPower;
   der(I_135) = ThFissionRate*I_yield - I_135*I_decay;
   der(Xe_135) = ThFissionRate*Xe_yield + I_135*I_decay - Xe_135*Xe_decay - NeutronFlux*Xe_135*Xe_abs_CS;
   FissionProduction = power/FissionEnergy*Xe_yield;
   DecayProduction = I_135*I_decay;
   DecayRemoval = Xe_135*Xe_decay;
   AbsorptionRemoval = NeutronFlux*Xe_135*Xe_abs_CS;
-  annotation (                                   Icon(graphics={
-        Rectangle(extent={{-80,80},{80,-80}}, lineColor={28,108,200},
-          fillColor={255,128,0},
-          fillPattern=FillPattern.Solid),
-        Text(
-          extent={{-60,66},{60,-56}},
-          lineColor={0,140,72},
-          textString="Xe",
-          textStyle={TextStyle.Bold})}));
+  annotation(
+    Icon(graphics = {Rectangle(extent = {{-80, 80}, {80, -80}}, lineColor = {28, 108, 200}, fillColor = {255, 128, 0}, fillPattern = FillPattern.Solid), Text(extent = {{-60, 66}, {60, -56}}, lineColor = {0, 140, 72}, textString = "Xe", textStyle = {TextStyle.Bold})}),
+    Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+    "));
 end Xenon;

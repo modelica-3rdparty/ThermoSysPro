@@ -1,6 +1,6 @@
 within ThermoSysPro.Properties.SolarSalt;
-function IsobaricExpansionCoefficient_derT
-  "derivative of IsobaricExpansionCoefficient_T"
+
+function IsobaricExpansionCoefficient_derT "derivative of IsobaricExpansionCoefficient_T"
   input Units.SI.Temperature temp "Fluid temperature (K)";
   input Real der_temp "fluid temperature time derivative (K/s)";
   output Real der_beta "isobaric expansion coefficient time derivative (1/Ks)";
@@ -10,4 +10,10 @@ protected
   constant Real betaC2 = -0.636;
 algorithm
   der_beta := -((betaC0*betaC2)/(betaC1 + betaC2*temp)^2)*der_temp;
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+    "));
 end IsobaricExpansionCoefficient_derT;

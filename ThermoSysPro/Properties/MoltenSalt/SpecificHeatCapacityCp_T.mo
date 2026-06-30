@@ -1,15 +1,17 @@
 within ThermoSysPro.Properties.MoltenSalt;
-function SpecificHeatCapacityCp_T
-  "Specific Heat Capacity at fixed P computation for Salt (input T)"
 
+function SpecificHeatCapacityCp_T "Specific Heat Capacity at fixed P computation for Salt (input T)"
   input Units.SI.Temperature T "Temperature (K)";
   output Units.SI.SpecificHeatCapacity Cp "Specific Heat Capacity (J/kg/K)";
-
 algorithm
-  //Cp := 1396.11639230963 + 0.171740545944394*T;              // temperature in K
+//Cp := 1396.11639230963 + 0.171740545944394*T;              // temperature in K
+// New
+  Cp := 1443 + 0.172*(T - 273.15);
+//Cp := 1448;
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
 
-  // New
-    Cp := 1443 + 0.172*(T - 273.15);
-    //Cp := 1448;
+## ThermoSysPro Version 4.2
 
+    "));
 end SpecificHeatCapacityCp_T;
