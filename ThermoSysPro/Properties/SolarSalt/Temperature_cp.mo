@@ -1,4 +1,5 @@
 within ThermoSysPro.Properties.SolarSalt;
+
 function Temperature_cp "inverse function of SpecificHeatCp_t"
   input Units.SI.SpecificHeatCapacity cp "Specific Heat Capacity (J/kgK)";
   output Units.SI.Temperature temp "Fluid temperature (K)";
@@ -6,6 +7,13 @@ protected
   constant Real tempC0 = -8116.38;
   constant Real tempC1 = 5.81395;
 algorithm
-   temp := tempC0 + tempC1*cp;
-   annotation(inverse(cp = SpecificHeatCp_T(temp)), derivative = Temperature_dercp);
+  temp := tempC0 + tempC1*cp;
+  annotation(
+    inverse(cp = SpecificHeatCp_T(temp)),
+    derivative = Temperature_dercp,
+    Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+    "));
 end Temperature_cp;

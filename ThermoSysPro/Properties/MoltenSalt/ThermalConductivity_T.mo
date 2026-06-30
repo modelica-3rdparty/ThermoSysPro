@@ -1,11 +1,15 @@
-﻿within ThermoSysPro.Properties.MoltenSalt;
-function ThermalConductivity_T
-  "Thermal Conductivity computation for Salt (input T)"
+within ThermoSysPro.Properties.MoltenSalt;
 
+function ThermalConductivity_T "Thermal Conductivity computation for Salt (input T)"
   input Units.SI.Temperature T "Temperature (K)";
   output Units.SI.ThermalConductivity k "Thermal Conductivity (W/m/K)";
-
 algorithm
-  k := 0.3911015 + 0.00019*T;                                // temperature in °K
+  k := 0.3911015 + 0.00019*T;
+// temperature in °K
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
 
+## ThermoSysPro Version 4.2
+
+    "));
 end ThermalConductivity_T;

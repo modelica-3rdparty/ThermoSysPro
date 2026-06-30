@@ -1,18 +1,18 @@
 within ThermoSysPro.Properties.WaterSteamSimple.Conductivity;
-function dlambda1ph_Ph
-  "Derivative of conductivity wrt. pressure at constant specific enthalpy in liquid region for given pressure and specific enthalpy"
+
+function dlambda1ph_Ph "Derivative of conductivity wrt. pressure at constant specific enthalpy in liquid region for given pressure and specific enthalpy"
   input Units.SI.AbsolutePressure p "Pressure";
   input Units.SI.SpecificEnthalpy h "Specific enthalpy";
-  output Real dlambdaph
-    "Derivative of conductivity wrt. pressure at constant specific enthalpy";
+  output Real dlambdaph "Derivative of conductivity wrt. pressure at constant specific enthalpy";
 protected
-  lambda1_Ph_coef coef annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
+  lambda1_Ph_coef coef annotation(
+    Placement(transformation(extent = {{-100, 80}, {-80, 100}})));
 algorithm
+  dlambdaph := ThermoSysPro.Properties.WaterSteamSimple.Utilities.polynomial_xy_order5_derivative_x(coef, p, h);
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
 
-  dlambdaph :=
-    ThermoSysPro.Properties.WaterSteamSimple.Utilities.polynomial_xy_order5_derivative_x(
-    coef,
-    p,
-    h);
+## ThermoSysPro Version 4.2
 
+    "));
 end dlambda1ph_Ph;

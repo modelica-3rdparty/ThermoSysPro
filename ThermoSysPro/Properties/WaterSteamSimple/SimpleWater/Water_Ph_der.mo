@@ -1,22 +1,19 @@
-﻿within ThermoSysPro.Properties.WaterSteamSimple.SimpleWater;
+within ThermoSysPro.Properties.WaterSteamSimple.SimpleWater;
+
 function Water_Ph_der "Derivative function of Water_Ph"
   input Units.SI.AbsolutePressure p "Pressure";
   input Units.SI.SpecificEnthalpy h "Specific enthalpy";
   input Integer mode = 0 "Région IF97 - 0:calcul automatique";
   //input CombiPlant.ThermoFluidPro.Media.Common.IF97TwoPhaseAnalytic aux "auxiliary record";
-
   input Real p_der "derivative of Pressure";
   input Real h_der "derivative of Specific enthalpy";
-
   output ThermoSysPro.Properties.WaterSteamSimple.ThermoProperties_ph der_pro "Derivative";
-
 protected
   Integer region;
- // Integer phase;
-
+  // Integer phase;
 algorithm
-  //phase := ThermoSysPro.Properties.WaterSteamSimple.phase_ph(p,h);
-  //region :=ThermoSysPro.Properties.WaterSteamSimple.region_ph(p,h,phase,mode);
+//phase := ThermoSysPro.Properties.WaterSteamSimple.phase_ph(p,h);
+//region :=ThermoSysPro.Properties.WaterSteamSimple.region_ph(p,h,phase,mode);
   region := ThermoSysPro.Properties.WaterSteamSimple.region_ph(p, h, mode);
   if (region == 1) then
     der_pro := ThermoSysPro.Properties.WaterSteamSimple.prop1_Ph_der(p, h, p_der, h_der);
@@ -27,34 +24,14 @@ algorithm
   else
     assert(false, "Water_Ph: Incorrect region number (" + String(region) + ")");
   end if;
+  annotation(
+    Window(x = 0.22, y = 0.2, width = 0.6, height = 0.6),
+    Icon(coordinateSystem(preserveAspectRatio = false, extent = {{-100, -100}, {100, 100}}, grid = {2, 2}), graphics = {Text(extent = {{-134, 104}, {142, 44}}, textString = "%name"), Ellipse(extent = {{-100, 40}, {100, -100}}, lineColor = {255, 127, 0}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid), Text(extent = {{-84, -4}, {84, -52}}, lineColor = {255, 127, 0}, textString = "fonction")}),
+    Documentation(info = "
+## Copyright © EDF 2002 - 2026  
 
-  annotation (
-    Window(
-      x=0.22,
-      y=0.2,
-      width=0.6,
-      height=0.6),
-    Icon(coordinateSystem(
-        preserveAspectRatio=false,
-        extent={{-100,-100},{100,100}},
-        grid={2,2}), graphics={
-        Text(extent={{-134,104},{142,44}}, textString=
-                                               "%name"),
-        Ellipse(
-          extent={{-100,40},{100,-100}},
-          lineColor={255,127,0},
-          fillColor={255,255,255},
-          fillPattern=FillPattern.Solid),
-        Text(
-          extent={{-84,-4},{84,-52}},
-          lineColor={255,127,0},
-          textString=
-               "fonction")}),
-    Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
-</HTML>
-<html>
-<p><b>ThermoSysPro Version 4.1</b></p>
-</HTML>
-"));
+
+## ThermoSysPro Version 4.2  
+
+    "));
 end Water_Ph_der;

@@ -1,4 +1,5 @@
 within ThermoSysPro.Correlations.Misc;
+
 function PropFlueGases "Computation of the flue gases properties"
   input Units.SI.AbsolutePressure Pmf "Flue gases average pressure";
   input Units.SI.Temperature Tmf "Flue gases average temperature";
@@ -7,39 +8,33 @@ function PropFlueGases "Computation of the flue gases properties"
   input Real XefO2 "O2 mass fraction";
   input Real XefN2 "N2 mass fraction";
   input Real XefSO2 "SO2 mass fraction";
-
   output Real propf[4] "Flue gases physical properties vector";
-
 protected
   Units.SI.ThermalConductivity condf "Flue gases thermal conductivity";
   Units.SI.SpecificHeatCapacity cpf "Flue gases specific heat capacity";
   Units.SI.DynamicViscosity muf "Flue gases dynamic viscosity";
   Units.SI.Density rhof "Flue gases density";
-
 algorithm
   condf := ThermoSysPro.Properties.FlueGases.FlueGases_k(Pmf, Tmf, XefCO2, XefH2O, XefO2, XefSO2);
   cpf := ThermoSysPro.Properties.FlueGases.FlueGases_cp(Pmf, Tmf, XefCO2, XefH2O, XefO2, XefSO2);
   muf := ThermoSysPro.Properties.FlueGases.FlueGases_mu(Pmf, Tmf, XefCO2, XefH2O, XefO2, XefSO2);
   rhof := ThermoSysPro.Properties.FlueGases.FlueGases_rho(Pmf, Tmf, XefCO2, XefH2O, XefO2, XefSO2);
-
   propf[1] := condf;
   propf[2] := cpf;
   propf[3] := muf;
   propf[4] := rhof;
+  annotation(
+    smoothOrder = 2,
+    Documentation(revisions = "
+Author  
 
-  annotation (
-    smoothOrder=2,
-    Documentation(revisions="<html>
-<p><u><b>Author</b></u></p>
-<ul>
-<li>Baligh El Hefni </li>
-</ul>
-</html>",
-   info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
-</HTML>
-<html>
-<p><b>ThermoSysPro Version 4.1</h4>
-</HTML>
-"));
+Baligh El Hefni   
+
+    ", info = "
+## Copyright © EDF 2002 - 2026  
+
+
+## ThermoSysPro Version 4.2  
+
+    "));
 end PropFlueGases;
