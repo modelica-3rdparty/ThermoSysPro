@@ -89,7 +89,6 @@ TestSteamEngine
 TestSteamExtractionSplitter
 TestSteamGenerator_1SG
 TestSteamGenerator_1SG_Purge
-TestSteamGenerator_1SG_ELOOP_SMR
 TestStodolaTurbine
 TestStodolaTurbine1
 TestStodolaTurbine2

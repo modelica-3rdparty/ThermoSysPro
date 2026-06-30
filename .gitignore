@@ -16,4 +16,4 @@ status*
 *.mof
 *.c
 buildlog.txt
-
+*.bak-mo
