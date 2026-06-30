@@ -1,45 +1,37 @@
 within ThermoSysPro.Properties.FlueGases;
-function FlueGases_drhodp
-  "Derivative of the density wrt. the pressure at constant specific enthalpy"
+
+function FlueGases_drhodp "Derivative of the density wrt. the pressure at constant specific enthalpy"
   input Units.SI.AbsolutePressure PMF "Flue gases average pressure";
   input Units.SI.Temperature TMF "Flue gases average temperature";
   input Real Xco2 "CO2 mass fraction";
   input Real Xh2o "H2O mass fraction";
   input Real Xo2 "O2 mass fraction";
   input Real Xso2 "SO2 mass fraction";
-
-  output Units.SI.DerDensityByPressure drhodp
-    "Derivative of the density wrt. the pressure at constant specific enthalpy";
-
+  output Units.SI.DerDensityByPressure drhodp "Derivative of the density wrt. the pressure at constant specific enthalpy";
 protected
   ThermoSysPro.Properties.ModelicaMediaFlueGases.ThermodynamicState state;
   Units.SI.SpecificEntropy s "Flue gases specific entropy";
   Units.SI.Density rho "Flue gaases density";
   Units.SI.SpecificHeatCapacity cp "Specific heat capacity";
   Units.SI.SpecificHeatCapacity R "gas constant";
-
   Real Xn2 "N2 mass fraction";
-
 algorithm
   Xn2 := 1 - Xco2 - Xh2o - Xo2 - Xso2;
-
-  /* Computation of the thermodynamic state */
-  state := ThermoSysPro.Properties.ModelicaMediaFlueGases.setState_pTX(PMF, TMF, {Xn2,Xo2,Xh2o,Xco2,Xso2});
+/* Computation of the thermodynamic state */
+  state := ThermoSysPro.Properties.ModelicaMediaFlueGases.setState_pTX(PMF, TMF, {Xn2, Xo2, Xh2o, Xco2, Xso2});
   s := ThermoSysPro.Properties.ModelicaMediaFlueGases.specificEntropy(state);
   rho := ThermoSysPro.Properties.ModelicaMediaFlueGases.density(state);
   cp := ThermoSysPro.Properties.ModelicaMediaFlueGases.specificHeatCapacityCp(state);
   R := ThermoSysPro.Properties.ModelicaMediaFlueGases.gasConstant(state);
-
   drhodp := (rho*rho*R)/(PMF*cp)*(1/rho + TMF/PMF*(cp - R));
-
-  annotation (
-    smoothOrder=2,
+  annotation(
+    smoothOrder = 2,
     Icon(graphics),
-    Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
-</HTML>
-<html>
-<p><b>ThermoSysPro Version 4.1</b></p>
-</HTML>
-</html>"));
+    Documentation(info = "
+## Copyright © EDF 2002 - 2026  
+
+
+## ThermoSysPro Version 4.2  
+
+    "));
 end FlueGases_drhodp;

@@ -1,4 +1,5 @@
 within ThermoSysPro.Properties.SolarSalt;
+
 function Temperature_k "inverse function of ThermalConductivity_t"
   input Units.SI.ThermalConductivity k "Thermal Conductivity";
   output Units.SI.Temperature temp "Fluid temperature (K)";
@@ -7,5 +8,12 @@ protected
   constant Real tempC1 = 5263.16;
 algorithm
   temp := tempC0 + tempC1*k;
-  annotation(inverse(k = ThermalConductivity_T(temp)), derivative = Temperature_derk);
+  annotation(
+    inverse(k = ThermalConductivity_T(temp)),
+    derivative = Temperature_derk,
+    Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+    "));
 end Temperature_k;
