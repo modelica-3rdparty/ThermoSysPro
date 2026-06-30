@@ -1,13 +1,17 @@
 within ThermoSysPro.Properties.WaterSteamSimple.Pressure;
+
 function dpsatT_T "Derivative of saturation pressure wrt. temperature"
   input Units.SI.Temperature T "Temperature";
   output Real dpT "Derivative of pressure";
 protected
-  psat_T_coef coef annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
+  psat_T_coef coef annotation(
+    Placement(transformation(extent = {{-100, 80}, {-80, 100}})));
 algorithm
+  dpT := ThermoSysPro.Properties.WaterSteamSimple.Utilities.polynomial_x_order7_derivative(coef, T);
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
 
-  dpT :=
-    ThermoSysPro.Properties.WaterSteamSimple.Utilities.polynomial_x_order7_derivative(
-    coef, T);
+## ThermoSysPro Version 4.2
 
+    "));
 end dpsatT_T;

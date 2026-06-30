@@ -1,12 +1,17 @@
 within ThermoSysPro.Properties.WaterSteamSimple.Enthalpy;
-function h1sat_P "specific enthalpy at liquid saturation for given pressure"
 
+function h1sat_P "specific enthalpy at liquid saturation for given pressure"
   input Units.SI.Pressure p "pressure";
   output Units.SI.SpecificEnthalpy h "specific enthalpy";
 protected
-  h1sat_P_coef coef
-    annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
+  h1sat_P_coef coef annotation(
+    Placement(transformation(extent = {{-100, 80}, {-80, 100}})));
 algorithm
- h := coef.a0 + coef.a*abs(p)^coef.b;
+  h := coef.a0 + coef.a*abs(p)^coef.b;
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
 
+## ThermoSysPro Version 4.2
+
+    "));
 end h1sat_P;

@@ -1,4 +1,5 @@
 within ThermoSysPro.Properties.FlueGases;
+
 function EmissivGP "Flue gases - particles emissivity"
   extends ThermoSysPro.Properties.FlueGases.unsafeForJacobian;
   input Units.SI.Length AL "Equivalent length (radiation)";
@@ -12,17 +13,14 @@ function EmissivGP "Flue gases - particles emissivity"
   input Real EPSPAR "Wall emissivity";
   output Real EPSFP "Particles/flue gases emissivity";
 
-external "FORTRAN" emg(AL, TMF, TPE, PMEL, PH2O, PCO2, FV, DP, EPSPAR, EPSFP);
-  annotation (             Window(
-      x=0.22,
-      y=0.22,
-      width=0.44,
-      height=0.65),
-    Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
-</HTML>
-<html>
-<p><b>ThermoSysPro Version 4.1</b></p>
-</HTML>
-"));
+  external "FORTRAN" emg(AL, TMF, TPE, PMEL, PH2O, PCO2, FV, DP, EPSPAR, EPSFP);
+  annotation(
+    Window(x = 0.22, y = 0.22, width = 0.44, height = 0.65),
+    Documentation(info = "
+## Copyright © EDF 2002 - 2026  
+
+
+## ThermoSysPro Version 4.2  
+
+    "));
 end EmissivGP;

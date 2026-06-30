@@ -1,10 +1,9 @@
 within ThermoSysPro.Properties.WaterSteamSimple;
+
 function prop2_Ph "Thermodynamics properties in region 2, independent variables p and h "
   input Units.SI.AbsolutePressure p "Pressure";
   input Units.SI.SpecificEnthalpy h "Specific enthalpy";
-
   output ThermoSysPro.Properties.WaterSteamSimple.ThermoProperties_ph pro;
-
 algorithm
   pro.T := ThermoSysPro.Properties.WaterSteamSimple.Temperature.T2_Ph(p, h);
   pro.d := ThermoSysPro.Properties.WaterSteamSimple.Density.d2_Ph(p, h);
@@ -15,5 +14,11 @@ algorithm
   pro.ddph := ThermoSysPro.Properties.WaterSteamSimple.Density.dd2ph_Ph(p, h);
   pro.duph := ThermoSysPro.Properties.WaterSteamSimple.Energy.du2ph_Ph(p, h);
   pro.duhp := ThermoSysPro.Properties.WaterSteamSimple.Energy.du2hp_Ph(p, h);
-  pro.x :=1;
+  pro.x := 1;
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+    "));
 end prop2_Ph;

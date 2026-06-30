@@ -1,32 +1,30 @@
 within ThermoSysPro.Properties.WaterSteamSimple;
+
 function region_ph "Returns the current region (valid values: 1,2,4) for given pressure and specific enthalpy"
   input Units.SI.Pressure p "pressure";
   input Units.SI.SpecificEnthalpy h "specific enthalpy";
-// input Integer phase=0 "phase: 2 for two-phase, 1 for one phase";
- input Integer mode=0 "mode: 0 means check, otherwise assume region=mode";
-
- output Integer region "region (valid values: 1,2,4)";
+  // input Integer phase=0 "phase: 2 for two-phase, 1 for one phase";
+  input Integer mode = 0 "mode: 0 means check, otherwise assume region=mode";
+  output Integer region "region (valid values: 1,2,4)";
   // If mode is different from 0, no checking for the region is done and
   // the mode is assumed to be the correct region. This can be used to
   // implement e.g. water-only steamtables when mode == 1
-
 protected
   Units.SI.SpecificEnthalpy hl "bubble enthalpy";
   Units.SI.SpecificEnthalpy hv "dew enthalpy";
   Integer phase;
   Boolean supercritical;
-
 algorithm
   if (mode <> 0) then
     region := mode;
   else
-    // check for regions 1, 2 and 4
+// check for regions 1, 2 and 4
     supercritical := (p > ThermoSysPro.Properties.WaterSteamSimple.critical.PCRIT);
     if supercritical then
       if h < ThermoSysPro.Properties.WaterSteamSimple.critical.HCRIT then
-       region:= 1;
+        region := 1;
       else
-       region:= 2;
+        region := 2;
       end if;
     else
       hl := Enthalpy.h1sat_P(p);
@@ -36,12 +34,17 @@ algorithm
         region := 4;
       else
         if (h < hl) then
-          region:= 1;
-        elseif (h>hv) then
+          region := 1;
+        elseif (h > hv) then
           region := 2;
         end if;
       end if;
     end if;
   end if;
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
 
+## ThermoSysPro Version 4.2
+
+    "));
 end region_ph;
