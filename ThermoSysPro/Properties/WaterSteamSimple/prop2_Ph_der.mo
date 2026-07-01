@@ -1,13 +1,11 @@
 within ThermoSysPro.Properties.WaterSteamSimple;
+
 function prop2_Ph_der
   input Units.SI.AbsolutePressure p "Pressure";
   input Units.SI.SpecificEnthalpy h "Specific enthalpy";
-
   input Real p_der "derivative of Pressure";
   input Real h_der "derivative of Specific enthalpy";
-
   output ThermoSysPro.Properties.WaterSteamSimple.ThermoProperties_ph der_pro "Derivative";
-
 protected
   Real dTp "Derivative of temperature wrt. pressure";
   Real dTh "Derivative of temperature wrt. enthalpy";
@@ -25,9 +23,8 @@ protected
   Real d2uhp "Second derivative of specific inner energy wrt. enthalpy and pressure";
   Real d2uhh "Second derivative of specific inner energy wrt. enthalpy";
   Real d2upp "Second derivative of specific inner energy wrt. pressure";
-
 algorithm
-  //First derivatives
+//First derivatives
   dTp := ThermoSysPro.Properties.WaterSteamSimple.Temperature.dT2ph_Ph(p, h);
   dTh := ThermoSysPro.Properties.WaterSteamSimple.Temperature.dT2ph_Ph(p, h);
   ddp := ThermoSysPro.Properties.WaterSteamSimple.Density.dd2ph_Ph(p, h);
@@ -38,25 +35,27 @@ algorithm
   dsh := ThermoSysPro.Properties.WaterSteamSimple.Entropy.ds2ph_Ph(p, h);
   dcp := ThermoSysPro.Properties.WaterSteamSimple.HeatCapacity.dcp2ph_Ph(p, h);
   dch := ThermoSysPro.Properties.WaterSteamSimple.HeatCapacity.dcp2ph_Ph(p, h);
-
   der_pro.T := dTp*p_der + dTh*h_der;
   der_pro.d := ddp*p_der + ddh*h_der;
   der_pro.u := dup*p_der + duh*h_der;
   der_pro.s := dsp*p_der + dsh*h_der;
   der_pro.cp := dcp*p_der + dch*h_der;
-  der_pro.x :=0;
-
-  //Second derivatives
+  der_pro.x := 0;
+//Second derivatives
   d2dhp := ThermoSysPro.Properties.WaterSteamSimple.Density.d2d2hp_Ph(p, h);
   d2dhh := ThermoSysPro.Properties.WaterSteamSimple.Density.d2d2hh_Ph(p, h);
   d2dpp := ThermoSysPro.Properties.WaterSteamSimple.Density.d2d2pp_Ph(p, h);
   d2uhp := ThermoSysPro.Properties.WaterSteamSimple.Energy.d2u2hp_Ph(p, h);
   d2uhh := ThermoSysPro.Properties.WaterSteamSimple.Energy.d2u2hh_Ph(p, h);
   d2upp := ThermoSysPro.Properties.WaterSteamSimple.Energy.d2u2pp_Ph(p, h);
-
   der_pro.ddhp := d2dhp*p_der + d2dhh*h_der;
   der_pro.ddph := d2dpp*p_der + d2dhp*h_der;
   der_pro.duph := d2uhp*p_der + d2uhh*h_der;
   der_pro.duhp := d2upp*p_der + d2uhp*h_der;
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
 
+## ThermoSysPro Version 4.2
+
+    "));
 end prop2_Ph_der;

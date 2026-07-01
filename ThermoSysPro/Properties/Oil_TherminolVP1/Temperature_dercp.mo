@@ -1,4 +1,5 @@
 within ThermoSysPro.Properties.Oil_TherminolVP1;
+
 function Temperature_dercp "derivative of Temperature_cp"
   input Units.SI.SpecificHeatCapacity cp "Specific Heat Capacity (J/kgK)";
   input Real der_cp "specific heat capacity time derivative (J/kgKs)";
@@ -10,5 +11,11 @@ protected
   constant Real temp_c3 = 8.707277494347506e-7;
   constant Real temp_c4 = -1.15573614609828e-10;
 algorithm
-   der_temp :=  temp_c1 * der_cp + 2 * temp_c2 * cp * der_cp + 3 * temp_c3 * cp ^ 2 * der_cp + 4 * temp_c4 * cp ^ 3 * der_cp;
+  der_temp := temp_c1*der_cp + 2*temp_c2*cp*der_cp + 3*temp_c3*cp^2*der_cp + 4*temp_c4*cp^3*der_cp;
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+    "));
 end Temperature_dercp;

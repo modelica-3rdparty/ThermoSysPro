@@ -1,4 +1,5 @@
 within ThermoSysPro.NuclearCore;
+
 model Xenon "xenon as fission product"
   parameter Boolean steady_state = true "Steady-state (true) or fixed values (false) initialization" annotation(Dialog(group="Initialization"));
   parameter Real Xe_start = 0 "Initial concentration of Xenon (if steady_state=false)" annotation (Dialog(group="Initialization",enable=not steady_state));
@@ -93,5 +94,11 @@ $$ FissionRate = FastFissionFactor * \\Phi_{Th} * \\sigma_f * N_f $$
 where *FastFissionFactor* is the ratio between the total number of fissions and the thermal ones, \\\\(\\sigma_f\\\\) the microscopic fission cross-section of the fuel
 and \\\\(N_f\\\\) the density of fissil atoms in the fuel.
 
-The used microscopic cross-section values should refer to the thermal neutron flux."));
+The used microscopic cross-section values should refer to the thermal neutron flux.
+
+## Copyright © EDF 2002 - 2026  
+
+
+## ThermoSysPro Version 4.2  
+"));
 end Xenon;

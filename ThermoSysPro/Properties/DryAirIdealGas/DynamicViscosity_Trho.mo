@@ -1,17 +1,14 @@
 within ThermoSysPro.Properties.DryAirIdealGas;
-function DynamicViscosity_Trho
-  "Dynamic Viscosity computation for Dry Air Ideal Gas (inputs: T, rho)"
+
+function DynamicViscosity_Trho "Dynamic Viscosity computation for Dry Air Ideal Gas (inputs: T, rho)"
   //valid up to 100MPa and 2000K, according to Kadoya et al. 1985 (Viscosity and Thermal Conductivity of Dry Air in the Gaseous Phase), Journal of Physical and Chemical Reference Data"
   // STEPHANIE Dry Air Ideal Gas
-
   input Units.SI.Temperature T "Temperature (K)";
   input Units.SI.Density rho "Density (kg/m3)";
-
   output Units.SI.DynamicViscosity mu "Dynamic Viscosity (Pa.s)";
-
 protected
-  constant Units.SI.Temperature tnorm=132.5 "kritikal temperature";
-  constant Units.SI.Density rhonorm=314.3 "critical density";
+  constant Units.SI.Temperature tnorm = 132.5 "kritikal temperature";
+  constant Units.SI.Density rhonorm = 314.3 "critical density";
   constant Real H = 6.1609e-6;
   constant Real A1 = 0.128517;
   constant Real A05 = 2.60661;
@@ -28,16 +25,19 @@ protected
   Units.SI.Temperature tReduced "dimensionless temperature";
   Units.SI.Density rhoReduced "dimensionless density";
   Real residualViscosity;
-
 algorithm
- //viscosityZeroDensity:
+//viscosityZeroDensity:
   tReduced := T/tnorm;
   viscosityZeroDensity := A1*tReduced + A05*sqrt(tReduced) + A0 + A_1*tReduced^(-1) + A_2*tReduced^(-2) + A_3*tReduced^(-3) + A_4*tReduced^(-4);
- //residualViscosity:
+//residualViscosity:
   rhoReduced := rho/rhonorm;
   residualViscosity := B1*rhoReduced + B2*rhoReduced^2 + B3*rhoReduced^3 + B4*rhoReduced^4;
-
   mu := (viscosityZeroDensity + residualViscosity)*H;
+  annotation(
+    derivative = derDynamicViscosity_derT_derrho,
+    Documentation(info = "## Copyright © EDF 2002 - 2025
 
-  annotation(derivative = derDynamicViscosity_derT_derrho);
+## ThermoSysPro Version 4.2
+
+    "));
 end DynamicViscosity_Trho;

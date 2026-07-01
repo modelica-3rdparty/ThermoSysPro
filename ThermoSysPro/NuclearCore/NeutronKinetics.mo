@@ -68,9 +68,7 @@ equation
   der(Pneut) = (Reac*1e-5 - SumBeta)*Pneut/Tlife + sum(Lambda .* Pndelay);
 
   for i in 1:6 loop
-
     der(Pndelay[i]) = Beta[i]*Pneut/Tlife - Lambda[i]*Pndelay[i];
-
   end for;
 
   annotation (Icon(
@@ -343,5 +341,9 @@ The default values for \\\\(Tlife\\\\) (*prompt neutron lifetime*), \\\\(Beta\\\
 The equations can also be derived from the same source, setting:
 - \\\\(n(t)\\\\) proportional to \\\\(Pneut\\\\)
 - \\\\(C_i(t)\\\\) proportional to \\\\(Pdelay\\\\)
+## Copyright © EDF 2002 - 2026  
+
+
+## ThermoSysPro Version 4.2  
 "));
 end NeutronKinetics;

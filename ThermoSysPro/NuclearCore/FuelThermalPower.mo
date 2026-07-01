@@ -94,7 +94,6 @@ initial equation
       end for;
     end for;
   end if;
-
 equation
   -Wcond[:,end] =C_clad.W;
   Tg =C_clad.T;
@@ -211,5 +210,11 @@ For the gap, the following thermal convection equation is used, where \\\\(h_{ga
 $$ Wcond_{i,end} = h_{gap} * S_{i,end} * (T_{i,surface} - T_{i,clad}) $$
 
 - [1]. G. Rowlands, *Resonance absorption and non-uniform temperature distributions*, Journal of Nuclear Energy, 1962.
-- [2]. N.E. Todreas, M. S. Kazimi, Nuclear System I, Thermal Hydraulics Fundamentals. Taylor&Francis, 1798."));
+- [2]. N.E. Todreas, M. S. Kazimi, Nuclear System I, Thermal Hydraulics Fundamentals. Taylor&Francis, 1798.
+
+## Copyright © EDF 2002 - 2026  
+
+
+## ThermoSysPro Version 4.2  
+"));
 end FuelThermalPower;

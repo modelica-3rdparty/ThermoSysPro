@@ -42,7 +42,6 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback due to 
   Real T_CoreAv "Average temperature of the moderator in the core (K)";
   Real Cbore "Concentration of the boron";
   Real Cxenon "Concentration of the xénon";
-
   Real Reac "Total reactivity (pcm)";
 
   Real ReacP "Reactivity given by soluble poison, i.e. Boron (pcm)";
@@ -339,11 +338,10 @@ equation
         extent=[116, 62; 116, 50],
         style(color=3, rgbcolor={0,0,255}),
         string="ReacB")),
-    Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
-</HTML>
-<html>
-<p><b>ThermoSysPro Version 4.1</b></p>
-</HTML>
-"));
+    Documentation(info="
+## Copyright © EDF 2002 - 2026  
+
+
+## ThermoSysPro Version 4.2  
+    "));
 end ReactivityFeedbacks;

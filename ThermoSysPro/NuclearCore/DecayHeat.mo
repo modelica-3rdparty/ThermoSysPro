@@ -23,30 +23,20 @@ public
     annotation (extent=[100,-10; 120,10], Placement(transformation(extent={{100,
             -10},{120,10}}, rotation=0)));
 initial equation
-
   if steady_state then
-
     for i in 1:N loop
-
       der(Pres[i]) = 0;
-
     end for;
-
   else
-    Pres = {89.35e6,58.88e6,92.05e6};
-
+    Pres = {89.35e6, 58.88e6, 92.05e6};
   end if;
-
 equation
   Pneut =Pneutrons.signal;
   PresTot =DecayHeat.signal;
 
   PresTot = sum(Pres);
-
   for i in 1:N loop
-
     der(Pres[i]) = (Kris[i]*Pneut - Pres[i])/Tris[i];
-
   end for;
 
   annotation (Icon(
@@ -201,11 +191,11 @@ equation
           fillColor=45,
           rgbfillColor={255,128,0}),
         string="Pneut")),
-    Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
-</HTML>
-<html>
-<p><b>ThermoSysPro Version 4.1</b></p>
-</HTML>
-"));
+    Documentation(info= = "
+## Copyright © EDF 2002 - 2026  
+
+
+## ThermoSysPro Version 4.2  
+
+    "));
 end DecayHeat;
