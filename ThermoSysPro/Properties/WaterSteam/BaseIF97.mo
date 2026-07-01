@@ -1,6 +1,7 @@
 within ThermoSysPro.Properties.WaterSteam;
 
 package BaseIF97 "Modelica Physical Property Model: the new industrial formulation IAPWS-IF97"
+  extends ThermoSysPro.UsersGuide.Documentation.ThermoSysProPackageIcon;
   import ThermoSysPro.Units.SI;
 
   record IterationData "constants for iterations internal to some functions"
@@ -1372,8 +1373,7 @@ Documentation added: December 2002
 
         "));
     end region_dT;
-    annotation(
-      Documentation(info = "Package description  
+    annotation(Documentation(info = "Package description
 Package Regions contains a large number of auxiliary functions which are neede to compute the current region  
  of the IAPWS/IF97 for a given pair of input variables as quickly as possible. The focus of this implementation was on  
  computational efficiency, not on compact code. Many of the function values calulated in these functions could be obtained  
@@ -1459,8 +1459,7 @@ Revised and extended for inclusion in Modelica.Thermal: December 2002
 
 ## ThermoSysPro Version 4.2
 
-      "),
-      Icon(graphics = {Text(extent = {{-102, 0}, {24, -26}}, lineColor = {242, 148, 0}, textString = "Thermo"), Text(extent = {{-4, 8}, {68, -34}}, lineColor = {46, 170, 220}, textString = "SysPro"), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-32, 12}, {-16, 14}, {6, 14}, {26, 12}, {42, 8}, {52, 2}, {42, 6}, {28, 10}, {6, 12}, {-12, 12}, {-16, 12}, {-34, 10}, {-50, 6}, {-62, 2}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-44, 38}, {-24, 38}, {-26, 30}, {-26, 22}, {-24, 14}, {-24, 12}, {-46, 8}, {-42, 22}, {-42, 30}, {-44, 38}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-26, 20}, {-20, 20}, {-20, 22}, {-14, 22}, {-14, 20}, {-12, 20}, {-12, 12}, {-26, 12}, {-28, 12}, {-26, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-8, 14}, {-8, 24}, {-6, 24}, {-6, 14}, {-8, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 30}, {-6, 26}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 36}, {-6, 32}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 42}, {-6, 38}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 48}, {-6, 44}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-4, 14}, {-4, 26}, {-2, 26}, {-2, 14}, {-4, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 32}, {-2, 28}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 38}, {-2, 34}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 44}, {-2, 40}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 50}, {-2, 46}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-2, 20}, {8, 20}, {8, 22}, {10, 22}, {18, 22}, {18, 12}, {-4, 14}, {-2, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-36, 10}, {-18, 12}, {6, 12}, {26, 10}, {42, 6}, {52, 0}, {42, 4}, {28, 8}, {6, 10}, {-12, 10}, {-18, 10}, {-38, 8}, {-50, 6}, {-62, 2}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Line(points = {{22, 12}, {22, 14}, {22, 16}, {24, 14}, {20, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{26, 12}, {26, 14}, {26, 16}, {28, 14}, {24, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{30, 10}, {30, 12}, {30, 14}, {32, 12}, {28, 16}}, color = {46, 170, 220}, thickness = 0.5), Polygon(points = {{36, 8}, {36, 30}, {34, 34}, {36, 38}, {40, 38}, {40, 8}, {36, 8}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-100, 80}, {80, -100}}, lineColor = {0, 0, 255}), Line(points = {{-100, 80}, {-80, 100}, {100, 100}, {100, -80}, {80, -100}}, color = {0, 0, 255}, smooth = Smooth.None), Line(points = {{80, 80}, {100, 100}}, color = {0, 0, 255}, smooth = Smooth.None)}));
+      "));
   end Regions;
 
   //===================================================================
@@ -3431,8 +3430,7 @@ Formulation 1997 for the Thermodynamic Properties of Water and Steam
 
         "));
     end g5L3;
-    annotation(
-      Documentation(info = "<HTML><h4>Package description</h4>
+    annotation(Documentation(info = "<HTML><h4>Package description</h4>
           <p>Package BaseIF97/Basic computes the the fundamental functions for the 5 regions of the steam tables
           as described in the standards document <a href=\"Documentation/IF97documentation/IF97.pdf\">IF97.pdf</a>. The code of these
           functions has been generated using <b><i>Mathematica</i></b> and the add-on packages \"Format\" and \"Optimize\"
@@ -3488,7 +3486,7 @@ Formulation 1997 for the Thermodynamic Properties of Water and Steam
           </ul>
           </HTML>
           "),
-      Documentation(info = "Package description  
+      Documentation(info = "Package description
 Package BaseIF97/Basic computes the the fundamental functions for the 5 regions of the steam tables  
           as described in the standards document IF97.pdf. The code of these  
           functions has been generated using Mathematica and the add-on packages \"Format\" and \"Optimize\"  
@@ -3547,8 +3545,7 @@ Documentation added: December 2002
 
 ## ThermoSysPro Version 4.2
 
-      "),
-      Icon(graphics = {Text(extent = {{-102, 0}, {24, -26}}, lineColor = {242, 148, 0}, textString = "Thermo"), Text(extent = {{-4, 8}, {68, -34}}, lineColor = {46, 170, 220}, textString = "SysPro"), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-32, 12}, {-16, 14}, {6, 14}, {26, 12}, {42, 8}, {52, 2}, {42, 6}, {28, 10}, {6, 12}, {-12, 12}, {-16, 12}, {-34, 10}, {-50, 6}, {-62, 2}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-44, 38}, {-24, 38}, {-26, 30}, {-26, 22}, {-24, 14}, {-24, 12}, {-46, 8}, {-42, 22}, {-42, 30}, {-44, 38}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-26, 20}, {-20, 20}, {-20, 22}, {-14, 22}, {-14, 20}, {-12, 20}, {-12, 12}, {-26, 12}, {-28, 12}, {-26, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-8, 14}, {-8, 24}, {-6, 24}, {-6, 14}, {-8, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 30}, {-6, 26}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 36}, {-6, 32}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 42}, {-6, 38}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 48}, {-6, 44}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-4, 14}, {-4, 26}, {-2, 26}, {-2, 14}, {-4, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 32}, {-2, 28}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 38}, {-2, 34}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 44}, {-2, 40}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 50}, {-2, 46}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-2, 20}, {8, 20}, {8, 22}, {10, 22}, {18, 22}, {18, 12}, {-4, 14}, {-2, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-36, 10}, {-18, 12}, {6, 12}, {26, 10}, {42, 6}, {52, 0}, {42, 4}, {28, 8}, {6, 10}, {-12, 10}, {-18, 10}, {-38, 8}, {-50, 6}, {-62, 2}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Line(points = {{22, 12}, {22, 14}, {22, 16}, {24, 14}, {20, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{26, 12}, {26, 14}, {26, 16}, {28, 14}, {24, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{30, 10}, {30, 12}, {30, 14}, {32, 12}, {28, 16}}, color = {46, 170, 220}, thickness = 0.5), Polygon(points = {{36, 8}, {36, 30}, {34, 34}, {36, 38}, {40, 38}, {40, 8}, {36, 8}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-100, 80}, {80, -100}}, lineColor = {0, 0, 255}), Line(points = {{-100, 80}, {-80, 100}, {100, 100}, {100, -80}, {80, -100}}, color = {0, 0, 255}, smooth = Smooth.None), Line(points = {{80, 80}, {100, 100}}, color = {0, 0, 255}, smooth = Smooth.None)}));
+      "));
   end Basic;
 
   package Transport "transport properties for water according to IAPWS/IF97"
@@ -3814,8 +3811,7 @@ Documentation added: December 2002
 
         "));
     end cond_industrial_dT;
-    annotation(
-      Documentation(info = "Package description  
+    annotation(Documentation(info = "Package description
 
 Package contents  
 
@@ -3854,8 +3850,7 @@ Initial version: October 2002
 
 ## ThermoSysPro Version 4.2
 
-      "),
-      Icon(graphics = {Text(extent = {{-102, 0}, {24, -26}}, lineColor = {242, 148, 0}, textString = "Thermo"), Text(extent = {{-4, 8}, {68, -34}}, lineColor = {46, 170, 220}, textString = "SysPro"), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-32, 12}, {-16, 14}, {6, 14}, {26, 12}, {42, 8}, {52, 2}, {42, 6}, {28, 10}, {6, 12}, {-12, 12}, {-16, 12}, {-34, 10}, {-50, 6}, {-62, 2}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-44, 38}, {-24, 38}, {-26, 30}, {-26, 22}, {-24, 14}, {-24, 12}, {-46, 8}, {-42, 22}, {-42, 30}, {-44, 38}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-26, 20}, {-20, 20}, {-20, 22}, {-14, 22}, {-14, 20}, {-12, 20}, {-12, 12}, {-26, 12}, {-28, 12}, {-26, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-8, 14}, {-8, 24}, {-6, 24}, {-6, 14}, {-8, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 30}, {-6, 26}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 36}, {-6, 32}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 42}, {-6, 38}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 48}, {-6, 44}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-4, 14}, {-4, 26}, {-2, 26}, {-2, 14}, {-4, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 32}, {-2, 28}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 38}, {-2, 34}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 44}, {-2, 40}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 50}, {-2, 46}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-2, 20}, {8, 20}, {8, 22}, {10, 22}, {18, 22}, {18, 12}, {-4, 14}, {-2, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-36, 10}, {-18, 12}, {6, 12}, {26, 10}, {42, 6}, {52, 0}, {42, 4}, {28, 8}, {6, 10}, {-12, 10}, {-18, 10}, {-38, 8}, {-50, 6}, {-62, 2}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Line(points = {{22, 12}, {22, 14}, {22, 16}, {24, 14}, {20, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{26, 12}, {26, 14}, {26, 16}, {28, 14}, {24, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{30, 10}, {30, 12}, {30, 14}, {32, 12}, {28, 16}}, color = {46, 170, 220}, thickness = 0.5), Polygon(points = {{36, 8}, {36, 30}, {34, 34}, {36, 38}, {40, 38}, {40, 8}, {36, 8}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-100, 80}, {80, -100}}, lineColor = {0, 0, 255}), Line(points = {{-100, 80}, {-80, 100}, {100, 100}, {100, -80}, {80, -100}}, color = {0, 0, 255}, smooth = Smooth.None), Line(points = {{80, 80}, {100, 100}}, color = {0, 0, 255}, smooth = Smooth.None)}));
+      "));
   end Transport;
 
   package Isentropic "functions for calculating the isentropic enthalpy from pressure p and specific entropy s"
@@ -4306,8 +4301,7 @@ Initial version: October 2002
 
         "));
     end water_hisentropic_dyn;
-    annotation(
-      Documentation(info = "Package description  
+    annotation(Documentation(info = "Package description
 
 Package contents  
 
@@ -4353,8 +4347,7 @@ Documentation added: December 2002
 
 ## ThermoSysPro Version 4.2
 
-      "),
-      Icon(graphics = {Text(extent = {{-102, 0}, {24, -26}}, lineColor = {242, 148, 0}, textString = "Thermo"), Text(extent = {{-4, 8}, {68, -34}}, lineColor = {46, 170, 220}, textString = "SysPro"), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-32, 12}, {-16, 14}, {6, 14}, {26, 12}, {42, 8}, {52, 2}, {42, 6}, {28, 10}, {6, 12}, {-12, 12}, {-16, 12}, {-34, 10}, {-50, 6}, {-62, 2}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-44, 38}, {-24, 38}, {-26, 30}, {-26, 22}, {-24, 14}, {-24, 12}, {-46, 8}, {-42, 22}, {-42, 30}, {-44, 38}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-26, 20}, {-20, 20}, {-20, 22}, {-14, 22}, {-14, 20}, {-12, 20}, {-12, 12}, {-26, 12}, {-28, 12}, {-26, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-8, 14}, {-8, 24}, {-6, 24}, {-6, 14}, {-8, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 30}, {-6, 26}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 36}, {-6, 32}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 42}, {-6, 38}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 48}, {-6, 44}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-4, 14}, {-4, 26}, {-2, 26}, {-2, 14}, {-4, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 32}, {-2, 28}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 38}, {-2, 34}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 44}, {-2, 40}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 50}, {-2, 46}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-2, 20}, {8, 20}, {8, 22}, {10, 22}, {18, 22}, {18, 12}, {-4, 14}, {-2, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-36, 10}, {-18, 12}, {6, 12}, {26, 10}, {42, 6}, {52, 0}, {42, 4}, {28, 8}, {6, 10}, {-12, 10}, {-18, 10}, {-38, 8}, {-50, 6}, {-62, 2}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Line(points = {{22, 12}, {22, 14}, {22, 16}, {24, 14}, {20, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{26, 12}, {26, 14}, {26, 16}, {28, 14}, {24, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{30, 10}, {30, 12}, {30, 14}, {32, 12}, {28, 16}}, color = {46, 170, 220}, thickness = 0.5), Polygon(points = {{36, 8}, {36, 30}, {34, 34}, {36, 38}, {40, 38}, {40, 8}, {36, 8}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-100, 80}, {80, -100}}, lineColor = {0, 0, 255}), Line(points = {{-100, 80}, {-80, 100}, {100, 100}, {100, -80}, {80, -100}}, color = {0, 0, 255}, smooth = Smooth.None), Line(points = {{80, 80}, {100, 100}}, color = {0, 0, 255}, smooth = Smooth.None)}));
+      "));
   end Isentropic;
 
   //work needed: (Pr,lam,eta) = f(d,T,p, region?)
@@ -4939,8 +4932,7 @@ Documentation added: December 2002
 
         "));
     end tofpst5;
-    annotation(
-      Documentation(info = "Package description  
+    annotation(Documentation(info = "Package description
 
 Package contents  
 
@@ -4982,8 +4974,7 @@ Documentation added: December 2002
 
 ## ThermoSysPro Version 4.2
 
-      "),
-      Icon(graphics = {Text(extent = {{-102, 0}, {24, -26}}, lineColor = {242, 148, 0}, textString = "Thermo"), Text(extent = {{-4, 8}, {68, -34}}, lineColor = {46, 170, 220}, textString = "SysPro"), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-32, 12}, {-16, 14}, {6, 14}, {26, 12}, {42, 8}, {52, 2}, {42, 6}, {28, 10}, {6, 12}, {-12, 12}, {-16, 12}, {-34, 10}, {-50, 6}, {-62, 2}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-44, 38}, {-24, 38}, {-26, 30}, {-26, 22}, {-24, 14}, {-24, 12}, {-46, 8}, {-42, 22}, {-42, 30}, {-44, 38}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-26, 20}, {-20, 20}, {-20, 22}, {-14, 22}, {-14, 20}, {-12, 20}, {-12, 12}, {-26, 12}, {-28, 12}, {-26, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-8, 14}, {-8, 24}, {-6, 24}, {-6, 14}, {-8, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 30}, {-6, 26}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 36}, {-6, 32}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 42}, {-6, 38}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 48}, {-6, 44}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-4, 14}, {-4, 26}, {-2, 26}, {-2, 14}, {-4, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 32}, {-2, 28}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 38}, {-2, 34}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 44}, {-2, 40}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 50}, {-2, 46}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-2, 20}, {8, 20}, {8, 22}, {10, 22}, {18, 22}, {18, 12}, {-4, 14}, {-2, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-36, 10}, {-18, 12}, {6, 12}, {26, 10}, {42, 6}, {52, 0}, {42, 4}, {28, 8}, {6, 10}, {-12, 10}, {-18, 10}, {-38, 8}, {-50, 6}, {-62, 2}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Line(points = {{22, 12}, {22, 14}, {22, 16}, {24, 14}, {20, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{26, 12}, {26, 14}, {26, 16}, {28, 14}, {24, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{30, 10}, {30, 12}, {30, 14}, {32, 12}, {28, 16}}, color = {46, 170, 220}, thickness = 0.5), Polygon(points = {{36, 8}, {36, 30}, {34, 34}, {36, 38}, {40, 38}, {40, 8}, {36, 8}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-100, 80}, {80, -100}}, lineColor = {0, 0, 255}), Line(points = {{-100, 80}, {-80, 100}, {100, 100}, {100, -80}, {80, -100}}, color = {0, 0, 255}, smooth = Smooth.None), Line(points = {{80, 80}, {100, 100}}, color = {0, 0, 255}, smooth = Smooth.None)}));
+      "));
   end Inverses;
 
   package TwoPhase "steam properties in the two-phase rgion and on the phase boundaries"
@@ -5192,8 +5183,7 @@ Documentation added: December 2002
 
         "));
     end waterR4_dT;
-    annotation(
-      Documentation(info = "Package description  
+    annotation(Documentation(info = "Package description
 Package TwoPhase provides functions to compute the steam properties  
           in the two-phase region and on the phase boundaries  
 Package contents  
@@ -5229,11 +5219,9 @@ Documented and re-organized: January 2003
 
 ## ThermoSysPro Version 4.2
 
-      "),
-      Icon(graphics = {Text(extent = {{-102, 0}, {24, -26}}, lineColor = {242, 148, 0}, textString = "Thermo"), Text(extent = {{-4, 8}, {68, -34}}, lineColor = {46, 170, 220}, textString = "SysPro"), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-32, 12}, {-16, 14}, {6, 14}, {26, 12}, {42, 8}, {52, 2}, {42, 6}, {28, 10}, {6, 12}, {-12, 12}, {-16, 12}, {-34, 10}, {-50, 6}, {-62, 2}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-44, 38}, {-24, 38}, {-26, 30}, {-26, 22}, {-24, 14}, {-24, 12}, {-46, 8}, {-42, 22}, {-42, 30}, {-44, 38}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-26, 20}, {-20, 20}, {-20, 22}, {-14, 22}, {-14, 20}, {-12, 20}, {-12, 12}, {-26, 12}, {-28, 12}, {-26, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-8, 14}, {-8, 24}, {-6, 24}, {-6, 14}, {-8, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 30}, {-6, 26}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 36}, {-6, 32}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 42}, {-6, 38}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 48}, {-6, 44}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-4, 14}, {-4, 26}, {-2, 26}, {-2, 14}, {-4, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 32}, {-2, 28}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 38}, {-2, 34}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 44}, {-2, 40}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 50}, {-2, 46}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-2, 20}, {8, 20}, {8, 22}, {10, 22}, {18, 22}, {18, 12}, {-4, 14}, {-2, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-36, 10}, {-18, 12}, {6, 12}, {26, 10}, {42, 6}, {52, 0}, {42, 4}, {28, 8}, {6, 10}, {-12, 10}, {-18, 10}, {-38, 8}, {-50, 6}, {-62, 2}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Line(points = {{22, 12}, {22, 14}, {22, 16}, {24, 14}, {20, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{26, 12}, {26, 14}, {26, 16}, {28, 14}, {24, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{30, 10}, {30, 12}, {30, 14}, {32, 12}, {28, 16}}, color = {46, 170, 220}, thickness = 0.5), Polygon(points = {{36, 8}, {36, 30}, {34, 34}, {36, 38}, {40, 38}, {40, 8}, {36, 8}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-100, 80}, {80, -100}}, lineColor = {0, 0, 255}), Line(points = {{-100, 80}, {-80, 100}, {100, 100}, {100, -80}, {80, -100}}, color = {0, 0, 255}, smooth = Smooth.None), Line(points = {{80, 80}, {100, 100}}, color = {0, 0, 255}, smooth = Smooth.None)}));
+      "));
   end TwoPhase;
-  annotation(
-    Documentation(info = "
+  annotation(Documentation(info = "
 Version Info and Revision history  
           
 
@@ -5592,6 +5580,5 @@ Function extraDerivs_pT computes all entries to Bridgmans tables for all
 
 ## ThermoSysPro Version 4.2
 
-    "),
-    Icon(graphics = {Text(extent = {{-102, 0}, {24, -26}}, lineColor = {242, 148, 0}, textString = "Thermo"), Text(extent = {{-4, 8}, {68, -34}}, lineColor = {46, 170, 220}, textString = "SysPro"), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-32, 12}, {-16, 14}, {6, 14}, {26, 12}, {42, 8}, {52, 2}, {42, 6}, {28, 10}, {6, 12}, {-12, 12}, {-16, 12}, {-34, 10}, {-50, 6}, {-62, 2}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-44, 38}, {-24, 38}, {-26, 30}, {-26, 22}, {-24, 14}, {-24, 12}, {-46, 8}, {-42, 22}, {-42, 30}, {-44, 38}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-26, 20}, {-20, 20}, {-20, 22}, {-14, 22}, {-14, 20}, {-12, 20}, {-12, 12}, {-26, 12}, {-28, 12}, {-26, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-8, 14}, {-8, 24}, {-6, 24}, {-6, 14}, {-8, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 30}, {-6, 26}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 36}, {-6, 32}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 42}, {-6, 38}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-8, 48}, {-6, 44}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-4, 14}, {-4, 26}, {-2, 26}, {-2, 14}, {-4, 14}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 32}, {-2, 28}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 38}, {-2, 34}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 44}, {-2, 40}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-4, 50}, {-2, 46}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Polygon(points = {{-2, 20}, {8, 20}, {8, 22}, {10, 22}, {18, 22}, {18, 12}, {-4, 14}, {-2, 20}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Polygon(points = {{-62, 2}, {-58, 4}, {-48, 8}, {-36, 10}, {-18, 12}, {6, 12}, {26, 10}, {42, 6}, {52, 0}, {42, 4}, {28, 8}, {6, 10}, {-12, 10}, {-18, 10}, {-38, 8}, {-50, 6}, {-62, 2}}, lineColor = {242, 148, 0}, fillColor = {242, 148, 0}, fillPattern = FillPattern.Solid), Line(points = {{22, 12}, {22, 14}, {22, 16}, {24, 14}, {20, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{26, 12}, {26, 14}, {26, 16}, {28, 14}, {24, 18}}, color = {46, 170, 220}, thickness = 0.5), Line(points = {{30, 10}, {30, 12}, {30, 14}, {32, 12}, {28, 16}}, color = {46, 170, 220}, thickness = 0.5), Polygon(points = {{36, 8}, {36, 30}, {34, 34}, {36, 38}, {40, 38}, {40, 8}, {36, 8}}, lineColor = {46, 170, 220}, fillColor = {46, 170, 220}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-100, 80}, {80, -100}}, lineColor = {0, 0, 255}), Line(points = {{-100, 80}, {-80, 100}, {100, 100}, {100, -80}, {80, -100}}, color = {0, 0, 255}, smooth = Smooth.None), Line(points = {{80, 80}, {100, 100}}, color = {0, 0, 255}, smooth = Smooth.None)}));
+    "));
 end BaseIF97;
