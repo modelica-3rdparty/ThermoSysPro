@@ -3198,13 +3198,13 @@ Nov. 15, 1997 by Martin Otter and Hubertus Tummescheit:Some chapters realized.
   end SI;
 
   package nonSI
-    type Time_minute = Real(final quantity = "Time", final unit = "min") annotation (
+    type Time_minute = Real(final quantity = "Time", final unit = "min") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type Angle_deg = Real(final quantity = "Angle", final unit = "deg") annotation (
+    type Angle_deg = Real(final quantity = "Angle", final unit = "deg") annotation(
       Documentation(info = "
 Version 1.0  
 
@@ -3213,7 +3213,7 @@ Version 1.0
 ## ThermoSysPro Version 4.2
 
       "));
-    type AngularVelocity_rpm = Real(final quantity = "Angular velocity", final unit = "rev/min") annotation (
+    type AngularVelocity_rpm = Real(final quantity = "Angular velocity", final unit = "rev/min") annotation(
       Documentation(info = "
 Version 1.0  
 
@@ -3222,7 +3222,7 @@ Version 1.0
 ## ThermoSysPro Version 4.2
 
       "));
-    type Temperature_degC = Real(final quantity = "ThermodynamicTemperature", final unit = "degC") annotation (
+    type Temperature_degC = Real(final quantity = "ThermodynamicTemperature", final unit = "degC") annotation(
       Documentation(info = "
 Version 1.0  
 
@@ -3231,31 +3231,31 @@ Version 1.0
 ## ThermoSysPro Version 4.2
 
       "));
-    type Pressure_bar = Real(final quantity = "Pressure", final unit = "bar") annotation (
+    type Pressure_bar = Real(final quantity = "Pressure", final unit = "bar") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type Power_kW = Real(final quantity = "Power", final unit = "kW") annotation (
+    type Power_kW = Real(final quantity = "Power", final unit = "kW") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type Power_MW = Real(final quantity = "Power", final unit = "MW") annotation (
+    type Power_MW = Real(final quantity = "Power", final unit = "MW") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type VolumeFlowRate_m3h = Real(final quantity = "VolumeFlowRate", final unit = "m3/h") annotation (
+    type VolumeFlowRate_m3h = Real(final quantity = "VolumeFlowRate", final unit = "m3/h") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    annotation (
+    annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
@@ -3264,7 +3264,7 @@ Version 1.0
   end nonSI;
 
   package xSI "Additional SI units"
-    type PressureLossCoefficient = Real(final quantity = "Pressure loss coefficient", final unit = "m-4") annotation (
+    type PressureLossCoefficient = Real(final quantity = "Pressure loss coefficient", final unit = "m-4") annotation(
       Documentation(info = "
 Version 1.0  
 
@@ -3273,19 +3273,19 @@ Version 1.0
 ## ThermoSysPro Version 4.2
 
       "));
-    type DerDensityByEnthalpy = Real(final unit = "kg2/(m3.J)") annotation (
+    type DerDensityByEnthalpy = Real(final unit = "kg2/(m3.J)") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type DerDensityByEntropy = Real(final quantity = "DerDensityByEntropy", final unit = "kg2.K/(m3.J)") annotation (
+    type DerDensityByEntropy = Real(final quantity = "DerDensityByEntropy", final unit = "kg2.K/(m3.J)") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type DerEnergyByTemperature = Real(final quantity = "Derivative of the specific energy wrt. the temperature", final unit = "J/(kg.K)") annotation (
+    type DerEnergyByTemperature = Real(final quantity = "Derivative of the specific energy wrt. the temperature", final unit = "J/(kg.K)") annotation(
       Documentation(info = "
 Version 1.0  
 
@@ -3294,55 +3294,55 @@ Version 1.0
 ## ThermoSysPro Version 4.2
 
       "));
-    type DerEnergyByPressure = Real(final quantity = "DerEnergyByPressure", final unit = "J/Pa") annotation (
+    type DerEnergyByPressure = Real(final quantity = "DerEnergyByPressure", final unit = "J/Pa") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type DerEntropyByTemperature = Real(final quantity = "DerEntropyByTemperature", final unit = "J/K2") annotation (
+    type DerEntropyByTemperature = Real(final quantity = "DerEntropyByTemperature", final unit = "J/K2") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type DerEntropyByPressure = Real(final quantity = "DerEntropyByPressure", final unit = "J/(K.Pa)") annotation (
+    type DerEntropyByPressure = Real(final quantity = "DerEntropyByPressure", final unit = "J/(K.Pa)") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type DerPressureByDensity = Real(final quantity = "DerPressureByDensity", final unit = "Pa.m3/kg") annotation (
+    type DerPressureByDensity = Real(final quantity = "DerPressureByDensity", final unit = "Pa.m3/kg") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type DerPressureBySpecificVolume = Real(final quantity = "DerPressureBySpecificVolume", final unit = "Pa.kg/m3") annotation (
+    type DerPressureBySpecificVolume = Real(final quantity = "DerPressureBySpecificVolume", final unit = "Pa.kg/m3") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type DerPressureByTemperature = Real(final quantity = "DerPressureByTemperature", final unit = "Pa/K") annotation (
+    type DerPressureByTemperature = Real(final quantity = "DerPressureByTemperature", final unit = "Pa/K") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type DerVolumeByTemperature = Real(final quantity = "DerVolumeByTemperature", final unit = "m3/K") annotation (
+    type DerVolumeByTemperature = Real(final quantity = "DerVolumeByTemperature", final unit = "m3/K") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type DerVolumeByPressure = Real(final quantity = "DerVolumeByPressure", final unit = "m3/Pa") annotation (
+    type DerVolumeByPressure = Real(final quantity = "DerVolumeByPressure", final unit = "m3/Pa") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type Cv = Real(final quantity = "Cv U.S.", final unit = "gpm") annotation (
+    type Cv = Real(final quantity = "Cv U.S.", final unit = "gpm") annotation(
       Documentation(info = "
 Version 1.0  
 
@@ -3351,7 +3351,7 @@ Version 1.0
 ## ThermoSysPro Version 4.2
 
       "));
-    type SonicConductance = Real(final quantity = "Sonic conductance", final unit = "m3/(s.Pa)") annotation (
+    type SonicConductance = Real(final quantity = "Sonic conductance", final unit = "m3/(s.Pa)") annotation(
       Documentation(info = "
 Version 1.0  
 
@@ -3360,19 +3360,19 @@ Version 1.0
 ## ThermoSysPro Version 4.2
 
       "));
-    type IdealGasConstant = Real(final quantity = "Ideal gas constant", final unit = "J/(kg.K)") annotation (
+    type IdealGasConstant = Real(final quantity = "Ideal gas constant", final unit = "J/(kg.K)") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    type ViscousFriction = Real(final quantity = "Viscous friction", final unit = "N/(m/s)") annotation (
+    type ViscousFriction = Real(final quantity = "Viscous friction", final unit = "N/(m/s)") annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
 
       "));
-    annotation (
+    annotation(
       Documentation(info = "## Copyright © EDF 2002 - 2025
 
 ## ThermoSysPro Version 4.2
