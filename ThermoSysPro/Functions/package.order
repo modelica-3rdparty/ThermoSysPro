@@ -10,4 +10,5 @@ SmoothMin
 SmoothCond
 SplineInterpolation
 TableSplineInterpolation
+CumulativeIntegral
 Utilities

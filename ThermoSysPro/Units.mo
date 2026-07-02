@@ -537,8 +537,25 @@ package Units "Additional SI and non-SI units"
     type TimeAging = Real(final quantity = "1/Time", final unit = "1/s");
     type ChargeAging = Real(final quantity = "1/ElectricCharge", final unit = "1/(A.s)");
     // Other types not defined in ISO 31-1992
-    type PerUnit = Real(unit = "1");
-    type DimensionlessRatio = Real(unit = "1");
+    type PerUnit = Real(unit = "1") annotation(
+      Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+      "));
+    type DimensionlessRatio = Real(unit = "1") annotation(
+      Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+      "));
+    type LinearPowerDensity= Real (final quantity="LinearPowerDensity", final unit="W/m") annotation(
+      Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+      "));
+
     // Complex types for electrical systems (not defined in ISO 31-1992)
     operator record ComplexCurrent = Complex(redeclare ThermoSysPro.Units.SI.Current re, redeclare ThermoSysPro.Units.SI.Current im) "Complex electrical current";
     operator record ComplexCurrentSlope = Complex(redeclare ThermoSysPro.Units.SI.CurrentSlope re, redeclare ThermoSysPro.Units.SI.CurrentSlope im) "Complex current slope";
