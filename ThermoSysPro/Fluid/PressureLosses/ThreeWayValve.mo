@@ -5,10 +5,10 @@ model ThreeWayValve "Three way valve"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax1 = 8005.42 "Valve 1 max CV";
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax2 = 8005.42 "Valve 2 max CV";
-  parameter Real caract1[:, 2] = [0, 0; 1, Cvmax1] "Valve 1 - Position vs. Cv characteristics (active if mode_caract1=true)";
-  parameter Real caract2[:, 2] = [0, 0; 1, Cvmax2] "Valve 2 - Position vs. Cv characteristics (active if mode_caract2=true)";
+  parameter ThermoSysPro.Units.xSI.Cv Cvmax1 = 8005.42 "Valve 1 max CV [USG/min]";
+  parameter ThermoSysPro.Units.xSI.Cv Cvmax2 = 8005.42 "Valve 2 max CV [USG/min]";
+  parameter Real caract1[:, 2] = [0, 0; 1, Cvmax1] "Valve 1 - Position vs. Cv [USG/min] characteristics (active if mode_caract1=true)";
+  parameter Real caract2[:, 2] = [0, 0; 1, Cvmax2] "Valve 2 - Position vs. Cv [USG/min] characteristics (active if mode_caract2=true)";
   parameter Integer mode_caract1 = 0 "Valve 1 - 0:linear characteristics - 1:characteristics is given by caract1[]";
   parameter Integer mode_caract2 = 0 "Valve 2 - 0:linear characteristics - 1:characteristics is given by caract2[]";
   parameter Units.SI.Volume V = 1 "Three way valve volume (active if dynamic_energy_balance=true)" annotation(

@@ -3,8 +3,8 @@ within ThermoSysPro.Fluid.PressureLosses;
 model ControlValve "Control valve"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 8005.42 "Maximum CV (active if mode_caract=0)";
-  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv characteristics (active if mode_caract=1)";
+  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 8005.42 "Maximum CV [USG/min] (active if mode_caract=0)";
+  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv [USG/min] characteristics (active if mode_caract=1)";
   parameter Integer mode_caract = 0 "0:linear characteristics - 1:characteristics is given by caract[]";
   parameter Integer option_interpolation = 1 "1: linear interpolation - 2: spline interpolation (active if mode_caract=1)";
   parameter Integer option_rho_water = 1 "1: using (deltaP*Cv^2=A.Q^2/rho^2) - 2: using (deltaP*Cv^2=A.Q^2/(rho*rho_15)); with rho_15 is the density of the water at 15.5556 °C)";
@@ -15,7 +15,7 @@ model ControlValve "Control valve"
   parameter IF97Region region = IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(
     Evaluate = true,
     Dialog(enable = (ftype == FluidType.WaterSteam), tab = "Fluid", group = "Fluid properties"));
-  ThermoSysPro.Units.xSI.Cv Cv(start = 100) "Cv";
+  ThermoSysPro.Units.xSI.Cv Cv(start = 100) "Cv [USG/min]";
   Units.SI.MassFlowRate Q(start = 100) "Mass flow rate";
   ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
   Units.SI.Density rho(start = 998) "Fluid density";

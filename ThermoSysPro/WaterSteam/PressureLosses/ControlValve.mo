@@ -1,8 +1,8 @@
 within ThermoSysPro.WaterSteam.PressureLosses;
 
 model ControlValve "Control valve"
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 8005.42 "Maximum CV (active if mode_caract=0)";
-  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv characteristics (active if mode_caract=1)";
+  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 8005.42 "Maximum CV [USG/min] (active if mode_caract=0)";
+  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv [USG/min] characteristics (active if mode_caract=1)";
   parameter Integer mode_caract = 0 "0:linear characteristics - 1:characteristics is given by caract[]";
   parameter Integer option_interpolation = 1 "1: linear interpolation - 2: spline interpolation (active if mode_caract=1)";
   parameter Boolean continuous_flow_reversal = false "true: continuous flow reversal - false: discontinuous flow reversal";
@@ -10,7 +10,7 @@ model ControlValve "Control valve"
   parameter Integer option_rho_water = 1 "1: using (deltaP*Cv^2=A.Q^2/rho^2) - 2: using (deltaP*Cv^2=A.Q^2/(rho*rho_15)); with rho_15 is the density of the water at 15.5556 °C)";
   parameter Units.SI.Density p_rho = 0 "If > 0, fixed fluid density";
   parameter Integer mode = 0 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  ThermoSysPro.Units.xSI.Cv Cv(start = 100) "Cv";
+  ThermoSysPro.Units.xSI.Cv Cv(start = 100) "Cv [USG/min]";
   Units.SI.MassFlowRate Q(start = 500) "Mass flow rate";
   ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
   Units.SI.Density rho(start = 998) "Fluid density";
@@ -105,7 +105,7 @@ This component has 3 connectors:
 
 | Symbol| Description| Unit| Definition| Modelica name |  
 | :----------------------------------------------- | :------------------------------------------------------------------------------------- | :------------------------------- | :-------------------------------- | :----------- |  
-| \\\\(C\\_{\\mathrm{v}}\\\\)| Flow coefficient of the valve| U.S.|| Cvmax |  
+| \\\\(C\\_{\\mathrm{v}}\\\\)| Flow coefficient of the valve| U.S. [USG/min]|| Cvmax |  
 | \\\\(h\\\\)| Fluid specific enthalpy| \\\\(\\mathrm{J} / \\mathrm{kg}\\\\)|| h |  
 | \\\\(m\\\\)| Fluid mass flow rate| \\\\(\\mathrm{kg} / \\mathrm{s}\\\\)|| Q |  
 | \\\\(P\\_{\\mathrm{i}}\\\\)| Fluid pressure at the valve inlet| \\\\(\\mathrm{Pa}\\\\)|| C1.P |  
