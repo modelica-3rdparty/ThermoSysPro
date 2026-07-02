@@ -1,12 +1,12 @@
 within ThermoSysPro.FlueGases.PressureLosses;
 
 model ControlValve "Control valve"
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 5000 "Maximum CV (active if mode_caract=0)";
-  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv characteristics (active if mode_caract=1)";
+  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 5000 "Maximum CV [USG/min] (active if mode_caract=0)";
+  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv [USG/min] characteristics (active if mode_caract=1)";
   parameter Integer mode_caract = 0 "0:linear characteristics - 1:characteristics is given by caract[]";
   parameter Integer option_interpolation = 1 "1: linear interpolation - 2: spline interpolation (active if mode_caract=1)";
   parameter Units.SI.Density p_rho = 0 "If > 0, fixed fluid density";
-  ThermoSysPro.Units.xSI.Cv Cv(start = 100) "Cv";
+  ThermoSysPro.Units.xSI.Cv Cv(start = 100) "Cv [USG/min]";
   Units.SI.MassFlowRate Q(start = 100) "Mass flow";
   ThermoSysPro.Units.SI.PressureDifference deltaP(start = 10) "Singular pressure loss";
   Units.SI.Density rho(start = 1) "Fluid density";

@@ -5,8 +5,8 @@ model DynamicReliefValve "Dynamic relief valve"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
   parameter Units.SI.AbsolutePressure Popen = 3e5 "Pressure that opens the valve";
   parameter Units.SI.AbsolutePressure Pout = 1e5 "Pressure at the valve outlet (for sizing)";
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 8005.42 "Maximum Cv";
-  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv characteristics (active if mode_caract=1)";
+  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 8005.42 "Maximum Cv [USG/min]";
+  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv [USG/min] characteristics (active if mode_caract=1)";
   parameter Units.SI.Area A1 = 0.1 "Hydraulic area upstream the clapper";
   parameter Units.SI.Area A2 = 0.125 "Hydraulic area downstream the clapper";
   parameter Units.SI.Area clapper_area[:, 2] = [0, A1; 0.01, A2; 1, A2] "Clapper area as a function of the clapper elevation";
@@ -45,7 +45,7 @@ model DynamicReliefValve "Dynamic relief valve"
   Real Ouv "Valve position";
   Units.SI.Area A "Hydraulic area upstream the clapper";
   Units.SI.Force Fr_min "Spring force when valve is closed";
-  ThermoSysPro.Units.xSI.Cv Cv "Cv";
+  ThermoSysPro.Units.xSI.Cv Cv "Cv [USG/min]";
   Units.SI.MassFlowRate Q(start = 500) "Mass flow rate";
   ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
   Units.SI.Density rho(start = 998) "Fluid density";

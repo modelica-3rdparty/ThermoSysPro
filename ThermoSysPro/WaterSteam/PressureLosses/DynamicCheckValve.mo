@@ -1,8 +1,8 @@
 within ThermoSysPro.WaterSteam.PressureLosses;
 
 model DynamicCheckValve "Dynamic check valve"
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 8005.42 "Maximum CV";
-  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv characteristics (active if mode_caract=1)";
+  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 8005.42 "Maximum CV [USG/min]";
+  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv [USG/min] characteristics (active if mode_caract=1)";
   parameter Units.SI.MomentOfInertia J = 1 "Flap moment of inertia";
   parameter Real Kf1 = 0 "Flap friction law coefficient #1";
   parameter Real Kf2 = 100 "Flap friction law coefficient #2";
@@ -26,7 +26,7 @@ model DynamicCheckValve "Dynamic check valve"
   Units.SI.AngularVelocity omega "Flap angular speed";
   Units.SI.AngularAcceleration a "Flap angular acceleration";
   Real Ouv "Valve position";
-  ThermoSysPro.Units.xSI.Cv Cv(start = Cvmax) "Cv";
+  ThermoSysPro.Units.xSI.Cv Cv(start = Cvmax) "Cv [USG/min]";
   Units.SI.MassFlowRate Q(start = 500) "Mass flow rate";
   ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
   Units.SI.Density rho(start = 998) "Fluid density";
@@ -145,7 +145,7 @@ This component has 2 connectors:
 | \\\\(C\\_{\\mathrm{h}}\\\\)| Hydraulic torque acting on the clapper| \\\\(\\mathrm{N} \\mathrm{m}\\\\)|| Ch |  
 | \\\\(C\\_{\\mathrm{s}}\\\\)| Spring torque acting on the clapper| \\\\(\\mathrm{N} \\mathrm{m}\\\\)|| - |  
 | \\\\(C\\_{\\mathrm{t}}\\\\)| Total torque acting on the clapper| \\\\(\\mathrm{N} \\mathrm{m}\\\\)|| Ct |  
-| \\\\(C\\_{\\mathrm{v}}\\\\)| Flow coefficient of the valve| U.S.|| Cv |  
+| \\\\(C\\_{\\mathrm{v}}\\\\)| Flow coefficient of the valve| U.S. [USG/min]|| Cv |  
 | \\\\(C\\_{\\mathrm{w}}\\\\)| Weight torque acting on the clapper| \\\\(\\mathrm{N} \\mathrm{m}\\\\)|| Cp |  
 | \\\\(g\\\\)| Gravity constant| \\\\(\\mathrm{m} / \\mathrm{s}^{2}\\\\)|| g_n |  
 | \\\\(h\\\\)| Fluid specific enthalpy | \\\\(\\mathrm{J} / \\mathrm{kg}\\\\)|| h |  

@@ -102,21 +102,10 @@ package Units "Additional SI and non-SI units"
     type AngularMomentumFlux = Real(final quantity = "AngularMomentumFlux", final unit = "N.m");
     // Heat (chapter 4 of ISO 31-1992)
     type ThermodynamicTemperature = Real(final quantity = "ThermodynamicTemperature", final unit = "K", min = 0.0, start = 288.15, nominal = 300, displayUnit = "degC") "Absolute temperature (use type TemperatureDifference for relative temperatures)" annotation(
-      absoluteValue = true,
-      Documentation(info = "## Copyright © EDF 2002 - 2025
-
-## ThermoSysPro Version 4.2
-
-      "));
+      absoluteValue = true);
     type Temp_K = ThermodynamicTemperature;
     type Temperature = ThermodynamicTemperature;
-    type TemperatureDifference = Real(final quantity = "ThermodynamicTemperature", final unit = "K") annotation(
-      absoluteValue = false,
-      Documentation(info = "## Copyright © EDF 2002 - 2025
-
-## ThermoSysPro Version 4.2
-
-      "));
+    type TemperatureDifference = Real(final quantity = "ThermodynamicTemperature", final unit = "K");
     type TemperatureSlope = Real(final quantity = "TemperatureSlope", final unit = "K/s");
     type LinearTemperatureCoefficient = Real(final quantity = "LinearTemperatureCoefficient", final unit = "1/K");
     type QuadraticTemperatureCoefficient = Real(final quantity = "QuadraticTemperatureCoefficient", final unit = "1/K2");
@@ -606,33 +595,9 @@ Nov. 15, 1997 by Martin Otter and Hubertus Tummescheit:Some chapters realized.
 
   package nonSI
     type Time_minute = Real(final quantity = "Time", final unit = "min");
-    type Angle_deg = Real(final quantity = "Angle", final unit = "deg") annotation(
-      Documentation(info = "
-Version 1.0  
-
-## Copyright © EDF 2002 - 2025
-
-## ThermoSysPro Version 4.2
-
-      "));
-    type AngularVelocity_rpm = Real(final quantity = "Angular velocity", final unit = "rev/min") annotation(
-      Documentation(info = "
-Version 1.0  
-
-## Copyright © EDF 2002 - 2025
-
-## ThermoSysPro Version 4.2
-
-      "));
-    type Temperature_degC = Real(final quantity = "ThermodynamicTemperature", final unit = "degC") annotation(
-      Documentation(info = "
-Version 1.0  
-
-## Copyright © EDF 2002 - 2025
-
-## ThermoSysPro Version 4.2
-
-      "));
+    type Angle_deg = Real(final quantity = "Angle", final unit = "deg");
+    type AngularVelocity_rpm = Real(final quantity = "Angular velocity", final unit = "rev/min");
+    type Temperature_degC = Real(final quantity = "ThermodynamicTemperature", final unit = "degC");
     type Pressure_bar = Real(final quantity = "Pressure", final unit = "bar");
     type Power_kW = Real(final quantity = "Power", final unit = "kW");
     type Power_MW = Real(final quantity = "Power", final unit = "MW");
@@ -640,26 +605,10 @@ Version 1.0
   end nonSI;
 
   package xSI "Additional SI units"
-    type PressureLossCoefficient = Real(final quantity = "Pressure loss coefficient", final unit = "m-4") annotation(
-      Documentation(info = "
-Version 1.0  
-
-## Copyright © EDF 2002 - 2025
-
-## ThermoSysPro Version 4.2
-
-      "));
+    type PressureLossCoefficient = Real(final quantity = "Pressure loss coefficient", final unit = "m-4");
     type DerDensityByEnthalpy = Real(final unit = "kg2/(m3.J)");
     type DerDensityByEntropy = Real(final quantity = "DerDensityByEntropy", final unit = "kg2.K/(m3.J)");
-    type DerEnergyByTemperature = Real(final quantity = "Derivative of the specific energy wrt. the temperature", final unit = "J/(kg.K)") annotation(
-      Documentation(info = "
-Version 1.0  
-
-## Copyright © EDF 2002 - 2025
-
-## ThermoSysPro Version 4.2
-
-      "));
+    type DerEnergyByTemperature = Real(final quantity = "Derivative of the specific energy wrt. the temperature", final unit = "J/(kg.K)");
     type DerEnergyByPressure = Real(final quantity = "DerEnergyByPressure", final unit = "J/Pa");
     type DerEntropyByTemperature = Real(final quantity = "DerEntropyByTemperature", final unit = "J/K2");
     type DerEntropyByPressure = Real(final quantity = "DerEntropyByPressure", final unit = "J/(K.Pa)");
@@ -668,24 +617,8 @@ Version 1.0
     type DerPressureByTemperature = Real(final quantity = "DerPressureByTemperature", final unit = "Pa/K");
     type DerVolumeByTemperature = Real(final quantity = "DerVolumeByTemperature", final unit = "m3/K");
     type DerVolumeByPressure = Real(final quantity = "DerVolumeByPressure", final unit = "m3/Pa");
-    type Cv = Real(final quantity = "Cv U.S.", final unit = "gpm") annotation(
-      Documentation(info = "
-Version 1.0  
-
-## Copyright © EDF 2002 - 2025
-
-## ThermoSysPro Version 4.2
-
-      "));
-    type SonicConductance = Real(final quantity = "Sonic conductance", final unit = "m3/(s.Pa)") annotation(
-      Documentation(info = "
-Version 1.0  
-
-## Copyright © EDF 2002 - 2025
-
-## ThermoSysPro Version 4.2
-
-      "));
+    type Cv = Real(final quantity = "Cv U.S (in gpm).");
+    type SonicConductance = Real(final quantity = "Sonic conductance", final unit = "m3/(s.Pa)");
     type IdealGasConstant = Real(final quantity = "Ideal gas constant", final unit = "J/(kg.K)");
     type ViscousFriction = Real(final quantity = "Viscous friction", final unit = "N/(m/s)");
   end xSI;

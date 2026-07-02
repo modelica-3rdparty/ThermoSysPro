@@ -3,8 +3,8 @@ within ThermoSysPro.Fluid.PressureLosses;
 model DynamicCheckValve "Dynamic check valve"
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
   import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
-  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 8005.42 "Maximum CV";
-  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv characteristics (active if mode_caract=1)";
+  parameter ThermoSysPro.Units.xSI.Cv Cvmax = 8005.42 "Maximum CV [USG/min]";
+  parameter Real caract[:, 2] = [0, 0; 1, Cvmax] "Position vs. Cv [USG/min] characteristics (active if mode_caract=1)";
   parameter Units.SI.MomentOfInertia J = 1 "Flap moment of inertia";
   parameter Real Kf1 = 0 "Flap friction law coefficient #1";
   parameter Real Kf2 = 100 "Flap friction law coefficient #2";
@@ -36,7 +36,7 @@ model DynamicCheckValve "Dynamic check valve"
   Units.SI.AngularVelocity omega "Flap angular speed";
   Units.SI.AngularAcceleration a "Flap angular acceleration";
   Real Ouv "Valve position";
-  ThermoSysPro.Units.xSI.Cv Cv(start = Cvmax) "Cv";
+  ThermoSysPro.Units.xSI.Cv Cv(start = Cvmax) "Cv [USG/min]";
   Units.SI.MassFlowRate Q(start = 500) "Mass flow rate";
   ThermoSysPro.Units.SI.PressureDifference deltaP "Singular pressure loss";
   Units.SI.Density rho(start = 998) "Fluid density";
