@@ -191,7 +191,7 @@ equation
           fillColor=45,
           rgbfillColor={255,128,0}),
         string="Pneut")),
-    Documentation(info= = "
+    Documentation(info="
 ## Copyright © EDF 2002 - 2026  
 
 
