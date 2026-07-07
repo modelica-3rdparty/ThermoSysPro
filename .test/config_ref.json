@@ -1,0 +1,27 @@
+{   
+    "software": "Dymola",
+    "dymola": {
+        "advanced_flags":["Advanced.LogNonLinearIterationVariables=true","Advanced.GenerateBlockTimers=true"]
+    },
+    "openmodelica": {
+        "modelica_version": "4.0.0",
+        "compiler_flags":{
+            "--matchingAlgorithm":"PFPlusExt",
+            "-d":"initialization,iterationVars,stateselection,backenddaeinfo,stateselection,aliasConflicts,bltdump"
+        },
+        "simflags":{
+            "-jacobian":"coloredNumerical"
+        }
+    },
+    "libs": {
+        "ThermoSysPro": {
+            "path": {
+                "url" : "https://gitlab.pleiade.edf.fr/Phy13Models/modelicalibraries/ThermoSysPro_mirror.git",
+                "target" : "v4.0",
+                "package_path" : "ThermoSysPro/package.mo"
+            },
+            "models_filter": "(?<!Fluid\\.)\\bExamples\\b(?!\\.Control\\b)",
+            "vars_filter": ".T|.P|.Q|.h"
+        } 
+    }
+}
