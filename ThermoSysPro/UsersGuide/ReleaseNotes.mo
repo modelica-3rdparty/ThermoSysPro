@@ -772,6 +772,31 @@ o EndOfLines are now set to
       "),
       Icon(graphics = {Ellipse(lineColor = {75, 138, 73}, fillColor = {75, 138, 73}, pattern = LinePattern.None, fillPattern = FillPattern.Solid, extent = {{-100.0, -100.0}, {100.0, 100.0}}), Polygon(origin = {-4.167, -15.0}, fillColor = {255, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Solid, points = {{-15.833, 20.0}, {-15.833, 30.0}, {14.167, 40.0}, {24.167, 20.0}, {4.167, -30.0}, {14.167, -30.0}, {24.167, -30.0}, {24.167, -40.0}, {-5.833, -50.0}, {-15.833, -30.0}, {4.167, 20.0}, {-5.833, 20.0}}, smooth = Smooth.Bezier), Ellipse(origin = {7.5, 56.5}, fillColor = {255, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Solid, extent = {{-12.5, -12.5}, {12.5, 12.5}})}));
   end Version_4_1;
+
+  class Version_4_2 "Version 4.2"
+    annotation(
+      Documentation(info = "
+## 4.2 - 2026-07-08
+
+### Added
+* Added embedded a markdown documentation to ThermoSysPro components, which can be seen in Dymola. Documentation is now regenerated automatically after each modification and published with the project. 
+* Added automatic tests with OpenModelica and Dymola to compare changes against a reference branch.
+* Added a new library package icon.
+* Added new features to the `NuclearCore` package.
+
+### Changed
+* Updated the steam generator component, including a more configurable `SteamGenerator_1SG`, updated examples, and purge-related modelling.
+* Replaced remaining `Modelica.SIunits` usages with `ThermoSysPro.Units` where needed.
+* Updated the GitLab CI configuration for documentation generation, documentation publication, and automatic tests.
+
+### Fixed
+* Fixed `ThermoSysPro/Functions/Utilities/LinearInterpolation_i` to avoid integer rounding in the interpolation slope computation to improve compatibility with latest Dymola releases.
+* Fixed `ThermoSysPro/WaterSteam/BoundaryConditions/SourceP` and `ThermoSysPro/WaterSteam/BoundaryConditions/SinkP` so that the IF97 mode is correctly taken into account when computing specific enthalpy from pressure and temperature. Automatic mode is now used by default.
+* Fixed incorrect cardinality handling in `ThermoSysPro/ElectroMechanics/Machines/Generator8` and `ThermoSysPro/WaterSteam/Machines/Generator8` for unconnected mechanical power inputs.
+* Fixed units in several components.
+      "),
+      Icon(graphics = {Ellipse(lineColor = {75, 138, 73}, fillColor = {75, 138, 73}, pattern = LinePattern.None, fillPattern = FillPattern.Solid, extent = {{-100.0, -100.0}, {100.0, 100.0}}), Polygon(origin = {-4.167, -15.0}, fillColor = {255, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Solid, points = {{-15.833, 20.0}, {-15.833, 30.0}, {14.167, 40.0}, {24.167, 20.0}, {4.167, -30.0}, {14.167, -30.0}, {24.167, -30.0}, {24.167, -40.0}, {-5.833, -50.0}, {-15.833, -30.0}, {4.167, 20.0}, {-5.833, 20.0}}, smooth = Smooth.Bezier), Ellipse(origin = {7.5, 56.5}, fillColor = {255, 255, 255}, pattern = LinePattern.None, fillPattern = FillPattern.Solid, extent = {{-12.5, -12.5}, {12.5, 12.5}})}));
+  end Version_4_2;
   annotation(
     Documentation(info = "
 Release notes    
