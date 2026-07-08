@@ -1,0 +1,9 @@
+{
+    "dymola": {
+        "egg": "/opt/dymola-2025xRefresh1-x86_64/Modelica/Library/python_interface/dymola-2025.1-py3-none-any.whl",
+        "exe": "/opt/dymola-2025xRefresh1-x86_64/bin64/dymola.sh"
+    },
+    "openmodelica": {
+        "exe": "/usr/bin/omc"
+    }
+}

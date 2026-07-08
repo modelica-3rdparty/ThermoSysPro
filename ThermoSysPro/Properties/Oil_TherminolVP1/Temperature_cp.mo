@@ -1,4 +1,5 @@
 within ThermoSysPro.Properties.Oil_TherminolVP1;
+
 function Temperature_cp "inverse function of SpecificHeatCp_t"
   input Units.SI.SpecificHeatCapacity cp "Specific Heat Capacity (J/kgK)";
   output Units.SI.Temperature temp "Fluid temperature (K)";
@@ -9,6 +10,13 @@ protected
   constant Real temp_c3 = 8.707277494347506e-7;
   constant Real temp_c4 = -1.15573614609828e-10;
 algorithm
-   temp := temp_c0 + temp_c1 * cp + temp_c2 * cp ^ 2 + temp_c3 * cp ^ 3 + temp_c4 * cp ^ 4;
-   annotation(inverse(cp = SpecificHeatCp_T(temp)), derivative = Temperature_dercp);
+  temp := temp_c0 + temp_c1*cp + temp_c2*cp^2 + temp_c3*cp^3 + temp_c4*cp^4;
+  annotation(
+    inverse(cp = SpecificHeatCp_T(temp)),
+    derivative = Temperature_dercp,
+    Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+    "));
 end Temperature_cp;

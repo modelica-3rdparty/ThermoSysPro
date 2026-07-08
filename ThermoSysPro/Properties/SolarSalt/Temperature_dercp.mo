@@ -1,4 +1,5 @@
 within ThermoSysPro.Properties.SolarSalt;
+
 function Temperature_dercp "derivative of Temperature_cp"
   input Units.SI.SpecificHeatCapacity cp "Specific Heat Capacity (J/kgK)";
   input Real der_cp "specific heat capacity time derivative (J/kgKs)";
@@ -6,5 +7,11 @@ function Temperature_dercp "derivative of Temperature_cp"
 protected
   constant Real tempC1 = 5.81395;
 algorithm
-   der_temp :=  tempC1*der_cp;
+  der_temp := tempC1*der_cp;
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+    "));
 end Temperature_dercp;

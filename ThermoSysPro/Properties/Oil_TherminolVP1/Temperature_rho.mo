@@ -1,4 +1,5 @@
 within ThermoSysPro.Properties.Oil_TherminolVP1;
+
 function Temperature_rho "inverse of function Density_t"
   input Units.SI.Density rho "Density (kg/m3)";
   output Units.SI.Temperature temp "Fluid temperature (K)";
@@ -9,6 +10,13 @@ protected
   constant Real Temp_c3 = -3.586365918195385e-6;
   constant Real Temp_c4 = 1.3461510759998317e-9;
 algorithm
-  temp := Temp_c0 + Temp_c1 * rho + Temp_c2 * rho ^ 2 + Temp_c3 * rho ^ 3 + Temp_c4 * rho ^ 4;
- annotation(derivative = Temperature_derrho, inverse(rho = Density_T(temp)));
+  temp := Temp_c0 + Temp_c1*rho + Temp_c2*rho^2 + Temp_c3*rho^3 + Temp_c4*rho^4;
+  annotation(
+    derivative = Temperature_derrho,
+    inverse(rho = Density_T(temp)),
+    Documentation(info = "## Copyright © EDF 2002 - 2025
+
+## ThermoSysPro Version 4.2
+
+    "));
 end Temperature_rho;

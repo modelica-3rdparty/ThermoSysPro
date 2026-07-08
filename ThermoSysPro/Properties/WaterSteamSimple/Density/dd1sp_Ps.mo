@@ -1,19 +1,18 @@
 within ThermoSysPro.Properties.WaterSteamSimple.Density;
-function dd1sp_Ps
-  "Derivative of density wrt. specific entropy at constant pressure in liquid region for given pressure and specific entropy"
+
+function dd1sp_Ps "Derivative of density wrt. specific entropy at constant pressure in liquid region for given pressure and specific entropy"
   input Units.SI.AbsolutePressure p "Pressure";
   input Units.SI.SpecificEntropy s "Specific entropy";
-  output ThermoSysPro.Units.xSI.DerDensityByEntropy ddsp
-    "Derivative of density wrt. specific enthalpy at constant pressure";
+  output ThermoSysPro.Units.xSI.DerDensityByEntropy ddsp "Derivative of density wrt. specific enthalpy at constant pressure";
 protected
-  d1_Ps_coef coef
-    annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
+  d1_Ps_coef coef annotation(
+    Placement(transformation(extent = {{-100, 80}, {-80, 100}})));
 algorithm
+  ddsp := ThermoSysPro.Properties.WaterSteamSimple.Utilities.polynomial_xy_order3_derivative_y(coef, p, s);
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
 
-  ddsp :=
-    ThermoSysPro.Properties.WaterSteamSimple.Utilities.polynomial_xy_order3_derivative_y(
-    coef,
-    p,
-    s);
+## ThermoSysPro Version 4.2
 
+    "));
 end dd1sp_Ps;

@@ -1,4 +1,5 @@
 within ThermoSysPro.Fluid.Interfaces.Connectors;
+
 connector FuelOutlet "Fuel outlet connector"
   output Units.SI.MassFlowRate Q "Fuel mass flow rate";
   Units.SI.AbsolutePressure P "Fuel pressure";
@@ -14,17 +15,10 @@ connector FuelOutlet "Fuel outlet connector"
   ThermoSysPro.Units.SI.MassFraction Xashes "Ashes mass fraction";
   ThermoSysPro.Units.SI.MassFraction VolM "Percentage of volatile matter";
   Units.SI.Density rho "Fuel density";
-  annotation (Icon(graphics={Rectangle(
-          extent={{-100,-100},{100,100}},
-          lineColor={0,0,0},
-          fillColor={0,0,0},
-          fillPattern=FillPattern.Forward), Ellipse(
-          extent={{-100,100},{100,-100}},
-          lineColor={0,0,0},
-          fillPattern=FillPattern.Sphere,
-          fillColor={255,0,0})}),    Documentation(revisions="",
-        info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
-<p><b>ThermoSysPro Version 4.1</b> </p>
-</html>"));
+  annotation(
+    Icon(graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {0, 0, 0}, fillColor = {0, 0, 0}, fillPattern = FillPattern.Forward), Ellipse(extent = {{-100, 100}, {100, -100}}, lineColor = {0, 0, 0}, fillPattern = FillPattern.Sphere, fillColor = {255, 0, 0})}),
+    Documentation(info = "
+## Copyright © EDF 2002 - 2026   
+## ThermoSysPro Version 4.2   
+    "));
 end FuelOutlet;

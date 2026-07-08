@@ -1,18 +1,18 @@
 within ThermoSysPro.Properties.WaterSteamSimple.Enthalpy;
-function dh2ps_Ps
-  "Derivative of specific enthalpy wrt. pressure at constant specific enthalpy in vapor region for given pressure and specific entropy"
+
+function dh2ps_Ps "Derivative of specific enthalpy wrt. pressure at constant specific enthalpy in vapor region for given pressure and specific entropy"
   input Units.SI.AbsolutePressure p "Pressure";
   input Units.SI.SpecificEntropy s "Specific entropy";
-  output Real dhps
-    "Derivative of specific enthalpy wrt. pressure at constant specific entropy";
+  output Real dhps "Derivative of specific enthalpy wrt. pressure at constant specific entropy";
 protected
-  h2_Ps_coef coef annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
+  h2_Ps_coef coef annotation(
+    Placement(transformation(extent = {{-100, 80}, {-80, 100}})));
 algorithm
+  dhps := 1/log(10)/p*ThermoSysPro.Properties.WaterSteamSimple.Utilities.polynomial_xy_order5_derivative_x(coef, ThermoSysPro.Properties.WaterSteamSimple.Utilities.logBase10(p), s);
+  annotation(
+    Documentation(info = "## Copyright © EDF 2002 - 2025
 
-  dhps := 1/log(10)/p*
-    ThermoSysPro.Properties.WaterSteamSimple.Utilities.polynomial_xy_order5_derivative_x(
-    coef,
-    ThermoSysPro.Properties.WaterSteamSimple.Utilities.logBase10(p),
-    s);
+## ThermoSysPro Version 4.2
 
+    "));
 end dh2ps_Ps;

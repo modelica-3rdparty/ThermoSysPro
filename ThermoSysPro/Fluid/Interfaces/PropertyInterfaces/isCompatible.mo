@@ -1,32 +1,22 @@
 within ThermoSysPro.Fluid.Interfaces.PropertyInterfaces;
+
 function isCompatible "Determines whether fluids are comptaible"
   input FluidType ftype[:] "Fluid type";
   output Boolean compatible;
-
   /* The size of each dimension of the compatibility table must be equal to the
-  number of elements in the FluidType enumeration */
+    number of elements in the FluidType enumeration */
 protected
-  Boolean compatibility_table[7, 7]=
-  [true,  false, false, false, false, false, true;
-   false, true,  false, false, false, false, false;
-   false, false, true,  false, false, false, false;
-   false, false, false, true,  false, false, false;
-   false, false, false, false, true,  false, false;
-   false, false, false, false, false, true,  false;
-   true,  false, false, false, false, false, true];
-
+  Boolean compatibility_table[7, 7] = [true, false, false, false, false, false, true; false, true, false, false, false, false, false; false, false, true, false, false, false, false; false, false, false, true, false, false, false; false, false, false, false, true, false, false; false, false, false, false, false, true, false; true, false, false, false, false, false, true];
 algorithm
-
   compatible := true;
-
   for i in 1:size(ftype, 1) loop
     for j in i + 1:size(ftype, 1) loop
       compatible := compatible and compatibility_table[Integer(ftype[i]), Integer(ftype[j])];
     end for;
   end for;
-
-  annotation (Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b> </p>
-<p><b>ThermoSysPro Version 4.1</b> </p>
-</html>"));
+  annotation(
+    Documentation(info = "
+## Copyright © EDF 2002 - 2026   
+## ThermoSysPro Version 4.2   
+    "));
 end isCompatible;
