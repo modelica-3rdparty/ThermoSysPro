@@ -1,5 +1,4 @@
 within ThermoSysPro.Examples.SimpleExamples;
-
 model TestSteamGenerator_1SG
   parameter ThermoSysPro.Units.SI.Pressure P_Prim=155e5 annotation (Dialog(group="Primary"));
   parameter ThermoSysPro.Units.SI.Temperature Thot_Prim=320 + 273.15 annotation (Dialog(group="Primary"));
@@ -9,7 +8,7 @@ model TestSteamGenerator_1SG
   parameter ThermoSysPro.Units.SI.Temperature T_Feedwater=227 + 273.15 annotation (Dialog(group="Secondary"));
   parameter ThermoSysPro.Units.SI.SpecificEnthalpy h_Feedwater=977100 annotation (Dialog(group="Secondary"));
   parameter ThermoSysPro.Units.SI.MassFlowRate Q_Secondary=520 "Primary side flow rate per SG" annotation (Dialog(group="Secondary"));
-  parameter ThermoSysPro.Units.SI.Pressure P_Secondary=67.3e3 annotation (Dialog(group="Secondary"));
+  parameter ThermoSysPro.Units.SI.Pressure P_Secondary=67.3e5 annotation (Dialog(group="Secondary"));
 
   WaterSteam.BoundaryConditions.SinkQ sinkQ(Q0=Q_Prim, h0=1.278e6) annotation (Placement(transformation(extent={{60,-44},{80,-24}})));
   WaterSteam.BoundaryConditions.SourceP sourceP(
@@ -39,11 +38,12 @@ model TestSteamGenerator_1SG
         rotation=180)));
   WaterSteam.HeatExchangers.SteamGenerator_1SG steamGenerator(
     n_tubes=5500,
-    Leq=2*11.0,
-    hcCorr=1.25,
+    S=7000,
+    e_tubes=1.09e-3,
+    hcCorr=1.0,
+    V_sep=12,
     L_sep=2.9,
-    D_sep=2.1,
-    D_Riser=0.04,
+    V_Riser=75,
     L_Dome=6.3,
     R_Dome=2.4,
     V_MixARE=22.5,
@@ -356,7 +356,7 @@ model TestSteamGenerator_1SG
       dW2(start={-69249119.55796921,-55812352.70606944,-44875175.252391525,-36058712.51509096,-28987599.19303869})),
     volumeA(P(start=7203247.961077818), h(start=1208572.8409774043)),
     volumeA1(P(start=6708825.183275267), h(start=1600853.6941739672)),
-    K_riser=6.0,
+    K_riser=0.6,
     fluidInlet1(h_vol(start=1478000.0)),
     fluidOutletI1(h_vol(start=1291428.8047443377)),
     fluidInlet(h_vol(start=977100.0)))              annotation (Placement(transformation(extent={{-34,-36},{32,40}})));
@@ -374,21 +374,18 @@ model TestSteamGenerator_1SG
         rotation=0)));
 equation
   connect(sinkP1.C, singularPressureLoss1.C2) annotation (Line(points={{80,60},{60,60}}));
-  connect(singularPressureLoss1.C1, steamGenerator.fluidOutletI) annotation (Line(points={{40,60},
-          {-2,60},{-2,39.7467},{-1,39.7467}},                                                                                         color={0,0,255}));
+  connect(singularPressureLoss1.C1, steamGenerator.fluidOutletI) annotation (Line(points={{40,60},{0,60},{0,39.7467},{-1,39.7467}},   color={0,0,255}));
   connect(sourceP.C, SensorT_ThotPrim.C1) annotation (Line(points={{-60,-36},{-50,-36}}, color={0,0,255}));
   connect(SensorT_ThotPrim.C2, steamGenerator.fluidInlet1) annotation (Line(points={{-29.8,-36},{-12,-36}}, color={0,0,255}));
   connect(sinkQ.C, SensorT_TcoldPrim.C2) annotation (Line(points={{60,-34},{50.2,-34}}, color={0,0,255}));
   connect(SensorT_TcoldPrim.C1, steamGenerator.fluidOutletI1) annotation (Line(points={{30,-34},{10,-34},{10,-36}}, color={0,0,255}));
   connect(sourceQ1.C, SensorT_TARE.C1) annotation (Line(points={{80,30},{60,30}}, color={0,0,255}));
-  connect(SensorT_TARE.C2, steamGenerator.fluidInlet) annotation (Line(points={{39.8,30},
-          {26,30},{26,29.8667},{10.44,29.8667}},                                                                                color={0,0,255}));
+  connect(SensorT_TARE.C2, steamGenerator.fluidInlet) annotation (Line(points={{39.8,30},{26,30},{26,29.8667},{10.44,29.8667}}, color={0,0,255}));
   annotation(
     Documentation(info = "
 ## Copyright © EDF 2002 - 2026   
 ## ThermoSysPro Version 4.2   
-    "));
-  annotation (
+    "),
     Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Rectangle(
           lineColor={200,200,200},
