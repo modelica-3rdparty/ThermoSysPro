@@ -4,5 +4,5 @@ package ThermoSysPro
 ## Copyright © EDF 2002 - 2026   
 ## ThermoSysPro Version 4.2   
     "),
-    version = "4.1");
+    version = "4.2");
 end ThermoSysPro;
