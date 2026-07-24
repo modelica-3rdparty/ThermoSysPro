@@ -17,7 +17,10 @@ model TestStaticDrum_Plug_Traces
   ThermoSysPro.Fluid.BoundaryConditions.Sink sinkP2(redeclare package Medium = Medium) annotation (Placement(transformation(extent={{60,50},{80,70}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.RefP refP(redeclare package Medium = Medium, P0=3e5) annotation (Placement(transformation(extent={{-26,-90},{-6,-70}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.RefQ refQ(redeclare package Medium = Medium, Q0=100) annotation (Placement(transformation(extent={{-56,-90},{-36,-70}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.PlugA sourcePlug(redeclare package Medium = Medium, C(h(fixed=false), SubC={10})) annotation (Placement(transformation(extent={{-90,-90},{-70,-70}}, rotation=0)));
+  ThermoSysPro.Fluid.BoundaryConditions.PlugA sourcePlug(
+    redeclare package Medium = Medium,
+    SubC0={10},
+    C(h(fixed=false))) annotation (Placement(transformation(extent={{-90,-90},{-70,-70}}, rotation=0)));
 equation
   connect(singularPressureLossVALI2.C2, StaticDrumTh1.Ce_eco) annotation (Line(points={{-60,-40},{-60,0.6},{-48,0.6}}, color={0,0,255}));
   connect(singularPressureLossVALI1.C2, sinkP1.C) annotation (Line(points={{20,0},{40,0}}, color={0,0,255}));

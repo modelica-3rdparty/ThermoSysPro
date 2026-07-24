@@ -6,6 +6,9 @@ model PlugA "Plug"
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
+  parameter Medium.ExtraProperty SubC0[Medium.nC](quantity=Medium.extraPropertiesNames) = fill(0,Medium.nC) "Source trace substances" annotation (Evaluate=true, Dialog(
+      tab="Fluid",
+      group="Medium"));
 
 public
   Units.SI.MassFlowRate Q "Fluid mass flow rate";
@@ -23,6 +26,8 @@ equation
   C.h_vol_1 = h;
   C.diff_res_1 = 0;
   C.diff_on_1 = diffusion;
+
+  C.SubC = SubC0;
 
   /* Flow reversal */
   if continuous_flow_reversal then
