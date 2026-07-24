@@ -1,5 +1,7 @@
 within ThermoSysPro.Fluid.PressureLosses;
 model InvSingularPressureLoss "Inverse singular pressure loss"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.MassFlowRate gamma_diff=1e-4

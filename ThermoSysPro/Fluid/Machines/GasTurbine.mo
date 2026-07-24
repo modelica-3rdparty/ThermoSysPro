@@ -1,5 +1,7 @@
 within ThermoSysPro.Fluid.Machines;
 model GasTurbine "Combustion turbine for CICO and Barilla plants"
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the water/steam side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
   replaceable package Medium_FlueGases = ThermoSysPro.Properties.Media.FlueGases constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the flue gases side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 

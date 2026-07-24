@@ -1,5 +1,7 @@
 within ThermoSysPro.Fluid.Machines;
 model HeatPumpCompressor "Heat pump compressor "
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
   replaceable package Medium = ThermoSysPro.Properties.Media.C3H3F5 constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium
     "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
