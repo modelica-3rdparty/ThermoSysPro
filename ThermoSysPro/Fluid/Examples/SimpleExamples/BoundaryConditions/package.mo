@@ -1,4 +1,4 @@
 within ThermoSysPro.Fluid.Examples.SimpleExamples;
-package Junctions
+package BoundaryConditions
   extends ThermoSysPro.UsersGuide.Documentation.ThermoSysProPackageIcon;
-end Junctions;
+end BoundaryConditions;
