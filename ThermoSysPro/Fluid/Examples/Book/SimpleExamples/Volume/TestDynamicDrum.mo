@@ -1,11 +1,14 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.Volume;
 model TestDynamicDrum
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
+
   parameter ThermoSysPro.Units.xSI.Cv CvmaxWater(fixed=false, start=670)
     "Maximum CV (active if mode_caract=0)";
   parameter Real LambdaPipe(fixed=false,start=0.085)
     "Friction pressure loss coefficient (active if lambda_fixed=true)";
 
   ThermoSysPro.Fluid.Volumes.DynamicDrum              Drum(
+    redeclare package Medium = Medium,
     Vv(start=39),
     Vertical=false,
     hl(start=1454400),
@@ -19,6 +22,7 @@ model TestDynamicDrum
     Tp(start=592.6)) annotation (Placement(transformation(extent={{-61,16},{1,
             78}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve FeedwaterValve(
+    redeclare package Medium = Medium,
     Cv(start=335),
     Q(start=79.5),
     rho(start=888),
@@ -33,6 +37,7 @@ model TestDynamicDrum
                      annotation (Placement(transformation(extent={{-120,74},{
             -100,94}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.ControlValve SteamValve(
+    redeclare package Medium = Medium,
     Cv(start=25000),
     Q(start=79.5),
     rho(start=78.5),
@@ -42,6 +47,7 @@ model TestDynamicDrum
     annotation (Placement(transformation(extent={{40,74},{60,94}}, rotation=0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicTwoPhaseFlowPipe
     TubeEcranBoucleEvaporatoire(
+    redeclare package Medium = Medium,
     T0=fill(400, 10),
     heb(start={10409,10268,10127,9985,9842,9698,9552,9406,9258,9111}),
     advection=false,
@@ -75,6 +81,7 @@ model TestDynamicDrum
         extent={{-10,-10},{10,10}},
         rotation=90)));
   ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe lumpedStraightPipe(
+    redeclare package Medium = Medium,
     L=20,
     z1=20,
     C1(P(start=130e5)),
@@ -85,11 +92,13 @@ model TestDynamicDrum
         extent={{10,-10},{-10,10}},
         rotation=90)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP              sourceQ(h0=1400000,
+    redeclare package Medium = Medium,
     option_temperature=false,
     P0=13300000)
            annotation (Placement(transformation(extent={{-196,68},{-176,88}},
           rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkP              sinkP(
+    redeclare package Medium = Medium,
     option_temperature=false,
     h0=2.650e6,
     P0=12700000)

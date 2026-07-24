@@ -1,8 +1,9 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model DynamicWaterSteamMultiFluidsHeatExchanger "Dynamic water/steam heat exchanger"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium_1 = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the one-phase side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_2 = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the water/steam side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.Length L=1 "Exchanger length";
   parameter Units.SI.Position z1=0 "Exchanger inlet altitude";
@@ -41,9 +42,9 @@ model DynamicWaterSteamMultiFluidsHeatExchanger "Dynamic water/steam heat exchan
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
   Fluid.HeatExchangers.DynamicOnePhaseFlowPipe ExchangerMultiFluids(
+    redeclare package Medium = Medium_1,
     Ns=Ns,
     L=L,
     ntubes=Ntubes,
@@ -71,6 +72,7 @@ model DynamicWaterSteamMultiFluidsHeatExchanger "Dynamic water/steam heat exchan
     T0=T0[1])                            annotation (Placement(transformation(
           extent={{-10,-10},{10,10}}, rotation=0)));
   Fluid.HeatExchangers.DynamicTwoPhaseFlowPipe TwoPhaseFlowPipe(
+    redeclare package Medium = Medium_2,
     L=L,
     D=Dint,
     ntubes=Ntubes,
@@ -90,13 +92,13 @@ model DynamicWaterSteamMultiFluidsHeatExchanger "Dynamic water/steam heat exchan
     continuous_flow_reversal=continuous_flow_reversal)
     annotation (Placement(transformation(extent={{-10,-30},{10,-10}}, rotation=
             0)));
-  Interfaces.Connectors.FluidInlet Cfg1 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidInlet Cfg1(redeclare package Medium = Medium_1) annotation (Placement(transformation(
           extent={{-10,40},{10,60}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet Cfg2 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidOutlet Cfg2(redeclare package Medium = Medium_1) annotation (Placement(transformation(
           extent={{-10,-60},{10,-40}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet Cws1 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidInlet Cws1(redeclare package Medium = Medium_2) annotation (Placement(transformation(
           extent={{-110,-10},{-90,10}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet Cws2 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidOutlet Cws2(redeclare package Medium = Medium_2) annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
 equation
   connect(Cws2, TwoPhaseFlowPipe.C2)

@@ -1,6 +1,8 @@
 within ThermoSysPro.Fluid.Machines;
 model StaticFan "Static fan"
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
+  extends ThermoSysPro.Fluid.Interfaces.IconColors;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.FlueGases constrainedby Modelica.Media.Interfaces.PartialMixtureMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter ThermoSysPro.Units.nonSI.AngularVelocity_rpm VRot=1400
     "Rotational speed";
@@ -42,8 +44,6 @@ public
   Units.SI.AbsolutePressure P(start=1.e5) "Fluid average pressure";
   Units.SI.SpecificEnthalpy h(start=100000) "Fluid average specific enthalpy";
   Units.SI.Temperature T(start=500) "Fluid temperature";
-  FluidType ftype "Fluid type";
-  Integer fluid=Integer(ftype) "Fluid number";
 
 public
   ThermoSysPro.InstrumentationAndControl.Connectors.InputLogical commandeFan
@@ -51,9 +51,9 @@ public
         origin={0,110},
         extent={{-10,-10},{10,10}},
         rotation=270)));
-  Interfaces.Connectors.FluidInlet C1 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(transformation(
           extent={{-110,-10},{-90,10}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet C2 annotation (Placement(transformation(
+  Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(transformation(
           extent={{90,-10},{110,10}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal VRotation
     annotation (Placement(transformation(
@@ -61,8 +61,6 @@ public
         extent={{-10,-10},{10,10}},
         rotation=90)));
 equation
-  /* Check that the fluid type is flue gases */
-  assert(ftype == FluidType.FlueGases, "StaticFan: the fluid type must be flue gases");
 
   if (cardinality(commandeFan) == 0) then
     commandeFan.signal = true;
@@ -83,14 +81,9 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
   C1.diff_res_2 = C2.diff_res_2 + (if (gamma_diff > 0) then 1/gamma_diff else 0);
 
-  C1.ftype = C2.ftype;
+  C1.SubC = C2.SubC;
 
-  C1.Xco2 = C2.Xco2;
-  C1.Xh2o = C2.Xh2o;
-  C1.Xo2  = C2.Xo2;
-  C1.Xso2 = C2.Xso2;
-
-  ftype = C1.ftype;
+  C1.Xi = C2.Xi;
 
   Q = C1.Q;
   Q = Qv*rho;
@@ -124,12 +117,12 @@ equation
   h = (C2.h + C1.h)/2;
 
   // Temperature
-  h =  ThermoSysPro.Properties.FlueGases.FlueGases_h(P, T, C2.Xco2, C2.Xh2o, C2.Xo2, C2.Xso2);
+  h =  Medium.specificEnthalpy_pTX(P, T, C2.Xi);
 
   if (p_rho > 0) then
     rho = p_rho;
   else
-    rho = ThermoSysPro.Properties.FlueGases.FlueGases_rho(P, T, C2.Xco2, C2.Xh2o, C2.Xo2, C2.Xso2);
+    rho = Medium.density_pTX(P, T, C2.Xi);
   end if;
   annotation (
     Diagram(coordinateSystem(
@@ -177,6 +170,5 @@ equation
 <li>Daniel Bouskela</li>
 <li>Baligh El Hefni </li>
 </ul>
-</html>"),
-    DymolaStoredErrors);
+</html>"));
 end StaticFan;

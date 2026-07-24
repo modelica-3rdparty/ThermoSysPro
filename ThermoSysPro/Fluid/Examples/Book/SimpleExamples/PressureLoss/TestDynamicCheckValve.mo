@@ -1,13 +1,18 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.PressureLoss;
 model TestDynamicCheckValve
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
-  ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP1
+  ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP1(
+    redeclare package Medium = Medium)
                                      annotation (Placement(transformation(
           extent={{-38,-10},{-18,10}},rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkP puitsP1(
+                                   redeclare package Medium = Medium,
                                    P0=6e5) annotation (Placement(transformation(
           extent={{42,-10},{62,10}},rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.DynamicCheckValve checkValve(J=10)
+  ThermoSysPro.Fluid.PressureLosses.DynamicCheckValve checkValve(
+    redeclare package Medium = Medium,
+    J=10)
     annotation (Placement(transformation(extent={{2,-10},{22,10}},rotation=0)));
   InstrumentationAndControl.Blocks.Sources.Sinusoide pulse(
     period=100,

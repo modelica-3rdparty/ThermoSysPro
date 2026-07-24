@@ -3,9 +3,10 @@ model TestLumpedStraightPipe_FlueGases
   extends ThermoSysPro.UsersGuide.Icons.Example;
 
   replaceable package Medium = Properties.Media.FlueGases;
-  ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe
-                                                     lumpedStraightPipe(
-                                                                      redeclare replaceable package Medium = Medium) annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
+  ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe lumpedStraightPipe(
+    redeclare replaceable package Medium = Medium,
+    L=10,
+    D=0.2) annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
   ThermoSysPro.Fluid.BoundaryConditions.Sink sink(
     redeclare replaceable package Medium = Medium,
     T0=573.15,

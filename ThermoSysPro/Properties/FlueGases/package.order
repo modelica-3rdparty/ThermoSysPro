@@ -16,3 +16,4 @@ FlueGases_T
 FlueGases_Xtot
 unsafeForJacobian
 XSat
+getSubstanceIndex

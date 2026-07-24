@@ -24,3 +24,5 @@ TestStaticDrum
 TestStaticDrum_Traces
 TestStaticDrum_Plug
 TestStaticDrum_Plug_Traces
+TestSteamExtractionSplitter
+TestSteamExtractionSplitter_Traces

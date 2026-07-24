@@ -1,9 +1,7 @@
 within ThermoSysPro.Fluid.PressureLosses;
 model LumpedStraightPipe "Lumped straight pipe (circular duct)"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-
-  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialThermoSysProMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
-
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.Length L=10. "Pipe length";
   parameter Units.SI.Diameter D=0.2 "Pipe internal hydraulic diameter";
@@ -47,11 +45,9 @@ public
   Units.SI.ThermalConductivity k(start=0.05) "Fluid thermal conductivity";
   Units.SI.MassFlowRate gamma_diff(start=1.e-4) "Diffusion conductance";
   Medium.MassFraction X[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Mass fractions";
-
-
+  Medium.ThermodynamicState state "Fluid thermodynamic state";
 
 public
-  Medium.ThermodynamicState state;
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet C1(redeclare package Medium = Medium) annotation (Placement(
         transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
   ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet C2(redeclare package Medium = Medium) annotation (Placement(
@@ -75,15 +71,14 @@ equation
   C2.diff_res_1 = C1.diff_res_1 + 1/gamma_diff;
   C1.diff_res_2 = C2.diff_res_2 + 1/gamma_diff;
 
-
   C1.Xi = C2.Xi;
-  C1.SubC = C2.SubC;
   X = C1.Xi;
+
+  C1.SubC = C2.SubC;
 
   Q = C1.Q;
   h = C1.h;
   deltaP = C1.P - C2.P;
-
 
   /* Diffusion resistance */
   gamma_diff = A*k/cp/L;
@@ -115,8 +110,7 @@ equation
 
   /* Fluid thermodynamic properties */
   Pm = (C1.P + C2.P)/2;
-
-  state=Medium.setState_phX(p=Pm, h=h, X=X);
+  state = Medium.setState_phX(p=Pm, h=h, X=X);
 
   if (p_rho > 0) then
     rho = p_rho;
@@ -124,8 +118,7 @@ equation
     rho = Medium.density(state);
   end if;
 
-
-  T = state.T;
+  T = Medium.temperature(state);
   mu = Medium.dynamicViscosity(state);
   k = Medium.thermalConductivity(state);
   cp = Medium.specificHeatCapacityCp(state);

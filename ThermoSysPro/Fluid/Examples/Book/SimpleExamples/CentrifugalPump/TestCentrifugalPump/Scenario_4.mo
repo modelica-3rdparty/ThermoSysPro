@@ -1,7 +1,9 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.CentrifugalPump.TestCentrifugalPump;
 model Scenario_4
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
   ThermoSysPro.Fluid.Machines.CentrifugalPump centrifugalPump(
+    redeclare package Medium = Medium,
     J=5.685,
     dynamic_mech_equation=true,
     hn_coef={-165.23,774.95},
@@ -15,11 +17,13 @@ model Scenario_4
     Qv(start=0.010949905982587188))
     annotation (Placement(transformation(extent={{20,20},{40,40}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourcePQ sourceP(
+    redeclare package Medium = Medium,
     Q0=10,
     h0=650e3,
     P0=100000)
     annotation (Placement(transformation(extent={{-20,20},{0,40}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.Sink sinkP
+  ThermoSysPro.Fluid.BoundaryConditions.Sink sinkP(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{60,20},{80,40}}, rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Rampe rampe3(
     Duration=1000,

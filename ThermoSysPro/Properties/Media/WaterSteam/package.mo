@@ -114,11 +114,11 @@ package WaterSteam "1 - Water/steam properties library (IAPWS-IF97)"
           d=density_ph(
             p,
             h,
-            region=Region),
+            region=region),
           T=temperature_ph(
             p,
             h,
-            region=Region),
+            region=region),
           phase=if region == 0 then 0 else if region==4 then 2 else 1,
           h=h,
           p=p);

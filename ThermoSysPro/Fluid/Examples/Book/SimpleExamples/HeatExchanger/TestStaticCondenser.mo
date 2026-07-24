@@ -1,5 +1,6 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.HeatExchanger;
 model TestStaticCondenser
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
   parameter Units.SI.AbsolutePressure Pin_1(fixed=false, start=20000)
     "Flow pressure at inlet 1 (sourceP)";
@@ -8,10 +9,13 @@ model TestStaticCondenser
   parameter Units.SI.AbsolutePressure Pin_3(fixed=false, start=20000)
     "Flow pressure at inlet 3 (sourceP2)";
 
-  ThermoSysPro.Fluid.BoundaryConditions.SinkP Puit_condenseur(P0(fixed=false) = 100000)
+  ThermoSysPro.Fluid.BoundaryConditions.SinkP Puit_condenseur(
+    redeclare package Medium = Medium,
+    P0=100000)
              annotation (Placement(transformation(extent={{158,-15},{178,5}},
           rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP(
+    redeclare package Medium = Medium,
     option_temperature=false,
     P0=Pin_1,
     C(Q(fixed=true, start=832.66)),
@@ -19,42 +23,57 @@ model TestStaticCondenser
             annotation (Placement(transformation(extent={{-100,140},{-80,160}},
           rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP1(
+    redeclare package Medium = Medium,
     option_temperature=false,
     h0=2.5481e6,
     C(Q(fixed=true, start=1e-5)),
     P0=Pin_2)                     annotation (Placement(transformation(extent={
             {-182,80},{-162,100}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP2(
+    redeclare package Medium = Medium,
     option_temperature=false,
     h0=2.5055e6,
     C(Q(fixed=true, start=1e-5)),
     P0=Pin_3)                      annotation (Placement(transformation(extent=
             {{-180,40},{-160,60}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLoss(K=10)
+    singularPressureLoss(
+    redeclare package Medium = Medium,
+    K=10)
                          annotation (Placement(transformation(extent={{-100,80},
             {-80,100}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLoss1(K=10)
+    singularPressureLoss1(
+    redeclare package Medium = Medium,
+    K=10)
                           annotation (Placement(transformation(extent={{-100,40},
             {-80,60}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLoss3(K=10)
+    singularPressureLoss3(
+    redeclare package Medium = Medium,
+    K=10)
                           annotation (Placement(transformation(extent={{-40,140},
             {-20,160}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.Sink Puit_condenseur1
+  ThermoSysPro.Fluid.BoundaryConditions.Sink Puit_condenseur1(
+    redeclare package Medium = Medium)
              annotation (Placement(transformation(extent={{100,-100},{120,-80}},
           rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLoss4(K=1e-4)
+    singularPressureLoss4(
+    redeclare package Medium = Medium,
+    K=1e-4)
                           annotation (Placement(transformation(extent={{98,-15},
             {118,5}},  rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    singularPressureLoss5(K=1e-4)
+    singularPressureLoss5(
+    redeclare package Medium = Medium,
+    K=1e-4)
                           annotation (Placement(transformation(extent={{40,-100},
             {60,-80}}, rotation=0)));
 
   ThermoSysPro.Fluid.HeatExchangers.StaticCondenser              condenseur(
+    redeclare package Medium = Medium,
+    redeclare package Medium_Cooling = Medium,
     SCO=47786,
     z=0,
     CPCE=0,
@@ -62,12 +81,15 @@ model TestStaticCondenser
     QC0=37700)     annotation (Placement(transformation(
           extent={{-24,-24},{68,74}}, rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceQ Source_condenseur(
+    redeclare package Medium = Medium,
     h0=60e3,
-    C(P(fixed=true, start=328800)),
+    C(P(fixed=false, start=328800)),
     Q0(fixed=true) = 42261)
           annotation (Placement(transformation(extent={{-189,-25},{-146,15}},
           rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss              singularPressureLoss2(K=1e-3)
+  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss              singularPressureLoss2(
+    redeclare package Medium = Medium,
+    K=1e-3)
                           annotation (Placement(transformation(extent={{-101,
             -15},{-81,5}},
                        rotation=0)));

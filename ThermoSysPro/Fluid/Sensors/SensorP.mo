@@ -29,7 +29,6 @@ equation
   C1.diff_res_2 = C2.diff_res_2;
 
   C1.Xi = C2.Xi;
-
   C1.SubC = C2.SubC;
 
   /* Sensor signal */

@@ -6,3 +6,15 @@ TestStaticCentrifugalPump_Traces
 TestCentrifugalPump
 TestCentrifugalPump_FlueGases
 TestCentrifugalPump_Traces
+TestCombustionTurbine
+TestCombustionTurbine_Traces
+TestGasTurbine
+TestHeatPumpCompressor
+TestInternalCombustionEngine
+TestCHPEngineBarkantineSystem
+TestCompressor
+TestCompressor_Traces
+TestStaticFan
+TestStaticFan_Traces
+TestSteamEngine
+TestSteamEngine_Traces

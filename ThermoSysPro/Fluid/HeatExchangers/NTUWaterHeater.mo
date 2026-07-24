@@ -1,10 +1,9 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model NTUWaterHeater "NTU water heater"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.WaterSteamFluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium_e = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the water side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_c = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialTwoPhaseThermoSysProMedium "Medium model for the condensing side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Real lambdaE=0 "Pressure loss coefficient on the water side";
   parameter Units.SI.Area SCondDes=3000
@@ -18,23 +17,8 @@ model NTUWaterHeater "NTU water heater"
     "Diffusion conductance for the water side (active if diffusion=true in neighbouring volumes)";
   parameter Boolean continuous_flow_reversal=false "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter IF97Region region_eeF=IF97Region.All_regions "IF97 region at the inlet of the water side (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_seF=IF97Region.All_regions "IF97 region at the outlet of the water side (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_evC=IF97Region.All_regions "IF97 region at the inlet of the vapor side (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_mF=IF97Region.All_regions "IF97 region in the drain (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_epC=IF97Region.All_regions "IF97 region at the inlet of the drain (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_spC=IF97Region.All_regions "IF97 region at the outlet of the drain (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_flash=IF97Region.All_regions "IF97 region in the flash zone of the drain (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
 protected
-  parameter Integer fluid=Integer(ftype) "Fluid number";
-  parameter Integer mode_eeF=Integer(region_eeF) "IF97 region at the inlet of the water side. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_seF=Integer(region_seF) "IF97 region at the outlet of the water side. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_evC=Integer(region_evC) "IF97 region at the inlet of the vapor side. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_mF=Integer(region_mF) "IF97 region in the drain. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_epC=Integer(region_epC) "IF97 region at the inlet of the drain. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_spC=Integer(region_spC) "IF97 region at the outlet of the drain. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_flash=Integer(region_flash) "IF97 region in the flash zone of the drain. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
   parameter Units.SI.MassFlowRate gamma0=1.e-4
     "Pseudo-diffusion conductance use for continuous flow reversal (active if diffusion=false and continuous_flow_reversal = true)";
   parameter Real eps=1.e-3 "Small number for pressure loss equation";
@@ -63,13 +47,9 @@ public
   Units.SI.SpecificEnthalpy Hep(start=3e5)
     "Mixing specific enthalpy of the drain and the condensate";
   Units.SI.Density rho(start=1e3, min=0) "Average water density";
-  FluidType fluids[4] "Fluids mixing in volume";
-  FluidType ftype_e "Fluid type for the water side";
-  Integer fluid_e=Integer(ftype_e) "Fluid number for the water side";
-  ThermoSysPro.Units.SI.MassFraction Xco2 "CO2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xh2o "H20 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xo2 "O2 mass fraction";
-  ThermoSysPro.Units.SI.MassFraction Xso2 "SO2 mass fraction";
+  Medium_e.MassFraction Xe[Medium_e.nXi](start=Medium_e.X_default[1:Medium_e.nXi]) "Mass fractions on the water side";
+  Medium_c.MassFraction Xc[Medium_c.nXi](start=Medium_c.X_default[1:Medium_c.nXi]) "Mass fractions in the condensing volume";
+  Medium_c.ExtraProperty SubCc[Medium_c.nC](quantity=Medium_c.extraPropertiesNames, start=Medium_c.C_default) "Trace substances in the condensing volume";
   Units.SI.Power Jep "Thermal power diffusion from the inlet of the drain";
   Units.SI.Power Jev "Thermal power diffusion from the inlet of the vapor side";
   Units.SI.Power Jsp "Thermal power diffusion from the outlet of the drain";
@@ -84,89 +64,45 @@ public
   Real rev "Value of r(Q/gamma) for inlet for the inlet of the vapor side";
   Real rsp "Value of r(Q/gamma) for the outlet of the drain";
 
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proeeF
-    "Water inlet fluid properties (4F)"
-    annotation (Placement(transformation(extent={{-100,-100},{-80,-80}},
-          rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proseF
-    "Water outlet fluid properties (1F)"
-    annotation (Placement(transformation(extent={{-70,-100},{-50,-80}},
-          rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prospC
-    "Drain outlet fluid properties (4C)"
-    annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
-           0)));
-  Interfaces.Connectors.FluidInlet Ee "Water inlet"
+  Medium_e.ThermodynamicState state_eeF "Water inlet fluid state (4F)";
+  Medium_e.ThermodynamicState state_seF "Water outlet fluid state (1F)";
+  Medium_c.ThermodynamicState state_spC "Drain outlet fluid state (4C)";
+  Interfaces.Connectors.FluidInlet Ee(redeclare package Medium = Medium_e) "Water inlet"
     annotation (Placement(transformation(extent={{-90,-10},{-110,10}}, rotation=
            0)));
-  Interfaces.Connectors.FluidOutlet Se "Water outlet" annotation (Placement(
+  Interfaces.Connectors.FluidOutlet Se(redeclare package Medium = Medium_e) "Water outlet" annotation (Placement(
         transformation(extent={{110,-10},{90,10}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet Ep "Drain inlet"
+  Interfaces.Connectors.FluidInlet Ep(redeclare package Medium = Medium_c) "Drain inlet"
     annotation (Placement(transformation(extent={{-50,24},{-70,44}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet Sp "Drain outlet" annotation (Placement(
+  Interfaces.Connectors.FluidOutlet Sp(redeclare package Medium = Medium_c) "Drain outlet" annotation (Placement(
         transformation(extent={{-50,-43},{-70,-23}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet Ev "Vapor inlet"
+  Interfaces.Connectors.FluidInlet Ev(redeclare package Medium = Medium_c) "Vapor inlet"
     annotation (Placement(transformation(extent={{70,24},{50,44}}, rotation=0),
         iconTransformation(extent={{70,24},{50,44}})));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proevC
-    "Vapor inlet fluid properties (1C)"
-    annotation (Placement(transformation(extent={{-70,80},{-50,100}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat lsatC
-    "Saturation conditions for the liquid phase"
-    annotation (Placement(transformation(extent={{10,40},{30,60}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.PropThermoSat vsatC
-    "Saturation conditions for the vapor phase"
-    annotation (Placement(transformation(extent={{-30,40},{-10,60}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph promeF
-    "Average water fluid properties (between 4F and 3F)"
-    annotation (Placement(transformation(extent={{-40,-100},{-20,-80}},
-          rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prodesmC
-    "Deheating average fluid properties (between 1C and 2C)"
-    annotation (Placement(transformation(extent={{50,80},{70,100}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph promcF
-    "Average deheating fluid properties (between 3F and 2F)"
-    annotation (Placement(transformation(extent={{50,-100},{70,-80}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prodesF
-    "Deheating inlet fluid properties (2F)"
-    annotation (Placement(transformation(extent={{-10,-100},{10,-80}}, rotation=
-           0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prodesmF
-    "Average deheating fluid properties (between 2F and 1F)"
-    annotation (Placement(transformation(extent={{20,-100},{40,-80}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prosp
-    "Drain outlet fluid properties before cooling (near 3C)"
-    annotation (Placement(transformation(extent={{-40,80},{-20,100}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prompC
-    "Average fluid properties in the drain (between 3C and 4C)"
-    annotation (Placement(transformation(extent={{20,80},{40,100}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph prompF
-    "Average water fluid properties (between 4F and 3F)"
-    annotation (Placement(transformation(extent={{-100,-60},{-80,-40}},
-          rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proecF
-    "Water fluid properties (3F)"
-    annotation (Placement(transformation(extent={{80,-100},{100,-80}}, rotation=
-           0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph flashepC
-    "Flash fluid properties (near 4C)"
-    annotation (Placement(transformation(extent={{80,80},{100,100}}, rotation=0)));
+  Medium_c.ThermodynamicState state_evC "Vapor inlet fluid state (1C)";
+  Medium_c.SaturationProperties satC "Saturation conditions at the vapor inlet pressure";
+  Medium_c.ThermodynamicState state_lsatC "Saturated liquid state";
+  Medium_c.ThermodynamicState state_vsatC "Saturated vapor state";
+  Medium_e.ThermodynamicState state_meF "Average water fluid state (between 4F and 3F)";
+  Medium_c.ThermodynamicState state_desmC "Deheating average fluid state (between 1C and 2C)";
+  Medium_e.ThermodynamicState state_mcF "Average deheating fluid state (between 3F and 2F)";
+  Medium_e.ThermodynamicState state_desF "Deheating inlet fluid state (2F)";
+  Medium_e.ThermodynamicState state_desmF "Average deheating fluid state (between 2F and 1F)";
+  Medium_c.ThermodynamicState state_sp "Drain outlet fluid state before cooling (near 3C)";
+  Medium_c.ThermodynamicState state_mpC "Average fluid state in the drain (between 3C and 4C)";
+  Medium_e.ThermodynamicState state_mpF "Average water fluid state (between 4F and 3F)";
+  Medium_e.ThermodynamicState state_ecF "Water fluid state (3F)";
+  Units.SI.SpecificHeatCapacity cp_desmC;
+  Units.SI.SpecificHeatCapacity cp_mcF;
+  Units.SI.SpecificHeatCapacity cp_desmF;
+  Units.SI.SpecificHeatCapacity cp_mpC;
+  Units.SI.SpecificHeatCapacity cp_mpF;
+  Units.SI.Temperature T_evC;
+  Units.SI.Temperature T_desF;
+  Units.SI.Temperature T_sp;
+  Units.SI.Temperature T_eeF;
+  Real x_flashepC "Steam mass fraction in the flash state";
 equation
-
-  /* Check that incoming fluids are compatible with fluid in volume */
-  fluids[1] = ftype;
-  fluids[2] = Ev.ftype;
-  fluids[3] = Ep.ftype;
-  fluids[4] = Sp.ftype;
-
-  assert(ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.isCompatible(fluids), "NTUWaterHeater:  fluids mixing in water heater volume are not compatible with each other");
-
-  /* Check that the fluid type is water/steam for the water side */
-  assert((ftype_e == FluidType.WaterSteam) or (ftype_e == FluidType.WaterSteamSimple), "NTUWaterHeater: the fluid type for the water side must be water/steam");
 
   /* Unconnected connectors */
   if cardinality(Ep) == 0 then
@@ -175,11 +111,8 @@ equation
     Ep.h_vol_1 = 1.e5;
     Ep.diff_res_1 = 0;
     Ep.diff_on_1 = false;
-    Ep.ftype = ftype;
-    Ep.Xco2 = 0;
-    Ep.Xh2o = 0;
-    Ep.Xo2 = 0;
-    Ep.Xso2 = 0;
+    Ep.Xi = Medium_c.X_default[1:Medium_c.nXi];
+    Ep.SubC = fill(0, Medium_c.nC);
   end if;
 
   // Cooling pipe
@@ -196,14 +129,10 @@ equation
   Se.diff_res_1 = Ee.diff_res_1 + 1/gamma_diff_e;
   Ee.diff_res_2 = Se.diff_res_2 + 1/gamma_diff_e;
 
-  Ee.ftype = Se.ftype;
+  Ee.Xi = Se.Xi;
+  Ee.SubC = Se.SubC;
 
-  Ee.Xco2 = Se.Xco2;
-  Ee.Xh2o = Se.Xh2o;
-  Ee.Xo2  = Se.Xo2;
-  Ee.Xso2 = Se.Xso2;
-
-  ftype_e = Ee.ftype;
+  Xe = Ee.Xi;
 
   /* Pressure loss equation in the water pipe */
   Ee.P - Se.P = lambdaE*ThermoSysPro.Functions.ThermoSquare(Ee.Q, eps)/rho;
@@ -237,7 +166,7 @@ equation
   if (HsatvC < Ev.h) then
     0 = Ev.Q*(Ev.h - HsatvC) - Ee.Q*(Se.h - HDesF) + J/3;
     Wdes = Ee.Q*(Se.h - HDesF);
-    Wdes = noEvent(min(Ev.Q*prodesmC.cp, Ee.Q*prodesmF.cp)*ThermoSysPro.Correlations.Thermal.WBHeatExchangerEfficiency(Ev.Q, Ee.Q, prodesmC.cp, prodesmF.cp, KCond/2, SDes, 1)*(proevC.T - prodesF.T));
+    Wdes = noEvent(min(Ev.Q*cp_desmC, Ee.Q*cp_desmF)*ThermoSysPro.Correlations.Thermal.WBHeatExchangerEfficiency(Ev.Q, Ee.Q, cp_desmC, cp_desmF, KCond/2, SDes, 1)*(T_evC - T_desF));
   /* If deheating is absent */
   else
     Wdes = 1e-9;
@@ -256,20 +185,20 @@ equation
   end if;
 
   Wcond = Ee.Q*(HDesF - HeiF);
-  Wcond = Ee.Q*promcF.cp*ThermoSysPro.Correlations.Thermal.WBHeatExchangerEfficiency(Ev.Q, Ee.Q, 1.e20, promcF.cp, KCond, (SCondDes - SDes), 0.5)*(TsatC - TeiF);
+  Wcond = Ee.Q*cp_mcF*ThermoSysPro.Correlations.Thermal.WBHeatExchangerEfficiency(Ev.Q, Ee.Q, 1.e20, cp_mcF, KCond, (SCondDes - SDes), 0.5)*(TsatC - TeiF);
 
   // Flash zone
   //-----------
 
   /* Heat power in case of partial vaporization in the drain */
-  if (flashepC.x > 0) then
+  if (x_flashepC > 0) then
     Wflash = Ep.Q*(Ep.h - HsateC);
   else
     Wflash = 0;
   end if;
 
   /* Condition for partial vaporisation in the drain (flash) */
-  if (flashepC.x > 0) then
+  if (x_flashepC > 0) then
     Hep = HsateC;
   else
     Sp.Q*Hep = HsateC*Ev.Q + Ep.h*Ep.Q;
@@ -282,27 +211,21 @@ equation
   if noEvent(SPurge > 0) then
     0 = Sp.Q*(Hep - Sp.h) - Ee.Q*(HeiF - Ee.h) + J/3;
     Wpurge = Ee.Q*(HeiF - Ee.h);
-    Wpurge = noEvent(min(Sp.Q*prompC.cp, Ee.Q*prompF.cp)*ThermoSysPro.Correlations.Thermal.WBHeatExchangerEfficiency(Sp.Q, Ee.Q, prompC.cp, prompF.cp, KPurge, SPurge, 0)*(prosp.T - proeeF.T));
-    TeiF = proecF.T;
+    Wpurge = noEvent(min(Sp.Q*cp_mpC, Ee.Q*cp_mpF)*ThermoSysPro.Correlations.Thermal.WBHeatExchangerEfficiency(Sp.Q, Ee.Q, cp_mpC, cp_mpF, KPurge, SPurge, 0)*(T_sp - T_eeF));
+    TeiF = Medium_e.temperature(state_ecF);
   else
     HeiF = Ee.h;
     Wpurge = 0;
     Hep = Sp.h;
-    TeiF = proeeF.T;
+    TeiF = T_eeF;
   end if;
 
   /* Fluid composition balance equations */
-  0 = Ep.Xco2*Ep.Q + Ev.Xco2*Ev.Q - Sp.Xco2*Sp.Q;
-  0 = Ep.Xh2o*Ep.Q + Ev.Xh2o*Ev.Q - Sp.Xh2o*Sp.Q;
-  0 = Ep.Xo2*Ep.Q + Ev.Xo2*Ev.Q - Sp.Xo2*Sp.Q;
-  0 = Ep.Xso2*Ep.Q + Ev.Xso2*Ev.Q - Sp.Xso2*Sp.Q;
+  zeros(Medium_c.nXi) = Ep.Xi*Ep.Q + Ev.Xi*Ev.Q - Sp.Xi*Sp.Q;
+  zeros(Medium_c.nC) = Ep.SubC*Ep.Q + Ev.SubC*Ev.Q - Sp.SubC*Sp.Q;
 
-  Sp.ftype = ftype;
-
-  Sp.Xco2 = Xco2;
-  Sp.Xh2o = Xh2o;
-  Sp.Xo2  = Xo2;
-  Sp.Xso2 = Xso2;
+  Xc = Sp.Xi;
+  SubCc = Sp.SubC;
 
   /* Flow reversal */
   if continuous_flow_reversal then
@@ -349,30 +272,43 @@ equation
   Sp.diff_on_1 = diffusion;
 
   /* Fluid thermodynamic properties */
-  proeeF = ThermoSysPro.Properties.Fluid.Ph(Ee.P, Ee.h, mode_eeF, fluid_e);
-  proseF = ThermoSysPro.Properties.Fluid.Ph(Se.P, Se.h, mode_seF, fluid_e);
-  promeF = ThermoSysPro.Properties.Fluid.Ph((Ee.P + Se.P)/2,(Ee.h + Se.h)/2, mode_eeF, fluid_e);
-  proevC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, Ev.h, mode_evC, fluid);
-  prospC = ThermoSysPro.Properties.Fluid.Ph(Sp.P, Sp.h, mode_spC, fluid);
-  prosp = ThermoSysPro.Properties.Fluid.Ph(Ev.P, Hep, mode_spC, fluid);
-  prodesF = ThermoSysPro.Properties.Fluid.Ph(Se.P, HDesF, mode_seF, fluid_e);
-  prompC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, (Hep + Sp.h)/2, mode_spC, fluid);
-  prodesmC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, (vsatC.h + Ev.h)/2, mode_evC, fluid);
-  prompF = ThermoSysPro.Properties.Fluid.Ph(Ee.P, (Ee.h + HeiF)/2, mode_eeF, fluid_e);
-  promcF = ThermoSysPro.Properties.Fluid.Ph((Ee.P + Se.P)/2, (HeiF + HDesF)/2, mode_mF, fluid_e);
-  prodesmF = ThermoSysPro.Properties.Fluid.Ph(Se.P, (HDesF + Se.h)/2, mode_seF, fluid_e);
-  proecF = ThermoSysPro.Properties.Fluid.Ph(Ee.P, HeiF, mode_eeF, fluid_e);
-  flashepC = ThermoSysPro.Properties.Fluid.Ph(Ev.P, Ep.h, mode_flash, fluid);
+  state_eeF = Medium_e.setState_phX(p=Ee.P, h=Ee.h, X=Xe);
+  state_seF = Medium_e.setState_phX(p=Se.P, h=Se.h, X=Xe);
+  state_meF = Medium_e.setState_phX(p=(Ee.P + Se.P)/2, h=(Ee.h + Se.h)/2, X=Xe);
+  state_evC = Medium_c.setState_phX(p=Ev.P, h=Ev.h, X=Ev.Xi);
+  state_spC = Medium_c.setState_phX(p=Sp.P, h=Sp.h, X=Xc);
+  state_sp = Medium_c.setState_phX(p=Ev.P, h=Hep, X=Xc);
+  state_desF = Medium_e.setState_phX(p=Se.P, h=HDesF, X=Xe);
+  state_mpC = Medium_c.setState_phX(p=Ev.P, h=(Hep + Sp.h)/2, X=Xc);
+  state_desmC = Medium_c.setState_phX(p=Ev.P, h=(HsatvC + Ev.h)/2, X=Ev.Xi);
+  state_mpF = Medium_e.setState_phX(p=Ee.P, h=(Ee.h + HeiF)/2, X=Xe);
+  state_mcF = Medium_e.setState_phX(p=(Ee.P + Se.P)/2, h=(HeiF + HDesF)/2, X=Xe);
+  state_desmF = Medium_e.setState_phX(p=Se.P, h=(HDesF + Se.h)/2, X=Xe);
+  state_ecF = Medium_e.setState_phX(p=Ee.P, h=HeiF, X=Xe);
+  cp_desmC = Medium_c.specificHeatCapacityCp(state_desmC);
+  cp_mcF = Medium_e.specificHeatCapacityCp(state_mcF);
+  cp_desmF = Medium_e.specificHeatCapacityCp(state_desmF);
+  cp_mpC = Medium_c.specificHeatCapacityCp(state_mpC);
+  cp_mpF = Medium_e.specificHeatCapacityCp(state_mpF);
+
+  T_evC = Medium_c.temperature(state_evC);
+  T_desF = Medium_e.temperature(state_desF);
+  T_sp = Medium_c.temperature(state_sp);
+  T_eeF = Medium_e.temperature(state_eeF);
+
+  x_flashepC = noEvent(if (Ep.h <= HsateC) then 0 else if (Ep.h >= HsatvC) then 1 else (Ep.h - HsateC)/(HsatvC - HsateC));
 
   /* Fluid density */
-  rho = promeF.d;
+  rho = Medium_e.density(state_meF);
 
   /* Saturation point at the vapor inlet pressure */
-  (lsatC, vsatC) = ThermoSysPro.Properties.Fluid.Water_sat_P(Ev.P, fluid);
+  satC = Medium_c.setSat_p(Ev.P);
+  state_lsatC = Medium_c.setBubbleState(satC);
+  state_vsatC = Medium_c.setDewState(satC);
 
-  TsatC  = lsatC.T;
-  HsateC = lsatC.h;
-  HsatvC = vsatC.h;
+  TsatC  = Medium_c.saturationTemperature(Ev.P);
+  HsateC = Medium_c.specificEnthalpy(state_lsatC);
+  HsatvC = Medium_c.specificEnthalpy(state_vsatC);
 
   annotation (
     Icon(coordinateSystem(

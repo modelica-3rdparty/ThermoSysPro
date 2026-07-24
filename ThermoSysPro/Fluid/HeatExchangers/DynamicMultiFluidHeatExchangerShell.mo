@@ -1,8 +1,9 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model DynamicMultiFluidHeatExchangerShell "Dynamic one-phase heat exchanger"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium_shell = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for shell-side fluid" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_pipe = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for pipe-side fluid" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.Length L=1 "Exchanger length";
   parameter Units.SI.Position z1=0 "Exchanger inlet altitude";
@@ -41,10 +42,10 @@ model DynamicMultiFluidHeatExchangerShell "Dynamic one-phase heat exchanger"
     "true: continuous flow reversal - false: discontinuous flow reversal";
   parameter Boolean diffusion=false
     "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
-  parameter IF97Region region=IF97Region.All_regions "IF97 region (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
 
   ThermoSysPro.Fluid.HeatExchangers.DynamicOnePhaseFlowShell
     dynamicOnePhaseFlowShell(
+    redeclare package Medium = Medium_shell,
     Ns=Ns,
     L=L,
     ntubes=Ntubes,
@@ -59,8 +60,7 @@ model DynamicMultiFluidHeatExchangerShell "Dynamic one-phase heat exchanger"
     advection=advection,
     diffusion=diffusion,
     T0=T0,
-    h0=h0,
-    region=region)
+    h0=h0)
              annotation (Placement(transformation(extent={{-10,30},{10,10}},
           rotation=0)));
   ThermoSysPro.Thermal.HeatTransfer.HeatExchangerWall ExchangerWall(
@@ -72,6 +72,7 @@ model DynamicMultiFluidHeatExchangerShell "Dynamic one-phase heat exchanger"
     steady_state=steady_state)           annotation (Placement(transformation(
           extent={{-10,-10},{10,10}}, rotation=0)));
   Fluid.HeatExchangers.DynamicOnePhaseFlowPipe DynamicOnePhaseFlowPipe(
+    redeclare package Medium = Medium_pipe,
     L=L,
     D=Dint,
     ntubes=Ntubes,
@@ -89,17 +90,16 @@ model DynamicMultiFluidHeatExchangerShell "Dynamic one-phase heat exchanger"
     dynamic_mass_balance=dynamic_mass_balance,
     T0=T0,
     h0=h0,
-    P0=P0,
-    region=region)
+    P0=P0)
            annotation (Placement(transformation(extent={{-10,-30},{10,-10}},
           rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cfg1 annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cfg1(redeclare package Medium = Medium_shell) annotation (
       Placement(transformation(extent={{-10,40},{10,60}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cfg2 annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cfg2(redeclare package Medium = Medium_shell) annotation (
       Placement(transformation(extent={{-10,-60},{10,-40}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cws1 annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Cws1(redeclare package Medium = Medium_pipe) annotation (
       Placement(transformation(extent={{-110,-10},{-90,10}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cws2 annotation (
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cws2(redeclare package Medium = Medium_pipe) annotation (
       Placement(transformation(extent={{90,-10},{110,10}}, rotation=0)));
 equation
   connect(Cws2, DynamicOnePhaseFlowPipe.C2) annotation (Line(

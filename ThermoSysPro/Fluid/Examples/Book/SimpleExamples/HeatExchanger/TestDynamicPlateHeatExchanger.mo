@@ -1,12 +1,13 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.HeatExchanger;
 model TestDynamicPlateHeatExchanger
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
   ThermoSysPro.Fluid.HeatExchangers.DynamicPlateHeatExchanger
     echangeurAPlaques1D1(
+    redeclare package Medium_c = Medium,
+    redeclare package Medium_f = Medium,
     Ns=5,
     Sc(Q(fixed=true, start=1036)),
-    region_c=ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1,
-    region_f=ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1,
     Qc(start={39464.19306563736,39464.19140625,39464.19140625,39464.19140625,39464.19140625,
           39464.19140625}),
     hc(start={280049.6746505721,280050.4252984669,280051.8112565058,280040.0015809256,
@@ -24,19 +25,22 @@ model TestDynamicPlateHeatExchanger
          annotation (Placement(transformation(extent={{-14,6},{6,26}},
           rotation=0)));
 
-  ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP2(T0=340, region=
-        ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1)
+  ThermoSysPro.Fluid.BoundaryConditions.SourceP sourceP2(
+      redeclare package Medium = Medium,
+      T0=340)
     annotation (Placement(transformation(extent={{-74,6},{-54,26}},   rotation=
             0)));
-  BoundaryConditions.SourceP                    sourcePQ(region=ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1,
+  BoundaryConditions.SourceP                    sourcePQ(
+      redeclare package Medium = Medium,
       Q(start=1084))                        annotation (Placement(
         transformation(extent={{-54,-14},{-34,6}},   rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkP puitsP2(P0(fixed=false)=
-      100000, region=
-        ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1)
+      100000,
+      redeclare package Medium = Medium)
                                          annotation (Placement(transformation(
           extent={{46,6},{66,26}},   rotation=0)));
-  BoundaryConditions.SinkP                    puitsP3(region=ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1)
+  BoundaryConditions.SinkP                    puitsP3(
+      redeclare package Medium = Medium)
                                           annotation (Placement(transformation(
           extent={{26,-14},{46,6}},   rotation=0)));
 equation

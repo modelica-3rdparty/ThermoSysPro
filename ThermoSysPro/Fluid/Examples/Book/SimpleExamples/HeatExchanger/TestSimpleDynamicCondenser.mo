@@ -1,5 +1,6 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.HeatExchanger;
 model TestSimpleDynamicCondenser
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
 parameter Real L1 = 425 "First sensor chain length";
 parameter Integer Ns1 = 80 "Number of cells in the first sensor chain";
@@ -8,47 +9,63 @@ parameter Real L2 = 75 "Second sensor chain length";
 parameter Integer Ns2 = 1 "Number of cells in the second sensor chain";
 
   ThermoSysPro.Fluid.BoundaryConditions.SinkP puitsPCaloporteur(
+    redeclare package Medium = Medium,
     P0=1e5,
     option_temperature=false) annotation (Placement(transformation(extent={{48,30},
             {88,70}}, rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    PerteChargeCondPompe(                                                          K=1e-6, Q(start=
+    PerteChargeCondPompe(
+          redeclare package Medium = Medium,
+          K=1e-6, Q(start=
           0.598447))
     annotation (Placement(transformation(
         origin={-90,-38},
         extent={{-10,-10},{10,10}},
         rotation=180)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP SourceRechauffeurEau(
+    redeclare package Medium = Medium,
     option_temperature=false,
     h0=2401e3,
     P0=15050)                   annotation (Placement(transformation(extent={{-207,
             148},{-183,170}},      rotation=0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkQ PuitsRechauffeurEau(
+                  redeclare package Medium = Medium,
                   h0=191812, Q0=192)
                           annotation (Placement(transformation(extent={{-184,
             -52},{-208,-24}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SourceQ sourcePCaloporteur(Q0=29804.5, h0=113e3)
+  ThermoSysPro.Fluid.BoundaryConditions.SourceQ sourcePCaloporteur(
+          redeclare package Medium = Medium,
+          Q0=29804.5, h0=113e3)
                                 annotation (Placement(transformation(extent={{-212,30},
             {-172,68}},          rotation=0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    PerteChargeCondPompe1(                                                         K=1e-6)
+    PerteChargeCondPompe1(
+          redeclare package Medium = Medium,
+          K=1e-6)
     annotation (Placement(transformation(
         origin={36,50},
         extent={{6,-10},{-6,10}},
         rotation=180)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    PerteChargeCondPompe2(                                                         K=1e-6)
+    PerteChargeCondPompe2(
+          redeclare package Medium = Medium,
+          K=1e-6)
     annotation (Placement(transformation(
         origin={-154,49},
         extent={{6,-10},{-6,10}},
         rotation=180)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss
-    PerteChargeCondPompe3(K(fixed=false) = 1e-3, Q(start=192, fixed=true))
+    PerteChargeCondPompe3(
+    redeclare package Medium = Medium,
+    K=1e-3,
+    Q(start=192, fixed=false))
     annotation (Placement(transformation(
         origin={-120,159},
         extent={{10,-10},{-10,10}},
         rotation=180)));
   ThermoSysPro.Fluid.HeatExchangers.SimpleDynamicCondenser Condenseur(    D=0.018,
+    redeclare package Medium = Medium,
+    redeclare package Medium_Cooling = Medium,
     V=1000,
     A=100,
     lambda=0.01,

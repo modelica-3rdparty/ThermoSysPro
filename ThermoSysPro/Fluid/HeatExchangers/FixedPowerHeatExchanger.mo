@@ -1,8 +1,9 @@
 within ThermoSysPro.Fluid.HeatExchangers;
 model FixedPowerHeatExchanger "Heat exchanger with fixed delta power"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium_c = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the hot fluid" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_f = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the cold fluid" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Units.SI.Power DW=0
     "Power exchanged between the hot and the cold fluid";
@@ -12,12 +13,6 @@ model FixedPowerHeatExchanger "Heat exchanger with fixed delta power"
     "Diffusion conductance for the hot fluid (active if diffusion=true in neighbouring volumes)";
   parameter Units.SI.MassFlowRate gamma_diff_f=1e-4
     "Diffusion conductance for the cold fluid (active if diffusion=true in neighbouring volumes)";
-  parameter IF97Region region_c=IF97Region.All_regions "IF97 region for the hot fluid (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-  parameter IF97Region region_f=IF97Region.All_regions "IF97 region for the cold fluid (active for IF97 water/steam only)" annotation(Evaluate=true, Dialog(enable=(ftype==FluidType.WaterSteam), tab="Fluid", group="Fluid properties"));
-
-protected
-  parameter Integer mode_c=Integer(region_c) - 1 "IF97 region for the hot fluid. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
-  parameter Integer mode_f=Integer(region_f) - 1 "IF97 region for the cold fluid. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
 
 public
   Units.SI.Temperature Tec "Fluid temperature at the inlet of the hot side";
@@ -26,31 +21,22 @@ public
   Units.SI.Temperature Tsf "Fluid temperature at the outlet of the cold side";
   Units.SI.MassFlowRate Qc(start=100) "Hot fluid mass flow rate";
   Units.SI.MassFlowRate Qf(start=100) "Cold fluid mass flow rate";
-  FluidType ftype_c "Fluid type for the hot fluid";
-  Integer fluid_c=Integer(ftype_c) "Fluid number for the hot fluid";
-  FluidType ftype_f "Fluid type for the cold fluid";
-  Integer fluid_f=Integer(ftype_f) "Fluid number for the cold fluid";
+  Medium_c.MassFraction Xc[Medium_c.nXi](start=Medium_c.X_default[1:Medium_c.nXi]) "Mass fractions of the hot fluid";
+  Medium_f.MassFraction Xf[Medium_f.nXi](start=Medium_f.X_default[1:Medium_f.nXi]) "Mass fractions of the cold fluid";
+  Medium_c.ThermodynamicState state_ce "Thermodynamic state of the hot fluid at the inlet";
+  Medium_c.ThermodynamicState state_cs "Thermodynamic state of the hot fluid at the outlet";
+  Medium_f.ThermodynamicState state_fe "Thermodynamic state of the cold fluid at the inlet";
+  Medium_f.ThermodynamicState state_fs "Thermodynamic state of the cold fluid at the outlet";
 
 public
-  Interfaces.Connectors.FluidInlet Ec annotation (Placement(transformation(
+  Interfaces.Connectors.FluidInlet Ec(redeclare package Medium = Medium_c) annotation (Placement(transformation(
           extent={{-68,-70},{-48,-50}}, rotation=0)));
-  Interfaces.Connectors.FluidInlet Ef annotation (Placement(transformation(
+  Interfaces.Connectors.FluidInlet Ef(redeclare package Medium = Medium_f) annotation (Placement(transformation(
           extent={{-110,-10},{-90,10}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet Sf annotation (Placement(transformation(
+  Interfaces.Connectors.FluidOutlet Sf(redeclare package Medium = Medium_f) annotation (Placement(transformation(
           extent={{88,-9},{108,11}}, rotation=0)));
-  Interfaces.Connectors.FluidOutlet Sc annotation (Placement(transformation(
+  Interfaces.Connectors.FluidOutlet Sc(redeclare package Medium = Medium_c) annotation (Placement(transformation(
           extent={{48,-70},{68,-50}}, rotation=0)));
-
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph proce
-    annotation (Placement(transformation(extent={{-20,80},{0,100}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph procs
-    annotation (Placement(transformation(extent={{20,80},{40,100}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph profe
-    annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
-           0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_ph profs
-    annotation (Placement(transformation(extent={{-60,80},{-40,100}}, rotation=
-            0)));
 equation
 
   /* Mass flow rates */
@@ -65,14 +51,8 @@ equation
   Sc.diff_res_1 = Ec.diff_res_1 + 1/gamma_diff_c;
   Ec.diff_res_2 = Sc.diff_res_2 + 1/gamma_diff_c;
 
-  Ec.ftype = Sc.ftype;
-
-  Ec.Xco2 = Sc.Xco2;
-  Ec.Xh2o = Sc.Xh2o;
-  Ec.Xo2  = Sc.Xo2;
-  Ec.Xso2 = Sc.Xso2;
-
-  ftype_c = Ec.ftype;
+  Ec.Xi = Sc.Xi;
+  Ec.SubC = Sc.SubC;
 
   Ef.Q = Sf.Q;
 
@@ -85,17 +65,13 @@ equation
   Sf.diff_res_1 = Ef.diff_res_1 + 1/gamma_diff_f;
   Ef.diff_res_2 = Sf.diff_res_2 + 1/gamma_diff_f;
 
-  Ef.ftype = Sf.ftype;
-
-  Ef.Xco2 = Sf.Xco2;
-  Ef.Xh2o = Sf.Xh2o;
-  Ef.Xo2  = Sf.Xo2;
-  Ef.Xso2 = Sf.Xso2;
-
-  ftype_f = Ef.ftype;
+  Ef.Xi = Sf.Xi;
+  Ef.SubC = Sf.SubC;
 
   Qc = Ec.Q;
   Qf = Ef.Q;
+  Xc = Ec.Xi;
+  Xf = Ef.Xi;
 
   /* Power exchanged between the hot and cold fluid */
   DW = Qf*(Sf.h - Ef.h);
@@ -106,18 +82,18 @@ equation
   Sf.P = if (Qf > 0) then Ef.P - DPf*Ef.P/100 else Ef.P + DPf*Ef.P/100;
 
   /* Fluid thermodynamic properties for the hot fluid */
-  proce = ThermoSysPro.Properties.Fluid.Ph(Ec.P, Ec.h, mode_c, fluid_c);
-  procs = ThermoSysPro.Properties.Fluid.Ph(Sc.P, Sc.h, mode_c, fluid_c);
+  state_ce = Medium_c.setState_phX(p=Ec.P, h=Ec.h, X=Xc);
+  state_cs = Medium_c.setState_phX(p=Sc.P, h=Sc.h, X=Xc);
 
-  Tec = proce.T;
-  Tsc = procs.T;
+  Tec = Medium_c.temperature(state_ce);
+  Tsc = Medium_c.temperature(state_cs);
 
   /* Fluid thermodynamic properties for the cold fluid */
-  profe = ThermoSysPro.Properties.Fluid.Ph(Ef.P, Ef.h, mode_f, fluid_f);
-  profs = ThermoSysPro.Properties.Fluid.Ph(Sf.P, Sf.h, mode_f, fluid_f);
+  state_fe = Medium_f.setState_phX(p=Ef.P, h=Ef.h, X=Xf);
+  state_fs = Medium_f.setState_phX(p=Sf.P, h=Sf.h, X=Xf);
 
-  Tef = profe.T;
-  Tsf = profs.T;
+  Tef = Medium_f.temperature(state_fe);
+  Tsf = Medium_f.temperature(state_fs);
 
   annotation (
     Icon(coordinateSystem(

@@ -1,10 +1,9 @@
 ﻿within ThermoSysPro.Fluid.Combustion.CombustionChambers;
 model GridFurnace "Combustion furnace"
-  extends
-    ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FlueGasesFluidTypeParameterInterface;
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType;
-  import ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region;
+
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the water/steam side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
+  replaceable package Medium_FlueGases = ThermoSysPro.Properties.Media.FlueGases constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model for the flue gases side" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 
   parameter Real X2eap=0.1 "Primary air fraction in zone 2";
   parameter Real X3eap=0.1 "Primary air fraction in zone 3";
@@ -44,6 +43,11 @@ protected
   constant Units.SI.SpecificEnthalpy HfH2Ol=15.883300e6 "H2Ol formation enthalpy";
   constant Units.SI.SpecificHeatCapacity Cp3g=1100 "Average flue gases specific heat capacity at T3g";
   parameter Integer mode=0 "IF97 region. 1:liquid - 2:steam - 4:saturation line - 0:automatic";
+  parameter Integer iN2=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium_FlueGases.substanceNames, {"N2", "Nitrogen", "nitrogen"}) "Index of nitrogen in the flue gases composition";
+  parameter Integer iO2=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium_FlueGases.substanceNames, {"O2", "Oxygen", "oxygen"}) "Index of oxygen in the flue gases composition";
+  parameter Integer iH2O=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium_FlueGases.substanceNames, {"H2O", "Water", "water"}) "Index of water vapor in the flue gases composition";
+  parameter Integer iCO2=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium_FlueGases.substanceNames, {"CO2", "Carbondioxide", "Carbon dioxide", "carbondioxide"}) "Index of carbon dioxide in the flue gases composition";
+  parameter Integer iSO2=ThermoSysPro.Properties.Media.Functions.findSubstanceIndex(Medium_FlueGases.substanceNames, {"SO2", "Sulfurdioxide", "Sulfur dioxide", "sulfurdioxide"}) "Index of sulfur dioxide in the flue gases composition";
   parameter Boolean diffusion=false "true: energy balance equation with diffusion - false: energy balance equation without diffusion";
   parameter Units.SI.MassFlowRate gamma0=1.e-4 "Pseudo-diffusion conductance use for continuous flow reversal (active if diffusion=false and continuous_flow_reversal = true)";
 
@@ -264,56 +268,41 @@ public
   Real FVN0(start=0.1) "Ashes normal volume fraction for the computation of FVN";
   Units.SI.SpecificEnthalpy Hsf(start=50e4) "Flue gases specific enthalpy at the outlet";
   Units.SI.SpecificEnthalpy h(start=10e5) "Fluid specific enthalpy";
-  FluidType fluids[4] "Fluids mixing in volume";
-  FluidType ftype_ws "Water/steam fluid type";
-  Integer fluid_ws=Integer(ftype_ws) "Water/steam fluid number";
+  Medium.MassFraction Xws[Medium.nXi](start=Medium.X_default[1:Medium.nXi]) "Water/steam mass fractions";
+  Medium_FlueGases.MassFraction Xeap[Medium_FlueGases.nX](start=Medium_FlueGases.X_default) "Primary air mass fractions";
+  Medium_FlueGases.MassFraction Xeas[Medium_FlueGases.nX](start=Medium_FlueGases.X_default) "Secondary air mass fractions";
+  Medium_FlueGases.MassFraction Xsf[Medium_FlueGases.nX](start=Medium_FlueGases.X_default) "Flue gases outlet mass fractions";
+  Medium.ExtraProperty SubCws[Medium.nC](quantity=Medium.extraPropertiesNames, start=Medium.C_default) "Water/steam trace substances";
+  Medium_FlueGases.ExtraProperty SubCfg[Medium_FlueGases.nC](quantity=Medium_FlueGases.extraPropertiesNames, start=Medium_FlueGases.C_default) "Flue gases trace substances";
+  Medium.ThermodynamicState state_biomass_water "Water in biomass thermodynamic state";
+  Medium.ThermodynamicState state_biomass_water_sat_v "Saturated vapor state of water in biomass";
+  Medium.ThermodynamicState state_biomass_water_sat_l "Saturated liquid state of water in biomass";
+  Medium.ThermodynamicState state_dried_water "Water vapor state after drying";
+  Medium.ThermodynamicState state_water_seal_vapor "Water seal vapor state";
 
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ca2 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ca2(redeclare package Medium = Medium_FlueGases) annotation (Placement(
         transformation(extent={{-60,50},{-40,70}}, rotation=0)));
   ThermoSysPro.Fluid.Interfaces.Connectors.FuelInlet Com
     annotation (Placement(transformation(extent={{-100,-20},{-80,0}}, rotation=
             0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet port_eau_refroid
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet port_eau_refroid(redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{70,20},{90,40}}, rotation=0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_pT pro1
-    annotation (Placement(transformation(extent={{-100,80},{-80,100}}, rotation=
-           0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_pT pro2
-    annotation (Placement(transformation(extent={{-100,60},{-80,80}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_pT pro3
-    annotation (Placement(transformation(extent={{-100,40},{-80,60}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_pT pro4
-    annotation (Placement(transformation(extent={{-100,20},{-80,40}}, rotation=
-            0)));
-  ThermoSysPro.Properties.WaterSteam.Common.ThermoProperties_pT pro5
-    annotation (Placement(transformation(extent={{-60,80},{-40,100}}, rotation=
-            0)));
 public
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ca1 annotation (Placement(
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidInlet Ca1(redeclare package Medium = Medium_FlueGases) annotation (Placement(
         transformation(extent={{-10,-100},{10,-80}}, rotation=0)));
-  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cfg "Flue gases outlet"
+  ThermoSysPro.Fluid.Interfaces.Connectors.FluidOutlet Cfg(redeclare package Medium = Medium_FlueGases) "Flue gases outlet"
     annotation (Placement(transformation(extent={{-10,80},{10,100}}, rotation=0)));
 equation
 
-  /* Check that incoming fluids are compatible with fluid in volume */
-  fluids[1] = ftype;
-  fluids[2] = Ca1.ftype;
-  fluids[3] = Ca2.ftype;
-  fluids[4] = Cfg.ftype;
-
-  assert(ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.isCompatible(fluids),
-    "GenericCombustion1D: fluids mixing in volume are not compatible with each other");
+  assert(Medium_FlueGases.nX > 1, "GridFurnace: Medium_FlueGases must be a gas mixture");
+  assert(iN2 > 0 and iO2 > 0 and iH2O > 0 and iCO2 > 0 and iSO2 > 0, "GridFurnace: Medium_FlueGases.substanceNames must contain nitrogen, oxygen, water, carbon dioxide and sulfur dioxide");
 
   /* Mixing specific enthalpy */
   port_eau_refroid.h_vol_2 = h;
   Ca1.h_vol_2 = h;
   Ca2.h_vol_2 = h;
   Cfg.h_vol_1 = h;
-
-  Cfg.ftype = ftype;
 
   /* No flow reversal */
   Cfg.h = Cfg.h_vol_1;
@@ -340,15 +329,13 @@ equation
   Cpom = Com.cp;
 
   /* Cooling water inlet */
-  assert((ftype_ws == FluidType.WaterSteam) or (ftype_ws == FluidType.WaterSteamSimple), "GridFurnace: the fluid type for the water/steam inlet must be water/steam");
-
   port_eau_refroid.diff_res_2 = 0;
   port_eau_refroid.diff_on_2 = diffusion;
 
-  ftype_ws = port_eau_refroid.ftype;
-
   Qerefo = port_eau_refroid.Q;
   Herefo = port_eau_refroid.h;
+  Xws = port_eau_refroid.Xi;
+  SubCws = port_eau_refroid.SubC;
 
   /* Primary air inlet */
   Qeap = Ca1.Q;
@@ -356,11 +343,15 @@ equation
   Peap = Psf;
   Heap = Ca1.h;
 
-  XeapCO2 = Ca1.Xco2;
-  XeapH2O = Ca1.Xh2o;
-  XeapO2 = Ca1.Xo2;
-  XeapSO2 = Ca1.Xso2;
-  XeapN2 = 1 - Ca1.Xco2 - Ca1.Xh2o - Ca1.Xo2 - Ca1.Xso2;
+  Xeap[1:Medium_FlueGases.nXi] = Ca1.Xi;
+  if Medium_FlueGases.nXi < Medium_FlueGases.nX then
+    Xeap[Medium_FlueGases.nX] = 1 - sum(Ca1.Xi);
+  end if;
+  XeapCO2 = Xeap[iCO2];
+  XeapH2O = Xeap[iH2O];
+  XeapO2 = Xeap[iO2];
+  XeapSO2 = Xeap[iSO2];
+  XeapN2 = Xeap[iN2];
 
   /* Secondary air inlet */
   Qeas = Ca2.Q;
@@ -368,21 +359,20 @@ equation
   Peas = Psf;
   Heas = Ca2.h;
 
-  XeasCO2 = Ca2.Xco2;
-  XeasH2O = Ca2.Xh2o;
-  XeasO2 = Ca2.Xo2;
-  XeasSO2 = Ca2.Xso2;
-  XeasN2 = 1 - Ca2.Xco2 - Ca2.Xh2o - Ca2.Xo2 - Ca2.Xso2;
+  Xeas[1:Medium_FlueGases.nXi] = Ca2.Xi;
+  if Medium_FlueGases.nXi < Medium_FlueGases.nX then
+    Xeas[Medium_FlueGases.nX] = 1 - sum(Ca2.Xi);
+  end if;
+  XeasCO2 = Xeas[iCO2];
+  XeasH2O = Xeas[iH2O];
+  XeasO2 = Xeas[iO2];
+  XeasSO2 = Xeas[iSO2];
+  XeasN2 = Xeas[iN2];
 
   /* Flue gases outlet */
   Qsf = Cfg.Q;
   Hsf = Cfg.h;
   Psf = Cfg.P;
-
-  XsfCO2 = Cfg.Xco2;
-  XsfH2O = Cfg.Xh2o;
-  XsfO2 = Cfg.Xo2;
-  XsfSO2 = Cfg.Xso2;
 
   /* Primary air mass flow rates */
   X1eap = 1 - X2eap - X3eap;
@@ -439,21 +429,33 @@ equation
   end if;
 
   /* Specific enthalpy of the water in the biomass */
-  pro1 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Peap, Teom, mode);
-  Heauom = pro1.h;
+  state_biomass_water = Medium.setState_pTX(
+    p=Peap,
+    T=Teom,
+    region=mode);
+  Heauom = Medium.specificEnthalpy(state_biomass_water);
 
   /* Water phase transition energy at Teom */
   Psateom = ThermoSysPro.Properties.WaterSteam.BaseIF97.Basic.psat(Teom);
-  pro2 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Psateom, Teom, 2);
-  Hvteom = pro2.h;
-  pro3 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Psateom, Teom, 1);
-  Hlteom = pro3.h;
+  state_biomass_water_sat_v = Medium.setState_pTX(
+    p=Psateom,
+    T=Teom,
+    region=2);
+  Hvteom = Medium.specificEnthalpy(state_biomass_water_sat_v);
+  state_biomass_water_sat_l = Medium.setState_pTX(
+    p=Psateom,
+    T=Teom,
+    region=1);
+  Hlteom = Medium.specificEnthalpy(state_biomass_water_sat_l);
 
   Hvapteom = Hvteom - Hlteom;
 
   /* Specific enthalpy of the water in the biomass */
-  pro4 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Psf, T1sfm, 0);
-  Hs1vom = pro4.h;
+  state_dried_water = Medium.setState_pTX(
+    p=Psf,
+    T=T1sfm,
+    region=0);
+  Hs1vom = Medium.specificEnthalpy(state_dried_water);
 
   /* Specific enthalpy of the biomass at Teom */
   Heom = Cpom*(Teom - 273.15);
@@ -663,9 +665,12 @@ end if;
     P4m = Q4eom*CpMACHs4*((T3o - 273.15) - (T4o - 273.15));
     P4h = Q4eom*X4H2O*Cp4liq*((T4o - 273.15) - (T4er - 273.15));
     Q4v = rendje*(P4m - P4h)/(Cp4liq*(373.15 - (T4er - 273.15)) + Hvapo);
-    pro5 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Peap, 373.15, 2);
-    H4 = pro5.h;
-    P4v = Q4v*pro5.h;
+    state_water_seal_vapor = Medium.setState_pTX(
+      p=Peap,
+      T=373.15,
+      region=2);
+    H4 = Medium.specificEnthalpy(state_water_seal_vapor);
+    P4v = Q4v*Medium.specificEnthalpy(state_water_seal_vapor);
   else
     T4o = 273.15;
     TsMACH = T3o;
@@ -675,8 +680,11 @@ end if;
     P4m = 0;
     P4h = 0;
     Q4v = 0;
-    pro5 = ThermoSysPro.Properties.WaterSteam.IF97.Water_PT(Peap, 373.15, 2);
-    H4 = pro5.h;
+    state_water_seal_vapor = Medium.setState_pTX(
+      p=Peap,
+      T=373.15,
+      region=2);
+    H4 = Medium.specificEnthalpy(state_water_seal_vapor);
     P4v = 0;
   end if;
 
@@ -747,6 +755,14 @@ end if;
   XsfHF = Q5eHF/Qsf;
   XsfCEND = Q5ecend/Qsf;
   XsfN2 = 1 - (XsfCO2 + XsfH2O + XsfO2 + XsfSO2);
+  Xsf[iN2] = XsfN2;
+  Xsf[iO2] = XsfO2;
+  Xsf[iH2O] = XsfH2O;
+  Xsf[iCO2] = XsfCO2;
+  Xsf[iSO2] = XsfSO2;
+  Cfg.Xi = Xsf[1:Medium_FlueGases.nXi];
+  Cfg.SubC = Ca1.SubC;
+  SubCfg = Cfg.SubC;
 
   /* Power accumulated by the flue gases in zone 5 */
   P5a = Qeasm*Heasm;

@@ -1,25 +1,34 @@
 within ThermoSysPro.Fluid.Examples.Book.SimpleExamples.Volume;
 model TestTank
+  replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam;
 
-  ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe PerteDP1
+  ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe PerteDP1(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{30,-50},{50,-30}}, rotation=0)));
-  ThermoSysPro.Fluid.PressureLosses.ControlValve VanneReglante1
+  ThermoSysPro.Fluid.PressureLosses.ControlValve VanneReglante1(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{-50,2},{-30,22}},  rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SourceP SourceP1
+  ThermoSysPro.Fluid.BoundaryConditions.SourceP SourceP1(
+    redeclare package Medium = Medium)
                                             annotation (Placement(
         transformation(extent={{-90,-4},{-70,16}}, rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SinkP PuitsP1
+  ThermoSysPro.Fluid.BoundaryConditions.SinkP PuitsP1(
+    redeclare package Medium = Medium)
                                           annotation (Placement(transformation(
           extent={{70,-50},{90,-30}}, rotation=0)));
-  ThermoSysPro.Fluid.Volumes.Tank Tank1(z(fixed=false, start=5))
+  ThermoSysPro.Fluid.Volumes.Tank Tank1(
+    redeclare package Medium = Medium,
+    z(fixed=false, start=5))
     annotation (Placement(transformation(extent={{-10,-10},{10,10}},
                                                                   rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Rampe Rampe1
     annotation (Placement(transformation(extent={{-90,30},{-70,50}},  rotation=
             0)));
-  ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe PerteDP2
+  ThermoSysPro.Fluid.PressureLosses.LumpedStraightPipe PerteDP2(
+    redeclare package Medium = Medium)
     annotation (Placement(transformation(extent={{30,-4},{50,16}},   rotation=0)));
-  ThermoSysPro.Fluid.BoundaryConditions.SinkP PuitsP2
+  ThermoSysPro.Fluid.BoundaryConditions.SinkP PuitsP2(
+    redeclare package Medium = Medium)
                                           annotation (Placement(transformation(
           extent={{70,-4},{90,16}},   rotation=0)));
 equation
