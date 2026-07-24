@@ -1,5 +1,5 @@
 within ThermoSysPro.Fluid.LoopBreakers;
-model LoopBreakerXgas "Fluid composition loop breaker"
+model LoopBreakerSubC "Fluid Traces loop breaker"
 
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 public
@@ -22,7 +22,7 @@ equation
   C2.diff_res_1 = C1.diff_res_1;
   C1.diff_res_2 = C2.diff_res_2;
 
-  C1.Xi = C2.Xi;
+  C1.SubC = C2.SubC;
 
   annotation (
     Diagram(coordinateSystem(
@@ -37,7 +37,7 @@ equation
         Text(
           extent={{-38,38},{42,-42}},
           lineColor={0,0,255},
-          textString="X"),
+          textString="C"),
         Line(points={{0,100},{0,-100}}, color={0,0,255})}),
     Icon(coordinateSystem(
         preserveAspectRatio=false,
@@ -51,7 +51,7 @@ equation
         Text(
           extent={{-40,38},{40,-42}},
           lineColor={0,0,255},
-          textString="X"),
+          textString="C"),
         Line(points={{0,100},{0,-100}}, color={0,0,255})}),
     Window(
       x=0.33,
@@ -68,4 +68,4 @@ Baligh El Hefni
 Daniel Bouskela
 
     "));
-end LoopBreakerXgas;
+end LoopBreakerSubC;

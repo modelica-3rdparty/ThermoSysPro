@@ -1,10 +1,10 @@
 within ThermoSysPro.Fluid.Sensors;
-model SensorH "Specific enthalpy sensor"
+model SensorSubC "SubC sensor"
   extends ThermoSysPro.Fluid.Interfaces.IconColors;
 
   replaceable package Medium = ThermoSysPro.Properties.Media.WaterSteam constrainedby ThermoSysPro.Properties.Media.PartialSubCMedium "Medium model" annotation (choicesAllMatching=true, Dialog(tab="Fluid", group="Medium"));
 public
-  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Measure
+  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal[Medium.nC] Measure
     annotation (Placement(transformation(
         origin={0,102},
         extent={{-10,-10},{10,10}},
@@ -33,7 +33,8 @@ equation
   C1.SubC = C2.SubC;
 
   /* Sensor signal */
-  Measure.signal = C1.h;
+  Measure.signal = C1.SubC;
+
   annotation (
     Icon(coordinateSystem(
         preserveAspectRatio=false,
@@ -46,10 +47,8 @@ equation
           fillColor=DynamicSelect({127,255,0}, fill_color_singular)),
         Line(points={{0,-28},{0,-80}}),
         Line(points={{-98,-80},{102,-80}}),
-        Text(
-          extent={{-60,60},{60,0}},
-          lineColor={0,0,0},
-          textString="h")}),
+        Text(extent={{-60,60},{60,0}}, textString=
+                                            "C")}),
     Window(
       x=0.62,
       y=0.25,
@@ -66,12 +65,8 @@ equation
           fillColor={0,255,0}),
         Line(points={{0,-28},{0,-80}}),
         Line(points={{-98,-80},{102,-80}}),
-        Text(
-          extent={{-60,60},{60,0}},
-          lineColor={28,108,200},
-          fillColor={0,255,0},
-          fillPattern=FillPattern.Solid,
-          textString="h")}),
+        Text(extent={{-60,60},{60,0}}, textString=
+                                            "C")}),
     Documentation(info = "
 ## Copyright © EDF 2002 - 2026
 ## ThermoSysPro Version 4.2
@@ -82,4 +77,4 @@ Daniel Bouskela
 Baligh El Hefni
 
     "));
-end SensorH;
+end SensorSubC;
