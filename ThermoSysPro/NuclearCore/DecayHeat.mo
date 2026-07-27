@@ -6,6 +6,8 @@ model DecayHeat "Calculation of the decay heat given by the decay of the fission
     "Fraction of the power associated to group i";
   parameter Real Tris[:]={15,137,2910}
     "Time constant associated to group i (s)";
+  parameter ThermoSysPro.Units.SI.Power Pres_start[:]={89.35e6,58.88e6,92.05e6}
+    "Initial residual power (used if steqdy_state=false)";
   parameter Boolean steady_state=true "Initialize the decay heat at equilibrium" annotation(choices(checkBox=true));
 
 protected
@@ -14,7 +16,7 @@ protected
 public
   ThermoSysPro.Units.SI.Power Pneut(start=3560e6) "Total neutronic power (W)";
   ThermoSysPro.Units.SI.Power PresTot "Total decay heat (W)";
-  ThermoSysPro.Units.SI.Power Pres[N]
+  ThermoSysPro.Units.SI.Power Pres[N](start=Pres_start)
     "Residual power associated to the groups of radio-isotopes (W)";
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal Pneutrons
     annotation (extent=[-120,-10; -100,10], Placement(transformation(extent={{-120,
@@ -28,7 +30,7 @@ initial equation
       der(Pres[i]) = 0;
     end for;
   else
-    Pres = zeros(N);
+    Pres = Pres_start;
   end if;
 equation
   Pneut =Pneutrons.signal;

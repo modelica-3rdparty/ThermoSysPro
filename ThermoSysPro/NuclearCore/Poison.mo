@@ -1,9 +1,9 @@
 within ThermoSysPro.NuclearCore;
-
-model Xenon "xenon as fission product"
+model Poison "Vectorial formulation for multiple fission products"
   parameter Boolean steady_state = true "Steady-state (true) or fixed values (false) initialization" annotation(Dialog(group="Initialization"));
-  parameter Real Xe_start = 0 "Initial concentration of Xenon (if steady_state=false)" annotation (Dialog(group="Initialization",enable=not steady_state));
-  parameter Real I_start = 0 "Initial concentration of Iode (if steady_state=false)" annotation (Dialog(group="Initialization",enable=not steady_state));
+  parameter Integer Np = 1 "Number of neutron poisons";
+  parameter Real D_start[Np] = fill(0, Np)  "Initial concentration of daughter nuclide (if steady_state=false)" annotation (Dialog(group="Initialization",enable=not steady_state));
+  parameter Real P_start[Np]  = fill(0, Np) "Initial concentration of parent nuclide (if steady_state=false)" annotation (Dialog(group="Initialization",enable=not steady_state));
   parameter ThermoSysPro.Units.SI.Density FuelDensity = 10950 "Fuel Density" annotation(Dialog(group="Fuel Properties"));
   parameter Real Enrichment = 0.02433 "Fuel enrichement" annotation(Dialog(group="Fuel Properties"));
 
@@ -20,59 +20,62 @@ protected
 public
   constant Real pi=Modelica.Constants.pi "pi";
   constant Real OAtomicMass = 15.9949 "Oxygen atomic mass";
-  constant ThermoSysPro.Units.SI.Frequency I_decay = 2.913e-5 "Decay constant of 135Iode" annotation(Dialog(group="Nuclear Data"));
-  constant ThermoSysPro.Units.SI.Frequency Xe_decay = 2.116e-5 "Decay constant of 135Xenon" annotation(Dialog(group="Nuclear Data"));
 
   parameter Real FastFissionFactor = 1.07 "Fast Fission Factor" annotation(Dialog(group="Nuclear Data"));
   parameter ThermoSysPro.Units.SI.Area Fuel_Fission_CS = 5.82e-26 "Fuel thermal microscopic fission cross-section" annotation(Dialog(group="Nuclear Data"));
   parameter ThermoSysPro.Units.SI.Energy FissionEnergy = 3.2e-11 "Energy from each fission" annotation(Dialog(group="Nuclear Data"));
   parameter Real FAtomicMass = 235.04393 "Fissil atomic mass" annotation(Dialog(group="Nuclear Data"));
-  parameter Real I_yield = 0.0632 "Total fission yield of 135Iode" annotation(Dialog(group="Nuclear Data"));
-  parameter Real Xe_yield = 0.0026 "Total fission yield of 135Xenon" annotation(Dialog(group="Nuclear Data"));
-  parameter ThermoSysPro.Units.SI.Area Xe_abs_CS = 2.75e-22 "Microscopic absorption cross-section of 135Xenon" annotation(Dialog(group="Nuclear Data"));
+   parameter ThermoSysPro.Units.SI.Frequency P_decay[Np] "Decay constant of parent nuclide" annotation(Dialog(group="Nuclear Data"));
+  parameter ThermoSysPro.Units.SI.Frequency D_decay[Np] "Decay constant of daughter nuclide" annotation(Dialog(group="Nuclear Data"));
+  parameter Real P_yield[Np] "Total fission yield of parent nuclide" annotation(Dialog(group="Nuclear Data"));
+  parameter Real D_yield[Np] "Total fission yield of daughter nuclide" annotation(Dialog(group="Nuclear Data"));
+  parameter ThermoSysPro.Units.SI.Area D_abs_CS[Np] "Microscopic absorption cross-section of daughter nuclide" annotation(Dialog(group="Nuclear Data"));
 
   ThermoSysPro.Units.SI.TotalNeutronSourceDensity FissionRate "Reactor Fission Rate";
 
-  Real I_135 "Number of 135Iode nuclei";
-  Real Xe_135 "Number of 135Xenon nuclei";
+  Real P[Np] "Number of parent nuclei";
+  Real D[Np] "Number of daughter nuclei";
   ThermoSysPro.Units.SI.NeutronFluenceRate ThNeutronFlux "Neutron Flux (Thermal)";
 
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal Power(signal(
         start=3.8e9))
     "Thermal Power from fission [W]"
     annotation (Placement(transformation(extent={{-92,-10},{-72,10}})));
-  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Xe135
-    annotation (Placement(transformation(extent={{72,-52},{92,-32}})));
-  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal I135
-    annotation (Placement(transformation(extent={{72,30},{92,50}})));
+  ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal Poisons[Np]
+    annotation (Placement(transformation(extent={{72,-10},{92,10}}),
+        iconTransformation(extent={{72,-10},{92,10}})));
 initial equation
   if steady_state then
-    der(I_135) = 0;
-    der(Xe_135) = 0;
+    for i in 1:Np loop
+      der(P[i]) = 0;
+      der(D[i]) = 0;
+    end for;
   else
-    I_135 = I_start;
-    Xe_135 = Xe_start;
+    P = P_start;
+    D = D_start;
   end if;
 
 equation
-  Xe135.signal = Xe_135;
-  I135.signal = I_135;
+  Poisons.signal = D;
 
   Power.signal / Vfuel = FissionEnergy * FissionRate;
   FissionRate = FastFissionFactor * ThNeutronFlux * Fuel_Fission_CS * fissil_density;
 
-  der(I_135) = FissionRate*I_yield - I_135*I_decay;
-  der(Xe_135) = FissionRate*Xe_yield + I_135*I_decay - Xe_135*Xe_decay - ThNeutronFlux*Xe_135*Xe_abs_CS;
+   for i in 1:Np loop
+      der(P[i]) =  FissionRate*P_yield[i] - P[i]*P_decay[i];
+      der(D[i]) =  FissionRate*D_yield[i] + P[i]*P_decay[i] - D[i]*D_decay[i] - ThNeutronFlux*D[i]*D_abs_CS[i];
+   end for;
 
   annotation (                                   Icon(graphics={
         Rectangle(extent={{-80,80},{80,-80}}, lineColor={0,0,0},
           fillColor={255,128,0},
           fillPattern=FillPattern.Sphere),
         Text(
-          extent={{-60,66},{60,-56}},
+          extent={{-60,64},{60,-58}},
           lineColor={0,198,99},
           textStyle={TextStyle.Bold},
-          textString="Xe")}), Documentation(info="# Xenon Evolution 
+          textString="Poisons")}),
+                              Documentation(info="# Xenon Evolution 
 
 The Xenon evolution follows the following Bateman equations:
 
@@ -94,11 +97,5 @@ $$ FissionRate = FastFissionFactor * \\Phi_{Th} * \\sigma_f * N_f $$
 where *FastFissionFactor* is the ratio between the total number of fissions and the thermal ones, \\\\(\\sigma_f\\\\) the microscopic fission cross-section of the fuel
 and \\\\(N_f\\\\) the density of fissil atoms in the fuel.
 
-The used microscopic cross-section values should refer to the thermal neutron flux.
-
-## Copyright © EDF 2002 - 2026  
-
-
-## ThermoSysPro Version 4.2  
-"));
-end Xenon;
+The used microscopic cross-section values should refer to the thermal neutron flux."));
+end Poison;
