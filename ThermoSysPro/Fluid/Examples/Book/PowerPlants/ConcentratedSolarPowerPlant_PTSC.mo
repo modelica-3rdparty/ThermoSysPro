@@ -36,23 +36,23 @@ model ConcentratedSolarPowerPlant_PTSC "Model of a concentrated solar power plan
     Placement(transformation(extent = {{-171, 34}, {-115, 78}}, rotation = 0)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicOnePhaseFlowPipe TubeEcran_11(P(each start = 2.2e6), option_temperature = false, L = L1, Ns = Ns1, T0 = {587.815, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0, 550.0}, h0 = fill(650e3, Ns1), D = 0.04, advection = false, hcCorr = 2, dpfCorr = 0.4, ntubes = 3, h(start = {801122.25, 638880.0, 582613.0, 562383.0, 546913.0, 533929.0, 522949.0, 513609.0, 505631.0, 498794.0, 492917.0, 487857.0, 483492.0, 479721.0, 476460.0, 473637.0, 471191.0, 469070.0, 467231.0, 465634.0, 464248.0, 464248.0})) annotation(
     Placement(transformation(extent = {{-116, 122}, {-173, 78}}, rotation = 0)));
-  ThermoSysPro.Fluid.Junctions.SteamDryer Secheur(xe(start = 0.273553)) annotation(
+  ThermoSysPro.Fluid.Junctions.SteamDryer Secheur(proe(x(start = 0.273553))) annotation(
     Placement(transformation(extent = {{-86, 39}, {-62, 63}}, rotation = 0)));
-  ThermoSysPro.Fluid.HeatExchangers.SimpleDynamicCondenser Condenseur(A = 5, Kvl = 100, e = 0.0005, L = 3.5, Vf0 = 0.15, ntubes = 300, steady_state = false, V = 30, P0 = 5000, Cv(Q(start = 1.13)), Pfond(start = 5000.53), rhol(start = 995.533)) annotation(
+  ThermoSysPro.Fluid.HeatExchangers.SimpleDynamicCondenser Condenseur(A = 5, Kvl = 100, e = 0.0005, L = 3.5, Vf0 = 0.15, ntubes = 300, steady_state = false, V = 30, P0 = 5000, Cv(Q(start = 1.13)), Pfond(start = 5000.53), proe(d(start = 995.533))) annotation(
     Placement(transformation(extent = {{116, -51}, {156, -11}}, rotation = 0)));
   ThermoSysPro.Fluid.BoundaryConditions.SinkP puitsPCaloporteur(P0 = 1e5, option_temperature = false) annotation(
     Placement(transformation(extent = {{178, -48}, {206, -22}}, rotation = 0)));
-  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss PerteChargeCondPompe(K = 1e-6, C2(h_vol_1(start = 137765.0)), Pm(start = 5000.53)) annotation(
+  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss PerteChargeCondPompe(K = 1e-6, C2(h_vol_1(start = 137765.0)), Pm(start = 5000.53), region = ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1) annotation(
     Placement(transformation(origin = {117, -82.5}, extent = {{-6, -9.5}, {6, 9.5}}, rotation = 180)));
   ThermoSysPro.Fluid.PressureLosses.InvSingularPressureLoss Connection_HQ_Secheur_Ballon(Q(start = 1)) annotation(
     Placement(transformation(origin = {-73, -15}, extent = {{-10, -10}, {10, 10}}, rotation = 270)));
-  ThermoSysPro.Fluid.Machines.StaticCentrifugalPump Pompe(Pm(fixed = false, start = 3502560.0), a1(fixed = false) = -4.9345734425e8, hn(start = 716.167), a3 = 2000, b1 = -3500, b2 = 510, Q(fixed = true, start = 1.13), C2(h_vol_1(start = 150161.0)), Qv(start = 0.00113454), h(start = 143963.0)) annotation(
+  ThermoSysPro.Fluid.Machines.StaticCentrifugalPump Pompe(Pm(fixed = false, start = 3502560.0), a1(fixed = false) = -4.9345734425e8, hn(start = 716.167), a3 = 2000, b1 = -3500, b2 = 510, Q(fixed = true, start = 1.13), C2(h_vol_1(start = 150161.0)), Qv(start = 0.00113454), h(start = 143963.0), region = ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1) annotation(
     Placement(transformation(extent = {{84, -91}, {64, -71}}, rotation = 0)));
-  ThermoSysPro.Fluid.Volumes.VolumeC Ballon(V = 1, h0 = 3e5, h(start = 1125640.0), P0 = 7000000, dynamic_mass_balance = true, P(start = 7000000)) annotation(
+  ThermoSysPro.Fluid.Volumes.VolumeC Ballon(V = 1, h0 = 3e5, h(start = 1125640.0), P0 = 7000000, dynamic_mass_balance = true, P(start = 7000000), region = ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1) annotation(
     Placement(transformation(extent = {{-63, -91}, {-83, -71}}, rotation = 0)));
-  ThermoSysPro.Fluid.PressureLosses.ControlValve ControlValveBallon(Cvmax(fixed = true) = 300, C2(P(fixed = false, start = 70e5)), Pm(start = 7000060.0)) annotation(
+  ThermoSysPro.Fluid.PressureLosses.ControlValve ControlValveBallon(Cvmax(fixed = true) = 300, C2(P(fixed = false, start = 70e5)), Pm(start = 7000060.0), region = ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1) annotation(
     Placement(transformation(origin = {-30, -75}, extent = {{-10, 10}, {10, -10}}, rotation = 180)));
-  ThermoSysPro.Fluid.PressureLosses.ControlValve ControlValveBallon1(Cvmax = 10, C1(P(start = 10618800.0), h_vol_2(start = 1127430.0)), C2(h_vol_1(start = 1127430.0)), Pm(start = 9676220.0)) annotation(
+  ThermoSysPro.Fluid.PressureLosses.ControlValve ControlValveBallon1(Cvmax = 10, C1(P(start = 10618800.0), h_vol_2(start = 1127430.0)), C2(h_vol_1(start = 1127430.0)), Pm(start = 9676220.0), region = ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1) annotation(
     Placement(transformation(origin = {-212, -75}, extent = {{-10, 10}, {10, -10}}, rotation = 180)));
   ThermoSysPro.Fluid.BoundaryConditions.SourceP sourcePCaloporteur(option_temperature = false, h0 = 63.03e3, P0(fixed = false) = 500000, Q(fixed = true, start = 14.9263)) annotation(
     Placement(transformation(extent = {{66, -49}, {94, -22}}, rotation = 0)));
@@ -64,17 +64,17 @@ model ConcentratedSolarPowerPlant_PTSC "Model of a concentrated solar power plan
     Placement(transformation(extent = {{-48, -62}, {-38, -52}}, rotation = 0)));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Constante Ouv1(k = 0.5) annotation(
     Placement(transformation(extent = {{-231, -62}, {-221, -52}}, rotation = 0)));
-  ThermoSysPro.Fluid.Machines.StaticCentrifugalPump Pompe1(Pm(fixed = false), hn(start = 466.292), a3 = 2000, b2 = 510, b1 = -3500, a1(fixed = false) = -9.5e8, Q(fixed = false, start = 0.65), C2(P(fixed = false, start = 75e5)), C1(P(fixed = true, start = 70e5), h_vol_2(start = 1125640.0)), Qv(start = 0.00521975), h(start = 1126540.0)) annotation(
+  ThermoSysPro.Fluid.Machines.StaticCentrifugalPump Pompe1(Pm(fixed = false), hn(start = 466.292), a3 = 2000, b2 = 510, b1 = -3500, a1(fixed = false) = -9.5e8, Q(fixed = false, start = 0.65), C2(P(fixed = false, start = 75e5)), C1(P(fixed = true, start = 70e5), h_vol_2(start = 1125640.0)), Qv(start = 0.00521975), h(start = 1126540.0), region = ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1) annotation(
     Placement(transformation(extent = {{-158, -91}, {-178, -71}}, rotation = 0)));
-  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss PerteChargeCondPompe3(K = 1e-6) annotation(
+  ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss PerteChargeCondPompe3(K = 1e-6, region = ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1) annotation(
     Placement(transformation(origin = {-120, -81}, extent = {{-6, -10}, {6, 10}}, rotation = 180)));
-  ThermoSysPro.Fluid.Machines.StodolaTurbine Turbine(W_fric = 1, Cst(fixed = false, start = 6.8e10) = 6.19323e6, Qmax = 0.001, eta_is_min = 0.80, rhos(start = 10), eta_is_nom = 0.92, Pe(fixed = true, start = 8000000), Ps(fixed = false, start = 1800000)) annotation(
+  ThermoSysPro.Fluid.Machines.StodolaTurbine Turbine(W_fric = 1, Cst(fixed = false, start = 6.8e10) = 6.19323e6, Qmax = 0.001, eta_is_min = 0.80, rhos(start = 10), eta_is_nom = 0.92, Pe(fixed = true, start = 8000000), Ps(fixed = false, start = 1800000), pros(d(start = 8.36949))) annotation(
     Placement(transformation(extent = {{47, 72}, {73, 40}}, rotation = 0)));
   ThermoSysPro.ElectroMechanics.Machines.Generator Alternateur annotation(
     Placement(transformation(extent = {{168, 90}, {198, 130}}, rotation = 0)));
   Thermal.HeatTransfer.HeatExchangerWallCounterFlow Paroi4(cpw = 1000, steady_state = true, lambda = 26, D = 0.04, L = L4, Ns = Ns4, ntubes = 3, e = 0.003, Tp1(start = {532.06, 532.262, 532.478}), Tp2(start = {533.3, 532.429, 532.217}), Tp(start = {532.141, 532.349, 532.57})) annotation(
     Placement(transformation(origin = {-269, -12}, extent = {{-24, -30}, {24, 30}}, rotation = 90)));
-  ThermoSysPro.Fluid.HeatExchangers.DynamicTwoPhaseFlowPipe TubeEcran_4(option_temperature = false, D = 0.04, L = L4, Ns = Ns4, T0 = fill(300, Ns4), h0 = fill(650e3, Ns4), ntubes = 3, inertia = false, advection = false, P(start = {8751668.0, 8729230.0, 8724830.0, 8720430.0, 8733863.0}), h(start = {1128519.5, 1128310.0, 1129260.0, 1130270.0, 1131729.0})) annotation(
+  ThermoSysPro.Fluid.HeatExchangers.DynamicTwoPhaseFlowPipe TubeEcran_4(option_temperature = false, D = 0.04, L = L4, Ns = Ns4, T0 = fill(300, Ns4), h0 = fill(650e3, Ns4), ntubes = 3, inertia = false, advection = false, P(start = {8751668.0, 8729230.0, 8724830.0, 8720430.0, 8733863.0}), h(start = {1128519.5, 1128310.0, 1129260.0, 1130270.0, 1131729.0}), region = ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1) annotation(
     Placement(transformation(origin = {-245.5, -11.5}, extent = {{-23.5, -23.5}, {23.5, 23.5}}, rotation = 90)));
   ThermoSysPro.Fluid.HeatExchangers.DynamicOnePhaseFlowPipe TubeEcran_44(P(each start = 1.6e6), option_temperature = false, L = L4, Ns = Ns4, T0 = {532.656, 550.0, 550.0}, h0 = fill(650e3, Ns4), advection = false, D(fixed = true) = 0.04, C2(P(fixed = false, start = 16.99e5), Q(fixed = false, start = 2)), hcCorr = 2, dpfCorr = 0.4, ntubes = 3, h(start = {465547.78125, 463670.0, 463128.0, 462620.0, 462620.0})) annotation(
     Placement(transformation(origin = {-293, -12}, extent = {{23, 24}, {-23, -24}}, rotation = 90)));
@@ -84,15 +84,15 @@ model ConcentratedSolarPowerPlant_PTSC "Model of a concentrated solar power plan
     Placement(transformation(origin = {-212, 138.5}, extent = {{6, -9.5}, {-6, 9.5}}, rotation = 180)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss PerteCharge_Huile_1(K = 1e-6, p_rho = 900) annotation(
     Placement(transformation(origin = {-286, 138.5}, extent = {{6, -9.5}, {-6, 9.5}}, rotation = 180)));
-  ThermoSysPro.Fluid.Machines.StodolaTurbine TurbineMp(W_fric = 1, Cst(fixed = false, start = 8.3e9) = 6.19323e6, Qmax = 0.001, eta_is_min = 0.80, rhos(start = 10), eta_is_nom = 0.94, Pe(fixed = true, start = 1800000), Ps(fixed = false, start = 5000), xm(start = 0.908482)) annotation(
+  ThermoSysPro.Fluid.Machines.StodolaTurbine TurbineMp(W_fric = 1, Cst(fixed = false, start = 8.3e9) = 6.19323e6, Qmax = 0.001, eta_is_min = 0.80, rhos(start = 10), eta_is_nom = 0.94, Pe(fixed = true, start = 1800000), Ps(fixed = false, start = 5000), pros(d(start = 0.0434309)), xm(start = 0.908482)) annotation(
     Placement(transformation(extent = {{105, 72}, {131, 40}}, rotation = 0)));
-  ThermoSysPro.Fluid.Volumes.Tank Tank(p_rho = 895, A = 0.1, z0 = 1, h0 = 423600, steady_state = true, h(start = 462620.0), rho(start = 895), Patm = 1670000, P(start = 1699000)) annotation(
+  ThermoSysPro.Fluid.Volumes.Tank Tank(p_rho = 895, A = 0.1, z0 = 1, h0 = 423600, steady_state = true, h(start = 462620.0), rho(start = 895), Patm = 1670000, P(start = 1699000), ftype = ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.FluidType.Oil_TherminolVP1) annotation(
     Placement(transformation(origin = {-248, 142}, extent = {{6, 6}, {-6, -6}}, rotation = 180)));
   ThermoSysPro.Fluid.Volumes.VolumeA VolumeMP(V = 1, rho(start = 10), h0 = 2.4e6, h(start = 2868560.0), P0 = 1800000, dynamic_mass_balance = true, P(start = 1800000), Cs2(Q(start = 0.255955), h_vol_2(start = 2.87e6))) annotation(
     Placement(transformation(extent = {{84, 50}, {94, 62}}, rotation = 0)));
   ThermoSysPro.Fluid.Volumes.VolumeA VolumeCond(V = 1, rho(start = 10), h(start = 1837610.0), h0 = 2.1e6, P0 = 5000, dynamic_mass_balance = false, P(start = 5000)) annotation(
     Placement(transformation(extent = {{141, 24}, {130, 34}}, rotation = 0)));
-  ThermoSysPro.Fluid.HeatExchangers.NTUWaterHeater Re_1(KPurge = 10, SPurge = 0.3, Se(h(fixed = true, start = 600e3)), SCondDes(fixed = false, start = 9.57697) = 3, HDesF(start = 583561.0), HeiF(start = 150619.0), Hep(start = 884611.0), SDes(start = 0.932441), h(start = 882589.0), lambdaE = 1, KCond = 500) annotation(
+  ThermoSysPro.Fluid.HeatExchangers.NTUWaterHeater Re_1(KPurge = 10, SPurge = 0.3, Se(h(fixed = true, start = 600e3)), SCondDes(fixed = false, start = 9.57697) = 3, HDesF(start = 583561.0), HeiF(start = 150619.0), Hep(start = 884611.0), SDes(start = 0.932441), h(start = 882589.0), lambdaE = 1, KCond = 500, region_eeF = ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1, region_seF = ThermoSysPro.Fluid.Interfaces.PropertyInterfaces.IF97Region.Region_1) annotation(
     Placement(transformation(extent = {{42, -106}, {0, -56}}, rotation = 0)));
   ThermoSysPro.Fluid.PressureLosses.SingularPressureLoss Dp_Re_1(rho(start = 10), h(start = 2400e3), Q(start = 0.1), K = 1e-4, Pm(start = 1800000)) annotation(
     Placement(transformation(origin = {31.5, -13.5}, extent = {{5.5, -5.5}, {-5.5, 5.5}}, rotation = 90)));
