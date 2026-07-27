@@ -14,7 +14,7 @@ protected
 public
   ThermoSysPro.Units.SI.Power Pneut(start=3560e6) "Total neutronic power (W)";
   ThermoSysPro.Units.SI.Power PresTot "Total decay heat (W)";
-  ThermoSysPro.Units.SI.Power Pres[N](start={89.35e6,58.88e6,92.05e6})
+  ThermoSysPro.Units.SI.Power Pres[N]
     "Residual power associated to the groups of radio-isotopes (W)";
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal Pneutrons
     annotation (extent=[-120,-10; -100,10], Placement(transformation(extent={{-120,
@@ -28,7 +28,7 @@ initial equation
       der(Pres[i]) = 0;
     end for;
   else
-    Pres = {89.35e6, 58.88e6, 92.05e6};
+    Pres = zeros(N);
   end if;
 equation
   Pneut =Pneutrons.signal;
