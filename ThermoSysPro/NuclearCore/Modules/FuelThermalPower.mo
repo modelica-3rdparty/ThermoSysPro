@@ -1,4 +1,4 @@
-within ThermoSysPro.NuclearCore;
+within ThermoSysPro.NuclearCore.Modules;
 model FuelThermalPower "Meshed model that describes the dynamic of the conduction of heat generated 
   by fission in a fuel rod."
 
@@ -103,8 +103,6 @@ equation
   Wcond[:,1] = zeros(Nz);  //Null thermal conduction power in the center
   Wcond[:,end] = heat_coeff_gap*Sseg_cladi*(Tout - Tg); //Convection power to the clad
 
-
-
   // Extrapolation of limit point (change in conductivities could be taken into account)
   Tcenter = T[:,1]*1.5 - T[:,2]*0.5;
   Tout = T[:,end]*1.5 - T[:,Nr-1]*0.5;
@@ -127,7 +125,6 @@ equation
   Teff = 0.444*Tcenter + 0.556*Tout;
   // Mean effective temperature, weighted by thermal power axial distribution
   Teffg = zWt_norm * Teff;
-
 
   annotation (Diagram(
       coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}),

@@ -1,4 +1,4 @@
-within ThermoSysPro.NuclearCore;
+within ThermoSysPro.NuclearCore.Modules;
 model DecayHeat "Calculation of the decay heat given by the decay of the fission
   products in the core of the nuclear reactor"
 

@@ -1,4 +1,4 @@
-within ThermoSysPro.NuclearCore;
+within ThermoSysPro.NuclearCore.Modules;
 model ReactivityFeedbacks "This module calculates the neutronic feedback due to control rods, Doppler effect, moderator temperature, 
   boron and xenon concentration"
 
@@ -36,7 +36,6 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback due to 
 
  // parameter Real cumRodWorth[n_rods, rod_nodes+3] = {ThermoSysPro.Functions.CumulativeIntegral(rod_nodes+3, Z_rodNodes, rodWorth_tab[i]) for i in 1:n_rods}
  //   "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=false,group="Control Rods Parameters"));
-
 
   parameter Real ReacFuel(start=1000,fixed=false) "Reference Reactivity of Fuel" annotation(Dialog(group="Reference State"));
 

@@ -1,4 +1,4 @@
-within ThermoSysPro.NuclearCore;
+within ThermoSysPro.NuclearCore.Modules;
 model NeutronKinetics "Neutronic power evolution by neutron kinetics"
 
   parameter Real Kfuel=1

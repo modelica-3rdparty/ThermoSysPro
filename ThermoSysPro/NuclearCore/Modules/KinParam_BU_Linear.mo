@@ -1,4 +1,4 @@
-within ThermoSysPro.NuclearCore;
+within ThermoSysPro.NuclearCore.Modules;
 model KinParam_BU_Linear
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal inputReal
     annotation (Placement(transformation(extent={{-108,-10},{-88,10}})));

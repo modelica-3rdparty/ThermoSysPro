@@ -1,4 +1,4 @@
-within ThermoSysPro.NuclearCore;
+within ThermoSysPro.NuclearCore.Modules;
 model Poison "Vectorial formulation for multiple fission products"
   parameter Boolean steady_state = true "Steady-state (true) or fixed values (false) initialization" annotation(Dialog(group="Initialization"));
   parameter Integer Np = 1 "Number of neutron poisons";
