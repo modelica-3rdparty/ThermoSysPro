@@ -158,10 +158,10 @@ equation
           textColor={0,0,0},
           textString=
         "%name")}),
-    Documentation(info="# Fuel Heat Transfer1
+    Documentation(info="# Fuel Heat Transfer
 
-This module resolve the heat transfer equation in the fuel rod, based on the fuel properties, *cp* and \"k\",
- computed in [FuelProperties](modelica://ThermoSysPro.NuclearCore.FuelProperties).
+This module resolve the heat transfer equation in the fuel rod, based on the fuel properties, *cp* and *k*,
+ computed in [FuelProperties](modelica://ThermoSysPro.NuclearCore.Modules.FuelProperties).
 
 ## Heat Transfer Resolution
 

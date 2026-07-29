@@ -22,20 +22,12 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback due to 
   parameter Integer rod_nodes = 10 "Number of sections in the rod worth tables" annotation(Dialog(group="Control Rods Parameters",enable=not
                                                                                                                                             (constant_rodWorth)));
 
-  //parameter Real Z_rodNodes[n_rods,rod_nodes + 3]={{i*rodWorth[j]/rod_nodes for i in -1:rod_nodes + 1} for j in 1:n_rods} "Z of rodworth sections" annotation (Dialog(group="Control Rods Parameters", enable=not (constant_rodWorth)));
+  parameter Real Z_rodNodes[n_rods,rod_nodes + 3]={{i*rod_stroke[j]/rod_nodes for i in -1:rod_nodes + 1} for j in 1:n_rods} "Z of rodworth sections" annotation (Dialog(group="Control Rods Parameters", enable=not (constant_rodWorth)));
 
-  //parameter Real rodWorth_tab[n_rods, rod_nodes+3] = fill({0, 0, 5, 9, 12, 14, 15, 14, 12, 9, 5, 0, 0},n_rods) "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=not(constant_rodWorth),tab = "Neutronics",group="Control Rods Parameters"));
+  parameter Real rodWorth_tab[n_rods, rod_nodes+3] = zeros(n_rods, rod_nodes+3) "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=not
+                                                                                                                                                               (constant_rodWorth),group="Control Rods Parameters"));
 
- // parameter Real cumRodWorth[n_rods, rod_nodes+3] = {ThermoSysPro.Functions.CumulativeIntegral(rod_nodes+3, Z_rodNodes[i], rodWorth_tab[i]) for i in 1:n_rods} "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=false,group="Control Rods Parameters"));
-
-  //parameter Real Z_rodNodes[rod_nodes+3] = {i*rod_stroke/rod_nodes for i in -1:rod_nodes+1} "Z of rodworth sections" annotation(Dialog(group="Control Rods Parameters",enable=not (constant_rodWorth)));
-
-  //parameter Real rodWorth_tab[n_rods, rod_nodes+3] = {
-  //  {0, 0, 5, 9, 12, 14, 15, 14, 12, 9, 5, 0, 0},
-  //  {0, 0, 3, 6, 8, 9, 9.5, 9, 8, 6, 3, 0, 0}} "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=not(constant_rodWorth),group="Control Rods Parameters"));
-
- // parameter Real cumRodWorth[n_rods, rod_nodes+3] = {ThermoSysPro.Functions.CumulativeIntegral(rod_nodes+3, Z_rodNodes, rodWorth_tab[i]) for i in 1:n_rods}
- //   "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=false,group="Control Rods Parameters"));
+  parameter Real cumRodWorth[n_rods, rod_nodes+3] = {ThermoSysPro.Functions.CumulativeIntegral(rod_nodes+3, Z_rodNodes[i], rodWorth_tab[i]) for i in 1:n_rods} "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=false,group="Control Rods Parameters"));
 
   parameter Real ReacFuel(start=1000,fixed=false) "Reference Reactivity of Fuel" annotation(Dialog(group="Reference State"));
 
@@ -123,10 +115,9 @@ equation
       k[i] =min(rod_stroke[i], integer(max(floor(RodsPos[i] + 0.5), 0)));
     end if;
 
-    ReacBi[i] = if constant_rodWorth then k[i]*rodWorth[i].signal else 0; //ThermoSysPro.Functions.LinearInterpolation(Z_rodNodes[i], cumRodWorth[i], RodsPos[i]);
+    ReacBi[i] = if constant_rodWorth then k[i]*rodWorth[i].signal else ThermoSysPro.Functions.LinearInterpolation(Z_rodNodes[i], cumRodWorth[i], RodsPos[i]);
   end for;
 
-  assert(constant_rodWorth, "Only constant worth supported");
 
   /* Reactivity given by the soluble poison (boron) */
   ReacSP = kB * Cbore;
@@ -404,11 +395,95 @@ equation
         extent=[116, 62; 116, 50],
         style(color=3, rgbcolor={0,0,255}),
         string="ReacB")),
-    Documentation(info="<html>
-<p><b>Copyright &copy; EDF 2002 - 2024</b></p>
-</HTML>
-<html>
-<p><b>ThermoSysPro Version 4.1</b></p>
-</HTML>
-"));
+    Documentation(info="# Reactivity feedbacks
+
+The *ReactivityFeedbacks* model calculates the total reactivity by combining the principal neutronic feedback mechanisms. The model accounts for:
+- Control rod reactivity
+- Fuel temperature (Doppler) feedback 
+- Moderator temperature feedback
+- Soluble boron concentration
+- Neutronic poisons from fission products feedback
+- Burnable absorber (e.g., gadolinium) reactivity contribution
+
+The total reactivity is expressed in pcm and is obtained as the sum of the individual contributions. 
+The model supports multiple poison species (\\\\(Np \\\\)) and multiple control rod banks (\\\\(n_{rods} \\\\)) . 
+Control rod worth can be represented either by a constant differential worth or by user-defined rod-worth tables.
+
+
+## Nomenclature
+
+| Symbol              | Description                     | Unit                                    | Definition                                                     | Modelica name       |
+| :-------------------: | :-------------------------------: | :---------------------------------------: | :--------------------------------------------------------------: |:-------------------: |
+| $$N_p$$             | Number of poison species        | -                                       | Number of neutron poisons considered                           | `Np`                |
+| $$k_{p,i}$$         | Poison coefficient              | $$\\mathrm{pcm}$$ per concentration unit | Converts poison concentration into reactivity                  | `kp[i]`             |
+| $$k_B$$             | Boron coefficient               | $$\\mathrm{pcm/ppm}$$                    | Soluble boron reactivity coefficient                           | `kB`                |
+| $$T_{ref,f}$$       | Reference fuel temperature      | $$\\mathrm{K}$$                          | Fuel temperature corresponding to zero Doppler feedback        | `Tref_fuel`         |
+| $$T_{ref,m}$$       | Reference moderator temperature | $$\\mathrm{K}$$                          | Moderator temperature corresponding to zero moderator feedback | `Tref_mod`          |
+| $$N_r$$             | Number of control rod groups    | -                                       | Number of independently controlled rod banks                   | `n_rods`            |
+| $$S_i$$             | Rod stroke                      | variable                                | Maximum insertion depth of rod group \\\\(i\\\\)                      | `rod_stroke[i]`     |
+| $$Z_{0,i}$$         | Initial rod position            | variable                                | Initial position of rod group \\\\(i\\\\)                           | `RodsPos0[i]`       |
+| $$W_i$$             | Differential rod worth          | $$\\mathrm{pcm}$$ per position unit      | Constant rod worth coefficient                                 | `rodWorth[i]`       |
+| $$Z_{node,i,j}$$    | Rod-worth table coordinate      | position unit                           | Position associated with rod-worth table node                  | `Z_rodNodes[i,j]`   |
+| $$RW_{i,j}$$        | Differential rod worth table    | $$\\mathrm{pcm}$$ per position unit      | Differential rod worth versus insertion depth                  | `rodWorth_tab[i,j]` |
+| $$CRW_{i,j}$$       | Cumulative rod worth table      | $$\\mathrm{pcm}$$                        | Integrated rod worth table                                     | `cumRodWorth[i,j]`  |
+| $$\\rho_{fuel,ref}$$ | Reference fuel reactivity       | $$\\mathrm{pcm}$$                        | Base reactivity offset                                         | `ReacFuel`          |
+| $$T_f$$       | Fuel temperature             | $$\\mathrm{K}$$     | Effective fuel temperature                        | `EntreeT_fuel.signal`   |
+| $$T_m$$       | Moderator temperature        | $$\\mathrm{K}$$     | Core-average moderator temperature                | `EntreeT_CoreAv.signal` |
+| $$C_B$$       | Boron concentration          | $$\\mathrm{ppm}$$   | Soluble boron concentration                       | `EntreeCbore.signal`    |
+| $$C_{p,i}$$   | Poison concentration         | concentration unit | Poison concentration of species \\\\(i\\\\)             | `EntreeCpois.signal[i]` |
+| $$\\alpha_m$$  | Moderator coefficient        | $$\\mathrm{pcm/K}$$ | Moderator temperature coefficient                 | `alfa_mod.signal`       |
+| $$\\alpha_D$$  | Doppler coefficient          | $$\\mathrm{pcm/K}$$ | Fuel Doppler coefficient                          | `alfa_dop.signal`       |
+| $$\\rho_{Gd}$$ | Burnable absorber reactivity | $$\\mathrm{pcm}$$   | Reactivity contribution from gadolinium depletion | `ReacGd.signal`         |
+| $$V_i$$       | Rod insertion velocity       | position unit/min  | Control rod motion speed                          | `RodsSpeeds.signal[i]`  |
+| $$Z_i$$        | Rod position                   | position unit    | Current insertion depth of rod group \\\\(i\\\\) | `RodsPos[i]`  |
+| $$k_i$$        | Effective rod position         | position unit    | Position used in rod-worth calculations    | `k[i]`        |
+| $$\\rho_B$$     | Rod-bank reactivity            | $$\\mathrm{pcm}$$ | Total control-rod contribution             | `ReacB`       |
+| $$\\rho_{B,i}$$ | Rod-bank contribution          | $$\\mathrm{pcm}$$ | Contribution of rod group \\\\(i\\\\)            | `ReacBi[i]`   |
+| $$\\rho_{SP}$$  | Soluble poison reactivity      | $$\\mathrm{pcm}$$ | Boron reactivity contribution              | `ReacSP`      |
+| $$\\rho_D$$     | Doppler reactivity             | $$\\mathrm{pcm}$$ | Fuel temperature effect                    | `ReacD`       |
+| $$\\rho_M$$     | Moderator reactivity           | $$\\mathrm{pcm}$$ | Moderator temperature effect               | `ReacM`       |
+| $$\\rho_P$$     | Poison reactivity              | $$\\mathrm{pcm}$$ | Total poison contribution                  | `ReacP`       |
+| $$\\rho_{P,i}$$ | Individual poison contribution | $$\\mathrm{pcm}$$ | Contribution of poison species \\\\(i\\\\)       | `ReacPi[i]`   |
+| $$\\rho$$       | Total reactivity               | $$\\mathrm{pcm}$$ | Sum of all reactivity contributions        | `Reac`        |
+
+
+## Governing equations
+
+### Control rod insertion
+The user can specify via an external input the control rod insertion speed \\\\( V_i \\\\). This can be used to compute the effective control rod position \\\\( k_i \\\\), which is constrained by the 
+stroke of the control rod group. Morever, via the dedicated flag `continuousInsertion`, it can be specified whether continuos or integer insertion steps should be considered.
+
+Two different models can be selected to compute the control rod insertion. Activating the `constant_rodWorth` option, the rodWorth is specified externally, e.g., to capture the burnup dependency.
+In contrast, a variable rod worth (dependending on the axial position) can be defined when `constant_rodWorth = false`.
+
+### Temperature feedbacks
+The reactivity insertion related to temperature feedbacks is computed in the form of
+
+$$  \\rho = \\alpha (T - T_{ref}) $$
+
+where \\\\( \\alpha \\\\) are the feedback coefficients, specified externally to account for the burnup effect. For the Doppler effect, the temperature refers to the effective fuel temperature computed
+with [Rowland's model] (modelica://ThermoSysPro.NuclearCore.Modules.FuelThermalPower), whereas the moderator feedback is calculated considering the average coolant temperature.
+
+### Neutron poisons
+
+The contribution of three different kinds of neutron poisons is considered in the model, arising namely from fission products (e.g., xenon, samarium) and from the external injection of 
+soluble poisons (e.g., boron). The reactivity contributions are assumed to be proportional to the concentration of the species:
+
+$$  \\rho = k C $$
+
+Lastly, the user can specify the reactivity contributions of burnable poisons in the fuel (e.g., gadolinium).
+
+
+### Total reactivity
+
+Overall, in critical conditions the fuel reactivity needs to compensate the reactivity contributions of tha aforementioned effects. The total reactivity is obtained by summing all contributions:
+
+$$  \\rho = \\rho_{fuel,ref} + \\sum_{i=1}^{n_{rods}} \\rho_{B,i} + \\rho_D + \\rho_M + \\sum_{i=1}^{N_p} \\rho_{P,i}+ \\rho_{SP} + \\rho_{Gd}  $$
+
+
+
+## Copyright © EDF 2002 - 2026  
+
+
+## ThermoSysPro Version 4.2  "));
 end ReactivityFeedbacks;
