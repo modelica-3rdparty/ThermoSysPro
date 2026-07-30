@@ -376,12 +376,55 @@ equation
 
 This module contains a model of the neutronic power with six groups of delayed neutrons (it could be easily changed to 8 groups if needed). 
 Starting from the total reactivity (model input from the *ReactivityFeedbacks* module), this module calculates the time evolution of the fission power of the reactor. 
-The total power take into account also the residual power (which is computed and provided by the *DeecayHeat* module).
+The total power take into account also the residual power (which is computed and provided by the *DecayHeat* module).
 
-The default values for \\\\(Tlife\\\\) (*prompt neutron lifetime*), \\\\(Beta\\\\) (*delayed neutron fraction*) and \\\\(lambda\\\\) (*decay constant*), valid for U235, are taken from *S. Marguet, La physique des réacteurs nucléaire, Ed. Lavoisier, 2013*.
+The default values for \\\\(T_{life}\\\\) (*prompt neutron lifetime*), \\\\(\\beta\\\\) (*delayed neutron fraction*) and \\\\(\\lambda\\\\) (*decay constant*), valid for U235, are taken from *S. Marguet, La physique des réacteurs nucléaire, Ed. Lavoisier, 2013*.
 
 The equations can also be derived from the same source, setting:
-- \\\\(n(t)\\\\) proportional to \\\\(Pneut\\\\)
-- \\\\(C_i(t)\\\\) proportional to \\\\(Pdelay\\\\)
+- \\\\(n(t)\\\\) proportional to \\\\(P_{neut}\\\\)
+- \\\\(C_i(t)\\\\) proportional to \\\\(P_{delay,i}\\\\)
+
+## Nomenclature
+|     Symbol    | Description                 |        Unit        | Definition                                            | Modelica name        |
+|:------:|-------------|:----:|------------|--------------|
+|  \\\\(K_{fuel} \\\\) | Fuel power fraction         |          -         | Fraction of total reactor power deposited in the fuel | `Kfuel`              |
+| \\\\(P_{tot,0} \\\\) | Initial reactor power       | \\\\( \\mathrm{W} \\\\) | Initial total reactor power                           | `Ptot0`              |
+|   \\\\(E_f \\\\)    | Energy released per fission | \\\\( \\mathrm{J} \\\\) | Average recoverable energy per fission event          | `FissionEnergy`      |
+|    \\\\(\\nu \\\\)    | Neutrons per fission        |          -         | Average number of neutrons produced per fission       | `NeutronsPerFission` |
+|    \\\\(\\rho \\\\)  | Reactor reactivity                      |           pcm           | Total reactivity inserted into the core                             | `Reactivity.signal` |
+|  \\\\(P_{res} \\\\)  | Decay heat power                        |    \\\\( \\mathrm{W} \\\\)   | Residual power provided by the decay heat model                     | `DecayHeat.signal`  |
+|     \\\\(S \\\\)     | External neutron source                 |   neutrons \\\\( \\mathrm{s^{-1}} \\\\)   | External neutron source strength                                    | `S.signal`          |
+| \\\\(\\lambda_i \\\\) | Decay constant of precursor group \\\\( i \\\\) | \\\\( \\mathrm{s^{-1}} \\\\) | Radioactive decay constant of delayed neutron precursor group  \\\\( i \\\\) | `Lambda[i].signal`  |
+|  \\\\(\\beta_i \\\\)  | Delayed neutron fraction of group  \\\\( i \\\\)|            -            | Fraction of fission neutrons emitted by precursor group  \\\\( i \\\\)       | `Beta[i].signal`    |
+|     \\\\(l \\\\)    | Prompt neutron lifetime                 |    \\\\( \\mathrm{s} \\\\)   | Mean lifetime of prompt neutrons                                    | `Tlife.signal`      |
+| \\\\(P_{neut} \\\\) | Neutronic power                | \\\\( \\mathrm{W} \\\\) | Power generated directly by fission reactions                       | `Pneut`       |
+| \\\\(P_{delay,i} \\\\) | Delayed-neutron group power    | \\\\( \\mathrm{W} \\\\) | Power-equivalent inventory of delayed neutron precursor group \\\\( i \\\\) | `Pndelay[i]`  |
+|  \\\\(P_{tot} \\\\) | Total reactor power            | \\\\( \\mathrm{W} \\\\) | Sum of neutronic and decay heat power                               | `Ptot`        |
+| \\\\(P_{fuel} \\\\) | Fuel power                     | \\\\( \\mathrm{W} \\\\) | Fraction of total power deposited in the fuel                       | `Pfuel`       |
+| \\\\(P_{H_2O} \\\\) | Moderator power                | \\\\( \\mathrm{W} \\\\) | Fraction of total power deposited directly in the moderator         | `Ph2o`        |
+|   \\\\(\\beta \\\\)  | Total delayed neutron fraction |          -         | Sum of the delayed neutron fractions                                | `SumBeta`     |
+
+
+
+## Governing equations
+
+The neutronic power balance is defined as follows:
+
+$$ \\frac{dP_{neut}}{dt} =\\frac{\\rho - \\beta}{l} P_{neut} + \\sum_{i=1}^{6} \\lambda_i P_{delay,i} + S \\frac{E_f}{l \\nu} $$
+
+For each precursor group \\\\(i\\\\), the contribution is governed by the following equation:
+
+
+$$ \\frac{dP_{delay,i}}{dt} =\\frac{\\beta_i}{l} P_{neut} - \\lambda_i P_{delay,i} $$
+
+The total core power is computed as the sum of the neutronic power \\\\(P_{neut}\\\\) and the residual power \\\\(P_{res}\\\\). 
+By means of the parameter \\\\(K_{fuel}\\\\), it is possible to specify the fraction of power deposited in the fuel:
+
+$$ P_{fuel} = K_{fuel} P_{tot} $$
+
+with the remaining power deposited directly in the coolant.
+
+
+
 "));
 end NeutronKinetics;

@@ -193,7 +193,43 @@ equation
           fillColor=45,
           rgbfillColor={255,128,0}),
         string="Pneut")),
-    Documentation(info="
+    Documentation(info="# Decay heat module
+
+The *DecayHeat* module calculates the decay heat (or residual power) produced by radioactive decay of fission products the core.
+The model represents the decay heat source using a set of (\\\\(N \\\\)) equivalent groups of radioactive isotopes. Each group is characterized by:
+
+- A fraction of the neutronic power associated with the group
+- A characteristic decay time constant
+- The corresponding residual power that evolves dynamically.
+
+## Nomenclature
+
+|      Symbol     | Description                                           |        Unit        | Definition                                              | Modelica name   |
+|:------:|-------------|:----:|------------|--------------|
+|     \\\\( K_i\\\\)     | Power fraction associated with decay heat group \\\\(i \\\\) |          -         | Fraction of neutronic power contributing to group \\\\(i \\\\) | `Kris[i]`       |
+|     \\\\( T_i\\\\)    | Decay time constant of group \\\\(i \\\\)                    | \\\\( \\mathrm{s} \\\\) | Characteristic response time of decay heat group \\\\(i \\\\)  | `Tris[i]`       |
+| \\\\( P_{res,i,0}\\\\) | Initial residual power of group \\\\(i \\\\)                 | \\\\( \\mathrm{W} \\\\) | Used when `steady_state = false`                        | `Pres_start[i]` |
+|      \\\\( N\\\\)      | Number of decay heat groups                           |          -         | Number of equivalent radioactive isotope groups         | `size(Kris,1)`  |
+|    \\\\( P_{neut}\\\\)   | Neutronic power               | \\\\( \\mathrm{W} \\\\) | Instantaneous power produced by fission             | `Pneut`            |
+|   \\\\( P_{res,i}\\\\)   | Residual power of group \\\\(i \\\\) | \\\\( \\mathrm{W} \\\\) | Decay heat contribution associated with group \\\\(i \\\\)| `Pres[i]`          |
+|    \\\\( P_{res}\\\\)    | Total decay heat              | \\\\( \\mathrm{W} \\\\) | Sum of all group contributions                      | `PresTot`          |
+| \\\\( P_{neut}^{in}\\\\) | Neutronic power input         | \\\\( \\mathrm{W} \\\\) | Input signal containing reactor neutronic power     | `Pneutrons.signal` |
+| \\\\( P_{res}^{out}\\\\) | Decay heat output             | \\\\( \\mathrm{W} \\\\) | Output signal containing total decay heat           | `DecayHeat.signal` |
+
+
+## Governing equations
+For each decay heat group \\\\(i \\\\), the residual power evolves according to the following differential equation:
+
+$$ \\frac{dP_{res,i}}{dt} = \\frac{K_i P_{neut} -P_{res,i}}{T_i} $$
+
+The total decay heat is obtained by summing the contributions of each group:
+
+$$ P_{res} = \\sum_{i=1}^{N} P_{res,i} $$
+
+
+
+
+
 ## Copyright © EDF 2002 - 2026  
 
 

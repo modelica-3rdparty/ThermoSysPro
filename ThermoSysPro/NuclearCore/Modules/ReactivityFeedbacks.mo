@@ -406,45 +406,45 @@ The *ReactivityFeedbacks* model calculates the total reactivity by combining the
 - Burnable absorber (e.g., gadolinium) reactivity contribution
 
 The total reactivity is expressed in pcm and is obtained as the sum of the individual contributions. 
-The model supports multiple poison species (\\\\(Np \\\\)) and multiple control rod banks (\\\\(n_{rods} \\\\)) . 
+The model supports multiple poison species (\\\\(N_p \\\\)) and multiple control rod banks (\\\\(n_{rods} \\\\)) . 
 Control rod worth can be represented either by a constant differential worth or by user-defined rod-worth tables.
 
 
 ## Nomenclature
 
 | Symbol              | Description                     | Unit                                    | Definition                                                     | Modelica name       |
-| :-------------------: | :-------------------------------: | :---------------------------------------: | :--------------------------------------------------------------: |:-------------------: |
-| $$N_p$$             | Number of poison species        | -                                       | Number of neutron poisons considered                           | `Np`                |
-| $$k_{p,i}$$         | Poison coefficient              | $$\\mathrm{pcm}$$ per concentration unit | Converts poison concentration into reactivity                  | `kp[i]`             |
-| $$k_B$$             | Boron coefficient               | $$\\mathrm{pcm/ppm}$$                    | Soluble boron reactivity coefficient                           | `kB`                |
-| $$T_{ref,f}$$       | Reference fuel temperature      | $$\\mathrm{K}$$                          | Fuel temperature corresponding to zero Doppler feedback        | `Tref_fuel`         |
-| $$T_{ref,m}$$       | Reference moderator temperature | $$\\mathrm{K}$$                          | Moderator temperature corresponding to zero moderator feedback | `Tref_mod`          |
-| $$N_r$$             | Number of control rod groups    | -                                       | Number of independently controlled rod banks                   | `n_rods`            |
-| $$S_i$$             | Rod stroke                      | variable                                | Maximum insertion depth of rod group \\\\(i\\\\)                      | `rod_stroke[i]`     |
-| $$Z_{0,i}$$         | Initial rod position            | variable                                | Initial position of rod group \\\\(i\\\\)                           | `RodsPos0[i]`       |
-| $$W_i$$             | Differential rod worth          | $$\\mathrm{pcm}$$ per position unit      | Constant rod worth coefficient                                 | `rodWorth[i]`       |
-| $$Z_{node,i,j}$$    | Rod-worth table coordinate      | position unit                           | Position associated with rod-worth table node                  | `Z_rodNodes[i,j]`   |
-| $$RW_{i,j}$$        | Differential rod worth table    | $$\\mathrm{pcm}$$ per position unit      | Differential rod worth versus insertion depth                  | `rodWorth_tab[i,j]` |
-| $$CRW_{i,j}$$       | Cumulative rod worth table      | $$\\mathrm{pcm}$$                        | Integrated rod worth table                                     | `cumRodWorth[i,j]`  |
-| $$\\rho_{fuel,ref}$$ | Reference fuel reactivity       | $$\\mathrm{pcm}$$                        | Base reactivity offset                                         | `ReacFuel`          |
-| $$T_f$$       | Fuel temperature             | $$\\mathrm{K}$$     | Effective fuel temperature                        | `EntreeT_fuel.signal`   |
-| $$T_m$$       | Moderator temperature        | $$\\mathrm{K}$$     | Core-average moderator temperature                | `EntreeT_CoreAv.signal` |
-| $$C_B$$       | Boron concentration          | $$\\mathrm{ppm}$$   | Soluble boron concentration                       | `EntreeCbore.signal`    |
-| $$C_{p,i}$$   | Poison concentration         | concentration unit | Poison concentration of species \\\\(i\\\\)             | `EntreeCpois.signal[i]` |
-| $$\\alpha_m$$  | Moderator coefficient        | $$\\mathrm{pcm/K}$$ | Moderator temperature coefficient                 | `alfa_mod.signal`       |
-| $$\\alpha_D$$  | Doppler coefficient          | $$\\mathrm{pcm/K}$$ | Fuel Doppler coefficient                          | `alfa_dop.signal`       |
-| $$\\rho_{Gd}$$ | Burnable absorber reactivity | $$\\mathrm{pcm}$$   | Reactivity contribution from gadolinium depletion | `ReacGd.signal`         |
-| $$V_i$$       | Rod insertion velocity       | position unit/min  | Control rod motion speed                          | `RodsSpeeds.signal[i]`  |
-| $$Z_i$$        | Rod position                   | position unit    | Current insertion depth of rod group \\\\(i\\\\) | `RodsPos[i]`  |
-| $$k_i$$        | Effective rod position         | position unit    | Position used in rod-worth calculations    | `k[i]`        |
-| $$\\rho_B$$     | Rod-bank reactivity            | $$\\mathrm{pcm}$$ | Total control-rod contribution             | `ReacB`       |
-| $$\\rho_{B,i}$$ | Rod-bank contribution          | $$\\mathrm{pcm}$$ | Contribution of rod group \\\\(i\\\\)            | `ReacBi[i]`   |
-| $$\\rho_{SP}$$  | Soluble poison reactivity      | $$\\mathrm{pcm}$$ | Boron reactivity contribution              | `ReacSP`      |
-| $$\\rho_D$$     | Doppler reactivity             | $$\\mathrm{pcm}$$ | Fuel temperature effect                    | `ReacD`       |
-| $$\\rho_M$$     | Moderator reactivity           | $$\\mathrm{pcm}$$ | Moderator temperature effect               | `ReacM`       |
-| $$\\rho_P$$     | Poison reactivity              | $$\\mathrm{pcm}$$ | Total poison contribution                  | `ReacP`       |
-| $$\\rho_{P,i}$$ | Individual poison contribution | $$\\mathrm{pcm}$$ | Contribution of poison species \\\\(i\\\\)       | `ReacPi[i]`   |
-| $$\\rho$$       | Total reactivity               | $$\\mathrm{pcm}$$ | Sum of all reactivity contributions        | `Reac`        |
+|:------:|-------------|:----:|------------|--------------|
+| \\\\(N_p\\\\)             | Number of poison species        | -                                       | Number of neutron poisons considered                           | `Np`                |
+| \\\\(k_{p,i}\\\\)         | Poison coefficient              | \\\\(\\mathrm{pcm}\\\\) per concentration unit | Converts poison concentration into reactivity                  | `kp[i]`             |
+| \\\\(k_B\\\\)             | Boron coefficient               | \\\\(\\mathrm{pcm/ppm}\\\\)                    | Soluble boron reactivity coefficient                           | `kB`                |
+| \\\\(T_{ref,f}\\\\)       | Reference fuel temperature      | \\\\(\\mathrm{K}\\\\)                       | Fuel temperature corresponding to zero Doppler feedback        | `Tref_fuel`         |
+| \\\\(T_{ref,m}\\\\)       | Reference moderator temperature | \\\\(\\mathrm{K}\\\\)                         | Moderator temperature corresponding to zero moderator feedback | `Tref_mod`          |
+| \\\\(n_rods\\\\)             | Number of control rod groups    | -                                       | Number of independently controlled rod banks                   | `n_rods`            |
+| \\\\(S_i\\\\)             | Rod stroke                      | variable                                | Maximum insertion depth of rod group \\\\(i\\\\)                      | `rod_stroke[i]`     |
+| \\\\(Z_{0,i}\\\\)         | Initial rod position            | variable                                | Initial position of rod group \\\\(i\\\\)                           | `RodsPos0[i]`       |
+| \\\\(W_i\\\\)            | Differential rod worth          | \\\\(\\mathrm{pcm}\\\\) per position unit      | Constant rod worth coefficient                                 | `rodWorth[i]`       |
+| \\\\(Z_{node,i,j}\\\\)    | Rod-worth table coordinate      | position unit                           | Position associated with rod-worth table node                  | `Z_rodNodes[i,j]`   |
+| \\\\(RW_{i,j}\\\\)       | Differential rod worth table    | \\\\(\\mathrm{pcm}\\\\) per position unit      | Differential rod worth versus insertion depth                  | `rodWorth_tab[i,j]` |
+| \\\\(CRW_{i,j}\\\\)       | Cumulative rod worth table      | \\\\(\\mathrm{pcm}\\\\)                        | Integrated rod worth table                                     | `cumRodWorth[i,j]`  |
+| \\\\(\\rho_{fuel,ref}\\\\) | Reference fuel reactivity       | \\\\(\\mathrm{pcm}\\\\)                        | Base reactivity offset                                         | `ReacFuel`          |
+| \\\\(T_f\\\\)       | Fuel temperature             | \\\\(\\mathrm{K}\\\\)    | Effective fuel temperature                        | `EntreeT_fuel.signal`   |
+| \\\\(T_m\\\\)       | Moderator temperature        | \\\\(\\mathrm{K}\\\\)    | Core-average moderator temperature                | `EntreeT_CoreAv.signal` |
+| \\\\(C_B\\\\)       | Boron concentration          | \\\\(\\mathrm{ppm}\\\\)   | Soluble boron concentration                       | `EntreeCbore.signal`    |
+| \\\\(C_{p,i}\\\\)   | Poison concentration         | concentration unit | Poison concentration of species \\\\(i\\\\)             | `EntreeCpois.signal[i]` |
+| \\\\(\\alpha_m\\\\)  | Moderator coefficient        | \\\\(\\mathrm{pcm/K}\\\\) | Moderator temperature coefficient                 | `alfa_mod.signal`       |
+| \\\\(\\alpha_D\\\\)  | Doppler coefficient          | \\\\(\\mathrm{pcm/K}\\\\) | Fuel Doppler coefficient                          | `alfa_dop.signal`       |
+| \\\\(\\rho_{Gd}\\\\) | Burnable absorber reactivity | \\\\(\\mathrm{pcm}\\\\)   | Reactivity contribution from gadolinium depletion | `ReacGd.signal`         |
+| \\\\(V_i\\\\)       | Rod insertion velocity       | position unit/min  | Control rod motion speed                          | `RodsSpeeds.signal[i]`  |
+| \\\\(Z_i\\\\)       | Rod position                   | position unit    | Current insertion depth of rod group \\\\(i\\\\) | `RodsPos[i]`  |
+| \\\\(k_i\\\\)       | Effective rod position         | position unit    | Position used in rod-worth calculations    | `k[i]`        |
+| \\\\(\\rho_B\\\\)     | Rod-bank reactivity            | \\\\(\\mathrm{pcm}\\\\) | Total control-rod contribution             | `ReacB`       |
+| \\\\(\\rho_{B,i}\\\\) | Rod-bank contribution          | \\\\(\\mathrm{pcm}\\\\) | Contribution of rod group \\\\(i\\\\)            | `ReacBi[i]`   |
+| \\\\(\\rho_{SP}\\\\)  | Soluble poison reactivity      | \\\\(\\mathrm{pcm}\\\\) | Boron reactivity contribution              | `ReacSP`      |
+| \\\\(\\rho_D\\\\)     | Doppler reactivity             | \\\\(\\mathrm{pcm}\\\\) | Fuel temperature effect                    | `ReacD`       |
+| \\\\(\\rho_M\\\\)     | Moderator reactivity           | \\\\(\\mathrm{pcm}\\\\) | Moderator temperature effect               | `ReacM`       |
+| \\\\(\\rho_P\\\\)     | Poison reactivity              | \\\\(\\mathrm{pcm}\\\\) | Total poison contribution                  | `ReacP`       |
+| \\\\(\\rho_{P,i}\\\\) | Individual poison contribution | \\\\(\\mathrm{pcm}\\\\) | Contribution of poison species \\\\(i\\\\)       | `ReacPi[i]`   |
+| \\\\(\\rho\\\\)       | Total reactivity               | \\\\(\\mathrm{pcm}\\\\) | Sum of all reactivity contributions        | `Reac`        |
 
 
 ## Governing equations
