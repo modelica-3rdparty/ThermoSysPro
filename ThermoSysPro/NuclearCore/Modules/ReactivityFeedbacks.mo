@@ -415,11 +415,11 @@ Control rod worth can be represented either by a constant differential worth or 
 | Symbol              | Description                     | Unit                                    | Definition                                                     | Modelica name       |
 |:------:|-------------|:----:|------------|--------------|
 | \\\\(N_p\\\\)             | Number of poison species        | -                                       | Number of neutron poisons considered                           | `Np`                |
-| \\\\(k_{p,i}\\\\)         | Poison coefficient              | \\\\(\\mathrm{pcm}\\\\) per concentration unit | Converts poison concentration into reactivity                  | `kp[i]`             |
+| \\\\(k_{p,i}\\\\)         | Poison coefficient              | \\\\(\\mathrm{pcm/nuclides}\\\\) | Converts poison concentration into reactivity                  | `kp[i]`             |
 | \\\\(k_B\\\\)             | Boron coefficient               | \\\\(\\mathrm{pcm/ppm}\\\\)                    | Soluble boron reactivity coefficient                           | `kB`                |
 | \\\\(T_{ref,f}\\\\)       | Reference fuel temperature      | \\\\(\\mathrm{K}\\\\)                       | Fuel temperature corresponding to zero Doppler feedback        | `Tref_fuel`         |
 | \\\\(T_{ref,m}\\\\)       | Reference moderator temperature | \\\\(\\mathrm{K}\\\\)                         | Moderator temperature corresponding to zero moderator feedback | `Tref_mod`          |
-| \\\\(n_rods\\\\)             | Number of control rod groups    | -                                       | Number of independently controlled rod banks                   | `n_rods`            |
+| \\\\(n_{rods}\\\\)             | Number of control rod groups    | -                                       | Number of independently controlled rod banks                   | `n_rods`            |
 | \\\\(S_i\\\\)             | Rod stroke                      | variable                                | Maximum insertion depth of rod group \\\\(i\\\\)                      | `rod_stroke[i]`     |
 | \\\\(Z_{0,i}\\\\)         | Initial rod position            | variable                                | Initial position of rod group \\\\(i\\\\)                           | `RodsPos0[i]`       |
 | \\\\(W_i\\\\)            | Differential rod worth          | \\\\(\\mathrm{pcm}\\\\) per position unit      | Constant rod worth coefficient                                 | `rodWorth[i]`       |
@@ -430,7 +430,7 @@ Control rod worth can be represented either by a constant differential worth or 
 | \\\\(T_f\\\\)       | Fuel temperature             | \\\\(\\mathrm{K}\\\\)    | Effective fuel temperature                        | `EntreeT_fuel.signal`   |
 | \\\\(T_m\\\\)       | Moderator temperature        | \\\\(\\mathrm{K}\\\\)    | Core-average moderator temperature                | `EntreeT_CoreAv.signal` |
 | \\\\(C_B\\\\)       | Boron concentration          | \\\\(\\mathrm{ppm}\\\\)   | Soluble boron concentration                       | `EntreeCbore.signal`    |
-| \\\\(C_{p,i}\\\\)   | Poison concentration         | concentration unit | Poison concentration of species \\\\(i\\\\)             | `EntreeCpois.signal[i]` |
+| \\\\(C_{p,i}\\\\)   | Poison concentration         | nuclides | Poison concentration of species \\\\(i\\\\)             | `EntreeCpois.signal[i]` |
 | \\\\(\\alpha_m\\\\)  | Moderator coefficient        | \\\\(\\mathrm{pcm/K}\\\\) | Moderator temperature coefficient                 | `alfa_mod.signal`       |
 | \\\\(\\alpha_D\\\\)  | Doppler coefficient          | \\\\(\\mathrm{pcm/K}\\\\) | Fuel Doppler coefficient                          | `alfa_dop.signal`       |
 | \\\\(\\rho_{Gd}\\\\) | Burnable absorber reactivity | \\\\(\\mathrm{pcm}\\\\)   | Reactivity contribution from gadolinium depletion | `ReacGd.signal`         |
@@ -453,7 +453,7 @@ Control rod worth can be represented either by a constant differential worth or 
 The user can specify via an external input the control rod insertion speed \\\\( V_i \\\\). This can be used to compute the effective control rod position \\\\( k_i \\\\), which is constrained by the 
 stroke of the control rod group. Morever, via the dedicated flag `continuousInsertion`, it can be specified whether continuos or integer insertion steps should be considered.
 
-Two different models can be selected to compute the control rod insertion. Activating the `constant_rodWorth` option, the rodWorth is specified externally, e.g., to capture the burnup dependency.
+Two different models can be selected to compute the control rod insertion. Activating the `constant_rodWorth` option, the rod worth \\\\( W_i \\\\) is specified externally, e.g., to capture the burnup dependency.
 In contrast, a variable rod worth (dependending on the axial position) can be defined when `constant_rodWorth = false`.
 
 ### Temperature feedbacks
@@ -462,14 +462,14 @@ The reactivity insertion related to temperature feedbacks is computed in the for
 $$  \\rho = \\alpha (T - T_{ref}) $$
 
 where \\\\( \\alpha \\\\) are the feedback coefficients, specified externally to account for the burnup effect. For the Doppler effect, the temperature refers to the effective fuel temperature computed
-with [Rowland's model] (modelica://ThermoSysPro.NuclearCore.Modules.FuelThermalPower), whereas the moderator feedback is calculated considering the average coolant temperature.
+with [Rowland's model](modelica://ThermoSysPro.NuclearCore.Modules.FuelThermalPower), whereas the moderator feedback is calculated considering the average coolant temperature.
 
 ### Neutron poisons
 
 The contribution of three different kinds of neutron poisons is considered in the model, arising namely from fission products (e.g., xenon, samarium) and from the external injection of 
 soluble poisons (e.g., boron). The reactivity contributions are assumed to be proportional to the concentration of the species:
 
-$$  \\rho = k C $$
+$$  \\rho = k_P C_P $$
 
 Lastly, the user can specify the reactivity contributions of burnable poisons in the fuel (e.g., gadolinium).
 

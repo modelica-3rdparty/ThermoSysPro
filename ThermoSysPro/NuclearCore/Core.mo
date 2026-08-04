@@ -73,10 +73,10 @@ model Core
   parameter ThermoSysPro.Units.SI.Energy FissionEnergy = 3.2e-11 "Energy from each fission" annotation(Dialog(tab="Neutronics",group="Nuclear physics"));
   parameter Real FAtomicMass = 235.04393 "Fissil atomic mass" annotation(Dialog(tab="Neutronics",group="Nuclear physics"));
   parameter Real NeutronsPerFission = 2.43 "Average number of neutrons per thermal fission" annotation(Dialog(tab="Neutronics",group="Nuclear physics"));
-  parameter Real P_yield[Np] = {0.063,0.011} "Total fission yield of 135Iode" annotation(Dialog(tab="Neutronics",group="Poisoning"));
-  parameter Real D_yield[Np] = {0.002,0} "Total fission yield of 135Xenon" annotation(Dialog(tab="Neutronics",group="Poisoning"));
-  parameter Real P_decay[Np] = {2.95e-05,3.63e-06} "Total fission yield of 135Iode" annotation(Dialog(tab="Neutronics",group="Poisoning"));
-  parameter Real D_decay[Np] = {2.1e-05,0} "Total fission yield of 135Xenon" annotation(Dialog(tab="Neutronics",group="Poisoning"));
+  parameter Real P_yield[Np] = {0.063,0.011} "Total fission yield of parent nuclide" annotation(Dialog(tab="Neutronics",group="Poisoning"));
+  parameter Real D_yield[Np] = {0.002,0} "Total fission yield of daughter nuclide" annotation(Dialog(tab="Neutronics",group="Poisoning"));
+  parameter Real P_decay[Np] = {2.95e-05,3.63e-06} "Decay constant of parent nuclide" annotation(Dialog(tab="Neutronics",group="Poisoning"));
+  parameter Real D_decay[Np] = {2.1e-05,0} "Decay constant of daughter nuclide" annotation(Dialog(tab="Neutronics",group="Poisoning"));
   parameter ThermoSysPro.Units.SI.Area D_abs_CS[Np] = {3e-22,6.5e-23} "Microscopic absorption cross-section of 135Xenon" annotation(Dialog(tab="Neutronics",group="Poisoning"));
 
   parameter Real fuel_porosity=0.05 "Fuel porosity" annotation(Dialog(tab="Fuel", group="Fuel Properties"));

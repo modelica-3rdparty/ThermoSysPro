@@ -196,7 +196,7 @@ equation
     Documentation(info="# Decay heat module
 
 The *DecayHeat* module calculates the decay heat (or residual power) produced by radioactive decay of fission products the core.
-The model represents the decay heat source using a set of (\\\\(N \\\\)) equivalent groups of radioactive isotopes. Each group is characterized by:
+The model represents the decay heat source using a set of (\\\\(N \\\\)) equivalent groups. Each group is characterized by:
 
 - A fraction of the neutronic power associated with the group
 - A characteristic decay time constant
@@ -206,7 +206,7 @@ The model represents the decay heat source using a set of (\\\\(N \\\\)) equival
 
 |      Symbol     | Description                                           |        Unit        | Definition                                              | Modelica name   |
 |:------:|-------------|:----:|------------|--------------|
-|     \\\\( K_i\\\\)     | Power fraction associated with decay heat group \\\\(i \\\\) |          -         | Fraction of neutronic power contributing to group \\\\(i \\\\) | `Kris[i]`       |
+|     \\\\( K_i\\\\)     | Power fraction associated with decay heat group \\\\(i \\\\) |          -         | Fraction of power contributing to group \\\\(i \\\\) | `Kris[i]`       |
 |     \\\\( T_i\\\\)    | Decay time constant of group \\\\(i \\\\)                    | \\\\( \\mathrm{s} \\\\) | Characteristic response time of decay heat group \\\\(i \\\\)  | `Tris[i]`       |
 | \\\\( P_{res,i,0}\\\\) | Initial residual power of group \\\\(i \\\\)                 | \\\\( \\mathrm{W} \\\\) | Used when `steady_state = false`                        | `Pres_start[i]` |
 |      \\\\( N\\\\)      | Number of decay heat groups                           |          -         | Number of equivalent radioactive isotope groups         | `size(Kris,1)`  |

@@ -378,7 +378,7 @@ This module contains a model of the neutronic power with six groups of delayed n
 Starting from the total reactivity (model input from the *ReactivityFeedbacks* module), this module calculates the time evolution of the fission power of the reactor. 
 The total power take into account also the residual power (which is computed and provided by the *DecayHeat* module).
 
-The default values for \\\\(T_{life}\\\\) (*prompt neutron lifetime*), \\\\(\\beta\\\\) (*delayed neutron fraction*) and \\\\(\\lambda\\\\) (*decay constant*), valid for U235, are taken from *S. Marguet, La physique des réacteurs nucléaire, Ed. Lavoisier, 2013*.
+The default values for \\\\(T_{life}\\\\) (prompt neutron lifetime), \\\\(\\beta\\\\) (delayed neutron fraction) and \\\\(\\lambda\\\\) (decay constant), valid for U235, are taken from *S. Marguet, La physique des réacteurs nucléaire, Ed. Lavoisier, 2013*.
 
 The equations can also be derived from the same source, setting:
 - \\\\(n(t)\\\\) proportional to \\\\(P_{neut}\\\\)
@@ -390,7 +390,7 @@ The equations can also be derived from the same source, setting:
 |  \\\\(K_{fuel} \\\\) | Fuel power fraction         |          -         | Fraction of total reactor power deposited in the fuel | `Kfuel`              |
 | \\\\(P_{tot,0} \\\\) | Initial reactor power       | \\\\( \\mathrm{W} \\\\) | Initial total reactor power                           | `Ptot0`              |
 |   \\\\(E_f \\\\)    | Energy released per fission | \\\\( \\mathrm{J} \\\\) | Average recoverable energy per fission event          | `FissionEnergy`      |
-|    \\\\(\\nu \\\\)    | Neutrons per fission        |          -         | Average number of neutrons produced per fission       | `NeutronsPerFission` |
+|    \\\\(\\mathrm{\\nu} \\\\)    | Neutrons per fission        |          -         | Average number of neutrons produced per fission       | `NeutronsPerFission` |
 |    \\\\(\\rho \\\\)  | Reactor reactivity                      |           pcm           | Total reactivity inserted into the core                             | `Reactivity.signal` |
 |  \\\\(P_{res} \\\\)  | Decay heat power                        |    \\\\( \\mathrm{W} \\\\)   | Residual power provided by the decay heat model                     | `DecayHeat.signal`  |
 |     \\\\(S \\\\)     | External neutron source                 |   neutrons \\\\( \\mathrm{s^{-1}} \\\\)   | External neutron source strength                                    | `S.signal`          |
