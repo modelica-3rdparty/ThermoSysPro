@@ -1,12 +1,12 @@
 within ThermoSysPro.ConvectedQuantities.Components;
-block MassBalance4CVI "Mass Balance block for transported substances"
+block MassBalance4amineLeakage
+  "Mass Balance block for transported substances"
 
   import      ThermoSysPro.Units.SI;
   constant Real pi=Modelica.Constants.pi "pi";
 
   replaceable package Species =
-      ThermoSysPro.ConvectedQuantities.Substances.None
-                      annotation (
+      Substances.None annotation (
   choicesAllMatching=true);
 
   //replaceable package SinkAndSource =
@@ -41,12 +41,12 @@ block MassBalance4CVI "Mass Balance block for transported substances"
   //parameter Species.sink_and_source_list sink_and_source = Species.sink_and_source_list.none;
 
   parameter Boolean dynamic_mass_balance = false "true: dynamic mass balance equation - false: static mass balance equation";
-  parameter SI.Volume V = 10 "Volume used to compute the fluid mass for dynamic calculations and for degradation";
+  parameter SI.Volume V = 0 "Volume used to compute the fluid mass for dynamic calculations and for degradation";
 
-  input ThermoSysPro.ConvectedQuantities.Components.MixtureConnector mix_in[n_in](
-      redeclare package Species = Species)
+  input MixtureConnector                                mix_in[n_in](redeclare
+      package Species = Species)
     annotation (Placement(transformation(extent={{-70,-10},{-50,10}})));
-  output ThermoSysPro.ConvectedQuantities.Components.MixtureConnector mix_out[n_out](
+  output MixtureConnector                                mix_out[n_out](
       redeclare package Species = Species)
     annotation (Placement(transformation(extent={{50,-10},{70,10}})));
 
@@ -55,7 +55,7 @@ block MassBalance4CVI "Mass Balance block for transported substances"
 
   input SI.Density rho;
   input SI.Temperature T;
-  input Real NH3_CVI "Loss of NH3 [mg/s]";
+  input Real Qloss "Loss of massflow [kg/s]";
 
 //   SinkAndSource.SaS_None SaS(
 //     SubC=InternalConcentrations,
@@ -93,9 +93,9 @@ initial equation
 equation
 
     if dynamic_mass_balance == false then
-      in_Cflows - out_Tflow * InternalConcentrations = NH3_CVI*SaS.C;
+      in_Cflows - out_Tflow * InternalConcentrations = Qloss*InternalConcentrations;
     else
-      in_Cflows - out_Tflow * InternalConcentrations = V*rho*der(InternalConcentrations) + InternalConcentrations*(sum(Qin)-out_Tflow) + NH3_CVI*SaS.C;
+      in_Cflows - out_Tflow * InternalConcentrations = V*rho*der(InternalConcentrations) + InternalConcentrations*(sum(Qin)-out_Tflow) + Qloss*InternalConcentrations;
     end if;
 
 //     dist=zeros(size(InternalConcentrations,1));
@@ -141,12 +141,10 @@ equation
         preserveAspectRatio=false,
         extent={{-100,-100},{100,100}},
         grid={2,2}), graphics={Ellipse(
-          extent={{-62,60},{58,-60}},
+          extent={{-60,60},{60,-60}},
           lineColor={0,0,255},
           fillColor={85,170,255},
-          fillPattern=FillPattern.Solid,
-          startAngle=0,
-          endAngle=360)}),
+          fillPattern=FillPattern.Solid)}),
     Icon(coordinateSystem(
         preserveAspectRatio=true,
         extent={{-100,-100},{100,100}},
@@ -175,4 +173,4 @@ equation
 <li>Daniel Bouskela </li>
 </ul>
 </html>"));
-end MassBalance4CVI;
+end MassBalance4amineLeakage;
