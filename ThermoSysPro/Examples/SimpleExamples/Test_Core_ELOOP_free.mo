@@ -6,7 +6,8 @@ model Test_Core_ELOOP_free
     rod_stroke={100,100,100},
     RodsPos0={0,0,0},
     Rp=8.27E-03/2,
-    Length=2.86,
+    ActiveLength=2.86,
+    Length=3.10,
     Rclad=8.27E-03/2 + 8.38E-05,
     Rclad_out=8.27E-03/2 + 8.38E-05 + 5.71E-04,
     pitch=1.26E-02,
@@ -33,9 +34,9 @@ model Test_Core_ELOOP_free
     annotation (Placement(transformation(extent={{-200,-10},{-180,10}})));
   ThermoSysPro.InstrumentationAndControl.Blocks.Sources.Constante Group3(k=0)
     annotation (Placement(transformation(extent={{-200,20},{-180,40}})));
-  NuclearCore.Interfaces.BUinput bUinput annotation (Placement(transformation(
-          extent={{-114,-68},{-102,-56}}), iconTransformation(extent={{-114,-68},
-            {-102,-56}})));
+  NuclearCore.Interfaces.KineticParametersInput bUinput annotation (Placement(
+        transformation(extent={{-114,-68},{-102,-56}}), iconTransformation(
+          extent={{-114,-68},{-102,-56}})));
   InstrumentationAndControl.Blocks.Sources.Constante Burnup(k=0)
     annotation (Placement(transformation(extent={{-200,-72},{-180,-52}})));
   InstrumentationAndControl.AdaptorForFMU.AdaptorTSPModelica

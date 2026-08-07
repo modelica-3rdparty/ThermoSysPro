@@ -65,7 +65,8 @@ model Core
   parameter Real Enrichment = 0.02433 "Fuel enrichement" annotation(Dialog(tab="Fuel",group="Fuel Properties"));
 
   parameter ThermoSysPro.Units.SI.Radius Rp=4.05765E-03 "Radius of the fuel pellet" annotation(Dialog(tab="Fuel",group="Geometry"));
-  parameter ThermoSysPro.Units.SI.Length Length=4.270 "Active lenght of the fuel rods" annotation(Dialog(tab="Fuel",group="Geometry"));
+  parameter ThermoSysPro.Units.SI.Length ActiveLength=4.270 "Active length of the fuel rods" annotation(Dialog(tab="Fuel",group="Geometry"));
+  parameter ThermoSysPro.Units.SI.Length Length=4.270 "Lenght of the coolant channel" annotation(Dialog(tab="Fuel",group="Geometry"));
 
   parameter Integer Np =2 "Number of poisons" annotation(Dialog(tab="Neutronics",group="Poisoning"));
   parameter Real FastFissionFactor = 1.07 "Fast Fission Factor" annotation(Dialog(tab="Neutronics",group="Nuclear physics"));
@@ -120,7 +121,7 @@ model Core
     ntubes=TubesNumber,
     z1=0,
     z2=Length,
-    hcCorr=2*Rclad_out/PrimaryCoolantFlow_Core.D,
+    hcCorr=2*Rclad_out/PrimaryCoolantFlow_Core.D*ActiveLength/Length,
     Ns=Nz,
     simplified_dynamic_energy_balance=true,
     inertia=false,
@@ -149,7 +150,7 @@ model Core
     Rclad=Rclad,
     Nz=Nz,
     Nr=Nr,
-    Length=Length,
+    Length=ActiveLength,
     steady_state=Fuel_steady_state,
     Tstart=Tstart,
     heat_coeff_gap=heat_coeff_gap)
@@ -250,11 +251,13 @@ model Core
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal S1
     annotation (Placement(transformation(extent={{-170,32},{-150,52}}),
         iconTransformation(extent={{-170,32},{-150,52}})));
-  replaceable ThermoSysPro.NuclearCore.Modules.BU_Linear BUmodel(Nrods=n_rods)
-                                                                 constrainedby ThermoSysPro.NuclearCore.Interfaces.BUinterface
+  replaceable ThermoSysPro.NuclearCore.Modules.KinParam_BU_Linear
+                                                         BUmodel(Nrods=n_rods)
+    constrainedby
+    ThermoSysPro.NuclearCore.Interfaces.KineticParametersInterface
     annotation ( choicesAllMatching=true,Placement(transformation(extent={{-130,
             -84},{-88,-54}})));
-  Interfaces.BUinput bUinput
+  Interfaces.KineticParametersInput bUinput
     annotation (Placement(transformation(extent={{-170,-78},{-150,-58}})));
 equation
 
