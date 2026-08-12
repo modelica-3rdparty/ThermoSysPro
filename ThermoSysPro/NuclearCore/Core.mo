@@ -170,7 +170,7 @@ model Core
         origin={72,0})));
   ThermoSysPro.NuclearCore.Modules.NeutronKinetics Neutron_Kinetics(
     Kfuel=Kfuel,
-    Ptot0=MaximumPower,
+    Ptot0=Ptot0,
     FissionEnergy=FissionEnergy,
     NeutronsPerFission=NeutronsPerFission,
     Pneut(start=MaximumPower))
@@ -194,7 +194,7 @@ model Core
     constant_rodWorth=constant_rodWorth,
     rod_nodes=rod_nodes,
     continuosInsertion=continuosInsertion)
-    annotation (Placement(transformation(extent={{-68,40},{-12,104}})));
+    annotation (Placement(transformation(extent={{-68,40},{-16,100}})));
   ThermoSysPro.WaterSteam.Sensors.SensorT
                                      sensorTin(Q(start=NominalFlow)) annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
@@ -251,12 +251,11 @@ model Core
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal S1
     annotation (Placement(transformation(extent={{-170,32},{-150,52}}),
         iconTransformation(extent={{-170,32},{-150,52}})));
-  replaceable ThermoSysPro.NuclearCore.Modules.KinParam_BU_Linear
-                                                         BUmodel(Nrods=n_rods)
-    constrainedby
-    ThermoSysPro.NuclearCore.Interfaces.KineticParametersInterface
-    annotation ( choicesAllMatching=true,Placement(transformation(extent={{-130,
-            -84},{-88,-54}})));
+  replaceable ThermoSysPro.NuclearCore.Modules.KinParam_BU_Linear KinParam(Nrods=
+        n_rods) constrainedby
+    ThermoSysPro.NuclearCore.Interfaces.KineticParametersInterface annotation (
+      choicesAllMatching=true, Placement(transformation(extent={{-130,-84},{-88,
+            -54}})));
   Interfaces.KineticParametersInput bUinput
     annotation (Placement(transformation(extent={{-170,-78},{-150,-58}})));
 equation
@@ -266,10 +265,10 @@ equation
           {-80,2},{-80,-32},{-18,-32},{-18,-56},{-22.2,-56}},                                                                                                color={0,0,255}));
   connect(Neutron_Kinetics.Pneutrons, Residual_Power.Pneutrons) annotation (Line(points={{-22,10},
           {-14,10},{-14,-82},{-66,-82},{-66,-56},{-61.8,-56}},                                                                                               color={0,0,255}));
-  connect(Reactivity_Feedbacks.SortieReac, Neutron_Kinetics.Reactivity) annotation (Line(points={{-11.2,
-          72},{-4,72},{-4,34},{-74,34},{-74,16},{-64.8,16}},                                                                                                     color={0,0,255}));
+  connect(Reactivity_Feedbacks.SortieReac, Neutron_Kinetics.Reactivity) annotation (Line(points={{
+          -15.2571,70},{-4,70},{-4,34},{-74,34},{-74,16},{-64.8,16}},                                                                                            color={0,0,255}));
   connect(Fuel_Thermal_Power.Teff_fuel, Reactivity_Feedbacks.EntreeT_fuel) annotation (Line(points={{36,13.2},
-          {36,106},{-92,106},{-92,92.4},{-68.4,92.4}},                                                                                                   color={0,0,255}));
+          {36,106},{-92,106},{-92,92.5},{-68.3714,92.5}},                                                                                                color={0,0,255}));
   connect(Fuel_Thermal_Power.C_clad, heatExchangerWallCounterFlow.WT2) annotation (Line(points={{49.2,
           -0.12},{59,-0.12},{59,0},{68.8,0}},                                                                                                    color={0,0,0}));
   connect(heatExchangerWallCounterFlow.WT1, PrimaryCoolantFlow_Core.CTh) annotation (Line(points={{75.2,0},
@@ -283,8 +282,8 @@ equation
       color={0,0,255},
       pattern=LinePattern.Dot));
   connect(Tmoy.y, Reactivity_Feedbacks.EntreeT_CoreAv) annotation (Line(
-      points={{55,60},{50,60},{50,88},{-8,88},{-8,108},{-76,108},{-76,84.4},{-68.4,
-          84.4}},
+      points={{55,60},{50,60},{50,88},{-8,88},{-8,108},{-76,108},{-76,87.25},{
+          -68.3714,87.25}},
       color={0,0,255},
       pattern=LinePattern.Dot));
   connect(Neutron_Kinetics.TotalPower, Fuel_Thermal_Power.Wt_fuel) annotation (Line(points={{-22,3.2},
@@ -293,11 +292,12 @@ equation
           {126,18}},                                                                          color={0,0,0}));
   connect(PrimaryCoolantFlow_Core.C1, sensorTin.C2) annotation (Line(points={{126,-20},
           {126,-51.8}},                                                                          color={0,0,0}));
-  connect(Reactivity_Feedbacks.RodsSpeeds, RodsSpeeds1) annotation (Line(points={{-68.4,
-          100.4},{-144,100.4},{-144,90},{-160,90}},                       color
+  connect(Reactivity_Feedbacks.RodsSpeeds, RodsSpeeds1) annotation (Line(points={{
+          -68.3714,98.125},{-144,98.125},{-144,90},{-160,90}},            color
         ={0,0,255}));
   connect(Reactivity_Feedbacks.EntreeCbore, EntreeCbore1) annotation (Line(
-        points={{-68.4,76.4},{-96,76.4},{-96,76},{-122,76},{-122,0},{-158,0}},
+        points={{-68.3714,81.25},{-96,81.25},{-96,76},{-122,76},{-122,0},{-158,
+          0}},
         color={0,0,255}));
   connect(sensorTin.C1, C1_1) annotation (Line(points={{126,-72},{126,-86},{0,
           -86},{0,-118}},         color={0,0,0}));
@@ -319,33 +319,36 @@ equation
           {-14,28},{-14,-82},{-66,-82},{-66,-56},{-61.8,-56}},
                  color={0,0,255}));
   connect(xenon.Poisons, Reactivity_Feedbacks.EntreeCpois) annotation (Line(
-        points={{12.2,28},{20,28},{20,110},{-78,110},{-78,68.4},{-68.4,68.4}},
-                      color={0,0,255}));
+        points={{12.2,28},{20,28},{20,110},{-78,110},{-78,75.625},{-68.3714,
+          75.625}},   color={0,0,255}));
   connect(Neutron_Kinetics.S, S1) annotation (Line(points={{-64.8,9.2},{-144,9.2},
           {-144,42},{-160,42}}, color={0,0,255}));
-  connect(bUinput, BUmodel.BUinput) annotation (Line(points={{-160,-68},{-150,-68},
-          {-150,-70},{-130,-70},{-130,-69}}, color={0,140,72}));
-  connect(BUmodel.outputReal[1], Reactivity_Feedbacks.alfa_mod) annotation (
-      Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,61.2},{-68.4,
-          61.2}}, color={0,0,255}));
-  connect(BUmodel.outputReal[2], Reactivity_Feedbacks.alfa_dop) annotation (
-      Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,54.2},{-68.4,
-          54.2}}, color={0,0,255}));
-  connect(BUmodel.outputReal[3], Reactivity_Feedbacks.ReacGd) annotation (Line(
-        points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,48.6},{-68.4,48.6}},
-        color={0,0,255}));
-  connect(BUmodel.outputReal[4], Neutron_Kinetics.Tlife) annotation (Line(
+  connect(bUinput, KinParam.BUinput) annotation (Line(points={{-160,-68},{-150,
+          -68},{-150,-70},{-130,-70},{-130,-69}}, color={0,140,72}));
+  connect(KinParam.outputReal[1], Reactivity_Feedbacks.alfa_mod) annotation (
+      Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,69.625},{
+          -68.3714,69.625}}, color={0,0,255}));
+  connect(KinParam.outputReal[2], Reactivity_Feedbacks.alfa_dop) annotation (
+      Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,64.5625},{
+          -68.3714,64.5625}}, color={0,0,255}));
+  connect(KinParam.outputReal[3], Reactivity_Feedbacks.ReacGd) annotation (Line(
+        points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,58.5625},{
+          -68.3714,58.5625}}, color={0,0,255}));
+  connect(KinParam.outputReal[4], Neutron_Kinetics.Tlife) annotation (Line(
         points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,-17.6},{-65.2,
           -17.6}}, color={0,0,255}));
-  connect(BUmodel.outputReal[5:10], Neutron_Kinetics.Lambda) annotation (Line(
-        points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,-4.4},{-65.2,-4.4}},
-        color={0,0,255}));
-  connect(BUmodel.outputReal[11:16], Neutron_Kinetics.Beta) annotation (Line(
+  connect(KinParam.outputReal[5:10], Neutron_Kinetics.Lambda) annotation (Line(
+        points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,-4.4},{-65.2,
+          -4.4}}, color={0,0,255}));
+  connect(KinParam.outputReal[11:16], Neutron_Kinetics.Beta) annotation (Line(
         points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,-11.2},{-65.2,
           -11.2}}, color={0,0,255}));
-  connect(BUmodel.outputReal[17:end], Reactivity_Feedbacks.rodWorth)
-    annotation (Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,43},
-          {-68.4,43}}, color={0,0,255}));
+  connect(KinParam.outputReal[17], Reactivity_Feedbacks.deltaReacFuel)
+    annotation (Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,
+          45.8125},{-68.3714,45.8125}}, color={0,0,255}));
+  connect(KinParam.outputReal[18:end], Reactivity_Feedbacks.rodWorth)
+    annotation (Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,
+          52.5625},{-68.3714,52.5625}}, color={0,0,255}));
   annotation (
     experiment(StopTime=1000),
     Documentation(info="<html>

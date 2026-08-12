@@ -29,7 +29,7 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback due to 
 
   parameter Real cumRodWorth[n_rods, rod_nodes+3] = {ThermoSysPro.Functions.CumulativeIntegral(rod_nodes+3, Z_rodNodes[i], rodWorth_tab[i]) for i in 1:n_rods} "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=false,group="Control Rods Parameters"));
 
-  parameter Real ReacFuel(start=1000,fixed=false) "Reference Reactivity of Fuel" annotation(Dialog(group="Reference State"));
+  parameter Real ReacFuel0(start=1000,fixed=false) "Reference Reactivity of Fuel" annotation(Dialog(group="Reference State"));
 
   Real RodsPos[n_rods] "Position of groups (steps)";
   Real RodsSpeedsValue[n_rods] "Velocity of rods groups (insertion in step/min)";
@@ -48,42 +48,47 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback due to 
  Real ReacM "Reactivity given by the moderator effect (pcm)";
   Real ReacP "Reactivity given by the poisons (pcm)";
   Real ReacPi[Np] "Reactivity given by the poisons (pcm)";
+   Real ReacFuel;
 
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal SortieReac
     annotation (extent=[100, 70; 120, 90], Placement(transformation(extent={{134,-10},
             {154,10}},         rotation=0), iconTransformation(extent={{134,-10},
             {154,10}})));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal EntreeCbore
-    annotation (extent=[-120, -70; -100, -50], Placement(transformation(extent={{-152,12},
-            {-132,32}},              rotation=0)));
+    annotation (extent=[-120, -70; -100, -50], Placement(transformation(extent={{-152,50},
+            {-132,70}},              rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal EntreeT_CoreAv
-    annotation (extent=[-120, -30; -100, -10], Placement(transformation(extent={{-152,52},
-            {-132,72}},              rotation=0)));
+    annotation (extent=[-120, -30; -100, -10], Placement(transformation(extent={{-152,82},
+            {-132,102}},             rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal EntreeT_fuel
-    annotation (extent=[-120, 10; -100, 30], Placement(transformation(extent={{-152,92},
-            {-132,112}},         rotation=0)));
+    annotation (extent=[-120, 10; -100, 30], Placement(transformation(extent={{-152,
+            110},{-132,130}},    rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal RodsSpeeds[n_rods]
     annotation (extent=[-120,90; -100,110], Placement(transformation(extent={{-152,
-            132},{-132,152}},
+            140},{-132,160}},
                             rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal EntreeCpois[Np]
-    annotation (extent=[-120,-110; -100,-90], Placement(transformation(extent={{-152,
-            -28},{-132,-8}},       rotation=0)));
+    annotation (extent=[-120,-110; -100,-90], Placement(transformation(extent={{-152,20},
+            {-132,40}},            rotation=0)));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal alfa_mod
     annotation (extent=[-120,-110; -100,-90], Placement(transformation(extent={{-152,
-            -64},{-132,-44}},      rotation=0), iconTransformation(extent={{-152,
-            -64},{-132,-44}})));
+            -12},{-132,8}},        rotation=0), iconTransformation(extent={{-152,
+            -12},{-132,8}})));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal alfa_dop
     annotation (extent=[-120,-110; -100,-90], Placement(transformation(extent={{-152,
-            -98},{-132,-80}},       rotation=0), iconTransformation(extent={{-152,
-            -98},{-132,-80}})));
+            -38},{-132,-20}},       rotation=0), iconTransformation(extent={{-152,
+            -38},{-132,-20}})));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal ReacGd
-    annotation (extent=[-120,-110; -100,-90], Placement(transformation(extent={{
-            -154,-122},{-134,-104}}, rotation=0), iconTransformation(extent={{-152,
-            -126},{-132,-108}})));
+    annotation (extent=[-120,-110; -100,-90], Placement(transformation(extent={{-152,
+            -68},{-132,-50}},        rotation=0), iconTransformation(extent={{-152,
+            -70},{-132,-52}})));
   ThermoSysPro.InstrumentationAndControl.Connectors.InputReal rodWorth[n_rods] annotation (extent=[-120,-110; -100,-90], Placement(
-        transformation(extent={{-154,-150},{-134,-132}}, rotation=0),
-        iconTransformation(extent={{-152,-154},{-132,-136}})));
+        transformation(extent={{-152,-100},{-132,-82}},  rotation=0),
+        iconTransformation(extent={{-152,-102},{-132,-84}})));
+  InstrumentationAndControl.Connectors.InputReal deltaReacFuel annotation (
+      extent=[-120,-110; -100,-90], Placement(transformation(extent={{-152,-128},
+            {-132,-110}}, rotation=0), iconTransformation(extent={{-152,-138},{-132,
+            -120}})));
 initial equation
   RodsPos = RodsPos0;
 
@@ -132,6 +137,8 @@ equation
   ReacP = sum(ReacPi);
   ReacPi =kp.*Cpois;
 
+  ReacFuel = ReacFuel0+ deltaReacFuel.signal;
+
   /* Total reactivity*/
   Reac = ReacFuel + ReacB + ReacD + ReacM + ReacP + ReacSP + ReacGd.signal;
 
@@ -139,22 +146,22 @@ equation
       coordinateSystem(extent={{-140,-160},{140,160}}),
       graphics={
         Text(
-          extent={{-170,28},{-170,16}},
+          extent={{-172,66},{-172,54}},
           textColor={0,0,255},
           textString=
                "Cbore"),
         Text(
-          extent={{-178,68},{-178,56}},
+          extent={{-182,96},{-182,84}},
           textColor={0,0,255},
           textString=
                "T_CoreAv"),
         Text(
-          extent={{-170,106},{-170,94}},
+          extent={{-176,128},{-176,116}},
           textColor={0,0,255},
           textString=
                "T_fuel"),
         Text(
-          extent={{-184,148},{-184,136}},
+          extent={{-184,156},{-184,144}},
           textColor={0,0,255},
           textString="RodSpeed"),
         Text(
@@ -183,25 +190,29 @@ equation
           textString=
                "%name"),
         Text(
-          extent={{-170,-12},{-170,-24}},
+          extent={{-174,36},{-174,24}},
           textColor={0,0,255},
           textString="Cpois"),
         Text(
-          extent={{-176,-48},{-176,-60}},
+          extent={{-176,4},{-176,-8}},
           textColor={0,0,255},
           textString="alfa_mod"),
         Text(
-          extent={{-176,-82},{-176,-94}},
+          extent={{-174,-24},{-174,-36}},
           textColor={0,0,255},
           textString="alfa_dop"),
         Text(
-          extent={{-176,-110},{-176,-122}},
+          extent={{-174,-54},{-174,-66}},
           textColor={0,0,255},
           textString="ReacGd"),
         Text(
-          extent={{-176,-140},{-176,-152}},
+          extent={{-178,-86},{-178,-98}},
           textColor={0,0,255},
-          textString="RodWorth")},
+          textString="RodWorth"),
+        Text(
+          extent={{-186,-124},{-186,-136}},
+          textColor={0,0,255},
+          textString="deltaReacFuel")},
       Text(
         extent=[-136, -78; -136, -90],
         style(color=3, rgbcolor={0,0,255}),
@@ -286,26 +297,26 @@ equation
           textColor={0,0,255},
           textString="Reactivity Feedback"),
         Text(
-          extent={{-184,158},{-184,146}},
+          extent={{-190,156},{-190,144}},
           textColor={0,0,255},
           textString="RodsSpeeds"),
         Text(
-          extent={{-174,118},{-174,106}},
+          extent={{-176,128},{-176,116}},
           textColor={0,0,255},
           textString=
                "T_fuel"),
         Text(
-          extent={{-170,86},{-170,74}},
+          extent={{-180,96},{-180,84}},
           textColor={0,0,255},
           textString=
                "T_CoreAv"),
         Text(
-          extent={{-166,46},{-166,34}},
+          extent={{-172,64},{-172,52}},
           textColor={0,0,255},
           textString=
                "Cbore"),
         Text(
-          extent={{-162,6},{-162,-6}},
+          extent={{-174,34},{-174,22}},
           textColor={0,0,255},
           textString="Cpois"),
         Text(
@@ -314,21 +325,25 @@ equation
           textString=
                "Reac"),
         Text(
-          extent={{-176,-66},{-176,-78}},
+          extent={{-174,-24},{-174,-36}},
           textColor={0,0,255},
           textString="alfa_dop"),
         Text(
-          extent={{-176,-30},{-176,-42}},
+          extent={{-176,4},{-176,-8}},
           textColor={0,0,255},
           textString="alfa_mod"),
         Text(
-          extent={{-176,-98},{-176,-110}},
+          extent={{-176,-52},{-176,-64}},
           textColor={0,0,255},
           textString="ReacGd"),
         Text(
-          extent={{-180,-128},{-180,-140}},
+          extent={{-180,-86},{-180,-98}},
           textColor={0,0,255},
-          textString="RodWorth")},
+          textString="RodWorth"),
+        Text(
+          extent={{-190,-114},{-190,-126}},
+          textColor={0,0,255},
+          textString="deltaReacFuel")},
       Ellipse(extent=[-100, 102; 100, -18], style(
           color=3,
           rgbcolor={0,0,255},

@@ -1,10 +1,11 @@
 within ThermoSysPro.NuclearCore.Modules;
 model KinParam_BU_Linear
   extends ThermoSysPro.NuclearCore.Interfaces.KineticParametersInterface;
-  Modelica.Blocks.Tables.CombiTable1Ds combiTable1Ds(table=[0,-30,-3,0,2e-05,
-        0.0124,0.0305,0.111,0.301,1.14,3.01,0.00021,0.00142,0.00128,0.00257,
-        0.00075,0.00027,-10,0,0; 1,-30,-3,0,2e-05,0.0124,0.0305,0.111,0.301,
-        1.14,3.01,0.00021,0.00142,0.00128,0.00257,0.00075,0.00027,-10,0,0])
+
+  Modelica.Blocks.Tables.CombiTable1Ds combiTable1Ds(table=[0,-30,-3,0,2e-05,0.0124,
+        0.0305,0.111,0.301,1.14,3.01,0.00021,0.00142,0.00128,0.00257,0.00075,0.00027,
+        0,-10,0,0; 1,-30,-3,0,2e-05,0.0124,0.0305,0.111,0.301,1.14,3.01,0.00021,
+        0.00142,0.00128,0.00257,0.00075,0.00027,0,-10,0,0])
     annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
 equation
   connect(BUinput.Burnup, combiTable1Ds.u) annotation (Line(points={{-100,0},{

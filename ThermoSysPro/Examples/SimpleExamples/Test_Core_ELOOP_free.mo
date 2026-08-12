@@ -3,6 +3,7 @@ model Test_Core_ELOOP_free
 
   NuclearCore.Core core(
     n_rods=3,
+    steady_state=true,
     rod_stroke={100,100,100},
     RodsPos0={0,0,0},
     Rp=8.27E-03/2,

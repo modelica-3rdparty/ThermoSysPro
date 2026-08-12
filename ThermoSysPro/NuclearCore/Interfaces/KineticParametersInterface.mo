@@ -3,9 +3,9 @@ partial model KineticParametersInterface
   parameter Integer Nrods = 3;
   ThermoSysPro.NuclearCore.Interfaces.KineticParametersInput BUinput
     annotation (Placement(transformation(extent={{-110,-10},{-90,10}})));
-  InstrumentationAndControl.AdaptorForFMU.AdaptorModelicaTSP adaptorModelicaTSP[16 +
+  InstrumentationAndControl.AdaptorForFMU.AdaptorModelicaTSP adaptorModelicaTSP[17 +
     Nrods] annotation (Placement(transformation(extent={{46,-10},{66,10}})));
-  InstrumentationAndControl.Connectors.OutputReal outputReal[16 + Nrods]
+  InstrumentationAndControl.Connectors.OutputReal outputReal[17 + Nrods]
     annotation (Placement(transformation(extent={{94,-10},{114,10}})));
 equation
   connect(adaptorModelicaTSP.outputReal,outputReal)
@@ -16,11 +16,12 @@ equation
           lineColor={28,108,200},
           fillColor={215,215,215},
           fillPattern=FillPattern.Solid), Text(
-          extent={{-68,98},{76,-102}},
+          extent={{-90,94},{98,-96}},
           textColor={28,108,200},
-          textString="BUmodel")}), Diagram(coordinateSystem(preserveAspectRatio
+          textString="Kinetic
+Parameters")}),                    Diagram(coordinateSystem(preserveAspectRatio
           =false), graphics={                   Text(
-          extent={{4,-4},{102,-130}},
+          extent={{4,4},{108,-132}},
           textColor={28,108,200},
           horizontalAlignment=TextAlignment.Left,
           textString="1. alfa_mod
@@ -29,7 +30,8 @@ equation
 4. Tlife
 5-10. Lambda
 11-16. Beta
-17-(17+Nrods). RodsWorth")}),
+17. deltaReacFuel
+18-(18+Nrods). RodsWorth")}),
     Documentation(info="# Kinetic parameters
 
 The `KineticParametersInterface` component provides the kinetic and reactivity coefficients required by the reactor core model. 
