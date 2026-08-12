@@ -18,16 +18,15 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback due to 
 
   parameter Boolean continuosInsertion = true "Whether to use constant rod worths or tables" annotation(Dialog(group="Control Rods Parameters"),choices(checkBox=true));
 
-  parameter Boolean constant_rodWorth = true "Whether to use constant rod worths or tables" annotation(Dialog(group="Control Rods Parameters"),choices(checkBox=true));
-  parameter Integer rod_nodes = 10 "Number of sections in the rod worth tables" annotation(Dialog(group="Control Rods Parameters",enable=not
-                                                                                                                                            (constant_rodWorth)));
+  parameter Integer rodWorthModel = 0 "0: constant worth, 1: S-shape, 2: table" annotation(Dialog(group="Control Rods Parameters"),choices(checkBox=true));
 
-  parameter Real Z_rodNodes[n_rods,rod_nodes + 3]={{i*rod_stroke[j]/rod_nodes for i in -1:rod_nodes + 1} for j in 1:n_rods} "Z of rodworth sections" annotation (Dialog(group="Control Rods Parameters", enable=not (constant_rodWorth)));
+  parameter Integer rod_nodes = 10 "Number of sections in the rod worth tables" annotation(Dialog(group="Control Rods Parameters",enable=rodWorthModel==2));
 
-  parameter Real rodWorth_tab[n_rods, rod_nodes+3] = zeros(n_rods, rod_nodes+3) "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=not
-                                                                                                                                                               (constant_rodWorth),group="Control Rods Parameters"));
+  parameter Real Z_rodNodes[n_rods,rod_nodes + 3]={{i*rod_stroke[j]/rod_nodes for i in -1:rod_nodes + 1} for j in 1:n_rods} "Z of rodworth sections" annotation (Dialog(group="Control Rods Parameters", enable=rodWorthModel==2));
 
-  parameter Real cumRodWorth[n_rods, rod_nodes+3] = {ThermoSysPro.Functions.CumulativeIntegral(rod_nodes+3, Z_rodNodes[i], rodWorth_tab[i]) for i in 1:n_rods} "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=false,group="Control Rods Parameters"));
+  parameter Real rodWorth_tab[n_rods, rod_nodes+3] = zeros(n_rods, rod_nodes+3) "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=rodWorthModel==2,group="Control Rods Parameters"));
+
+  parameter Real cumRodWorth[n_rods, rod_nodes+3] = {ThermoSysPro.Functions.CumulativeIntegral(rod_nodes+3, Z_rodNodes[i], rodWorth_tab[i]) for i in 1:n_rods} "Cumulative rod worth" annotation(Dialog(enable=false,group="Control Rods Parameters"));
 
   parameter Real ReacFuel0(start=1000,fixed=false) "Reference Reactivity of Fuel" annotation(Dialog(group="Reference State"));
 
@@ -48,7 +47,8 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback due to 
  Real ReacM "Reactivity given by the moderator effect (pcm)";
   Real ReacP "Reactivity given by the poisons (pcm)";
   Real ReacPi[Np] "Reactivity given by the poisons (pcm)";
-   Real ReacFuel;
+  Real ReacFuel;
+
 
   ThermoSysPro.InstrumentationAndControl.Connectors.OutputReal SortieReac
     annotation (extent=[100, 70; 120, 90], Placement(transformation(extent={{134,-10},
@@ -89,6 +89,11 @@ model ReactivityFeedbacks "This module calculates the neutronic feedback due to 
       extent=[-120,-110; -100,-90], Placement(transformation(extent={{-152,-128},
             {-132,-110}}, rotation=0), iconTransformation(extent={{-152,-138},{-132,
             -120}})));
+
+ protected
+  constant Real pi = Modelica.Constants.pi "pi";
+
+
 initial equation
   RodsPos = RodsPos0;
 
@@ -120,7 +125,15 @@ equation
       k[i] =min(rod_stroke[i], integer(max(floor(RodsPos[i] + 0.5), 0)));
     end if;
 
-    ReacBi[i] = if constant_rodWorth then k[i]*rodWorth[i].signal else ThermoSysPro.Functions.LinearInterpolation(Z_rodNodes[i], cumRodWorth[i], RodsPos[i]);
+    if rodWorthModel==0 then
+      ReacBi[i] = k[i]*rodWorth[i].signal;
+    elseif rodWorthModel==1 then
+      ReacBi[i] = rodWorth[i].signal*(k[i]/rod_stroke[i]-1/2/pi*sin(2*pi*k[i]/rod_stroke[i]));
+    elseif rodWorthModel==2 then
+      ReacBi[i] =  ThermoSysPro.Functions.LinearInterpolation(Z_rodNodes[i], cumRodWorth[i], RodsPos[i]);
+    else
+      assert(false,"Unsupported rodWorthModel = " + String(rodWorthModel) +". Supported values are 0, 1 and 2.");
+    end if;
   end for;
 
 

@@ -45,18 +45,21 @@ model Core
   parameter Real rod_stroke[n_rods] = {100,100,100} "Rod Stroke in the core (in steps, cm...)" annotation(Dialog(tab = "Neutronics",group="Control Rods Parameters"));
   parameter Real RodsPos0[n_rods]={10,0,0} "Control rods initial position (0 -> completely extracted from the core)" annotation(Dialog(tab = "Neutronics",group="Control Rods Parameters"));
 
-  parameter Boolean constant_rodWorth = true "Whether to use constant rod worths or tables" annotation(Dialog(tab = "Neutronics",group="Control Rods Parameters"),choices(checkBox=true));
-  parameter Integer rod_nodes = 10 "Number of sections in the rod worth tables" annotation(Dialog(tab = "Neutronics",group="Control Rods Parameters",enable=not
-                                                                                                                                                               (constant_rodWorth)));
-  parameter Boolean continuosInsertion = true "Whether to use constant rod worths or tables" annotation(Dialog(tab = "Neutronics",group="Control Rods Parameters"),choices(checkBox=true));
+    parameter Boolean continuosInsertion = true "Whether to use constant rod worths or tables" annotation(Dialog(tab = "Neutronics",group="Control Rods Parameters"),choices(checkBox=true));
 
-  parameter Real Z_rodNodes[n_rods,rod_nodes+3] = {{i*rod_stroke[j]/rod_nodes for i in -1:rod_nodes+1} for j in 1:n_rods} "Z of rodworth sections" annotation(Dialog(tab = "Neutronics",group="Control Rods Parameters",enable=not
-                                                                                                                                                                                                        (constant_rodWorth)));
 
-  parameter Real rodWorth_tab[n_rods, rod_nodes+3] = fill({0, 0, 5, 9, 12, 14, 15, 14, 12, 9, 5, 0, 0},n_rods)  "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=not         (constant_rodWorth),tab = "Neutronics",group="Control Rods Parameters"));
+  parameter Integer rodWorthModel = 0 "0: constant worth, 1: S-shape, 2: table" annotation(Dialog(tab = "Neutronics",group="Control Rods Parameters"));
 
-  parameter Real cumRodWorth[n_rods, rod_nodes+3] = {ThermoSysPro.Functions.CumulativeIntegral(rod_nodes+3, Z_rodNodes[i], rodWorth_tab[i,:]) for i in 1:n_rods}
-    "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=false,tab = "Neutronics",group="Control Rods Parameters"));
+  parameter Integer rod_nodes = 10 "Number of sections in the rod worth tables" annotation(Dialog(tab = "Neutronics",group="Control Rods Parameters",enable=rodWorthModel==2));
+
+  parameter Real Z_rodNodes[n_rods,rod_nodes + 3]={{i*rod_stroke[j]/rod_nodes for i in -1:rod_nodes + 1} for j in 1:n_rods} "Z of rodworth sections" annotation (Dialog(tab = "Neutronics",group="Control Rods Parameters", enable=rodWorthModel==2));
+
+  parameter Real rodWorth_tab[n_rods, rod_nodes+3] = zeros(n_rods, rod_nodes+3) "Rod Worth of as a function of Z (see Z_rodNodes)" annotation(Dialog(enable=rodWorthModel==2,tab = "Neutronics",group="Control Rods Parameters"));
+
+
+
+
+
 
   parameter Boolean Pois_steady_state = true "Steady-state (true) or fixed values (false) initialization" annotation(Dialog(tab="Initialisation"));
   parameter Real Xe_start[Np] = fill(0, Np) "Initial concentration of Xenon (if steady_state=false)" annotation (Dialog(tab="Initialisation",enable=not steady_state));
@@ -191,10 +194,10 @@ model Core
     n_rods=n_rods,
     rod_stroke=rod_stroke,
     RodsPos0=RodsPos0,
-    constant_rodWorth=constant_rodWorth,
+    rodWorthModel=rodWorthModel,
     rod_nodes=rod_nodes,
     continuosInsertion=continuosInsertion)
-    annotation (Placement(transformation(extent={{-68,40},{-16,100}})));
+    annotation (Placement(transformation(extent={{-66,40},{-14,100}})));
   ThermoSysPro.WaterSteam.Sensors.SensorT
                                      sensorTin(Q(start=NominalFlow)) annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
@@ -266,9 +269,9 @@ equation
   connect(Neutron_Kinetics.Pneutrons, Residual_Power.Pneutrons) annotation (Line(points={{-22,10},
           {-14,10},{-14,-82},{-66,-82},{-66,-56},{-61.8,-56}},                                                                                               color={0,0,255}));
   connect(Reactivity_Feedbacks.SortieReac, Neutron_Kinetics.Reactivity) annotation (Line(points={{
-          -15.2571,70},{-4,70},{-4,34},{-74,34},{-74,16},{-64.8,16}},                                                                                            color={0,0,255}));
+          -13.2571,70},{-4,70},{-4,34},{-74,34},{-74,16},{-64.8,16}},                                                                                            color={0,0,255}));
   connect(Fuel_Thermal_Power.Teff_fuel, Reactivity_Feedbacks.EntreeT_fuel) annotation (Line(points={{36,13.2},
-          {36,106},{-92,106},{-92,92.5},{-68.3714,92.5}},                                                                                                color={0,0,255}));
+          {36,106},{-92,106},{-92,92.5},{-66.3714,92.5}},                                                                                                color={0,0,255}));
   connect(Fuel_Thermal_Power.C_clad, heatExchangerWallCounterFlow.WT2) annotation (Line(points={{49.2,
           -0.12},{59,-0.12},{59,0},{68.8,0}},                                                                                                    color={0,0,0}));
   connect(heatExchangerWallCounterFlow.WT1, PrimaryCoolantFlow_Core.CTh) annotation (Line(points={{75.2,0},
@@ -282,8 +285,8 @@ equation
       color={0,0,255},
       pattern=LinePattern.Dot));
   connect(Tmoy.y, Reactivity_Feedbacks.EntreeT_CoreAv) annotation (Line(
-      points={{55,60},{50,60},{50,88},{-8,88},{-8,108},{-76,108},{-76,87.25},{
-          -68.3714,87.25}},
+      points={{55,60},{50,60},{50,88},{-8,88},{-8,108},{-76,108},{-76,87.25},{-66.3714,
+          87.25}},
       color={0,0,255},
       pattern=LinePattern.Dot));
   connect(Neutron_Kinetics.TotalPower, Fuel_Thermal_Power.Wt_fuel) annotation (Line(points={{-22,3.2},
@@ -293,11 +296,10 @@ equation
   connect(PrimaryCoolantFlow_Core.C1, sensorTin.C2) annotation (Line(points={{126,-20},
           {126,-51.8}},                                                                          color={0,0,0}));
   connect(Reactivity_Feedbacks.RodsSpeeds, RodsSpeeds1) annotation (Line(points={{
-          -68.3714,98.125},{-144,98.125},{-144,90},{-160,90}},            color
+          -66.3714,98.125},{-144,98.125},{-144,90},{-160,90}},            color
         ={0,0,255}));
   connect(Reactivity_Feedbacks.EntreeCbore, EntreeCbore1) annotation (Line(
-        points={{-68.3714,81.25},{-96,81.25},{-96,76},{-122,76},{-122,0},{-158,
-          0}},
+        points={{-66.3714,81.25},{-96,81.25},{-96,76},{-122,76},{-122,0},{-158,0}},
         color={0,0,255}));
   connect(sensorTin.C1, C1_1) annotation (Line(points={{126,-72},{126,-86},{0,
           -86},{0,-118}},         color={0,0,0}));
@@ -319,36 +321,36 @@ equation
           {-14,28},{-14,-82},{-66,-82},{-66,-56},{-61.8,-56}},
                  color={0,0,255}));
   connect(xenon.Poisons, Reactivity_Feedbacks.EntreeCpois) annotation (Line(
-        points={{12.2,28},{20,28},{20,110},{-78,110},{-78,75.625},{-68.3714,
-          75.625}},   color={0,0,255}));
+        points={{12.2,28},{20,28},{20,110},{-78,110},{-78,75.625},{-66.3714,75.625}},
+                      color={0,0,255}));
   connect(Neutron_Kinetics.S, S1) annotation (Line(points={{-64.8,9.2},{-144,9.2},
           {-144,42},{-160,42}}, color={0,0,255}));
-  connect(bUinput, KinParam.BUinput) annotation (Line(points={{-160,-68},{-150,
-          -68},{-150,-70},{-130,-70},{-130,-69}}, color={0,140,72}));
+  connect(bUinput, KinParam.BUinput) annotation (Line(points={{-160,-68},{-150,-68},
+          {-150,-70},{-130,-70},{-130,-69}}, color={0,140,72}));
   connect(KinParam.outputReal[1], Reactivity_Feedbacks.alfa_mod) annotation (
-      Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,69.625},{
-          -68.3714,69.625}}, color={0,0,255}));
+      Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,69.625},{-66.3714,
+          69.625}}, color={0,0,255}));
   connect(KinParam.outputReal[2], Reactivity_Feedbacks.alfa_dop) annotation (
-      Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,64.5625},{
-          -68.3714,64.5625}}, color={0,0,255}));
+      Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,64.5625},{-66.3714,
+          64.5625}}, color={0,0,255}));
   connect(KinParam.outputReal[3], Reactivity_Feedbacks.ReacGd) annotation (Line(
-        points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,58.5625},{
-          -68.3714,58.5625}}, color={0,0,255}));
+        points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,58.5625},{-66.3714,
+          58.5625}}, color={0,0,255}));
   connect(KinParam.outputReal[4], Neutron_Kinetics.Tlife) annotation (Line(
         points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,-17.6},{-65.2,
           -17.6}}, color={0,0,255}));
   connect(KinParam.outputReal[5:10], Neutron_Kinetics.Lambda) annotation (Line(
-        points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,-4.4},{-65.2,
-          -4.4}}, color={0,0,255}));
+        points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,-4.4},{-65.2,-4.4}},
+        color={0,0,255}));
   connect(KinParam.outputReal[11:16], Neutron_Kinetics.Beta) annotation (Line(
         points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,-11.2},{-65.2,
           -11.2}}, color={0,0,255}));
   connect(KinParam.outputReal[17], Reactivity_Feedbacks.deltaReacFuel)
-    annotation (Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,
-          45.8125},{-68.3714,45.8125}}, color={0,0,255}));
+    annotation (Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,45.8125},
+          {-66.3714,45.8125}}, color={0,0,255}));
   connect(KinParam.outputReal[18:end], Reactivity_Feedbacks.rodWorth)
-    annotation (Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,
-          52.5625},{-68.3714,52.5625}}, color={0,0,255}));
+    annotation (Line(points={{-87.16,-69},{-76,-69},{-76,-36},{-116,-36},{-116,52.5625},
+          {-66.3714,52.5625}}, color={0,0,255}));
   annotation (
     experiment(StopTime=1000),
     Documentation(info="<html>
