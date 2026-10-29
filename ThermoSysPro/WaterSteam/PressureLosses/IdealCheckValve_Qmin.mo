@@ -55,7 +55,7 @@ equation
 
   touvert = (deltaP > dPOuvert);
   //tferme = (not (Q > 0));
-  tferme = (not (Q > Qmin/2));
+  tferme = (not (Q > Qmin));
 
   when {pre(tferme),pre(touvert)} then
     ouvert = pre(touvert);
